@@ -1,0 +1,8 @@
+language: csharp
+solution: Flexberry ORM ODataService.sln
+install:
+  - nuget restore "Flexberry ORM ODataService.sln"
+  - nuget install xunit.runner.console -Version 2.1.0 -OutputDirectory testrunner
+script:
+  - xbuild /p:Configuration=Debug "Flexberry ORM ODataService.sln"
+  - mono ./testrunner/xunit.runner.console.2.1.0/tools/xunit.console.exe ./Tests/NewPlatform.Flexberry.ORM.ODataService.Tests/bin/Debug/NewPlatform.Flexberry.ORM.ODataService.Tests.dll

@@ -1,0 +1,981 @@
+﻿
+
+
+
+
+
+CREATE TABLE Детейл2 (
+
+ primaryKey UUID NOT NULL,
+
+ prop2 VARCHAR(255) NULL,
+
+ Детейл UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE Мастер (
+
+ primaryKey UUID NOT NULL,
+
+ prop VARCHAR(255) NULL,
+
+ Мастер2 UUID NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE Библиотека (
+
+ primaryKey UUID NOT NULL,
+
+ Адрес VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE Лес (
+
+ primaryKey UUID NOT NULL,
+
+ Название VARCHAR(255) NULL,
+
+ Площадь INT NULL,
+
+ Заповедник BOOLEAN NULL,
+
+ ДатаПослОсмотра TIMESTAMP(3) NULL,
+
+ Страна UUID NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE ПоставщикКниг (
+
+ primaryKey UUID NOT NULL,
+
+ Ссылка UUID NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE Журнал (
+
+ primaryKey UUID NOT NULL,
+
+ Название VARCHAR(255) NULL,
+
+ Номер INT NULL,
+
+ Автор2 UUID NOT NULL,
+
+ Библиотека2 UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE КлассСМножТипов (
+
+ primaryKey UUID NOT NULL,
+
+ PropertyEnum VARCHAR(6) NULL,
+
+ PropertyBool BOOLEAN NULL,
+
+ PropertyInt INT NULL,
+
+ PropertyDateTime TIMESTAMP(3) NULL,
+
+ PropertyString VARCHAR(255) NULL,
+
+ PropertyFloat REAL NULL,
+
+ PropertyDouble DOUBLE PRECISION NULL,
+
+ PropertyDecimal DECIMAL NULL,
+
+ PropertySystemNullableDateTime TIMESTAMP(3) NULL,
+
+ PropertySystemNullableInt INT NULL,
+
+ PropertySystemNullableGuid UUID NULL,
+
+ PropertySystemNullableDecimal DECIMAL NULL,
+
+ PropStormnetNullableDateTime TIMESTAMP(3) NULL,
+
+ PropertyStormnetNullableInt INT NULL,
+
+ PropertyStormnetKeyGuid UUID NULL,
+
+ PropStormnetNullableDecimal DECIMAL NULL,
+
+ PropertyStormnetPartliedDate VARCHAR(255) NULL,
+
+ PropertyStormnetContact TEXT NULL,
+
+ PropertyStormnetBlob TEXT NULL,
+
+ PropertyStormnetEvent TEXT NULL,
+
+ PropertyStormnetGeoData TEXT NULL,
+
+ PropertyStormnetImage TEXT NULL,
+
+ PropertyStormnetWebFile TEXT NULL,
+
+ PropertyStormnetFile TEXT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE КлассСоСтрокКл (
+
+ StoragePrimaryKey VARCHAR(255) NOT NULL,
+
+ PRIMARY KEY (StoragePrimaryKey));
+
+
+CREATE TABLE КлассStoredDerived (
+
+ primaryKey UUID NOT NULL,
+
+ StrAttr2 VARCHAR(255) NULL,
+
+ StrAttr VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE Медведь (
+
+ primaryKey UUID NOT NULL,
+
+ ПолеБС VARCHAR(255) NULL,
+
+ ПорядковыйНомер INT NULL,
+
+ Вес INT NULL,
+
+ ЦветГлаз VARCHAR(255) NULL,
+
+ Пол VARCHAR(9) NULL,
+
+ ДатаРождения TIMESTAMP(3) NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ Страна UUID NULL,
+
+ Папа UUID NULL,
+
+ ЛесОбитания UUID NULL,
+
+ Мама UUID NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE Наследник (
+
+ primaryKey UUID NOT NULL,
+
+ Свойство DOUBLE PRECISION NULL,
+
+ Свойство1 VARCHAR(255) NULL,
+
+ Свойство2 INT NULL,
+
+ Master UUID NULL,
+
+ Мастер UUID NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE Car (
+
+ primaryKey UUID NOT NULL,
+
+ Number VARCHAR(255) NULL,
+
+ Model VARCHAR(255) NULL,
+
+ TipCar VARCHAR(9) NULL,
+
+ driver UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE Автор (
+
+ primaryKey UUID NOT NULL,
+
+ Имя VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE Страна (
+
+ primaryKey UUID NOT NULL,
+
+ Название VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE Берлога (
+
+ primaryKey UUID NOT NULL,
+
+ ПолеБС VARCHAR(255) NULL,
+
+ Наименование VARCHAR(255) NULL,
+
+ Комфортность INT NULL,
+
+ Заброшена BOOLEAN NULL,
+
+ ЛесРасположения UUID NULL,
+
+ Медведь UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE Книга (
+
+ primaryKey UUID NOT NULL,
+
+ Название VARCHAR(255) NULL,
+
+ Автор1 UUID NOT NULL,
+
+ Библиотека1 UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE ДочернийКласс (
+
+ primaryKey UUID NOT NULL,
+
+ ChildProperty VARCHAR(255) NULL,
+
+ PropertyEnum VARCHAR(6) NULL,
+
+ PropertyBool BOOLEAN NULL,
+
+ PropertyInt INT NULL,
+
+ PropertyDateTime TIMESTAMP(3) NULL,
+
+ PropertyString VARCHAR(255) NULL,
+
+ PropertyFloat REAL NULL,
+
+ PropertyDouble DOUBLE PRECISION NULL,
+
+ PropertyDecimal DECIMAL NULL,
+
+ PropertySystemNullableDateTime TIMESTAMP(3) NULL,
+
+ PropertySystemNullableInt INT NULL,
+
+ PropertySystemNullableGuid UUID NULL,
+
+ PropertySystemNullableDecimal DECIMAL NULL,
+
+ PropStormnetNullableDateTime TIMESTAMP(3) NULL,
+
+ PropertyStormnetNullableInt INT NULL,
+
+ PropertyStormnetKeyGuid UUID NULL,
+
+ PropStormnetNullableDecimal DECIMAL NULL,
+
+ PropertyStormnetPartliedDate VARCHAR(255) NULL,
+
+ PropertyStormnetContact TEXT NULL,
+
+ PropertyStormnetBlob TEXT NULL,
+
+ PropertyStormnetEvent TEXT NULL,
+
+ PropertyStormnetGeoData TEXT NULL,
+
+ PropertyStormnetImage TEXT NULL,
+
+ PropertyStormnetWebFile TEXT NULL,
+
+ PropertyStormnetFile TEXT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE БазовыйКласс (
+
+ primaryKey UUID NOT NULL,
+
+ Свойство1 VARCHAR(255) NULL,
+
+ Свойство2 INT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE Master (
+
+ primaryKey UUID NOT NULL,
+
+ property VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE Детейл (
+
+ primaryKey UUID NOT NULL,
+
+ prop1 INT NULL,
+
+ БазовыйКласс_m0 UUID NULL,
+
+ БазовыйКласс_m1 UUID NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE Driver (
+
+ primaryKey UUID NOT NULL,
+
+ Name VARCHAR(255) NULL,
+
+ CarCount INT NULL,
+
+ Documents BOOLEAN NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE Мастер2 (
+
+ primaryKey UUID NOT NULL,
+
+ свойство2 INT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE Блоха (
+
+ primaryKey UUID NOT NULL,
+
+ Кличка VARCHAR(255) NULL,
+
+ МедведьОбитания UUID NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMNETLOCKDATA (
+
+ LockKey VARCHAR(300) NOT NULL,
+
+ UserName VARCHAR(300) NOT NULL,
+
+ LockDate TIMESTAMP(3) NULL,
+
+ PRIMARY KEY (LockKey));
+
+
+CREATE TABLE STORMSETTINGS (
+
+ primaryKey UUID NOT NULL,
+
+ Module VARCHAR(1000) NULL,
+
+ Name VARCHAR(255) NULL,
+
+ Value TEXT NULL,
+
+ "User" VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMAdvLimit (
+
+ primaryKey UUID NOT NULL,
+
+ "User" VARCHAR(255) NULL,
+
+ Published BOOLEAN NULL,
+
+ Module VARCHAR(255) NULL,
+
+ Name VARCHAR(255) NULL,
+
+ Value TEXT NULL,
+
+ HotKeyData INT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMFILTERSETTING (
+
+ primaryKey UUID NOT NULL,
+
+ Name VARCHAR(255) NOT NULL,
+
+ DataObjectView VARCHAR(255) NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMWEBSEARCH (
+
+ primaryKey UUID NOT NULL,
+
+ Name VARCHAR(255) NOT NULL,
+
+ "Order" INT NOT NULL,
+
+ PresentView VARCHAR(255) NOT NULL,
+
+ DetailedView VARCHAR(255) NOT NULL,
+
+ FilterSetting_m0 UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMFILTERDETAIL (
+
+ primaryKey UUID NOT NULL,
+
+ Caption VARCHAR(255) NOT NULL,
+
+ DataObjectView VARCHAR(255) NOT NULL,
+
+ ConnectMasterProp VARCHAR(255) NOT NULL,
+
+ OwnerConnectProp VARCHAR(255) NULL,
+
+ FilterSetting_m0 UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMFILTERLOOKUP (
+
+ primaryKey UUID NOT NULL,
+
+ DataObjectType VARCHAR(255) NOT NULL,
+
+ Container VARCHAR(255) NULL,
+
+ ContainerTag VARCHAR(255) NULL,
+
+ FieldsToView VARCHAR(255) NULL,
+
+ FilterSetting_m0 UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE UserSetting (
+
+ primaryKey UUID NOT NULL,
+
+ AppName VARCHAR(256) NULL,
+
+ UserName VARCHAR(512) NULL,
+
+ UserGuid UUID NULL,
+
+ ModuleName VARCHAR(1024) NULL,
+
+ ModuleGuid UUID NULL,
+
+ SettName VARCHAR(256) NULL,
+
+ SettGuid UUID NULL,
+
+ SettLastAccessTime TIMESTAMP(3) NULL,
+
+ StrVal VARCHAR(256) NULL,
+
+ TxtVal TEXT NULL,
+
+ IntVal INT NULL,
+
+ BoolVal BOOLEAN NULL,
+
+ GuidVal UUID NULL,
+
+ DecimalVal DECIMAL(20,10) NULL,
+
+ DateTimeVal TIMESTAMP(3) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE ApplicationLog (
+
+ primaryKey UUID NOT NULL,
+
+ Category VARCHAR(64) NULL,
+
+ EventId INT NULL,
+
+ Priority INT NULL,
+
+ Severity VARCHAR(32) NULL,
+
+ Title VARCHAR(256) NULL,
+
+ Timestamp TIMESTAMP(3) NULL,
+
+ MachineName VARCHAR(32) NULL,
+
+ AppDomainName VARCHAR(512) NULL,
+
+ ProcessId VARCHAR(256) NULL,
+
+ ProcessName VARCHAR(512) NULL,
+
+ ThreadName VARCHAR(512) NULL,
+
+ Win32ThreadId VARCHAR(128) NULL,
+
+ Message VARCHAR(2500) NULL,
+
+ FormattedMessage TEXT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMAuObjType (
+
+ primaryKey UUID NOT NULL,
+
+ Name VARCHAR(255) NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMAuEntity (
+
+ primaryKey UUID NOT NULL,
+
+ ObjectPrimaryKey VARCHAR(38) NOT NULL,
+
+ OperationTime TIMESTAMP(3) NOT NULL,
+
+ OperationType VARCHAR(100) NOT NULL,
+
+ ExecutionResult VARCHAR(12) NOT NULL,
+
+ Source VARCHAR(255) NOT NULL,
+
+ SerializedField TEXT NULL,
+
+ User_m0 UUID NOT NULL,
+
+ ObjectType_m0 UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMAuField (
+
+ primaryKey UUID NOT NULL,
+
+ Field VARCHAR(100) NOT NULL,
+
+ OldValue TEXT NULL,
+
+ NewValue TEXT NULL,
+
+ MainChange_m0 UUID NULL,
+
+ AuditEntity_m0 UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMAG (
+
+ primaryKey UUID NOT NULL,
+
+ Name VARCHAR(80) NOT NULL,
+
+ Login VARCHAR(50) NULL,
+
+ Pwd VARCHAR(50) NULL,
+
+ IsUser BOOLEAN NOT NULL,
+
+ IsGroup BOOLEAN NOT NULL,
+
+ IsRole BOOLEAN NOT NULL,
+
+ ConnString VARCHAR(255) NULL,
+
+ Enabled BOOLEAN NULL,
+
+ Email VARCHAR(80) NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMLG (
+
+ primaryKey UUID NOT NULL,
+
+ Group_m0 UUID NOT NULL,
+
+ User_m0 UUID NOT NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMI (
+
+ primaryKey UUID NOT NULL,
+
+ User_m0 UUID NOT NULL,
+
+ Agent_m0 UUID NOT NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE Session (
+
+ primaryKey UUID NOT NULL,
+
+ UserKey UUID NULL,
+
+ StartedAt TIMESTAMP(3) NULL,
+
+ LastAccess TIMESTAMP(3) NULL,
+
+ Closed BOOLEAN NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMS (
+
+ primaryKey UUID NOT NULL,
+
+ Name VARCHAR(100) NOT NULL,
+
+ Type VARCHAR(100) NULL,
+
+ IsAttribute BOOLEAN NOT NULL,
+
+ IsOperation BOOLEAN NOT NULL,
+
+ IsView BOOLEAN NOT NULL,
+
+ IsClass BOOLEAN NOT NULL,
+
+ SharedOper BOOLEAN NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMP (
+
+ primaryKey UUID NOT NULL,
+
+ Subject_m0 UUID NOT NULL,
+
+ Agent_m0 UUID NOT NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMF (
+
+ primaryKey UUID NOT NULL,
+
+ FilterText TEXT NULL,
+
+ Name VARCHAR(255) NULL,
+
+ FilterTypeNView VARCHAR(255) NULL,
+
+ Subject_m0 UUID NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMAC (
+
+ primaryKey UUID NOT NULL,
+
+ TypeAccess VARCHAR(7) NULL,
+
+ Filter_m0 UUID NULL,
+
+ Permition_m0 UUID NOT NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMLO (
+
+ primaryKey UUID NOT NULL,
+
+ Class_m0 UUID NOT NULL,
+
+ Operation_m0 UUID NOT NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMLA (
+
+ primaryKey UUID NOT NULL,
+
+ View_m0 UUID NOT NULL,
+
+ Attribute_m0 UUID NOT NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMLV (
+
+ primaryKey UUID NOT NULL,
+
+ Class_m0 UUID NOT NULL,
+
+ View_m0 UUID NOT NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMLR (
+
+ primaryKey UUID NOT NULL,
+
+ StartDate TIMESTAMP(3) NULL,
+
+ EndDate TIMESTAMP(3) NULL,
+
+ Agent_m0 UUID NOT NULL,
+
+ Role_m0 UUID NOT NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+
+
+ ALTER TABLE Детейл2 ADD CONSTRAINT FKf6a08e1e664f441ea9843eec8803fcb7 FOREIGN KEY (Детейл) REFERENCES Детейл; 
+CREATE INDEX Indexa046c67e10cd40609b0c74c399bb8208 on Детейл2 (Детейл); 
+
+ ALTER TABLE Мастер ADD CONSTRAINT FKa38f98451882463491d1e301dc144efb FOREIGN KEY (Мастер2) REFERENCES Мастер2; 
+CREATE INDEX Index157771e9bce2441d9b5a3cb13e612e94 on Мастер (Мастер2); 
+
+ ALTER TABLE Лес ADD CONSTRAINT FKdc81942bff73424db97f8632ff9491e5 FOREIGN KEY (Страна) REFERENCES Страна; 
+CREATE INDEX Index2d85369faef24b26b6fa2c6dc7b9c404 on Лес (Страна); 
+
+ ALTER TABLE Журнал ADD CONSTRAINT FK58dc3c032fac402c82a19ef90f8c9866 FOREIGN KEY (Автор2) REFERENCES Автор; 
+CREATE INDEX Indexe8b6aa3a08614e2d97ab206cd628f6ab on Журнал (Автор2); 
+
+ ALTER TABLE Журнал ADD CONSTRAINT FK57178dbee71540ed8bd1ef4b8f7a292f FOREIGN KEY (Библиотека2) REFERENCES Библиотека; 
+CREATE INDEX Indexceed64c581b44dc1ba2726ddc9e44c6d on Журнал (Библиотека2); 
+
+ ALTER TABLE Медведь ADD CONSTRAINT FK3dccc54913754565849c422ee4690971 FOREIGN KEY (Страна) REFERENCES Страна; 
+CREATE INDEX Index2dbcb477d2d148deb26fd09666e5b404 on Медведь (Страна); 
+
+ ALTER TABLE Медведь ADD CONSTRAINT FKc29492057dd545349d0d723f67f0b0ee FOREIGN KEY (Папа) REFERENCES Медведь; 
+CREATE INDEX Index10149fc704dd4230ab7b55dc950248fb on Медведь (Папа); 
+
+ ALTER TABLE Медведь ADD CONSTRAINT FK0bebee9344d248c2a094d6b61977c225 FOREIGN KEY (ЛесОбитания) REFERENCES Лес; 
+CREATE INDEX Index2e34b8057621439f99672fe8b5670541 on Медведь (ЛесОбитания); 
+
+ ALTER TABLE Медведь ADD CONSTRAINT FK2c8573264ed9403fbb5ac8d2666b92c9 FOREIGN KEY (Мама) REFERENCES Медведь; 
+CREATE INDEX Indexe7b9233e9a1046839e23aa651a6cfb92 on Медведь (Мама); 
+
+ ALTER TABLE Наследник ADD CONSTRAINT FK51e0b97c44754c499be161ed46f23458 FOREIGN KEY (Master) REFERENCES Master; 
+CREATE INDEX Index88e7a55fc15e48178dbb8c2c7e2e80a8 on Наследник (Master); 
+
+ ALTER TABLE Наследник ADD CONSTRAINT FK18a5e87cd2964f07b5d2cd97a2be874c FOREIGN KEY (Мастер) REFERENCES Мастер; 
+CREATE INDEX Indexd4221ce689db467aa0b9a169fedcbb59 on Наследник (Мастер); 
+
+ ALTER TABLE Car ADD CONSTRAINT FK9df7e2ccb06448b7a700d454c12025fd FOREIGN KEY (driver) REFERENCES Driver; 
+CREATE INDEX Index7f955cb724be427ea965be2161189f8c on Car (driver); 
+
+ ALTER TABLE Берлога ADD CONSTRAINT FK6b24af8be0004c2eaf680c6468354a22 FOREIGN KEY (ЛесРасположения) REFERENCES Лес; 
+CREATE INDEX Index826ddc93524d4adb81a65e97957d7d6d on Берлога (ЛесРасположения); 
+
+ ALTER TABLE Берлога ADD CONSTRAINT FKb6db758613b647b58680daee13ed6cad FOREIGN KEY (Медведь) REFERENCES Медведь; 
+CREATE INDEX Indexb94fb98d966d499286ef983711890748 on Берлога (Медведь); 
+
+ ALTER TABLE Книга ADD CONSTRAINT FK937a56ba38c14634ade3d41a3b00e374 FOREIGN KEY (Автор1) REFERENCES Автор; 
+CREATE INDEX Index5f63e81871024c9eb01459386dc628e0 on Книга (Автор1); 
+
+ ALTER TABLE Книга ADD CONSTRAINT FK1bc1fc7d01a944469f9aa14fea318062 FOREIGN KEY (Библиотека1) REFERENCES Библиотека; 
+CREATE INDEX Indexb1437e5b72174b97a97c011a32a3fb14 on Книга (Библиотека1); 
+
+ ALTER TABLE Детейл ADD CONSTRAINT FKb9f7cef6f608437faecf05b6cc863c25 FOREIGN KEY (БазовыйКласс_m0) REFERENCES БазовыйКласс; 
+CREATE INDEX Index7082ec560bea4936abed6556464edc70 on Детейл (БазовыйКласс_m0); 
+
+ ALTER TABLE Детейл ADD CONSTRAINT FK6f0b1ac81c8d48409bf94fabff58bc90 FOREIGN KEY (БазовыйКласс_m1) REFERENCES Наследник; 
+CREATE INDEX Indexb944ac4d7206464c88233c27fc249124 on Детейл (БазовыйКласс_m1); 
+
+ ALTER TABLE Блоха ADD CONSTRAINT FK17ee8b4497a941d4bb29755baec064ca FOREIGN KEY (МедведьОбитания) REFERENCES Медведь; 
+CREATE INDEX Indexc52b4b07ce8646cca5eafd66e61c91db on Блоха (МедведьОбитания); 
+
+ ALTER TABLE STORMWEBSEARCH ADD CONSTRAINT FK19a5485070794582a21c84834f47f06f FOREIGN KEY (FilterSetting_m0) REFERENCES STORMFILTERSETTING; 
+
+ ALTER TABLE STORMFILTERDETAIL ADD CONSTRAINT FKd1058918a45842d785406e76e3653131 FOREIGN KEY (FilterSetting_m0) REFERENCES STORMFILTERSETTING; 
+
+ ALTER TABLE STORMFILTERLOOKUP ADD CONSTRAINT FK332c371e5b8e4dbe9e91f5273fce41f4 FOREIGN KEY (FilterSetting_m0) REFERENCES STORMFILTERSETTING; 
+
+ ALTER TABLE STORMAuEntity ADD CONSTRAINT FK2eae4147447741bab807dff1c8adabb4 FOREIGN KEY (ObjectType_m0) REFERENCES STORMAuObjType; 
+
+ ALTER TABLE STORMAuField ADD CONSTRAINT FK299d1253c6424c2aaf1f306307a78fe5 FOREIGN KEY (MainChange_m0) REFERENCES STORMAuField; 
+
+ ALTER TABLE STORMAuField ADD CONSTRAINT FK9855c8e781d047fc8a8d43f29e76490f FOREIGN KEY (AuditEntity_m0) REFERENCES STORMAuEntity; 
+
+ ALTER TABLE STORMLG ADD CONSTRAINT FK5e2873be78394fe8828d36b4e7e1f293 FOREIGN KEY (Group_m0) REFERENCES STORMAG; 
+
+ ALTER TABLE STORMLG ADD CONSTRAINT FKd586c045b3cf43c88e6066eb0b9c2e50 FOREIGN KEY (User_m0) REFERENCES STORMAG; 
+
+ ALTER TABLE STORMI ADD CONSTRAINT FK8e6107def6ef4e8a83e6aedd3097c8d0 FOREIGN KEY (User_m0) REFERENCES STORMAG; 
+
+ ALTER TABLE STORMI ADD CONSTRAINT FK289ad7e2c69e471dac9f8b1fe679873f FOREIGN KEY (Agent_m0) REFERENCES STORMAG; 
+
+ ALTER TABLE STORMP ADD CONSTRAINT FK4dca5310dec240fab2d788d13d5af39a FOREIGN KEY (Subject_m0) REFERENCES STORMS; 
+
+ ALTER TABLE STORMP ADD CONSTRAINT FKc580d2aa3d4a46d88cabd07971a7a154 FOREIGN KEY (Agent_m0) REFERENCES STORMAG; 
+
+ ALTER TABLE STORMF ADD CONSTRAINT FKb2d63e3bb9804827be9808ec73496cfe FOREIGN KEY (Subject_m0) REFERENCES STORMS; 
+
+ ALTER TABLE STORMAC ADD CONSTRAINT FK0e519949d2ba4699a17d8b90418450cb FOREIGN KEY (Filter_m0) REFERENCES STORMF; 
+
+ ALTER TABLE STORMAC ADD CONSTRAINT FKce0f398aa2274d769469a15af221a02b FOREIGN KEY (Permition_m0) REFERENCES STORMP; 
+
+ ALTER TABLE STORMLO ADD CONSTRAINT FKbc4df6b8d3ef479993ab340e8f4ae02a FOREIGN KEY (Class_m0) REFERENCES STORMS; 
+
+ ALTER TABLE STORMLO ADD CONSTRAINT FKed7b6a35a22e4332aa676477f4cdd9db FOREIGN KEY (Operation_m0) REFERENCES STORMS; 
+
+ ALTER TABLE STORMLA ADD CONSTRAINT FK00ebfac6b455494d8c9587ab3ae3b45c FOREIGN KEY (View_m0) REFERENCES STORMS; 
+
+ ALTER TABLE STORMLA ADD CONSTRAINT FK4cdc5b7654c14d2c8a792398a7329d45 FOREIGN KEY (Attribute_m0) REFERENCES STORMS; 
+
+ ALTER TABLE STORMLV ADD CONSTRAINT FK3e55ef13dcbf4d2c8702c4115d93ae07 FOREIGN KEY (Class_m0) REFERENCES STORMS; 
+
+ ALTER TABLE STORMLV ADD CONSTRAINT FK0d723cd0df9945b8a72f8e198f7c3d32 FOREIGN KEY (View_m0) REFERENCES STORMS; 
+
+ ALTER TABLE STORMLR ADD CONSTRAINT FK3bf2a5850570481d84eedf477b325db1 FOREIGN KEY (Agent_m0) REFERENCES STORMAG; 
+
+ ALTER TABLE STORMLR ADD CONSTRAINT FK422a2ecf699042668a31369caa1a81b3 FOREIGN KEY (Role_m0) REFERENCES STORMAG; 
