@@ -1,5 +1,6 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Tests.CRUD.Read
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Net;
@@ -8,15 +9,15 @@
 
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Windows.Forms;
+    using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
+
+    using ICSSoft.STORMNET.UserDataTypes;
 
     using Xunit;
-
-    using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
 
     /// <summary>
     /// Класс тестов для тестирования $skip, $top, $orderby.
     /// </summary>
-    
     public class SkipTopOrderByTest : BaseODataServiceIntegratedTest
     {
         /// <summary>
@@ -141,5 +142,111 @@
             });
         }
 
+        /// <summary>
+        /// Осуществляет проверку поиска с $orderby для поля NullableDateTime.
+        /// </summary>
+        [Fact]
+        public void NullableDateTimeOrderBy()
+        {
+            ActODataService(args =>
+            {
+                ExternalLangDef.LanguageDef.DataService = args.DataService;
+                NullableDateTime dt1 = (NullableDateTime)new DateTime(2017, 11, 21);
+                NullableDateTime dt2 = (NullableDateTime)new DateTime(2017, 10, 21);
+                NullableDateTime dt3 = (NullableDateTime)new DateTime(2017, 09, 21);
+                NullableDateTime dt4 = (NullableDateTime)new DateTime(2017, 08, 21);
+                Лес лес1 = new Лес { Название = "Еловый", ДатаПоследнегоОсмотра = dt1 };
+                Лес лес2 = new Лес { Название = "Сосновый", ДатаПоследнегоОсмотра = dt2 };
+                Лес лес3 = new Лес { Название = "Смешанный", ДатаПоследнегоОсмотра = dt3 };
+                Лес лес4 = new Лес { Название = "Березовый", ДатаПоследнегоОсмотра = dt4 };
+
+                var objs = new DataObject[] { лес1, лес2, лес3, лес4 };
+                args.DataService.UpdateObjects(ref objs);
+
+                string requestUrl;
+
+                // Проверка использования в фильтрации перечислений.
+                requestUrl = "http://localhost/odata/Лесs?$orderby=ДатаПоследнегоОсмотра desc";
+
+                // Обращаемся к OData-сервису и обрабатываем ответ.
+                using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
+                {
+                    // Убедимся, что запрос завершился успешно.
+                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                    // Получим строку с ответом.
+                    string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
+
+                    // Преобразуем полученный объект в словарь.
+                    Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
+
+                    Assert.Equal(4, ((ArrayList)receivedDict["value"]).Count);
+
+                    NullableDateTime[] expectedValues = { dt1, dt2, dt3, dt4 };
+
+                    for (int i = 0; i < expectedValues.Length; i++)
+                    {
+                        var лес = ((ArrayList)receivedDict["value"])[i];
+                        Assert.Equal(expectedValues[i], (NullableDateTime)new DateTimeOffset(DateTime.Parse((string)((Dictionary<string, object>)лес)["ДатаПоследнегоОсмотра"])).UtcDateTime);
+                    }
+                }
+            });
+        }
+
+        /// <summary>
+        /// Осуществляет проверку поиска с $orderby для поля NullableDateTime для мастера.
+        /// </summary>
+        [Fact]
+        public void NullableDateTimeOrderByMaster()
+        {
+            ActODataService(args =>
+            {
+                ExternalLangDef.LanguageDef.DataService = args.DataService;
+                NullableDateTime dt1 = (NullableDateTime)new DateTime(2017, 11, 21);
+                NullableDateTime dt2 = (NullableDateTime)new DateTime(2017, 10, 21);
+                NullableDateTime dt3 = (NullableDateTime)new DateTime(2017, 09, 21);
+                NullableDateTime dt4 = (NullableDateTime)new DateTime(2017, 08, 21);
+                Лес лес1 = new Лес { Название = "Еловый", ДатаПоследнегоОсмотра = dt1 };
+                Лес лес2 = new Лес { Название = "Сосновый", ДатаПоследнегоОсмотра = dt2 };
+                Лес лес3 = new Лес { Название = "Смешанный", ДатаПоследнегоОсмотра = dt3 };
+                Лес лес4 = new Лес { Название = "Березовый", ДатаПоследнегоОсмотра = dt4 };
+                Медведь медведь1 = new Медведь { Пол = tПол.Мужской, ЛесОбитания = лес1 };
+                Медведь медведь2 = new Медведь { Пол = tПол.Женский, ЛесОбитания = лес2 };
+                Медведь медведь3 = new Медведь { Пол = tПол.Мужской, ЛесОбитания = лес3 };
+                Медведь медведь4 = new Медведь { Пол = tПол.Женский, ЛесОбитания = лес4 };
+
+                var objs = new DataObject[] { медведь1, медведь2, медведь3, медведь4 };
+                args.DataService.UpdateObjects(ref objs);
+
+                string requestUrl;
+
+                // Проверка использования в фильтрации перечислений.
+                requestUrl = "http://localhost/odata/Медведьs?$expand=ЛесОбитания($select=ДатаПоследнегоОсмотра)&$orderby=ЛесОбитания/ДатаПоследнегоОсмотра desc";
+
+                // Обращаемся к OData-сервису и обрабатываем ответ.
+                using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
+                {
+                    // Убедимся, что запрос завершился успешно.
+                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                    // Получим строку с ответом.
+                    string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
+
+                    // Преобразуем полученный объект в словарь.
+                    Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
+
+                    Assert.Equal(4, ((ArrayList)receivedDict["value"]).Count);
+
+                    NullableDateTime[] expectedValues = { dt1, dt2, dt3, dt4 };
+
+                    for (int i = 0; i < expectedValues.Length; i++)
+                    {
+                        var медведь = ((ArrayList)receivedDict["value"])[i];
+                        var лес = ((Dictionary<string, object>)медведь)["ЛесОбитания"];
+                        Assert.Equal(expectedValues[i], (NullableDateTime)new DateTimeOffset(DateTime.Parse((string)((Dictionary<string, object>)лес)["ДатаПоследнегоОсмотра"])).UtcDateTime);
+                    }
+                }
+            });
+        }
     }
 }

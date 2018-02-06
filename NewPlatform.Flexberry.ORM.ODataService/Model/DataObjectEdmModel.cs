@@ -1,6 +1,8 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Model
 {
+    using Microsoft.Spatial;
     using System;
+    using Action = NewPlatform.Flexberry.ORM.ODataService.Functions.Action;
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
@@ -26,9 +28,22 @@
     {
         public IExportService ExportService { get; set; }
 
+        /// <summary>
+        /// Ссылка на IDataObjectEdmModelBuilder.
+        /// </summary>
         public IDataObjectEdmModelBuilder EdmModelBuilder { get; set; }
+        
+        /// <summary>
+        /// Имя свойства ключа.
+        /// </summary>
         public string KeyPropertyName => _metadata.KeyPropertyName;
+        
+        /// <summary>
+        /// Описание свойства ключа.
+        /// </summary>
         public PropertyInfo KeyProperty => _metadata.KeyProperty;
+
+        private const string DefaultNamespace = "DataObject";
 
         /// <summary>
         /// Словарь, в котором ключ алиас типа, а значение сам тип.
@@ -36,22 +51,22 @@
         private readonly IDictionary<string, Type> _aliasesNameToType = new Dictionary<string, Type>();
 
         /// <summary>
-        /// Словарь, в котором ключ сам тип, а значение алиас типа.
+        /// Словарь, в котором ключ сам тип, а значение - алиас типа.
         /// </summary>
         private readonly IDictionary<Type, string> _aliasesTypeToName = new Dictionary<Type, string>();
 
         /// <summary>
-        /// Словарь, в котором ключ алиас пространства имен, а значение сам тип.
+        /// Словарь, в котором ключ алиас пространства имен, а значение - сам тип.
         /// </summary>
         private readonly IDictionary<string, Type> _aliasesNamespaceToType = new Dictionary<string, Type>();
 
         /// <summary>
-        /// Словарь, в котором составной ключ это - алиас полного имени типа и алиас свойства, а значение само свойство.
+        /// Словарь, в котором составной ключ - это алиас полного имени типа и алиас свойства, а значение - само свойство.
         /// </summary>
         private readonly IDictionary<string, IDictionary<string, PropertyInfo>> _aliasesNameToProperty = new Dictionary<string, IDictionary<string, PropertyInfo>>();
 
         /// <summary>
-        /// Словарь, в котором составной ключ это - тип и имя свойства, а значение алиас имени свойства.
+        /// Словарь, в котором составной ключ - это тип и имя свойства, а значение - алиас имени свойства.
         /// </summary>
         private readonly IDictionary<Type, IDictionary<string, string>> _namePropertyToAlias = new Dictionary<Type, IDictionary<string, string>>();
 
@@ -81,6 +96,7 @@
             BuildEntitySets();
             RegisterMasters();
             RegisterDetails();
+            RegisterGeoIntersectsFunction();
         }
 
         private void BuildTypeHierarchy()
@@ -116,8 +132,8 @@
                 _registeredEdmEntityTypes.TryGetValue(baseType, out baseEdmEntityType);
 
                 EdmEntityType edmEntityType = new EdmEntityType(
-                    GetEntityTypeNamespace(dataObjectType) ,//dataObjectType.Namespace,
-                    GetEntityTypeName(dataObjectType), //dataObjectType.Name + "Alias", //"Alias",
+                    GetEntityTypeNamespace(dataObjectType),
+                    GetEntityTypeName(dataObjectType),
                     baseEdmEntityType,
                     dataObjectType.IsAbstract,
                     !dataObjectType.IsSealed);
@@ -164,14 +180,14 @@
                         AddElement(edmEnumType);
                     }
 
-                    var edmProp = edmEntityType.AddStructuralProperty(GetEntityPropertName(propertyInfo) /*propertyInfo.Name + "Alias"*//* "Alias"*/, new EdmEnumTypeReference(edmEnumType, false));
+                    EdmStructuralProperty edmProp = edmEntityType.AddStructuralProperty(GetEntityPropertName(propertyInfo), new EdmEnumTypeReference(edmEnumType, false));
                     this.SetAnnotationValue(edmProp, new ClrPropertyInfoAnnotation(propertyInfo));
                 }
 
                 IEdmPrimitiveType edmPrimitiveType = EdmTypeMap.GetEdmPrimitiveType(propertyType);
                 if (edmPrimitiveType != null)
                 {
-                    var edmProp = edmEntityType.AddStructuralProperty(GetEntityPropertName(propertyInfo) /*propertyInfo.Name + "Alias"*//*"Alias"*/, edmPrimitiveType.PrimitiveKind);
+                    EdmStructuralProperty edmProp = edmEntityType.AddStructuralProperty(GetEntityPropertName(propertyInfo) , edmPrimitiveType.PrimitiveKind);
                     this.SetAnnotationValue(edmProp, new ClrPropertyInfoAnnotation(propertyInfo));
                 }
             }
@@ -179,7 +195,7 @@
 
         private void BuildEntitySets()
         {
-            var container = new EdmEntityContainer("DataObject", "DataObjectContainer");
+            var container = new EdmEntityContainer(DefaultNamespace, "DataObjectContainer");
             AddElement(container);
 
             foreach (Type dataObjectType in _metadata.Types)
@@ -206,12 +222,17 @@
 
                 foreach (var masterProperty in typeSettings.MasterProperties)
                 {
+                    if (!_registeredEdmEntityTypes.ContainsKey(masterProperty.Value.MasterType))
+                    {
+                        throw new Exception($"Тип мастера {masterProperty.Value.MasterType.FullName} не найден для типа {dataObjectType.FullName}.");
+                    }
+
                     EdmEntityType edmTargetEntityType = _registeredEdmEntityTypes[masterProperty.Value.MasterType];
                     bool allowNull = masterProperty.Value.AllowNull;
 
                     var navigationProperty = new EdmNavigationPropertyInfo
                     {
-                        Name = GetEntityPropertName(masterProperty.Key), //masterProperty.Key.Name,
+                        Name = GetEntityPropertName(masterProperty.Key),
                         Target = edmTargetEntityType,
                         TargetMultiplicity = allowNull
                             ? EdmMultiplicity.ZeroOrOne
@@ -244,22 +265,27 @@
                 DataObjectEdmTypeSettings typeSettings = _metadata[dataObjectType];
                 EdmEntityType edmEntityType = _registeredEdmEntityTypes[dataObjectType];
 
-                foreach (var masterProperty in typeSettings.DetailProperties)
+                foreach (var detailProperty in typeSettings.DetailProperties)
                 {
-                    EdmEntityType edmTargetEntityType = _registeredEdmEntityTypes[masterProperty.Value.DetailType];
+                    if (!_registeredEdmEntityTypes.ContainsKey(detailProperty.Value.DetailType))
+                    {
+                        throw new Exception($"Тип детейла {detailProperty.Value.DetailType.FullName} не найден для типа {dataObjectType.FullName}.");
+                    }
+
+                    EdmEntityType edmTargetEntityType = _registeredEdmEntityTypes[detailProperty.Value.DetailType];
 
                     var navigationProperty = new EdmNavigationPropertyInfo
                     {
-                        Name = GetEntityPropertName(masterProperty.Key), //masterProperty.Key.Name,
+                        Name = GetEntityPropertName(detailProperty.Key),
                         Target = edmTargetEntityType,
                         TargetMultiplicity = EdmMultiplicity.Many
                     };
 
                     EdmNavigationProperty unidirectionalNavigation = edmEntityType.AddUnidirectionalNavigation(navigationProperty);
-                    this.SetAnnotationValue(unidirectionalNavigation, new ClrPropertyInfoAnnotation(masterProperty.Key));
+                    this.SetAnnotationValue(unidirectionalNavigation, new ClrPropertyInfoAnnotation(detailProperty.Key));
 
                     EdmEntitySet thisEdmEntitySet = _registeredEntitySets[dataObjectType];
-                    EdmEntitySet targetEdmEntitySet = _registeredEntitySets[masterProperty.Value.DetailType];
+                    EdmEntitySet targetEdmEntitySet = _registeredEntitySets[detailProperty.Value.DetailType];
                     thisEdmEntitySet.AddNavigationTarget(unidirectionalNavigation, targetEdmEntitySet);
 
                     // Add relation for all derived types.
@@ -295,7 +321,20 @@
         }
 
         /// <summary>
-        /// Получает свойство DataObject по имени типа и свойству в edm-модели.
+        /// Осуществляет получение типа EDM-перечисления, соответствующего заданному типу clr-перечисления.
+        /// </summary>
+        /// <param name="enumType">Тип объекта данных, для которого необходимо получить, соответствующий ему тип EDM-перечисления.</param>
+        /// <returns>Тип EDM-перечисления, соответствующий заданному типу clr-перечисления.</returns>
+        public EdmEnumType GetEdmEnumType(Type enumType)
+        {
+            Contract.Requires<ArgumentNullException>(enumType != null);
+            if (!_registeredEnums.ContainsKey(enumType))
+                return null;
+            return _registeredEnums[enumType];
+        }
+
+        /// <summary>
+        /// Получает свойство <see cref="DataObject"/> по имени типа и свойству в edm-модели.
         /// Поиск производится по всей иерархии заданного типа.
         /// </summary>
         /// <param name="aliasFullTypeName">Полное имя типа в edm-модели.</param>
@@ -305,10 +344,10 @@
         {
             if (aliasPropertyName == KeyPropertyName)
                 return KeyProperty;
-            var dicType = _aliasesNameToProperty[aliasFullTypeName];
+            IDictionary<string, PropertyInfo> dicType = _aliasesNameToProperty[aliasFullTypeName];
             while (!dicType.ContainsKey(aliasPropertyName))
             {
-                var type = _aliasesNameToType[aliasFullTypeName];
+                Type type = _aliasesNameToType[aliasFullTypeName];
                 aliasFullTypeName = _aliasesTypeToName[type.BaseType];
                 dicType = _aliasesNameToProperty[aliasFullTypeName];
             }
@@ -317,7 +356,7 @@
         }
 
         /// <summary>
-        /// Получает имя свойства DataObject по типу DataObject и имени свойства EdmType.
+        /// Получает имя свойства <see cref="DataObject"/> по типу DataObject и имени свойства EdmType.
         /// Поиск производится по всей иерархии заданного типа.
         /// </summary>
         /// <param name="dataObjectType">Дочерний тип DataObject.</param>
@@ -327,29 +366,29 @@
         {
             if (aliasPropertyName == KeyPropertyName)
                 return aliasPropertyName;
-            var dicType = _namePropertyToAlias[dataObjectType];
+            IDictionary<string, string> dicType = _namePropertyToAlias[dataObjectType];
             while (!dicType.Values.Contains(aliasPropertyName))
             {
                 dataObjectType = dataObjectType.BaseType;
                 dicType = _namePropertyToAlias[dataObjectType];
             }
 
-            var pair = dicType.FirstOrDefault(x => x.Value == aliasPropertyName);
+            KeyValuePair<string, string> pair = dicType.FirstOrDefault(x => x.Value == aliasPropertyName);
             return pair.Key;
         }
 
         /// <summary>
-        /// Получает имя свойства EdmType по типу и имени свойства DataObject.
+        /// Получает имя свойства <see cref="EdmType"/> по типу и имени свойства DataObject.
         /// Поиск производится по всей иерархии заданного типа.
         /// </summary>
-        /// <param name="dataObjectType">Дочерний тип DataObject.</param>
-        /// <param name="propertyName">Имя свойства для DataObject.</param>
+        /// <param name="dataObjectType">Дочерний тип <see cref="DataObject"/>.</param>
+        /// <param name="propertyName">Имя свойства для <see cref="DataObject"/>.</param>
         /// <returns>Возваращает имя свойства.</returns>
         public string GetEdmTypePropertyName(Type dataObjectType, string propertyName)
         {
             if (propertyName == KeyPropertyName)
                 return propertyName;
-            var dicType = _namePropertyToAlias[dataObjectType];
+            IDictionary<string, string> dicType = _namePropertyToAlias[dataObjectType];
             while (!dicType.ContainsKey(propertyName))
             {
                 dataObjectType = dataObjectType.BaseType;
@@ -359,6 +398,11 @@
             return dicType[propertyName];
         }
 
+        /// <summary>
+        /// Строит имя типа сущности по clr типу.
+        /// </summary>
+        /// <param name="type">Тип</param>
+        /// <returns></returns>
         private string GetEntityTypeName(Type type)
         {
             var name = type.Name;
@@ -373,6 +417,11 @@
             return name;
         }
 
+        /// <summary>
+        /// Строит Namespace типа сущности по clr типу.
+        /// </summary>
+        /// <param name="type">Тип</param>
+        /// <returns></returns>
         private string GetEntityTypeNamespace(Type type)
         {
             var name = type.Namespace;
@@ -383,6 +432,11 @@
             return name;
         }
 
+        /// <summary>
+        /// Строит имя типа свойства сущности по clr типу.
+        /// </summary>
+        /// <param name="type">Тип</param>
+        /// <returns></returns>
         private string GetEntityPropertName(PropertyInfo prop)
         {
             var name = prop.Name;
@@ -493,64 +547,205 @@
                 && ((EdmCollectionType)el.Type).ElementType.FullName() == entityType.FullTypeName());
         }
 
+        internal void AddAction(Action action)
+        {
+            EdmAction edmAction;
+            EdmEntityContainer entityContainer = (EdmEntityContainer)EntityContainer;
+            IEdmTypeReference edmTypeReference = GetNotEntityTypeReference(action.ReturnType);
+            if (edmTypeReference == null)
+            {
+                edmTypeReference = GetCollectionNotEntityTypeReference(action.ReturnType);
+            }
+
+            if (edmTypeReference != null)
+            {
+                edmAction = new EdmAction(DefaultNamespace, action.Name, edmTypeReference);
+                entityContainer.AddActionImport(edmAction);
+            }
+            else if (action.ReturnType == typeof(void))
+            {
+                edmAction = new EdmAction(DefaultNamespace, action.Name, null);
+                entityContainer.AddActionImport(edmAction);
+            }
+            else
+            {
+                IEdmTypeReference returnEdmTypeReference = GetEdmTypeReference(action.ReturnType, out IEdmEntityType returnEntityType, out bool isCollection);
+                if (returnEntityType == null)
+                {
+                    throw new ArgumentNullException("Тип возвращаемого результата action не найден в модели OData.");
+                }
+
+                edmAction = new EdmAction(DefaultNamespace, action.Name, returnEdmTypeReference);
+                edmAction.AddParameter("bindingParameter", returnEdmTypeReference);
+                entityContainer.AddActionImport(action.Name, edmAction, new EdmEntitySetReferenceExpression(GetEdmEntitySet(returnEntityType)));
+            }
+
+            AddElement(edmAction);
+            foreach (var parameter in action.ParametersTypes.Keys)
+            {
+                Type paramType = action.ParametersTypes[parameter];
+                edmTypeReference = GetEdmTypeReference(paramType, out IEdmEntityType entityType, out bool isCollection);
+                if (edmTypeReference == null)
+                {
+                    edmTypeReference = GetNotEntityTypeReference(paramType);
+                    if (edmTypeReference == null)
+                    {
+                        edmTypeReference = GetCollectionNotEntityTypeReference(paramType);
+                    }
+                }
+
+                if (edmTypeReference != null)
+                {
+                    edmAction.AddParameter(parameter, edmTypeReference);
+                }
+            }
+        }
+
         internal void AddUserFunction(Function function)
         {
+            if (function is Action)
+            {
+                AddAction(function as Action);
+                return;
+            }
+
             EdmFunction edmFunction;
             EdmEntityContainer entityContainer = (EdmEntityContainer)EntityContainer;
-            var edmReturnType = EdmTypeMap.GetEdmPrimitiveType(function.ReturnType);
-            if (edmReturnType != null)
+            IEdmTypeReference edmTypeReference = GetNotEntityTypeReference(function.ReturnType);
+            if (edmTypeReference == null)
             {
-                edmFunction = new EdmFunction("DataObject", function.FunctionName, new EdmPrimitiveTypeReference(edmReturnType, false), false, null, false);
+                edmTypeReference = GetCollectionNotEntityTypeReference(function.ReturnType);
+            }
+
+            if (edmTypeReference != null)
+            {
+                edmFunction = new EdmFunction(DefaultNamespace, function.Name, edmTypeReference, false, null, false);
                 entityContainer.AddFunctionImport(edmFunction);
             }
             else
             {
-                IEdmEntityType entityType = GetEdmEntityType(function.ReturnType);
-                bool isCollection = false;
-                if (entityType == null)
+                IEdmTypeReference returnEdmTypeReference = GetEdmTypeReference(function.ReturnType, out IEdmEntityType returnEntityType, out bool isCollection);
+                if (returnEntityType == null)
                 {
-                    if (typeof(IEnumerable).IsAssignableFrom(function.ReturnType) && function.ReturnType.IsGenericType)
-                    {
-                        Type[] typeParameters = function.ReturnType.GetGenericArguments();
-                        if (typeParameters.Length == 1)
-                        {
-                            entityType = GetEdmEntityType(typeParameters[0]);
-                            isCollection = true;
-                        }
-                    }
-
-                    if (function.ReturnType.IsArray)
-                    {
-                        entityType = GetEdmEntityType(function.ReturnType.GetElementType());
-                        isCollection = true;
-                    }
+                    throw new ArgumentNullException("Тип возвращаемого результата пользовательской функции не найден в модели OData.");
                 }
 
-                if (entityType == null)
-                    throw new ArgumentNullException("Тип возвращаемого функцией результата не найден в модели OData.");
-
-                IEdmTypeReference returnEdmTypeReference;
-                if (isCollection)
-                {
-                    returnEdmTypeReference = new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(entityType, false)));
-                }
-                else
-                {
-                    returnEdmTypeReference = new EdmEntityTypeReference(entityType, false);
-                }
-
-                edmFunction = new EdmFunction("DataObject", function.FunctionName, returnEdmTypeReference, true, null, true);
+                edmFunction = new EdmFunction(DefaultNamespace, function.Name, returnEdmTypeReference, true, null, true);
                 edmFunction.AddParameter("bindingParameter", returnEdmTypeReference);
-                entityContainer.AddFunctionImport(function.FunctionName, edmFunction, new EdmEntitySetReferenceExpression(GetEdmEntitySet(entityType)), true);
+                entityContainer.AddFunctionImport(function.Name, edmFunction, new EdmEntitySetReferenceExpression(GetEdmEntitySet(returnEntityType)), true);
             }
 
             AddElement(edmFunction);
-
             foreach (var parameter in function.ParametersTypes.Keys)
             {
-                var edmParameterType = EdmTypeMap.GetEdmPrimitiveType(function.ParametersTypes[parameter]);
-                edmFunction.AddParameter(parameter, new EdmPrimitiveTypeReference(edmParameterType, false));
+                Type paramType = function.ParametersTypes[parameter];
+                IEdmEnumType enumType = GetEdmEnumType(paramType);
+                var edmParameterType = EdmTypeMap.GetEdmPrimitiveType(paramType);
+                if (edmParameterType != null)
+                {
+                    edmFunction.AddParameter(parameter, new EdmPrimitiveTypeReference(edmParameterType, false));
+                }
+
+                if (enumType != null)
+                {
+                    edmFunction.AddParameter(parameter, new EdmEnumTypeReference(enumType, false));
+                }
             }
+        }
+
+        private IEdmTypeReference GetEdmTypeReference(Type clrType, out IEdmEntityType entityType, out bool isCollection)
+        {
+            isCollection = false;
+            IEdmTypeReference returnEdmTypeReference = null;
+            entityType = GetEdmEntityType(clrType);
+
+            if (entityType == null)
+            {
+                entityType = GetCollectionItemEdmEntityType(clrType);
+                if (entityType != null)
+                {
+                    returnEdmTypeReference = new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(entityType, true)));
+                    isCollection = true;
+                }
+            }
+            else
+            {
+                returnEdmTypeReference = new EdmEntityTypeReference(entityType, true);
+            }
+
+            return returnEdmTypeReference;
+        }
+
+        private IEdmTypeReference GetCollectionNotEntityTypeReference(Type clrType)
+        {
+            IEdmTypeReference typeRef = null;
+            if (typeof(IEnumerable).IsAssignableFrom(clrType) && clrType.IsGenericType)
+            {
+                Type[] typeParameters = clrType.GetGenericArguments();
+                if (typeParameters.Length == 1)
+                {
+                    typeRef = GetNotEntityTypeReference(typeParameters[0]);
+                }
+            }
+            else if (clrType.IsArray)
+            {
+                typeRef = GetNotEntityTypeReference(clrType.GetElementType());
+            }
+
+            if (typeRef != null)
+            {
+                typeRef = new EdmCollectionTypeReference(new EdmCollectionType(typeRef));
+            }
+
+            return typeRef;
+        }
+
+        private IEdmTypeReference GetNotEntityTypeReference(Type clrType)
+        {
+            IEdmType edmType = EdmTypeMap.GetEdmPrimitiveType(clrType);
+            if (edmType != null)
+            {
+                return new EdmPrimitiveTypeReference(edmType as IEdmPrimitiveType, false);
+            }
+
+            edmType = GetEdmEnumType(clrType);
+            if (edmType != null)
+            {
+                return new EdmEnumTypeReference(edmType as IEdmEnumType, false);
+            }
+
+            return null;
+        }
+
+        private IEdmEntityType GetCollectionItemEdmEntityType(Type clrType)
+        {
+            IEdmEntityType entityType = null;
+            if (typeof(IEnumerable).IsAssignableFrom(clrType) && clrType.IsGenericType)
+            {
+                Type[] typeParameters = clrType.GetGenericArguments();
+                if (typeParameters.Length == 1)
+                {
+                    entityType = GetEdmEntityType(typeParameters[0]);
+                }
+            }
+
+            if (clrType.IsArray)
+            {
+                entityType = GetEdmEntityType(clrType.GetElementType());
+            }
+
+            return entityType;
+        }
+
+        private void RegisterGeoIntersectsFunction()
+        {
+            EdmFunction edmFunction;
+            var edmReturnType = EdmTypeMap.GetEdmPrimitiveType(typeof(bool));
+            edmFunction = new EdmFunction("geo", "intersects", new EdmPrimitiveTypeReference(edmReturnType, false), false, null, true);
+            AddElement(edmFunction);
+            var edmParameterType = EdmTypeMap.GetEdmPrimitiveType(typeof(Geography));
+            edmFunction.AddParameter("geography1", new EdmPrimitiveTypeReference(edmParameterType, false));
+            edmFunction.AddParameter("geography2", new EdmPrimitiveTypeReference(edmParameterType, false));
         }
     }
 }

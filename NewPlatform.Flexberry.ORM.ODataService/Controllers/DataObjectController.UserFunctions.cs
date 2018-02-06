@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Web.Http;
     using System.Web.OData;
     using System.Web.OData.Extensions;
@@ -15,6 +16,10 @@
     using NewPlatform.Flexberry.ORM.ODataService.Functions;
     using NewPlatform.Flexberry.ORM.ODataService.Model;
     using NewPlatform.Flexberry.ORM.ODataService.Routing;
+    using Expressions;
+    using Microsoft.OData.Core;
+    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm.Values;
 
     /// <summary>
     /// OData controller class.
@@ -39,7 +44,7 @@
         public IHttpActionResult GetODataFunctionsExecute()
         {
             QueryOptions = CreateODataQueryOptions(typeof(DataObject));
-            return ExecuteUserFunction(new QueryParameters(QueryOptions));
+            return ExecuteUserFunction(new QueryParameters(this));
         }
 
         /// <summary>
@@ -50,6 +55,7 @@
         internal IHttpActionResult ExecuteUserFunction(QueryParameters queryParameters)
         {
             queryParameters.Count = null;
+            queryParameters.Request = Request;
             ODataPath odataPath = Request.ODataProperties().Path;
             UnboundFunctionPathSegment segment = odataPath.Segments[odataPath.Segments.Count - 1] as UnboundFunctionPathSegment;
 
@@ -61,16 +67,21 @@
             foreach (var parameterName in function.ParametersTypes.Keys)
             {
                 var parameterValue = segment.GetParameterValue(parameterName);
+                if (parameterValue is ODataEnumValue)
+                {
+                    parameterValue = Enum.Parse(function.ParametersTypes[parameterName], (parameterValue as ODataEnumValue).Value);
+                }
+
                 parameters.Add(parameterName, parameterValue);
             }
 
             var result = function.Handler(queryParameters, parameters);
-            if (EdmTypeMap.GetEdmPrimitiveType(result.GetType()) != null)
+            if (result == null)
             {
-                return SetResultPrimitive(result.GetType(), result);
+                return SetResult("Result is null.");
             }
 
-            if (result is IEnumerable)
+            if (!(result is string) && result is IEnumerable)
             {
                 Type type = null;
                 if (result.GetType().IsGenericType)
@@ -85,16 +96,18 @@
                     type = result.GetType().GetElementType();
                 }
 
-                if (type != null && type.IsSubclassOf(typeof(DataObject)))
+                if (type != null && (type.IsSubclassOf(typeof(DataObject)) || type == typeof(DataObject)))
                 {
                     var queryOpt = CreateODataQueryOptions(type);
 
-                    QueryOptions = new ODataQueryOptions(new ODataQueryContext(Request.ODataProperties().Model, type, Request.ODataProperties().Path), Request);
+                    QueryOptions = queryOpt;
                     if (QueryOptions.SelectExpand != null && QueryOptions.SelectExpand.SelectExpandClause != null)
                     {
                         Request.ODataProperties().SelectExpandClause = QueryOptions.SelectExpand.SelectExpandClause;
                     }
 
+                    this.type = type;
+                    CreateDynamicView();
                     IncludeCount = false;
                     if (queryOpt.Count != null && queryOpt.Count.Value)
                     {
@@ -109,25 +122,28 @@
                         }
                     }
 
-                    QueryOptions = queryOpt;
-                    var coll = GetEdmCollection((IEnumerable)result, type, 1, null);
+                    var coll = GetEdmCollection((IEnumerable)result, type, 1, null, _dynamicView);
                     return SetResult(coll);
                 }
+
+                return SetResult(result);
             }
 
             if (result is DataObject)
             {
-                QueryOptions = new ODataQueryOptions(new ODataQueryContext(Request.ODataProperties().Model, result.GetType(), Request.ODataProperties().Path), Request);
+                QueryOptions = CreateODataQueryOptions(result.GetType());
                 if (QueryOptions.SelectExpand != null && QueryOptions.SelectExpand.SelectExpandClause != null)
                 {
                     Request.ODataProperties().SelectExpandClause = QueryOptions.SelectExpand.SelectExpandClause;
                 }
 
-                var entityType = _model.GetEdmEntityType(result.GetType());
-                return SetResult(GetEdmObject(entityType, result, 1, null));
+                this.type = result.GetType();
+                CreateDynamicView();
+                var entityType = _model.GetEdmEntityType(this.type);
+                return SetResult(GetEdmObject(entityType, result, 1, null, _dynamicView));
             }
 
-            return SetResult("Function not found");
+            return SetResultPrimitive(result.GetType(), result);
         }
     }
 }

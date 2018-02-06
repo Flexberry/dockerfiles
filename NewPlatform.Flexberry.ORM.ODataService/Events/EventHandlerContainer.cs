@@ -45,5 +45,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Events
         /// Делегат для вызова логики после удаления объекта.
         /// </summary>
         public DelegateAfterDelete CallbackAfterDelete { get; set; }
+
+        /// <summary>
+        /// Делегат, вызываемый после возникновения исключения.
+        /// </summary>
+        public DelegateAfterInternalServerError CallbackAfterInternalServerError { get; set; }
     }
 }

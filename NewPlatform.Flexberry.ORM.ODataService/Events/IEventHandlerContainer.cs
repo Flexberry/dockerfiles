@@ -44,5 +44,10 @@
         /// Делегат для вызова логики после удаления объекта.
         /// </summary>
         DelegateAfterDelete CallbackAfterDelete { get; set; }
+
+        /// <summary>
+        /// Делегат, вызываемый после возникновения исключения.
+        /// </summary>
+        DelegateAfterInternalServerError CallbackAfterInternalServerError { get; set; }
     }
 }

@@ -52,7 +52,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Extensions
             var model = builder.Build();
 
             // Routing.
-            var pathHandler = new DefaultODataPathHandler();
+            var pathHandler = new ExtendedODataPathHandler();
             var routingConventions = DataObjectRoutingConventions.CreateDefault();
             var route = config.MapODataServiceRoute(routeName, routePrefix, model, pathHandler, routingConventions);
 

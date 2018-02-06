@@ -39,7 +39,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Functions
         /// <param name="function">The OData Service function.</param>
         public void Register(Function function)
         {
-            _functions.Add(function.FunctionName, function);
+            _functions.Add(function.Name, function);
             _token.Model.AddUserFunction(function);
         }
 
@@ -48,6 +48,20 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Functions
         /// </summary>
         /// <param name="function">The function.</param>
         public void Register(Delegate function)
+        {
+            Register(function, false);
+        }
+
+        /// <summary>
+        /// Registers the specified delegate as OData Service action.
+        /// </summary>
+        /// <param name="function">The function.</param>
+        public void RegisterAction(Delegate function)
+        {
+            Register(function, true);
+        }
+
+        private void Register(Delegate function, bool createAction)
         {
             var functionName = function.Method.Name;
             var returnType = function.Method.ReturnType;
@@ -71,8 +85,14 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Functions
 
                 return function.DynamicInvoke(args.Concat(objects.Values).ToArray());
             };
-
-            Register(new Function(functionName, handler, returnType, arguments));
+            if (createAction)
+            {
+                Register(new Action(functionName, handler, returnType, arguments));
+            }
+            else
+            {
+                Register(new Function(functionName, handler, returnType, arguments));
+            }
         }
 
         /// <summary>

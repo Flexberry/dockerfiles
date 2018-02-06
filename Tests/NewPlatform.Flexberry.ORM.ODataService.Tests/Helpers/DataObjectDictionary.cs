@@ -1,5 +1,6 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Helpers
 {
+    using Microsoft.Spatial;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -12,6 +13,7 @@
     using NewPlatform.Flexberry.ORM.ODataService.Extensions;
     using Newtonsoft.Json;
     using ODataService.Model;
+    using ICSSoft.STORMNET.Business.LINQProvider.Extensions;
 
     /// <summary>
     /// Класс, представляющий объект данных <see cref="DataObject"/> в виде словаря <see cref="Dictionary{String,Object}"/>.
@@ -36,7 +38,7 @@
         /// </summary>
         /// <param name="dataObject">Объект данных, который нужно представить в виде словаря.</param>
         /// <param name="dataObjectView">Представление, по которому определены свойства для конвертации объекта в словаря.</param>
-        /// <param name="model">Edm-модель, указанная в ManagementToken.</param>
+        /// <param name="model">Edm-модель, указанная в <see cref="ManagementToken"/>.</param>
         /// <param name="serializeValues">Флаг: Нужно ли сериализовывать значения свойств объекта данных.</param>
         public DataObjectDictionary(DataObject dataObject, View dataObjectView, DataObjectEdmModel model, bool serializeValues = false)
             : base()
@@ -72,8 +74,16 @@
                         propertyValue = ((NullableInt)propertyValue).Value;
                     else if (propertyValue is NullableDecimal)
                         propertyValue = ((NullableDecimal)propertyValue).Value;
+                    if (propertyValue is Geography)
+                    {
+                        GeoJsonObjectFormatter formatter = GeoJsonObjectFormatter.Create();
+                        propertyValue = formatter.Write(propertyValue as Geography);
+                    }
+                    else
+                    {
+                        propertyValue = propertyValue.ToString();
+                    }
 
-                    propertyValue = propertyValue.ToString();
                 }
 
                 var aliasPropertyName = model.GetEdmTypePropertyName(dataObjectType, propertyName);
@@ -107,7 +117,7 @@
         /// <remarks>
         /// Используется для преобразования типов значений из словаря, полученного через стандартный десериализатор.
         /// </remarks>
-        /// <param name="dataObjectAliases">Объект данных, в виде словаря.</param>
+        /// <param name="dataObjectAliases">Объект данных, в виде словаря псевдонимов.</param>
         /// <param name="dataObjectView">Представление, по которому определены свойства для конвертации объекта в словарь.</param>
         /// <param name="model">Edm-модель, указанная в ManagementToken.</param>
         /// <param name="serializeValues">Флаг: Нужно ли сериализовывать значения свойств объекта.</param>

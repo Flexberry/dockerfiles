@@ -20,7 +20,7 @@
     public class CustomizationEdmModelNames : BaseODataServiceIntegratedTest
     {
         /// <summary>
-        /// Осуществляет проверку того, что при запросах с параметром $count=true, возвращаются метаданные с количеством присланных объектов.
+        /// Осуществляет проверку того, что при запросах с параметром <text>$count=true</text>, возвращаются метаданные с количеством присланных объектов.
         /// </summary>
         [Fact]
         public void CustomizationEdmModelReadTest()
@@ -41,30 +41,11 @@
 
                 var objs = new DataObject[] { наследник };
                 args.DataService.UpdateObjects(ref objs);
-                string requestUrl;
-                
-                /*
-                requestUrl = $"http://localhost/odata/КлассСоСтроковымКлючомs?$filter=__PrimaryKey eq '{класс.__PrimaryKey}'";
-
-                // Обращаемся к OData-сервису и обрабатываем ответ.
-                using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
-                {
-                    // Убедимся, что запрос завершился успешно.
-                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-                    // Получим строку с ответом.
-                    string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
-
-                    // Преобразуем полученный объект в словарь.
-                    Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
-
-                    Assert.Equal(1, ((ArrayList)receivedDict["value"]).Count);
-                }*/
             });
         }
 
         /// <summary>
-        /// Осуществляет проверку того, что при запросах с параметром $count=true, возвращаются метаданные с количеством присланных объектов.
+        /// Осуществляет проверку того, что при запросах с параметром <text>$count=true</text>, возвращаются метаданные с количеством присланных объектов.
         /// </summary>
         [Fact]
         public void CustomizationEdmModelCreateTest()
@@ -84,6 +65,7 @@
                 детейл.Детейл2.Add(детейл2);
 
                 ExternalLangDef.LanguageDef.DataService = args.DataService;
+
                 // ------------------ Только создания объектов ------------------
                 // Подготовка тестовых данных в формате OData.
                 var controller = new Controllers.DataObjectController(args.DataService, args.Token.Model, args.Token.Events, args.Token.Functions);
@@ -97,8 +79,6 @@
                 var coll = controller.GetEdmCollection(наследник.Детейл, typeof(Детейл), 1, null);
                 edmObj.TrySetPropertyValue("DetailAlias", coll);
                 System.Web.OData.EdmEntityObject edmДетейл = (System.Web.OData.EdmEntityObject)coll[0];
-                //edmБерлога1.TrySetPropertyValue("ЛесРасположения", edmЛес1);
-                //edmБерлога2.TrySetPropertyValue("ЛесРасположения", edmЛес2);
 
                 // Формируем URL запроса к OData-сервису.
                 string requestUrl = string.Format("http://localhost/odata/{0}", args.Token.Model.GetEdmEntitySet(typeof(Наследник)).Name);
@@ -108,29 +88,6 @@
 
                 // Убедимся, что запрос завершился успешно.
                 Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-
-
-                //var objs = new DataObject[] { наследник };
-                //args.DataService.UpdateObjects(ref objs);
-                //string requestUrl;
-                
-                /*
-                requestUrl = $"http://localhost/odata/КлассСоСтроковымКлючомs?$filter=__PrimaryKey eq '{класс.__PrimaryKey}'";
-
-                // Обращаемся к OData-сервису и обрабатываем ответ.
-                using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
-                {
-                    // Убедимся, что запрос завершился успешно.
-                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-                    // Получим строку с ответом.
-                    string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
-
-                    // Преобразуем полученный объект в словарь.
-                    Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
-
-                    Assert.Equal(1, ((ArrayList)receivedDict["value"]).Count);
-                }*/
             });
         }
 
@@ -234,23 +191,6 @@
                     // Получим строку с ответом (в ней должна вернуться созданная сущность).
                     receivedJsonНаследник = response.Content.ReadAsStringAsync().Result.Beautify();
                 }
-
-                /*
-                var requestJsonDataБерлога = берлога1.ToJson(берлогаDynamicView);
-                var objJson = DataObjectDictionary.Parse(requestJsonDataБерлога, берлогаDynamicView);
-                receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedJsonМедв);
-                objJson.Add("Медведь@odata.bind", string.Format(
-                    "{0}({1})",
-                    args.Token.Model.GetEdmEntitySet(typeof(Медведь)).Name,
-                    receivedDict["__PrimaryKey"]));
-                requestJsonDataБерлога = objJson.Serialize();
-                requestUrl = string.Format("http://localhost/odata/{0}", args.Token.Model.GetEdmEntitySet(typeof(Берлога)).Name);
-                using (HttpResponseMessage response = args.HttpClient.PostAsJsonStringAsync(requestUrl, requestJsonDataБерлога).Result)
-                {
-                    Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-                }
-                */
-                
             });
         }
 

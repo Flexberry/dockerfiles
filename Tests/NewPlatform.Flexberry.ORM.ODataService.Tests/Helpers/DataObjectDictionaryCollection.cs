@@ -29,7 +29,7 @@
         /// </summary>
         /// <param name="dataObjects">Коллекция объектов данных.</param>
         /// <param name="dataObjectsView">Представление, по которому определены свойства для конвертации объектов в коллекцию словарей.</param>
-        /// <param name="model">Edm-модель, указанная в ManagementToken.</param>
+        /// <param name="model">Edm-модель, указанная в <see cref="ManagementToken"/>.</param>
         /// <param name="serializeValues">Флаг: Нужно ли сериализовывать значения свойств объекта данных.</param>
         public DataObjectDictionaryCollection(List<DataObject> dataObjects, View dataObjectsView, DataObjectEdmModel model, bool serializeValues = false)
             : base()
@@ -39,7 +39,7 @@
                 return;
             }
 
-            dataObjects.ForEach(x => Add(new DataObjectDictionary(x, dataObjectsView, model , serializeValues)));
+            dataObjects.ForEach(x => Add(new DataObjectDictionary(x, dataObjectsView, model, serializeValues)));
         }
 
         /// <summary>

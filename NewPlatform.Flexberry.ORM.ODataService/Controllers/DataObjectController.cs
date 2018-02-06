@@ -67,7 +67,7 @@
         /// <summary>
         /// Тип DataObject, который соответствует сущности в наборе из запроса. Заполняется в методе Init().
         /// </summary>
-        private Type _type;
+        public Type type { get; set; }
 
         /// <summary>
         /// Включать или нет в метаданные количество сущностей.
@@ -162,10 +162,10 @@
                 ODataPath odataPath = Request.ODataProperties().Path;
                 string key = odataPath.Segments[1].ToString().Trim().Replace("'", string.Empty);
                 Init();
-                var obj = LoadObject(_type, key);
+                var obj = LoadObject(type, key);
                 var result = Request.CreateResponse(
                     System.Net.HttpStatusCode.OK,
-                    GetEdmObject(_model.GetEdmEntityType(_type), obj, 1, null, _dynamicView));
+                    GetEdmObject(_model.GetEdmEntityType(type), obj, 1, null, _dynamicView));
 
                 return result;
             }
@@ -190,10 +190,10 @@
                 Guid key = new Guid(odataPath.Segments[1].ToString());
 
                 Init();
-                var obj = LoadObject(_type, key);
+                var obj = LoadObject(type, key);
                 var result = Request.CreateResponse(
                     System.Net.HttpStatusCode.OK,
-                    GetEdmObject(_model.GetEdmEntityType(_type), obj, 1, null, _dynamicView));
+                    GetEdmObject(_model.GetEdmEntityType(type), obj, 1, null, _dynamicView));
 
                 return result;
             }
@@ -214,7 +214,7 @@
             try
             {
                 Init();
-                return ExecuteExpression(_type);
+                return ExecuteExpression();
             }
             catch (Exception ex)
             {
@@ -350,33 +350,38 @@
         /// <returns>Сущность.</returns>
         internal EdmEntityObject GetEdmObject(IEdmEntityType entityType, object obj, int level, ExpandedNavigationSelectItem expandedNavigationSelectItem, DynamicView dynamicView)
         {
-            bool expandNavigationProperties = true;
             if (level == 0 || obj == null || (obj is DataObject && ((DataObject)obj).__PrimaryKey == null))
                 return null;
             EdmEntityObject entity = new EdmEntityObject(entityType);
 
             Dictionary<string, ExpandedNavigationSelectItem> expandedProperties = new Dictionary<string, ExpandedNavigationSelectItem>();
+            Dictionary<string, SelectItem> selectedProperties = new Dictionary<string, SelectItem>();
             IEnumerable<SelectItem> selectedItems = null;
             EdmEntityObject edmObj = null;
-            if (expandNavigationProperties)
+            if (expandedNavigationSelectItem == null)
             {
-                if (expandedNavigationSelectItem == null)
-                {
-                    if (QueryOptions != null && QueryOptions.SelectExpand != null)
-                        selectedItems = QueryOptions.SelectExpand.SelectExpandClause.SelectedItems;
-                }
-                else
-                {
-                    selectedItems = expandedNavigationSelectItem.SelectAndExpand.SelectedItems;
-                }
+                if (QueryOptions != null && QueryOptions.SelectExpand != null)
+                    selectedItems = QueryOptions.SelectExpand.SelectExpandClause.SelectedItems;
+            }
+            else
+            {
+                selectedItems = expandedNavigationSelectItem.SelectAndExpand.SelectedItems;
+            }
 
-                if (selectedItems != null)
+            if (selectedItems != null)
+            {
+                foreach (var item in selectedItems)
                 {
-                    foreach (var item in selectedItems)
+                    var expandedItem = CastExpandedNavigationSelectItem(item);
+                    if (expandedItem == null)
                     {
-                        var expandedItem = CastExpandedNavigationSelectItem(item);
-                        if (expandedItem == null)
-                            continue;
+                        if (item is PathSelectItem && (item as PathSelectItem).SelectedPath.FirstSegment is PropertySegment)
+                        {
+                            selectedProperties.Add(((item as PathSelectItem).SelectedPath.FirstSegment as PropertySegment).Property.Name, item);
+                        }
+                    }
+                    else
+                    {
                         expandedProperties.Add(((NavigationPropertySegment)expandedItem.PathToNavigationProperty.FirstSegment).NavigationProperty.Name, expandedItem);
                     }
                 }
@@ -384,8 +389,7 @@
 
             foreach (var prop in entityType.Properties())
             {
-                //var dataObjectPropName = prop.Name.Replace("Alias", "");
-                var dataObjectPropName = _model.GetDataObjectProperty(entityType.FullTypeName(), prop.Name).Name;
+                string dataObjectPropName = _model.GetDataObjectProperty(entityType.FullTypeName(), prop.Name).Name;
                 if (prop is EdmNavigationProperty)
                 {
                     if (expandedProperties.ContainsKey(prop.Name))
@@ -507,9 +511,12 @@
                         {
                             // Обработка файловых свойств объектов данных.
                             // ODataService будет возвращать строку с сериализованными метаданными файлового свойства.
-                            value = FileController.GetDataObjectFileProvider(propType)
-                                .GetFileDescription((DataObject)obj, prop.Name)
-                                ?.ToJson();
+                            if (selectedProperties.Count() == 0 || (selectedProperties.Count() > 0 && selectedProperties.ContainsKey(dataObjectPropName)))
+                            {
+                                value = FileController.GetDataObjectFileProvider(propType)
+                                    .GetFileDescription((DataObject)obj, dataObjectPropName)
+                                    ?.ToJson();
+                            }
                         }
                         else
                         {
@@ -560,7 +567,7 @@
             if (queryOpt.OrderBy != null)
             {
                 // queryable = queryOpt.OrderBy.ApplyTo(queryable, new ODataQuerySettings());
-                queryable = new OrderByQueryOption(queryOpt.OrderBy).ApplyTo(queryable, new ODataQuerySettings());
+                queryable = new OrderByQueryOption(queryOpt.OrderBy, type).ApplyTo(queryable, new ODataQuerySettings());
             }
 
             if (queryOpt.Skip != null)
@@ -647,7 +654,17 @@
         /// <returns>Параметры запроса OData.</returns>
         public ODataQueryOptions CreateODataQueryOptions(Type type)
         {
-            return new ODataQueryOptions(CreateODataQueryContext(type), Request);
+            return CreateODataQueryOptions(type, Request);
+        }
+
+        /// <summary>
+        /// Создаёт параметры запроса OData.
+        /// </summary>
+        /// <param name="type">Тип DataObject.</param>
+        /// <returns>Параметры запроса OData.</returns>
+        public ODataQueryOptions CreateODataQueryOptions(Type type, HttpRequestMessage request)
+        {
+            return new ODataQueryOptions(CreateODataQueryContext(type), request);
         }
 
         private IQueryable FilterApplyTo(FilterQueryOption filter, IQueryable query)
@@ -669,7 +686,7 @@
                 throw Error.ArgumentNull("assembliesResolver");
             }
 
-            if (filter.Context.ElementClrType == null)
+            if (type == null)
             {
                 throw Error.NotSupported(SRResources.ApplyToOnUntypedQueryOption, "ApplyTo");
             }
@@ -688,7 +705,7 @@
                 updatedSettings.HandleNullPropagation = HandleNullPropagationOptionHelper.GetDefaultHandleNullPropagationOption(query);
             }
 
-            FilterBinder binder = FilterBinder.Transform(filterClause, filter.Context.ElementClrType, filter.Context.Model, assembliesResolver, updatedSettings);
+            FilterBinder binder = FilterBinder.Transform(filterClause, type, filter.Context.Model, assembliesResolver, updatedSettings);
             _filterDetailProperties = binder.FilterDetailProperties;
             if (binder.IsOfTypesList.Count > 0)
             {
@@ -699,7 +716,7 @@
                 _lcsLoadingTypes.Clear();
             }
 
-            query = ExpressionHelpers.Where(query, binder.LinqExpression, filter.Context.ElementClrType);
+            query = ExpressionHelpers.Where(query, binder.LinqExpression, type);
             return query;
         }
 
@@ -720,12 +737,12 @@
         /// <returns>Сущность или коллекция сущностей.</returns>
         private IEdmObject EvaluateOdataPath()
         {
-            _type = _model.GetDataObjectType(Request.ODataProperties().Path.Segments.OfType<EntitySetPathSegment>().First().ToString());
+            type = _model.GetDataObjectType(Request.ODataProperties().Path.Segments.OfType<EntitySetPathSegment>().First().ToString());
             DetailArray detail = null;
             ODataPath odataPath = Request.ODataProperties().Path;
             Guid key = new Guid(odataPath.Segments[1].ToString());
             IEdmEntityType entityType = null;
-            var obj = LoadObject(_type, key);
+            var obj = LoadObject(type, key);
             if (obj == null)
             {
                 throw new InvalidOperationException("Not Found OData Path Segment " + 1);
@@ -734,8 +751,8 @@
             bool returnCollection = false;
             for (int i = 2; i < odataPath.Segments.Count; i++)
             {
-                _type = obj.GetType();
-                entityType = _model.GetEdmEntityType(_type);
+                type = obj.GetType();
+                entityType = _model.GetEdmEntityType(type);
                 string propName = odataPath.Segments[i].ToString();
                 EdmNavigationProperty navProp = (EdmNavigationProperty)entityType.FindProperty(propName);
 
@@ -785,14 +802,14 @@
             entityType = _model.GetEdmEntityType(obj.GetType());
             if (returnCollection)
             {
-                _type = detail.ItemType;
+                type = detail.ItemType;
             }
             else
             {
-                _type = obj.GetType();
+                type = obj.GetType();
             }
 
-            QueryOptions = new ODataQueryOptions(new ODataQueryContext(_model, _type, Request.ODataProperties().Path), Request);
+            QueryOptions = new ODataQueryOptions(new ODataQueryContext(_model, type, Request.ODataProperties().Path), Request);
             if (QueryOptions.SelectExpand != null && QueryOptions.SelectExpand.SelectExpandClause != null)
             {
                 Request.ODataProperties().SelectExpandClause = QueryOptions.SelectExpand.SelectExpandClause;
@@ -800,8 +817,8 @@
 
             if (returnCollection)
             {
-                IQueryable queryable = ApplyExpression(_type, QueryOptions, detail.GetAllObjects());
-                return GetEdmCollection(queryable, _type, 1, null);
+                IQueryable queryable = ApplyExpression(type, QueryOptions, detail.GetAllObjects());
+                return GetEdmCollection(queryable, type, 1, null);
             }
 
             return GetEdmObject(entityType, obj, 1, null);
@@ -849,10 +866,10 @@
         /// </summary>
         /// <param name="type">Тип DataObject.</param>
         /// <returns>Набор сущностей.</returns>
-        private HttpResponseMessage ExecuteExpression(Type type)
+        private HttpResponseMessage ExecuteExpression()
         {
             _objs = new DataObject[0];
-            _lcs = CreateLcs(type);
+            _lcs = CreateLcs();
             int count = -1;
             bool callExecuteCallbackBeforeGet = true;
             IncludeCount = false;
@@ -887,7 +904,7 @@
             return msg;
         }
 
-        private LoadingCustomizationStruct CreateLcs(Type type)
+        public LoadingCustomizationStruct CreateLcs()
         {
             Expression expr = GetExpression(type, QueryOptions);
             if (_filterDetailProperties != null && _filterDetailProperties.Count > 0)
@@ -934,8 +951,8 @@
         /// </summary>
         private void Init()
         {
-            _type = _model.GetDataObjectType(Request.ODataProperties().Path.Segments.OfType<EntitySetPathSegment>().First().ToString());
-            QueryOptions = new ODataQueryOptions(new ODataQueryContext(_model, _type, Request.ODataProperties().Path), Request);
+            type = _model.GetDataObjectType(Request.ODataProperties().Path.Segments.OfType<EntitySetPathSegment>().First().ToString());
+            QueryOptions = new ODataQueryOptions(new ODataQueryContext(_model, type, Request.ODataProperties().Path), Request);
             if (QueryOptions.SelectExpand != null && QueryOptions.SelectExpand.SelectExpandClause != null)
             {
                 Request.ODataProperties().SelectExpandClause = QueryOptions.SelectExpand.SelectExpandClause;
@@ -1043,20 +1060,20 @@
         {
             if (QueryOptions.SelectExpand == null || QueryOptions.SelectExpand.SelectExpandClause == null)
             {
-                var properties = DynamicView.GetProperties(_type);
+                var properties = DynamicView.GetProperties(type);
                 if (_filterDetailProperties != null && _filterDetailProperties.Count > 0)
                 {
                     properties.AddRange(_filterDetailProperties);
                 }
 
-                _dynamicView = DynamicView.Create(_type, properties /*, _model.DynamicViewCache */); // TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                _dynamicView = DynamicView.Create(type, properties /*, _model.DynamicViewCache */); // TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 return;
             }
 
             List<string> props = new List<string>();
             if (QueryOptions.SelectExpand.SelectExpandClause.AllSelected)
             {
-                var props2 = DynamicView.GetProperties(_type);
+                var props2 = DynamicView.GetProperties(type);
                 props.AddRange(props2);
             }
 
@@ -1098,7 +1115,7 @@
                 props.AddRange(_filterDetailProperties);
             }
 
-            _dynamicView = DynamicView.Create(_type, props /*, _model.DynamicViewCache */); // TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            _dynamicView = DynamicView.Create(type, props /*, _model.DynamicViewCache */); // TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
 
         private void GetPropertiesForDynamicView(ExpandedNavigationSelectItem parent, IEnumerable<SelectItem> selectedItems)

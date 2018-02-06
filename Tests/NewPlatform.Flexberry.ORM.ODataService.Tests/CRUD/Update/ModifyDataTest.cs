@@ -770,5 +770,127 @@
                 }
             });
         }
+
+        /// <summary>
+        /// Осуществляет проверку обновления мастера с иерархическими детейлами.
+        /// Мастер и детейлы заданы и модифицируются.
+        /// Объекты с изменениями передается JSON-строкой.
+        /// </summary>
+        [Fact]
+        public void UpdateCicleDeteilTest()
+        {
+            ActODataService(args =>
+            {
+                // Мастер тестирования обновления.
+                TestMaster testMaster1 = new TestMaster { TestMasterName = "TestMasterName" };
+                var objs = new DataObject[] { testMaster1 };
+                args.DataService.UpdateObjects(ref objs);
+
+                // Колличество создаваемых детейлов.
+                int deteilCount = 20;
+
+                // Детейлы тестирования обновления.
+                TestDetailWithCicle[] testDetailWithCicleArray = new TestDetailWithCicle[deteilCount];
+                TestDetailWithCicle testDetailWithCicle = null;
+
+                for (int i = 0; i < deteilCount; i++)
+                {
+                    if (i == 0)
+                    {
+                        testDetailWithCicle = new TestDetailWithCicle { TestDetailName = "TestDeteilName0", TestMaster = testMaster1 };
+                    }
+                    else
+                    {
+                        testDetailWithCicle = new TestDetailWithCicle { TestDetailName = "TestDeteilName" + i.ToString(), TestMaster = testMaster1, Parent = testDetailWithCicle };
+                    }
+
+                    testDetailWithCicleArray[i] = testDetailWithCicle;
+                    objs = new DataObject[] { testDetailWithCicle };
+                    args.DataService.UpdateObjects(ref objs);
+                }
+
+                // Обновляем атрибут мастера.
+                testMaster1.TestMasterName = "TestMasterNameUpdate";
+
+                // Представление, по которому будем обновлять.
+                string[] testMasterPropertiesNames =
+                {
+                    Information.ExtractPropertyPath<TestMaster>(x => x.__PrimaryKey),
+                    Information.ExtractPropertyPath<TestMaster>(x => x.TestMasterName)
+                };
+                var testMasterDynamicView = new View(new ViewAttribute("testMasterDynamicView", testMasterPropertiesNames), typeof(TestMaster));
+
+                // Преобразуем объект данных в JSON-строку.
+                string requestJsonData = testMaster1.ToJson(testMasterDynamicView, args.Token.Model);
+
+                // Формируем URL запроса к OData-сервису (с идентификатором изменяемой сущности).
+                string requestUrl = string.Format("http://localhost/odata/{0}({1})", args.Token.Model.GetEdmEntitySet(typeof(TestMaster)).Name, ((ICSSoft.STORMNET.KeyGen.KeyGuid)testMaster1.__PrimaryKey).Guid.ToString());
+
+                // Обращаемся к OData-сервису и обрабатываем ответ, в теле запроса передаем обновляемый объект в формате JSON.
+                using (HttpResponseMessage response = args.HttpClient.PatchAsJsonStringAsync(requestUrl, requestJsonData).Result)
+                {
+                    // Убедимся, что запрос завершился успешно (тело ответа д.б. пустым при отсутствии ошибок обновления).
+                    Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+
+                    // Проверяем что объект данных был обновлен в базе, причем только по переданным атрибутам.
+                    TestMaster updatedTestMaster = new TestMaster { __PrimaryKey = testMaster1.__PrimaryKey };
+                    args.DataService.LoadObject(updatedTestMaster);
+
+                    Assert.Equal(testMaster1.TestMasterName, updatedTestMaster.TestMasterName);
+                }
+
+                // Обновление атрибутов Детейлов.
+                for (int i = 0; i < deteilCount; i++)
+                {
+                    testDetailWithCicleArray[i].TestDetailName += "Update";
+                }
+
+                // Представление, по которому будем обновлять.
+                string[] testDetailWithCiclePropertiesNames =
+                {
+                    Information.ExtractPropertyPath<TestDetailWithCicle>(x => x.__PrimaryKey),
+                    Information.ExtractPropertyPath<TestDetailWithCicle>(x => x.TestDetailName)
+                };
+
+                var testDetailWithCicleDynamicView = new View(new ViewAttribute("testDetailWithCicleDynamicView", testDetailWithCiclePropertiesNames), typeof(TestDetailWithCicle));
+
+                for (int i = 0; i < deteilCount; i++)
+                {
+                    // Преобразуем объект данных в JSON-строку.
+                    string requestJsonDatatestDetailWithCicle = testDetailWithCicleArray[i].ToJson(testDetailWithCicleDynamicView, args.Token.Model);
+                    DataObjectDictionary objJson = DataObjectDictionary.Parse(requestJsonDatatestDetailWithCicle, testDetailWithCicleDynamicView, args.Token.Model);
+
+                    objJson.Add("TestMaster@odata.bind", string.Format(
+                        "{0}({1})",
+                        args.Token.Model.GetEdmEntitySet(typeof(TestMaster)).Name,
+                        ((KeyGuid)testMaster1.__PrimaryKey).Guid.ToString("D")));
+
+                    if (i != 0)
+                    {
+                        objJson.Add("Parent@odata.bind", string.Format(
+                            "{0}({1})",
+                            args.Token.Model.GetEdmEntitySet(typeof(TestDetailWithCicle)).Name,
+                            ((KeyGuid)testDetailWithCicleArray[i - 1].__PrimaryKey).Guid.ToString("D")));
+                    }
+
+                    requestJsonDatatestDetailWithCicle = objJson.Serialize();
+
+                    // Формируем URL запроса к OData-сервису.
+                    requestUrl = string.Format("http://localhost/odata/{0}({1})", args.Token.Model.GetEdmEntitySet(typeof(TestDetailWithCicle)).Name, ((KeyGuid)testDetailWithCicleArray[i].__PrimaryKey).Guid.ToString());
+
+                    using (HttpResponseMessage response = args.HttpClient.PatchAsJsonStringAsync(requestUrl, requestJsonDatatestDetailWithCicle).Result)
+                    {
+                        // Убедимся, что запрос завершился успешно (тело ответа д.б. пустым при отсутствии ошибок обновления).
+                        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+
+                        // Проверяем что объект данных был обновлен в базе, причем только по переданным атрибутам.
+                        TestDetailWithCicle updatedTestDetailWithCicle = new TestDetailWithCicle { __PrimaryKey = testDetailWithCicleArray[i].__PrimaryKey };
+                        args.DataService.LoadObject(updatedTestDetailWithCicle);
+
+                        Assert.Equal(testDetailWithCicleArray[i].TestDetailName, updatedTestDetailWithCicle.TestDetailName);
+                    }
+                }
+            });
+        }
     }
 }

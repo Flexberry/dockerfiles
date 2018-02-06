@@ -68,12 +68,12 @@
         }
 
         /// <summary>
-        /// Deserializes the given <paramref name="structuralProperty"/> into <paramref name="entityResource"/>.
+        /// Десериалезует <paramref name="structuralProperty"/> в <paramref name="entityResource"/>.
         /// </summary>
-        /// <param name="entityResource">The object into which the structural property should be read.</param>
-        /// <param name="structuralProperty">The entry object containing the structural properties.</param>
-        /// <param name="entityType">The entity type of the entity resource.</param>
-        /// <param name="readContext">The deserializer context.</param>
+        /// <param name="entityResource">Объект, в который  structural property будет прочитано.</param>
+        /// <param name="structuralProperty">Объект содержащий structural properties.</param>
+        /// <param name="entityType">Тип сущности.</param>
+        /// <param name="readContext">Состояние и установки, используемые при чтении.</param>
         public override void ApplyStructuralProperty(object entityResource, ODataProperty structuralProperty,
             IEdmEntityTypeReference entityType, ODataDeserializerContext readContext)
         {

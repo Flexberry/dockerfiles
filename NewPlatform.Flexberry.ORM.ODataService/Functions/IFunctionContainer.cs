@@ -21,6 +21,12 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Functions
         void Register(Delegate function);
 
         /// <summary>
+        /// Registers the specified delegate as OData Service action.
+        /// </summary>
+        /// <param name="function">The function.</param>
+        void RegisterAction(Delegate function);
+
+        /// <summary>
         /// Determines whether the specified OData Service function is already registered.
         /// </summary>
         /// <param name="functionName">The name of the function.</param>

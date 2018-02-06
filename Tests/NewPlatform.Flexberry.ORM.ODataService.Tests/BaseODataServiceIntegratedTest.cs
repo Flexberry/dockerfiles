@@ -46,15 +46,15 @@
 
         public BaseODataServiceIntegratedTest(
             string stageCasePath = @"РТЦ Тестирование и документирование\Модели для юнит-тестов\Flexberry ORM\NewPlatform.Flexberry.ORM.ODataService.Tests\",
-            bool useNamespaceInEntitySerName = false)
-            : base("ODataDB")
+            bool useNamespaceInEntitySetName = false, bool useGisDataService = false)
+            : base("ODataDB", useGisDataService)
         {
             DataObjectsAssembliesNames = new[]
             {
                 typeof(Car).Assembly,
                 //typeof(Agent).Assembly
             };
-            UseNamespaceInEntitySetName = useNamespaceInEntitySerName;
+            UseNamespaceInEntitySetName = useNamespaceInEntitySetName;
             var builder = new DefaultDataObjectEdmModelBuilder(DataObjectsAssembliesNames, UseNamespaceInEntitySetName);
             //builder.PropertyFilter = PropertyFilter;
             _builder = builder;

@@ -325,6 +325,13 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
             return reverseLookupClrType;
         }
 
+        public static bool IsNotNavigable(IEdmProperty edmProperty, IEdmModel edmModel)
+        {
+            QueryableRestrictionsAnnotation annotation = GetPropertyRestrictions(edmProperty, edmModel);
+            return annotation == null ? false : annotation.Restrictions.NotNavigable;
+        }
+
+
         // Mangle the invalid EDM literal Type.FullName (System.Collections.Generic.IEnumerable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]])
         // to a valid EDM literal (the C# type name IEnumerable<int>).
         private static string EdmName(this Type clrType)
@@ -410,5 +417,14 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
             return result;
         }
+
+        private static QueryableRestrictionsAnnotation GetPropertyRestrictions(IEdmProperty edmProperty, IEdmModel edmModel)
+        {
+            Contract.Assert(edmProperty != null);
+            Contract.Assert(edmModel != null);
+
+            return edmModel.GetAnnotationValue<QueryableRestrictionsAnnotation>(edmProperty);
+        }
+
     }
 }

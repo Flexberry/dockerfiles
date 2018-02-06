@@ -63,9 +63,9 @@
             return a + b;
         }
 
-        private static int AddWithQueryParameters(QueryParameters @params, int a, int b)
+        private static int AddWithQueryParameters(QueryParameters queryParameters, int a, int b)
         {
-            Assert.NotNull(@params);
+            Assert.NotNull(queryParameters);
 
             return a + b;
         }

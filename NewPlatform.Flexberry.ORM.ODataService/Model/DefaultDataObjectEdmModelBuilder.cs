@@ -247,12 +247,15 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Model
         private string BuildEntitySetName(Type dataObjectType)
         {
             PublishNameAttribute attr = dataObjectType.GetCustomAttribute<PublishNameAttribute>(false);
-            if (attr != null)
+            if (attr != null && !string.IsNullOrEmpty(attr.EntitySetPublishName))
             {
                 return attr.EntitySetPublishName;
             }
 
-            return string.Concat(_useNamespaceInEntitySetName ? dataObjectType.FullName.Replace(".", string.Empty) : dataObjectType.Name, "s"/* "Aliases"*/).Replace("_", string.Empty);
+            string typeName = BuildEntityTypeName(dataObjectType);
+            string nameSpace = BuildEntityTypeNamespace(dataObjectType);
+            return string.Concat(_useNamespaceInEntitySetName ? $"{nameSpace}.{typeName}".Replace(".", string.Empty) : typeName, "s"/* "Aliases"*/).Replace("_", string.Empty);
+            //return string.Concat(_useNamespaceInEntitySetName ? dataObjectType.FullName.Replace(".", string.Empty) : dataObjectType.Name, "s"/* "Aliases"*/).Replace("_", string.Empty);
         }
 
         /// <summary>

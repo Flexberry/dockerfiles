@@ -57,6 +57,11 @@
                 return "GetODataFunctionsExecute";
             }
 
+            if (odataPath.Segments.Count > 0 && odataPath.Segments[odataPath.Segments.Count - 1] is UnboundActionPathSegment)
+            {
+                return "PostODataActionsExecute";
+            }
+
             if ((odataPath.Segments.Count > 1 && odataPath.Segments[odataPath.Segments.Count - 1] is NavigationPathSegment) ||
                 (odataPath.Segments.Count > 2 && odataPath.Segments[odataPath.Segments.Count - 2] is NavigationPathSegment))
             {

@@ -24,7 +24,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
     /// Наследник.
     /// </summary>
     // *** Start programmer edit section *** (Наследник CustomAttributes)
-    [PublishName("NewPlatform.Flexberry.ORM.ODataService.Tests.DescendantAlias", "DescendantAliases")]
+    [PublishName("NewPlatform.Flexberry.ORM.ODataService.Tests.DescendantAlias")]
     // *** End programmer edit section *** (Наследник CustomAttributes)
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.none)]

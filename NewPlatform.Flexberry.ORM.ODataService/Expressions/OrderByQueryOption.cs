@@ -36,13 +36,16 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
         /// </summary>
         public IList<OrderByNode> OrderByNodes { get; private set; }
 
+        private Type _contextElementClrType;
+
         /// <summary>
         /// Создает экземпляр NewPlatform.Flexberry.ORM.ODataService.Expressions.OrderByQueryOption по экземпляру System.Web.OData.Query.OrderByQueryOption.
         /// </summary>
         /// <param name="orderByQueryOption">Экземпляр System.Web.OData.Query.OrderByQueryOption.</param>
-        public OrderByQueryOption(System.Web.OData.Query.OrderByQueryOption orderByQueryOption)
+        public OrderByQueryOption(System.Web.OData.Query.OrderByQueryOption orderByQueryOption, Type contextElementClrType)
         {
             Context = orderByQueryOption.Context;
+            _contextElementClrType = contextElementClrType;
             OrderByNodes = orderByQueryOption.OrderByNodes;
         }
 
@@ -60,7 +63,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
         private IOrderedQueryable ApplyToCore(IQueryable query, ODataQuerySettings querySettings)
         {
-            if (Context.ElementClrType == null)
+            if (_contextElementClrType == null)
             {
                 throw Error.NotSupported(SRResources.ApplyToOnUntypedQueryOption, "ApplyTo");
             }
@@ -98,7 +101,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
                     }
                     else
                     {
-                        querySoFar = ExpressionHelpers.OrderByProperty(querySoFar, Context.Model, property, direction, Context.ElementClrType, alreadyOrdered);
+                        querySoFar = ExpressionHelpers.OrderByProperty(querySoFar, Context.Model, property, direction, _contextElementClrType, alreadyOrdered);
                     }
 
                     alreadyOrdered = true;
@@ -124,7 +127,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
                         throw new ODataException(Error.Format(SRResources.OrderByDuplicateIt));
                     }
 
-                    querySoFar = ExpressionHelpers.OrderByIt(querySoFar, node.Direction, Context.ElementClrType, alreadyOrdered);
+                    querySoFar = ExpressionHelpers.OrderByIt(querySoFar, node.Direction, _contextElementClrType, alreadyOrdered);
                     alreadyOrdered = true;
                     orderByItSeen = true;
                 }
@@ -146,8 +149,8 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
             }
 
             LambdaExpression orderByExpression =
-                FilterBinder.Bind(orderbyClause, Context.ElementClrType, Context.Model, updatedSettings);
-            querySoFar = ExpressionHelpers.OrderBy(querySoFar, orderByExpression, direction, Context.ElementClrType, alreadyOrdered);
+                FilterBinder.Bind(orderbyClause, _contextElementClrType, Context.Model, updatedSettings);
+            querySoFar = ExpressionHelpers.OrderBy(querySoFar, orderByExpression, direction, _contextElementClrType, alreadyOrdered);
             return querySoFar;
         }
     }

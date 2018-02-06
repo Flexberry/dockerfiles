@@ -2,6 +2,8 @@
 {
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
+    using System;
+    using System.Net;
 
     /// <summary>
     /// Тип делегата, вызываемого перед выполнением запроса.
@@ -54,4 +56,13 @@
     /// </summary>
     /// <param name="obj">Объект перед удалением.</param>
     public delegate void DelegateAfterDelete(DataObject obj);
+
+    /// <summary>
+    /// Тип делегата, вызываемого после возникновения исключения.
+    /// </summary>
+    /// <param name="ex">Исключение, которое возникло внутри ODataService.</param>
+    /// <param name="code">Возвращаемый код HTTP. По-умолчанияю 500.</param>
+    /// <returns>Исключение, которое будет отправлено клиенту.</returns>
+    public delegate Exception DelegateAfterInternalServerError(Exception ex, ref HttpStatusCode code);
+
 }

@@ -71,7 +71,7 @@
                 DataObject obj = UpdateObject(edmEntity, null);
                 ExecuteCallbackAfterCreate(obj);
 
-                edmEntity = GetEdmObject(_model.GetEdmEntityType(_type), obj, 1, null, null);
+                edmEntity = GetEdmObject(_model.GetEdmEntityType(type), obj, 1, null, null);
                 var responseForPreferMinimal = TestPreferMinimal();
                 if (responseForPreferMinimal != null)
                 {
@@ -153,7 +153,7 @@
                     return Request.CreateResponse(System.Net.HttpStatusCode.NoContent);
                 }
 
-                edmEntity = GetEdmObject(_model.GetEdmEntityType(_type), obj, 1, null, null);
+                edmEntity = GetEdmObject(_model.GetEdmEntityType(type), obj, 1, null, null);
                 var result = Request.CreateResponse(System.Net.HttpStatusCode.OK, edmEntity);
                 result.Headers.Add("Preference-Applied", "return=representation");
                 return result;
@@ -201,7 +201,7 @@
 
                 Init();
 
-                var obj = (DataObject)Activator.CreateInstance(_type);
+                var obj = (DataObject)Activator.CreateInstance(type);
                 obj.SetExistObjectPrimaryKey(key);
 
                 // Раз объект данных удаляется, то и все ассоциированные с ним файлы должны быть удалены.
@@ -237,12 +237,22 @@
         }
 
         /// <summary>
-        /// Создаётся http-ответ с кодом 500, на возникшую в сервисе ошибку.
+        /// Создаётся http-ответ с кодом 500 по-умолчанию, на возникшую в сервисе ошибку.
+        /// Для изменения возвращаемого кода необходимо реализовать обработчик CallbackAfterInternalServerError.
         /// </summary>
         /// <param name="ex">Ошибка сервиса.</param>
-        /// <returns>Http-ответ с кодом 500.</returns>
+        /// <returns>Http-ответ.</returns>
         private HttpResponseMessage InternalServerErrorMessage(Exception ex)
         {
+            HttpStatusCode code = HttpStatusCode.InternalServerError;
+            Exception originalEx = ex;
+            ex = ExecuteCallbackAfterInternalServerError(ex, ref code);
+
+            if (ex == null)
+            {
+                ex = new Exception("Exception is null.");
+            }
+
             StringBuilder details = new StringBuilder();
             StringBuilder trace = new StringBuilder();
             var ex2 = ex;
@@ -250,7 +260,7 @@
             {
                 string detailsItem =
                     "{" +
-                    $"{JsonConvert.ToString("code")}: {JsonConvert.ToString("500")}, " +
+                    $"{JsonConvert.ToString("code")}: {JsonConvert.ToString($"{(int)code}")}, " +
                     $"{JsonConvert.ToString("message")}: {JsonConvert.ToString(ex2.InnerException.Message)}" +
                     "}";
                 if (details.Length > 0)
@@ -277,12 +287,12 @@
             details.Insert(0, "[").Append("]");
             trace.Insert(0, $"{{{JsonConvert.ToString("trace")}: [").Append("]}");
 
-            HttpResponseMessage msg = Request.CreateResponse(HttpStatusCode.InternalServerError);
+            HttpResponseMessage msg = Request.CreateResponse(code);
             msg.Content = new StringContent(
                 "{" +
                 $"{JsonConvert.ToString("error")}: " +
                 "{ " +
-                $"{JsonConvert.ToString("code")}: {JsonConvert.ToString("500")}, " +
+                $"{JsonConvert.ToString("code")}: {JsonConvert.ToString($"{(int)code}")}, " +
                 $"{JsonConvert.ToString("message")}: {JsonConvert.ToString(ex.Message)}, " +
                 $"{JsonConvert.ToString("details")}: {details.ToString()}, " +
                 $"{JsonConvert.ToString("innererror")}: {trace.ToString()}" +
@@ -290,7 +300,7 @@
                 "}",
                 Encoding.UTF8,
                 "application/json");
-            LogService.LogError("Internal Server Error.", ex);
+            LogService.LogError(originalEx.Message, originalEx);
             return msg;
         }
 
@@ -544,7 +554,7 @@
             // Все свойства объекта данных означим из пришедшей сущности, если они были там установлены(изменены).
             foreach (var prop in entityType.Properties())
             {
-                var dataObjectPropName = _model.GetDataObjectProperty(entityType.FullTypeName(), prop.Name).Name;
+                string dataObjectPropName = _model.GetDataObjectProperty(entityType.FullTypeName(), prop.Name).Name;
                 if (edmEntity.GetChangedPropertyNames().Contains(prop.Name))
                 {
                     // Обработка мастеров и детейлов.

@@ -4,6 +4,31 @@
 
 
 
+CREATE TABLE "TestDetailWithCicle" (
+
+ "primaryKey" RAW(16) NOT NULL,
+
+ "TestDetailName" NVARCHAR2(255) NULL,
+
+ "Parent" RAW(16) NULL,
+
+ "TestMaster" RAW(16) NOT NULL,
+
+ PRIMARY KEY ("primaryKey")
+
+ );
+
+CREATE TABLE "TestMaster"
+(
+
+	 "primaryKey" RAW(16) NOT NULL,
+
+	 "TestMasterName" NVARCHAR2(255) NULL,
+
+	 PRIMARY KEY ("primaryKey")
+
+ );
+
 CREATE TABLE "Детейл2"
 (
 

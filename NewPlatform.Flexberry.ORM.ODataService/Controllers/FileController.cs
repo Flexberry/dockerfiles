@@ -65,7 +65,7 @@
                 return baseUrl;
             }
 
-            internal set
+            set
             {
                 baseUrl = value;
                 dataObjectFileProviders.ForEach(x => x.FileBaseUrl = baseUrl);

@@ -4,6 +4,7 @@
 
 namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 {
+    using Microsoft.Spatial;
     using System;
     using System.Collections.Generic;
     using System.Data.Linq;
@@ -1095,6 +1096,8 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
                 case ClrCanonicalFunctions.TimeFunctionName:
                     return BindTime(node);
 
+                case "geo.intersects":
+                    return BindGeoIntersects(node);
                 case "now":
                     return BindNow(node);
                 case "isof":
@@ -1629,6 +1632,19 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
             Contract.Assert(arguments.Length == 1 && arguments[0].Type == typeof(string));
 
             return MakeFunctionCall(ClrCanonicalFunctions.Length, arguments);
+        }
+
+        private Expression BindGeoIntersects(SingleValueFunctionCallNode node)
+        {
+            Contract.Assert(node.Name == "geo.intersects");
+
+            Expression[] arguments = node.Parameters.OfType<NamedFunctionParameterNode>().Select(n => Bind(n.Value)).ToArray();
+
+            Contract.Assert(arguments.Length == 2 &&
+                (arguments[0].Type == typeof(Geography) || arguments[0].Type.IsSubclassOf(typeof(Geography))) &&
+                arguments[1].Type == typeof(Geography) || arguments[1].Type.IsSubclassOf(typeof(Geography)));
+
+            return MakeFunctionCall(ClrCanonicalFunctions.GeoIntersects, arguments[0], arguments[1]);
         }
 
         private Expression BindContains(SingleValueFunctionCallNode node)

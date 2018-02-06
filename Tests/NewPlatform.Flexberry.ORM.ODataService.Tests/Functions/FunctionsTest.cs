@@ -16,11 +16,11 @@
 
     using NewPlatform.Flexberry.ORM.ODataService.Functions;
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
+    using System.Text;
 
     /// <summary>
     /// Класс тестов для тестирования метаданных, получаемых от OData-сервиса.
     /// </summary>
-    
     public class FunctionsTest : BaseODataServiceIntegratedTest
     {
         /// <summary>
@@ -32,9 +32,42 @@
         {
             Dictionary<string, Type> parametersTypes = new Dictionary<string, Type>();
 
+            if (!container.IsRegistered("FunctionWithLcs1"))
+            {
+                parametersTypes = new Dictionary<string, Type> { { "entitySet", typeof(string) } };
+                container.Register(new Function(
+                    "FunctionWithLcs1",
+                    (queryParameters, parameters) =>
+                    {
+                        var type = queryParameters.GetDataObjectType(parameters["entitySet"] as string);
+                        var lcs = queryParameters.CreateLcs(type);
+                        var dobjs = dataService.LoadObjects(lcs);
+                        return dobjs.AsEnumerable();
+                    },
+                    typeof(IEnumerable<DataObject>),
+                    parametersTypes));
+            }
+
+            if (!container.IsRegistered("FunctionWithLcs2"))
+            {
+                parametersTypes = new Dictionary<string, Type> { { "entitySet", typeof(string) }, { "query", typeof(string) } };
+                container.Register(new Function(
+                    "FunctionWithLcs2",
+                    (queryParameters, parameters) =>
+                    {
+                        var type = queryParameters.GetDataObjectType(parameters["entitySet"] as string);
+                        var uri = $"http://a/b/c?{parameters["query"]}";
+                        var lcs = queryParameters.CreateLcs(type, uri);
+                        var dobjs = dataService.LoadObjects(lcs);
+                        return dobjs.Length;
+                    },
+                    typeof(int),
+                    parametersTypes));
+            }
+
             if (!container.IsRegistered("FunctionString"))
             {
-                parametersTypes.Add("stringParam", typeof(string));
+                parametersTypes = new Dictionary<string, Type> { { "stringParam", typeof(string) } };
                 container.Register(new Function(
                     "FunctionString",
                     (queryParameters, parameters) => parameters["stringParam"],
@@ -95,6 +128,109 @@
                     typeof(Медведь),
                     parametersTypes));
             }
+
+            if (!container.IsRegistered("FunctionEnum"))
+            {
+                parametersTypes = new Dictionary<string, Type> { { "пол", typeof(tПол) } };
+                container.Register(new Function(
+                    "FunctionEnum",
+                    (queryParameters, parameters) =>
+                    {
+                        return (tПол)parameters["пол"];
+                    },
+                    typeof(tПол),
+                    parametersTypes));
+            }
+        }
+
+        /// <summary>
+        /// Осуществляет проверку возвращаемого значения перечисления.
+        /// </summary>
+        [Fact]
+        public void TestFunctionEnum()
+        {
+            ActODataService(args =>
+            {
+                RegisterODataUserFunctions(args.Token.Functions, args.DataService);
+
+                // Формируем URL запроса к OData-сервису.
+                string requestUrl = $"http://localhost/odata/FunctionEnum(пол=NewPlatform.Flexberry.ORM.ODataService.Tests.tПол'Мужской')";
+
+                // Обращаемся к OData-сервису и обрабатываем ответ.
+                using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
+                {
+                    // Убедимся, что запрос завершился успешно.
+                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                    // Получим строку с ответом.
+                    string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
+
+                    // Преобразуем полученный объект в словарь.
+                    Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
+
+                    Assert.True(receivedDict.ContainsKey("value"));
+                    Assert.True(receivedDict["value"] as string == "Мужской");
+                }
+            });
+        }
+
+        /// <summary>
+        /// Осуществляет проверку возвращаемых значений функциями OData, которые используют LCS, созданный на основе запроса OData.
+        /// </summary>
+        [Fact]
+        public void TestFunctionFunctionWithLcs()
+        {
+            ActODataService(args =>
+            {
+                RegisterODataUserFunctions(args.Token.Functions, args.DataService);
+
+                // Создаем объекты и кладем их в базу данных.
+                DataObject[] countries = new DataObject[5];
+                int countriesCount = countries.Length;
+                for (int i = 0; i < countriesCount; i++)
+                {
+                    countries[i] = new Страна { Название = $"Страна №{i}" };
+                }
+
+                args.DataService.UpdateObjects(ref countries);
+
+                // Формируем URL запроса к OData-сервису.
+                string requestUrl = $"http://localhost/odata/FunctionWithLcs2(entitySet='Странаs',query='$filter=Название eq ''Страна №1''')";
+
+                // Обращаемся к OData-сервису и обрабатываем ответ.
+                using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
+                {
+                    // Убедимся, что запрос завершился успешно.
+                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                    // Получим строку с ответом.
+                    string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
+
+                    // Преобразуем полученный объект в словарь.
+                    Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
+
+                    Assert.True(receivedDict.ContainsKey("value"));
+                    Assert.Equal(1, receivedDict["value"]);
+                }
+
+                requestUrl = $"http://localhost/odata/FunctionWithLcs1(entitySet='Странаs')?$filter=Название eq 'Страна №1'";
+
+                // Обращаемся к OData-сервису и обрабатываем ответ.
+                using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
+                {
+                    // Убедимся, что запрос завершился успешно.
+                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                    // Получим строку с ответом.
+                    string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
+
+                    // Преобразуем полученный объект в словарь.
+                    Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
+
+                    Assert.True(receivedDict.ContainsKey("value"));
+                    Assert.Equal(1, (receivedDict["value"] as ArrayList).Count);
+                }
+            });
         }
 
         /// <summary>

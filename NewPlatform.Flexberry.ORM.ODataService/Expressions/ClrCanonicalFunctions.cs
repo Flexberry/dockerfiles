@@ -3,6 +3,8 @@
 // Branch of https://github.com/OData/WebApi/blob/v5.7.0/OData/src/System.Web.OData/OData/Query/Expressions/ClrCanonicalFunctions.cs
 namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 {
+
+    using Microsoft.Spatial;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
@@ -11,6 +13,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
     using System.Linq.Expressions;
     using System.Reflection;
     using Microsoft.OData.Edm.Library;
+    using ICSSoft.STORMNET.Business.LINQProvider.Extensions;
 
     /// <summary>
     /// Класс содержит определения функций описанных в стандарте OData в главе 11.2.5.1 System Query Option $filter:
@@ -18,6 +21,12 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
     /// </summary>
     internal class ClrCanonicalFunctions
     {
+
+        /// <summary>
+        /// Определение reflection для пользовательской функции GisExtensions.GeoIntersects
+        /// </summary>
+        public static readonly MethodInfo GeoIntersects;
+
         // string functions
 
         /// <summary>
@@ -352,6 +361,8 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
         [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Justification = "Initialization is order dependent")]
         static ClrCanonicalFunctions()
         {
+            GeoIntersects = MethodOf(_ => GisExtensions.GeoIntersects(default(Geography), default(Geography)));
+
             StartsWith = MethodOf(_ => _defaultString.StartsWith(default(string)));
             EndsWith = MethodOf(_ => _defaultString.EndsWith(default(string)));
             IndexOf = MethodOf(_ => _defaultString.IndexOf(default(string)));

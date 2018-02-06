@@ -1,8 +1,8 @@
-﻿using System;
-using System.Reflection;
-
-namespace NewPlatform.Flexberry.ORM.ODataService.Model
+﻿namespace NewPlatform.Flexberry.ORM.ODataService.Model
 {
+    using System;
+    using System.Reflection;
+
     /// <summary>
     /// Interface of builder for <see cref="DataObjectEdmModel"/> instances.
     /// </summary>

@@ -14,11 +14,12 @@
     using Xunit;
 
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
+    using ICSSoft.STORMNET.Windows.Forms;
 
     /// <summary>
     /// Класс тестов для тестирования применения $filter в OData-сервисе.
     /// </summary>
-    
+
     public class FilterTest : BaseODataServiceIntegratedTest
     {
         [Fact]
@@ -117,6 +118,41 @@
                 */
                 // Проверка использования фильтрации для типа ICSSoft.STORMNET.UserDataTypes.NullableInt.
                 requestUrl = $"http://localhost/odata/КлассСМножествомТиповs?$filter=PropertyStormnetNullableInt eq {i.Value.ToString()}";
+
+                // Обращаемся к OData-сервису и обрабатываем ответ.
+                using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
+                {
+                    // Убедимся, что запрос завершился успешно.
+                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                    // Получим строку с ответом.
+                    string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
+
+                    // Преобразуем полученный объект в словарь.
+                    Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
+
+                    Assert.Equal(1, ((ArrayList)receivedDict["value"]).Count);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Осуществляет проверку применения $filter в запросах OData с использованием функций дат.
+        /// </summary>
+        [Fact]
+        public void TestFilterNullableDateFunctions()
+        {
+            ActODataService(args =>
+            {
+                DateTime? date = new DateTime?(DateTime.UtcNow);
+                ExternalLangDef.LanguageDef.DataService = args.DataService;
+                КлассСМножествомТипов класс = new КлассСМножествомТипов() { PropertySystemNullableDateTime = date, PropertyDateTime = date.Value };
+                var objs = new DataObject[] { класс };
+                args.DataService.UpdateObjects(ref objs);
+                string requestUrl;
+
+                // Проверка использования фильтрации для типа System.DateTime?.
+                requestUrl = $"http://localhost/odata/КлассСМножествомТиповs?$filter=day(PropertySystemNullableDateTime) eq {date.Value.Day}";
 
                 // Обращаемся к OData-сервису и обрабатываем ответ.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)

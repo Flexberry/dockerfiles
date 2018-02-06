@@ -53,9 +53,12 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
             "PropertyStormnetGeoData",
             "PropertyStormnetImage",
             "PropertyStormnetWebFile",
-            "PropertyStormnetFile"})]
+            "PropertyStormnetFile",
+            "PropertyGeography"})]
     public class КлассСМножествомТипов : ICSSoft.STORMNET.DataObject
     {
+        
+        private Microsoft.Spatial.Geography fPropertyGeography;
         
         private NewPlatform.Flexberry.ORM.ODataService.Tests.Цифра fPropertyEnum;
         
@@ -109,6 +112,37 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
 
         // *** End programmer edit section *** (КлассСМножествомТипов CustomMembers)
 
+        
+        /// <summary>
+        /// PropertyGeography.
+        /// </summary>
+        // *** Start programmer edit section *** (КлассСМножествомТипов.PropertyGeography CustomAttributes)
+
+        // *** End programmer edit section *** (КлассСМножествомТипов.PropertyGeography CustomAttributes)
+        public virtual Microsoft.Spatial.Geography PropertyGeography
+        {
+            get
+            {
+                // *** Start programmer edit section *** (КлассСМножествомТипов.PropertyGeography Get start)
+
+                // *** End programmer edit section *** (КлассСМножествомТипов.PropertyGeography Get start)
+                Microsoft.Spatial.Geography result = this.fPropertyGeography;
+                // *** Start programmer edit section *** (КлассСМножествомТипов.PropertyGeography Get end)
+
+                // *** End programmer edit section *** (КлассСМножествомТипов.PropertyGeography Get end)
+                return result;
+            }
+            set
+            {
+                // *** Start programmer edit section *** (КлассСМножествомТипов.PropertyGeography Set start)
+
+                // *** End programmer edit section *** (КлассСМножествомТипов.PropertyGeography Set start)
+                this.fPropertyGeography = value;
+                // *** Start programmer edit section *** (КлассСМножествомТипов.PropertyGeography Set end)
+
+                // *** End programmer edit section *** (КлассСМножествомТипов.PropertyGeography Set end)
+            }
+        }
         
         /// <summary>
         /// PropertyEnum.

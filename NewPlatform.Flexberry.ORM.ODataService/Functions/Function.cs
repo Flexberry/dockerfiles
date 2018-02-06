@@ -12,7 +12,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Functions
         /// <summary>
         /// The name of the function.
         /// </summary>
-        public string FunctionName { get; }
+        public string Name { get; }
 
         /// <summary>
         /// The handler for the function.
@@ -43,7 +43,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Functions
             Contract.Requires<ArgumentNullException>(handler != null);
             Contract.Requires<ArgumentNullException>(returnType != null);
 
-            FunctionName = functionName;
+            Name = functionName;
             Handler = handler;
             ReturnType = returnType;
 

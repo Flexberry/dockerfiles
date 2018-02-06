@@ -23,11 +23,15 @@
              Type type,
              System.Net.Http.HttpRequestMessage request)
         {
-            if (type == typeof(ODataActionParameters) ||
-                type == typeof(ODataUntypedActionParameters) ||
-                type == typeof(Uri))
+            if (type == typeof(Uri))
             {
                 return base.GetODataDeserializer(model, type, request);
+            }
+
+            if (type == typeof(ODataActionParameters) ||
+                type == typeof(ODataUntypedActionParameters))
+            {
+                return new ExtendedODataActionPayloadDeserializer(Instance);
             }
 
             return new ExtendedODataEntityDeserializer(Instance);

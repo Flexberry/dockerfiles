@@ -4,6 +4,8 @@
     using ICSSoft.STORMNET.Business;
 
     using NewPlatform.Flexberry.ORM.ODataService.Events;
+    using System;
+    using System.Net;
 
     /// <summary>
     /// OData controller class.
@@ -90,6 +92,22 @@
         internal void ExecuteCallbackAfterDelete(DataObject obj)
         {
             _events.CallbackAfterDelete?.Invoke(obj);
+        }
+
+        /// <summary>
+        /// Вызов делегата после возникновения исключения.
+        /// </summary>
+        /// <param name="ex">Исключение, которое возникло внутри ODataService.</param>
+        /// <param name="code">Возвращаемый код HTTP. По-умолчанияю 500.</param>
+        /// <returns>Исключение, которое будет отправлено клиенту.</returns>
+        internal Exception ExecuteCallbackAfterInternalServerError(Exception ex, ref HttpStatusCode code)
+        {
+            if (_events.CallbackAfterInternalServerError == null)
+            {
+                return ex;
+            }
+
+            return _events.CallbackAfterInternalServerError(ex, ref code);
         }
     }
 }

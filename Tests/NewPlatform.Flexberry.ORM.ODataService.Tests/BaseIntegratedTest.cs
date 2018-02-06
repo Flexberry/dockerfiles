@@ -1,18 +1,19 @@
-﻿using ICSSoft.STORMNET.Business;
-using Npgsql;
-using Oracle.ManagedDataAccess.Client;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data.SqlClient;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
+﻿[assembly: Xunit.CollectionBehavior(DisableTestParallelization = true)]
 namespace NewPlatform.Flexberry.ORM.ODataService.Tests
 {
+    using Xunit;
+    using ICSSoft.STORMNET.Business;
+    using Npgsql;
+    using Oracle.ManagedDataAccess.Client;
+    using System;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Data.SqlClient;
+    using System.Diagnostics.Contracts;
+    using System.Linq;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
     public abstract class BaseIntegratedTest : IDisposable
     {
         /// <summary>
@@ -28,6 +29,8 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
         /// The data services for temp databases (for <see cref="DataServices"/>).
         /// </summary>
         private readonly List<IDataService> _dataServices = new List<IDataService>();
+
+        private bool _useGisDataService;
 
         /// <summary>
         /// Flag: Indicates whether "Dispose" has already been called.
@@ -53,6 +56,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
         {
             get
             {
+                //Тестирование в Oracle временно отлючено.
                 return null; //Resources.OracleScript;
             }
         }
@@ -76,8 +80,9 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
         /// Initializes a new instance of the <see cref="BaseIntegratedTest" /> class.
         /// </summary>
         /// <param name="tempDbNamePrefix">Prefix for temp database name.</param>
-        protected BaseIntegratedTest(string tempDbNamePrefix)
+        protected BaseIntegratedTest(string tempDbNamePrefix, bool useGisDataService = false)
         {
+            _useGisDataService = useGisDataService;
             if (!(tempDbNamePrefix != null))
                 throw new ArgumentNullException();
             if (!(tempDbNamePrefix != string.Empty))
@@ -97,10 +102,13 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
                     conn.Open();
                     using (var cmd = new NpgsqlCommand(string.Format("CREATE DATABASE \"{0}\" ENCODING = 'UTF8' CONNECTION LIMIT = -1;", _databaseName), conn))
                         cmd.ExecuteNonQuery();
+
                 }
                 using (var conn = new NpgsqlConnection($"{ConnectionStringPostgres};Database={_databaseName}"))
                 {
                     conn.Open();
+                    using (var cmd = new NpgsqlCommand("CREATE EXTENSION postgis;", conn) { CommandTimeout = 60 })
+                        cmd.ExecuteNonQuery();
                     using (var cmd = new NpgsqlCommand(PostgresScript, conn))
                         cmd.ExecuteNonQuery();
                     _dataServices.Add(CreatePostgresDataService($"{ConnectionStringPostgres};Database={_databaseName}"));
@@ -138,25 +146,9 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
                     using (var command = connection.CreateCommand())
                     {
                         // "CREATE USER" privileges required.
-                        var doWhile = true;
-                        while (doWhile)
-                        {
-                            _tmpUserNameOracle = tempDbNamePrefix + "_" + DateTime.Now.ToString("yyyyMMddHHmmssff") + "_" + new Random().Next(9999);
-                            command.CommandText = $"CREATE USER {_tmpUserNameOracle} IDENTIFIED BY {_tmpUserNameOracle} DEFAULT TABLESPACE users  quota unlimited on users  TEMPORARY TABLESPACE temp";
-                            try
-                            {
-                                command.ExecuteNonQuery();
-                            }
-                            catch (OracleException ex)
-                            {
-                                Thread.Sleep(1000);
-                                if (ex.Message.Contains("conflicts with another user or role name"))
-                                    continue;
-                                throw;
-                            }
-
-                            doWhile = false;
-                        }
+                        _tmpUserNameOracle = tempDbNamePrefix + "_" + DateTime.Now.ToString("yyyyMMddHHmmssff") + "_" + new Random().Next(9999);
+                        command.CommandText = $"CREATE USER {_tmpUserNameOracle} IDENTIFIED BY {_tmpUserNameOracle} DEFAULT TABLESPACE users  quota unlimited on users  TEMPORARY TABLESPACE temp";
+                        command.ExecuteNonQuery();
 
                         // "CREATE SESSION WITH ADMIN OPTION" privileges required.
                         command.CommandText = $"GRANT CREATE SESSION TO {_tmpUserNameOracle}";
@@ -190,6 +182,8 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
         /// <returns>The <see cref="MSSQLDataService"/> instance.</returns>
         protected virtual MSSQLDataService CreateMssqlDataService(string connectionString)
         {
+            if (_useGisDataService)
+                return new GisMSSQLDataService { CustomizationString = connectionString };
             return new MSSQLDataService { CustomizationString = connectionString };
         }
 
@@ -200,6 +194,8 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
         /// <returns>The <see cref="PostgresDataService"/> instance.</returns>
         protected virtual PostgresDataService CreatePostgresDataService(string connectionString)
         {
+            if (_useGisDataService)
+                return new GisPostgresDataService { CustomizationString = connectionString };
             return new PostgresDataService { CustomizationString = connectionString };
         }
 
@@ -225,44 +221,38 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
 
             if (disposing)
             {
-                try
+                foreach (var ds in _dataServices)
                 {
-                    foreach (var ds in _dataServices)
+                    if (ds is PostgresDataService || ds.GetType().IsSubclassOf(typeof(PostgresDataService)))
                     {
-                        if (ds is PostgresDataService)
+                        using (var conn = new NpgsqlConnection(ConnectionStringPostgres))
                         {
-                            using (var conn = new NpgsqlConnection(ConnectionStringPostgres))
-                            {
-                                conn.Open();
-                                using (var command = new NpgsqlCommand($"DROP DATABASE \"{_databaseName}\";", conn))
-                                    command.ExecuteNonQuery();
-                            }
+                            conn.Open();
+                            using (var command = new NpgsqlCommand($"DROP DATABASE \"{_databaseName}\";", conn))
+                                command.ExecuteNonQuery();
                         }
-                        if (ds is MSSQLDataService)
+                    }
+                    if (ds is MSSQLDataService || ds.GetType().IsSubclassOf(typeof(MSSQLDataService)))
+                    {
+                        using (var connection = new SqlConnection(ConnectionStringMssql))
                         {
-                            using (var connection = new SqlConnection(ConnectionStringMssql))
-                            {
-                                connection.Open();
-                                using (var command = new SqlCommand($"DROP DATABASE {_databaseName}", connection))
-                                    command.ExecuteNonQuery();
-                            }
+                            connection.Open();
+                            using (var command = new SqlCommand($"DROP DATABASE {_databaseName}", connection))
+                                command.ExecuteNonQuery();
                         }
-                        if (ds is OracleDataService)
+                    }
+                    if (ds is OracleDataService || ds.GetType().IsSubclassOf(typeof(OracleDataService)))
+                    {
+                        using (var connection = new OracleConnection(ConnectionStringOracle))
                         {
-                            using (var connection = new OracleConnection(ConnectionStringOracle))
+                            connection.Open();
+                            using (var command = connection.CreateCommand())
                             {
-                                connection.Open();
-                                using (var command = connection.CreateCommand())
-                                {
-                                    command.CommandText = $"DROP USER {_tmpUserNameOracle} CASCADE";
-                                    command.ExecuteNonQuery();
-                                }
+                                command.CommandText = $"DROP USER {_tmpUserNameOracle} CASCADE";
+                                command.ExecuteNonQuery();
                             }
                         }
                     }
-                }
-                catch (Exception)
-                {
                 }
             }
 

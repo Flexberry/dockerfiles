@@ -25,6 +25,25 @@
         private IDataService currentDataService;
 
         /// <summary>
+        /// Конструктор по-умолчанию
+        /// </summary>
+        public SelfHostBaseODataServiceIntegratedTest()
+            : base("ODataDB", false)
+        {
+
+        }
+
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        public SelfHostBaseODataServiceIntegratedTest(string stageCasePath = @"РТЦ Тестирование и документирование\Модели для юнит-тестов\Flexberry ORM\NewPlatform.Flexberry.ORM.ODataService.Tests\",
+            bool useNamespaceInEntitySetName = false, bool useGisDataService = false)
+            : base("ODataDB", useNamespaceInEntitySetName, useGisDataService)
+        {
+
+        }
+
+        /// <summary>
         /// Этот метод работает только под отладчиком. Он предназначен для приостановки выполнения теста, чтобы можно было обратиться к WebApi-контроллеру из браузера. После нажатия на кнопку ОК в модальном диалоге, тест продолжит работу.
         /// </summary>
         public void ShowPauseDialog()

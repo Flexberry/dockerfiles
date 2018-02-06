@@ -3,20 +3,20 @@
 
 namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
 {
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Reflection;
-using System.Runtime.Serialization;
-using System.Web.Http;
-using System.Web.OData.Properties;
-using Microsoft.OData.Core;
-using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
-using System.Web.OData.Formatter.Deserialization;
-using NewPlatform.Flexberry.ORM.ODataService.Expressions;
-using System.Web.OData;
-using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using System.Reflection;
+    using System.Runtime.Serialization;
+    using System.Web.Http;
+    using System.Web.OData.Properties;
+    using Microsoft.OData.Core;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Library;
+    using System.Web.OData.Formatter.Deserialization;
+    using NewPlatform.Flexberry.ORM.ODataService.Expressions;
+    using System.Web.OData;
+    using System;
 
     internal static class DeserializationHelpers
     {
