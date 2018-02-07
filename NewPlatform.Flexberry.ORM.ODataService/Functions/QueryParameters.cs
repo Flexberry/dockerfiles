@@ -1,4 +1,4 @@
-namespace NewPlatform.Flexberry.ORM.ODataService.Functions
+п»їnamespace NewPlatform.Flexberry.ORM.ODataService.Functions
 {
     using Controllers;
     using ICSSoft.STORMNET.Business;
@@ -8,86 +8,86 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Functions
     using System.Web.OData.Query;
 
     /// <summary>
-    /// Класс для хранения параметров запроса OData.
+    /// РљР»Р°СЃСЃ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РїР°СЂР°РјРµС‚СЂРѕРІ Р·Р°РїСЂРѕСЃР° OData.
     /// </summary>
     public class QueryParameters
     {
         /// <summary>
-        /// Запрос.
+        /// Р—Р°РїСЂРѕСЃ.
         /// </summary>
         public HttpRequestMessage Request { get; set; }
 
         /// <summary>
-        /// Тело запроса.
+        /// РўРµР»Рѕ Р·Р°РїСЂРѕСЃР°.
         /// </summary>
         public string RequestBody { get; set; }
 
         /// <summary>
-        /// Параметр запроса $top.
+        /// РџР°СЂР°РјРµС‚СЂ Р·Р°РїСЂРѕСЃР° $top.
         /// </summary>
         public int? Top { get; set; }
 
         /// <summary>
-        /// Параметр запроса $skip.
+        /// РџР°СЂР°РјРµС‚СЂ Р·Р°РїСЂРѕСЃР° $skip.
         /// </summary>
         public int? Skip { get; set; }
 
         /// <summary>
-        /// Хранит количество обработанных сущностей в пользовательской функции. Используется при формировании результата, если в запросе был параметр $count=true.
+        /// РҐСЂР°РЅРёС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ РѕР±СЂР°Р±РѕС‚Р°РЅРЅС‹С… СЃСѓС‰РЅРѕСЃС‚РµР№ РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕР№ С„СѓРЅРєС†РёРё. РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё С„РѕСЂРјРёСЂРѕРІР°РЅРёРё СЂРµР·СѓР»СЊС‚Р°С‚Р°, РµСЃР»Рё РІ Р·Р°РїСЂРѕСЃРµ Р±С‹Р» РїР°СЂР°РјРµС‚СЂ $count=true.
         /// </summary>
         public int? Count { get; set; }
 
-        private DataObjectController _сontroller;
+        private DataObjectController _controller;
 
         /// <summary>
-        /// Осуществляет получение типа объекта данных, соответствующего заданному имени набора сущностей в EDM-модели.
+        /// РћСЃСѓС‰РµСЃС‚РІР»СЏРµС‚ РїРѕР»СѓС‡РµРЅРёРµ С‚РёРїР° РѕР±СЉРµРєС‚Р° РґР°РЅРЅС‹С…, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРіРѕ Р·Р°РґР°РЅРЅРѕРјСѓ РёРјРµРЅРё РЅР°Р±РѕСЂР° СЃСѓС‰РЅРѕСЃС‚РµР№ РІ EDM-РјРѕРґРµР»Рё.
         /// </summary>
-        /// <param name="edmEntitySetName">Имя набора сущностей в EDM-модели, для которого требуется получить представление по умолчанию.</param>
-        /// <returns>Типа объекта данных, соответствующий заданному имени набора сущностей в EDM-модели.</returns>
+        /// <param name="edmEntitySetName">РРјСЏ РЅР°Р±РѕСЂР° СЃСѓС‰РЅРѕСЃС‚РµР№ РІ EDM-РјРѕРґРµР»Рё, РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ С‚СЂРµР±СѓРµС‚СЃСЏ РїРѕР»СѓС‡РёС‚СЊ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ.</param>
+        /// <returns>РўРёРїР° РѕР±СЉРµРєС‚Р° РґР°РЅРЅС‹С…, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёР№ Р·Р°РґР°РЅРЅРѕРјСѓ РёРјРµРЅРё РЅР°Р±РѕСЂР° СЃСѓС‰РЅРѕСЃС‚РµР№ РІ EDM-РјРѕРґРµР»Рё.</returns>
         public Type GetDataObjectType(string edmEntitySetName)
         {
-            DataObjectEdmModel model = (DataObjectEdmModel)_сontroller.QueryOptions.Context.Model;
+            DataObjectEdmModel model = (DataObjectEdmModel)_controller.QueryOptions.Context.Model;
             return model.GetDataObjectType(edmEntitySetName);
         }
 
         /// <summary>
-        /// Создаёт lcs по заданному типу и запросу OData.
+        /// РЎРѕР·РґР°С‘С‚ lcs РїРѕ Р·Р°РґР°РЅРЅРѕРјСѓ С‚РёРїСѓ Рё Р·Р°РїСЂРѕСЃСѓ OData.
         /// </summary>
-        /// <param name="type">Тип DataObject.</param>
-        /// <returns>Возвращает lcs.</returns>
+        /// <param name="type">РўРёРї DataObject.</param>
+        /// <returns>Р’РѕР·РІСЂР°С‰Р°РµС‚ lcs.</returns>
         public LoadingCustomizationStruct CreateLcs(Type type, string odataQuery = null)
         {
-            HttpRequestMessage request = _сontroller.Request;
+            HttpRequestMessage request = _controller.Request;
             if (odataQuery != null)
             {
                 request = new HttpRequestMessage(HttpMethod.Get, odataQuery);
             }
 
-            _сontroller.QueryOptions = _сontroller.CreateODataQueryOptions(type, request);
-            _сontroller.type = type;
-            return _сontroller.CreateLcs();
+            _controller.QueryOptions = _controller.CreateODataQueryOptions(type, request);
+            _controller.type = type;
+            return _controller.CreateLcs();
         }
 
         /// <summary>
-        /// Конструктор
+        /// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
         /// </summary>
-        /// <param name="сontroller">Контроллер DataObjectController.</param>
-        internal QueryParameters(DataObjectController сontroller)
+        /// <param name="controller">РљРѕРЅС‚СЂРѕР»Р»РµСЂ DataObjectController.</param>
+        internal QueryParameters(DataObjectController controller)
         {
-            _сontroller = сontroller;
-            if (сontroller.QueryOptions == null)
+            _controller = controller;
+            if (controller.QueryOptions == null)
             {
                 return;
             }
 
-            if (сontroller.QueryOptions.Skip != null)
+            if (controller.QueryOptions.Skip != null)
             {
-                Skip = сontroller.QueryOptions.Skip.Value;
+                Skip = controller.QueryOptions.Skip.Value;
             }
 
-            if (сontroller.QueryOptions.Top != null)
+            if (controller.QueryOptions.Top != null)
             {
-                Top = сontroller.QueryOptions.Top.Value;
+                Top = controller.QueryOptions.Top.Value;
             }
         }
     }

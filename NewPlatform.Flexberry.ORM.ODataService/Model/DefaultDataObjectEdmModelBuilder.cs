@@ -1,4 +1,4 @@
-namespace NewPlatform.Flexberry.ORM.ODataService.Model
+п»їnamespace NewPlatform.Flexberry.ORM.ODataService.Model
 {
     using System;
     using System.Collections.Generic;
@@ -212,7 +212,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Model
             {
                 Contract.Assume(
                     dataObjectType.BaseType == typeof(DataObject),
-                    $"Запрещено переопределение ключа в типе {dataObjectType.FullName}, т.к он не наследуется непосредственно от DataObject.");
+                    $"Р—Р°РїСЂРµС‰РµРЅРѕ РїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРёРµ РєР»СЋС‡Р° РІ С‚РёРїРµ {dataObjectType.FullName}, С‚.Рє РѕРЅ РЅРµ РЅР°СЃР»РµРґСѓРµС‚СЃСЏ РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ РѕС‚ DataObject.");
                 typeSettings.KeyType = keyType;
             }
 

@@ -1,4 +1,4 @@
-namespace NewPlatform.Flexberry.ORM.ODataService.Events
+п»їnamespace NewPlatform.Flexberry.ORM.ODataService.Events
 {
     /// <summary>
     /// Default implementation of <see cref="IEventHandlerContainer"/>.
@@ -7,47 +7,47 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Events
     internal class EventHandlerContainer : IEventHandlerContainer
     {
         /// <summary>
-        /// Делегат для вызова логики перед выполнением запроса.
+        /// Р”РµР»РµРіР°С‚ РґР»СЏ РІС‹Р·РѕРІР° Р»РѕРіРёРєРё РїРµСЂРµРґ РІС‹РїРѕР»РЅРµРЅРёРµРј Р·Р°РїСЂРѕСЃР°.
         /// </summary>
         public DelegateBeforeGet CallbackBeforeGet { get; set; }
 
         /// <summary>
-        /// Делегат для вызова логики перед изменением объекта.
+        /// Р”РµР»РµРіР°С‚ РґР»СЏ РІС‹Р·РѕРІР° Р»РѕРіРёРєРё РїРµСЂРµРґ РёР·РјРµРЅРµРЅРёРµРј РѕР±СЉРµРєС‚Р°.
         /// </summary>
         public DelegateBeforeUpdate CallbackBeforeUpdate { get; set; }
 
         /// <summary>
-        /// Делегат для вызова логики перед созданием объекта.
+        /// Р”РµР»РµРіР°С‚ РґР»СЏ РІС‹Р·РѕРІР° Р»РѕРіРёРєРё РїРµСЂРµРґ СЃРѕР·РґР°РЅРёРµРј РѕР±СЉРµРєС‚Р°.
         /// </summary>
         public DelegateBeforeCreate CallbackBeforeCreate { get; set; }
 
         /// <summary>
-        /// Делегат для вызова логики перед удалением объекта.
+        /// Р”РµР»РµРіР°С‚ РґР»СЏ РІС‹Р·РѕРІР° Р»РѕРіРёРєРё РїРµСЂРµРґ СѓРґР°Р»РµРЅРёРµРј РѕР±СЉРµРєС‚Р°.
         /// </summary>
         public DelegateBeforeDelete CallbackBeforeDelete { get; set; }
 
         /// <summary>
-        /// Делегат для вызова логики после вычитывания объектов.
+        /// Р”РµР»РµРіР°С‚ РґР»СЏ РІС‹Р·РѕРІР° Р»РѕРіРёРєРё РїРѕСЃР»Рµ РІС‹С‡РёС‚С‹РІР°РЅРёСЏ РѕР±СЉРµРєС‚РѕРІ.
         /// </summary>
         public DelegateAfterGet CallbackAfterGet { get; set; }
 
         /// <summary>
-        /// Делегат для вызова логики после сохранения объекта.
+        /// Р”РµР»РµРіР°С‚ РґР»СЏ РІС‹Р·РѕРІР° Р»РѕРіРёРєРё РїРѕСЃР»Рµ СЃРѕС…СЂР°РЅРµРЅРёСЏ РѕР±СЉРµРєС‚Р°.
         /// </summary>
         public DelegateAfterCreate CallbackAfterCreate { get; set; }
 
         /// <summary>
-        /// Делегат для вызова логики после обновления объекта.
+        /// Р”РµР»РµРіР°С‚ РґР»СЏ РІС‹Р·РѕРІР° Р»РѕРіРёРєРё РїРѕСЃР»Рµ РѕР±РЅРѕРІР»РµРЅРёСЏ РѕР±СЉРµРєС‚Р°.
         /// </summary>
         public DelegateAfterUpdate CallbackAfterUpdate { get; set; }
 
         /// <summary>
-        /// Делегат для вызова логики после удаления объекта.
+        /// Р”РµР»РµРіР°С‚ РґР»СЏ РІС‹Р·РѕРІР° Р»РѕРіРёРєРё РїРѕСЃР»Рµ СѓРґР°Р»РµРЅРёСЏ РѕР±СЉРµРєС‚Р°.
         /// </summary>
         public DelegateAfterDelete CallbackAfterDelete { get; set; }
 
         /// <summary>
-        /// Делегат, вызываемый после возникновения исключения.
+        /// Р”РµР»РµРіР°С‚, РІС‹Р·С‹РІР°РµРјС‹Р№ РїРѕСЃР»Рµ РІРѕР·РЅРёРєРЅРѕРІРµРЅРёСЏ РёСЃРєР»СЋС‡РµРЅРёСЏ.
         /// </summary>
         public DelegateAfterInternalServerError CallbackAfterInternalServerError { get; set; }
     }
