@@ -60,8 +60,7 @@
       <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ChangesToSqlBTMonitor.dll</HintPath>
     </Reference>
     <Reference Include="CheckingLibrary, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f5217598140e5d0f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\CheckingLibrary.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\CheckingLibrary.dll</HintPath>
     </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
@@ -81,8 +80,7 @@
       <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ICSSoft.Services.UnityFactory.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.AzManBridge, Version=1.0.0.1, Culture=neutral, PublicKeyToken=68fa18c590f08613, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\ICSSoft.STORMNET.AzManBridge.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\ICSSoft.STORMNET.AzManBridge.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Business, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c17bb360f7843f45, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ICSSoft.STORMNET.Business.dll</HintPath>
@@ -122,8 +120,7 @@
       <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ICSSoft.STORMNET.FunctionalLanguage.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.RightManager, Version=1.0.0.1, Culture=neutral, PublicKeyToken=2f453919c28176ba, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\ICSSoft.STORMNET.RightManager.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\ICSSoft.STORMNET.RightManager.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Tools, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c824f5305b237be9, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ICSSoft.STORMNET.Tools.dll</HintPath>
@@ -132,7 +129,8 @@
       <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ICSSoft.STORMNET.UserDataTypes.dll</HintPath>
     </Reference>
     <Reference Include="Interop.ActiveDs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96924c19c47317a6, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\Interop.ActiveDs.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\Interop.ActiveDs.dll</HintPath>
+      <Private>True</Private>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -144,7 +142,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Interop.Security.AzRoles, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\Microsoft.Interop.Security.AzRoles.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\Microsoft.Interop.Security.AzRoles.dll</HintPath>
+      <Private>True</Private>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.OData.Core, Version=6.15.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -194,16 +193,13 @@
       <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.GisPostgresDataService.1.0.0-alpha02\lib\net45\NewPlatform.Flexberry.ORM.GisPostgresDataService.dll</HintPath>
     </Reference>
     <Reference Include="NewPlatform.Flexberry.Security, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b04c483e14c0d306, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\NewPlatform.Flexberry.Security.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\NewPlatform.Flexberry.Security.dll</HintPath>
     </Reference>
     <Reference Include="NewPlatform.Flexberry.Security.BusinessServers, Version=1.0.0.1, Culture=neutral, PublicKeyToken=2a87ddf394e1b26a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\NewPlatform.Flexberry.Security.BusinessServers.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\NewPlatform.Flexberry.Security.BusinessServers.dll</HintPath>
     </Reference>
     <Reference Include="NewPlatform.Flexberry.Security.Objects, Version=1.0.0.1, Culture=neutral, PublicKeyToken=e9e142aba0117561, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\NewPlatform.Flexberry.Security.Objects.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\NewPlatform.Flexberry.Security.Objects.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -227,7 +223,7 @@
     </Reference>
     <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
-      <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\stdole.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\stdole.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
