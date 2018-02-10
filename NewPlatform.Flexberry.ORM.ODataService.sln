@@ -14,9 +14,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A94D831A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewPlatform.Flexberry.ORM.ODataService.Tests", "Tests\NewPlatform.Flexberry.ORM.ODataService.Tests\NewPlatform.Flexberry.ORM.ODataService.Tests.csproj", "{8E43819E-6643-4E5F-A3A2-B1C212033DE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewPlatform.Flexberry.ORM.ODataService.Tests(Objects)", "Tests\Objects\NewPlatform.Flexberry.ORM.ODataService.Tests(Objects).csproj", "{10CE2502-3EEF-4285-935F-E18F5F623C6D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewPlatform.Flexberry.ORM.ODataService.Tests.Objects", "Tests\Objects\NewPlatform.Flexberry.ORM.ODataService.Tests.Objects.csproj", "{10CE2502-3EEF-4285-935F-E18F5F623C6D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewPlatform.Flexberry.ORM.ODataService.Tests(BusinessServers)", "Tests\BusinessServers\NewPlatform.Flexberry.ORM.ODataService.Tests(BusinessServers).csproj", "{BFB771C3-51D8-4804-BB0F-A0B4BD7981D9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewPlatform.Flexberry.ORM.ODataService.Tests.BusinessServers", "Tests\BusinessServers\NewPlatform.Flexberry.ORM.ODataService.Tests.BusinessServers.csproj", "{BFB771C3-51D8-4804-BB0F-A0B4BD7981D9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Open Source", "Open Source", "{DB00E5CF-65B6-4A94-8C83-A80DB75E9B02}"
 	ProjectSection(SolutionItems) = preProject

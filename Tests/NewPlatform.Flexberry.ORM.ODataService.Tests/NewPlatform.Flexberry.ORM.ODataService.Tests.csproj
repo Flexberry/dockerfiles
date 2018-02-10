@@ -341,13 +341,13 @@
       <Project>{01bbe45a-3a3f-4ea5-9457-8c62167b5e99}</Project>
       <Name>NewPlatform.Flexberry.ORM.ODataService</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BusinessServers\NewPlatform.Flexberry.ORM.ODataService.Tests%28BusinessServers%29.csproj">
+    <ProjectReference Include="..\BusinessServers\NewPlatform.Flexberry.ORM.ODataService.Tests.BusinessServers.csproj">
       <Project>{bfb771c3-51d8-4804-bb0f-a0b4bd7981d9}</Project>
-      <Name>NewPlatform.Flexberry.ORM.ODataService.Tests%28BusinessServers%29</Name>
+      <Name>NewPlatform.Flexberry.ORM.ODataService.Tests.BusinessServers</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Objects\NewPlatform.Flexberry.ORM.ODataService.Tests%28Objects%29.csproj">
+    <ProjectReference Include="..\Objects\NewPlatform.Flexberry.ORM.ODataService.Tests.Objects.csproj">
       <Project>{10ce2502-3eef-4285-935f-e18f5f623c6d}</Project>
-      <Name>NewPlatform.Flexberry.ORM.ODataService.Tests%28Objects%29</Name>
+      <Name>NewPlatform.Flexberry.ORM.ODataService.Tests.Objects</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

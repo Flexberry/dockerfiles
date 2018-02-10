@@ -145,9 +145,9 @@
     <Reference Include="Oracle.ManagedDataAccess">
       <HintPath>..\..\packages\Oracle.ManagedDataAccess.12.1.022\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
     </Reference>
-    <ProjectReference Include="..\Objects\NewPlatform.Flexberry.ORM.ODataService.Tests%28Objects%29.csproj">
-      <Project>{7a33ad58-79d5-4404-a9de-7a936743349d}</Project>
-      <Name>NewPlatform.Flexberry.ORM.ODataService.Tests%28Objects%29</Name>
+    <ProjectReference Include="..\Objects\NewPlatform.Flexberry.ORM.ODataService.Tests.Objects.csproj">
+      <Project>{10CE2502-3EEF-4285-935F-E18F5F623C6D}</Project>
+      <Name>NewPlatform.Flexberry.ORM.ODataService.Tests.Objects</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
