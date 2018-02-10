@@ -3,6 +3,7 @@ solution: NewPlatform.Flexberry.ORM.ODataService.sln
 install:
   - nuget restore NewPlatform.Flexberry.ORM.ODataService.sln
   - nuget install CodeContractsRemover -Version 1.0.5 -OutputDirectory contractremover
+  - rm -rf ./packages/CodeContracts.MSBuild.1.12.0
 script:
   - mono ./contractremover/CodeContractsRemover.1.0.5/tools/code_contracts_remover.exe Convert ./
   - msbuild /p:Configuration=Debug NewPlatform.Flexberry.ORM.ODataService.sln
