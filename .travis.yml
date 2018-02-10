@@ -1,2 +1,8 @@
 language: csharp
 solution: NewPlatform.Flexberry.ORM.ODataService.sln
+install:
+  - nuget restore NewPlatform.Flexberry.ORM.ODataService.sln
+  - nuget install CodeContractsRemover -Version 1.0.5 -OutputDirectory contractremover
+script:
+  - mono ./contractremover/CodeContractsRemover.1.0.5/tools/code_contracts_remover.exe Convert ./
+  - xbuild /p:Configuration=Debug-Net45 NewPlatform.Flexberry.ORM.ODataService.sln
