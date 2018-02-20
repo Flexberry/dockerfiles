@@ -1,0 +1,11 @@
+#!/bin/sh
+export POSTFIX=-mono-apache
+export FULL_TAG=`echo $IMAGE_NAME | sed 's/:/\n/' | sed '1d'`
+export TAG=`echo $FULL_TAG | sed "s/$POSTFIX//"`
+export REPO=`echo $IMAGE_NAME | sed 's/:/\n/' | sed '2d'`
+
+docker build --build-arg TAG=$FULL_TAG -t $IMAGE_NAME .
+docker tag $IMAGE_NAME $REPO:latest
+docker push $REPO:latest
+docker tag $IMAGE_NAME $REPO:$TAG
+docker push $REPO:$TAG
