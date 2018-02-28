@@ -38,8 +38,15 @@
         /// </returns>
         public IHttpActionResult PostODataActionsExecute(ODataActionParameters parameters)
         {
-            QueryOptions = CreateODataQueryOptions(typeof(DataObject));
-            return ExecuteAction(parameters);
+            try
+            {
+                QueryOptions = CreateODataQueryOptions(typeof(DataObject));
+                return ExecuteAction(parameters);
+            }
+            catch (Exception ex)
+            {
+                return ResponseMessage(InternalServerErrorMessage(ex));
+            }
         }
 
         private IHttpActionResult ExecuteAction(ODataActionParameters parameters)

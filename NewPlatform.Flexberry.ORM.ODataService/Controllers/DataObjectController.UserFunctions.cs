@@ -43,8 +43,15 @@
         [CustomEnableQuery]
         public IHttpActionResult GetODataFunctionsExecute()
         {
-            QueryOptions = CreateODataQueryOptions(typeof(DataObject));
-            return ExecuteUserFunction(new QueryParameters(this));
+            try
+            {
+                QueryOptions = CreateODataQueryOptions(typeof(DataObject));
+                return ExecuteUserFunction(new QueryParameters(this));
+            }
+            catch (Exception ex)
+            {
+                return ResponseMessage(InternalServerErrorMessage(ex));
+            }
         }
 
         /// <summary>
