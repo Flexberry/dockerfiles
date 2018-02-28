@@ -4,7 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
-
+1. Add exception handling in user functions.
 ### Fixed
 
 ### Changed
