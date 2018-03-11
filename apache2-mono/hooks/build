@@ -1,0 +1,5 @@
+#!/bin/sh
+image=flexberry/alt.p8-mono4
+docker build  \
+  -t $image .;
+docker push $image
