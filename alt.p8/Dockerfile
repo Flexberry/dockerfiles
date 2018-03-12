@@ -2,7 +2,7 @@ FROM fotengauer/altlinux-p8
 
 ENV LANG ru_RU.UTF-8
 
-MAINTAINER kaf@nevod.ru
+MAINTAINER mail@flexberry.ru
 
 RUN export http_proxy=$http_proxy;\
   apt-get update && \
