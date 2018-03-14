@@ -15,7 +15,8 @@ RUN  /etc/init.d/postgresql initdb;
 COPY data/postgresql.conf data/pg_hba.conf /var/lib/pgsql/data/
 COPY /docker-cmd.sh /
 
-RUN  chown postgres:postgres /var/lib/pgsql/data/postgresql.conf /var/lib/pgsql/data/pg_hba.conf; \
+RUN  chmod +x /docker-cmd.sh; \
+  chown postgres:postgres /var/lib/pgsql/data/postgresql.conf /var/lib/pgsql/data/pg_hba.conf; \
   /etc/init.d/postgresql start; \
   sleep 5; \
   until echo  "\l" |  psql -U postgres; do sleep 5; done ; \
