@@ -10,7 +10,7 @@ RUN  \
   cd /tmp;\
   bzip2 -d /var/lib/rpm/*.bz2; \
   tar xzf rpms.tgz; \
-  apt-get install -y *.rpm; \
+  apt-get update && apt-get install -y *.rpm; \
   tar xzf apache2_mono4.tgz -C /; \
   cd /etc/httpd2/conf/sites-available/; \
   mv vhosts.conf /conf; \
