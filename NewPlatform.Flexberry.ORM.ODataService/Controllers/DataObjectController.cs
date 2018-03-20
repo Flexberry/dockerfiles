@@ -40,9 +40,12 @@
     using ODataPath = System.Web.OData.Routing.ODataPath;
     using OrderByQueryOption = NewPlatform.Flexberry.ORM.ODataService.Expressions.OrderByQueryOption;
     using Microsoft.Practices.Unity;
-    using Microsoft.Practices.Unity.Configuration;    /// <summary>
-                                                      /// Определяет класс контроллера OData, который поддерживает запись и чтение данных с использованием OData формата.
-                                                      /// </summary>
+    using Microsoft.Practices.Unity.Configuration;
+    using ICSSoft.STORMNET.Security;
+
+    /// <summary>
+    /// Определяет класс контроллера OData, который поддерживает запись и чтение данных с использованием OData формата.
+    /// </summary>
     public partial class DataObjectController : BaseODataController
     {
         private List<string> _filterDetailProperties;
@@ -1020,6 +1023,14 @@
         /// <returns>Если параметр callGetObjectsCount установлен в false, то возвращаются объекты, иначе пустой массив объектов.</returns>
         private DataObject[] LoadObjects(LoadingCustomizationStruct lcs, out int count, bool callExecuteCallbackBeforeGet = true, bool callGetObjectsCount = false, bool callExecuteCallbackAfterGet = true)
         {
+            foreach (var propType in Information.GetAllTypesFromView(lcs.View))
+            {
+                if (!_dataService.SecurityManager.AccessObjectCheck(propType, tTypeAccess.Full, false))
+                {
+                    _dataService.SecurityManager.AccessObjectCheck(propType, tTypeAccess.Read, true);
+                }
+            }
+
             DataObject[] dobjs = new DataObject[0];
             bool doLoad = true;
             count = -1;
