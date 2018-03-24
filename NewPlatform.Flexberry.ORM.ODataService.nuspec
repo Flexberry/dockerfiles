@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>NewPlatform.Flexberry.ORM.ODataService</id>
-    <version>4.1.1-alpha01</version>
+    <version>4.1.1-alpha02</version>
     <title>Flexberry ORM ODataService</title>
     <authors>New Platform Ltd.</authors>
     <owners>New Platform Ltd.</owners>
@@ -14,6 +14,7 @@
     <releaseNotes>
       Added
       1. Add exception handling in user functions.
+      1. Add permissions for masters and details.
     </releaseNotes>
     <copyright>Copyright New Platform Ltd 2018</copyright>
     <tags>Flexberry ORM OData ODataService</tags>
