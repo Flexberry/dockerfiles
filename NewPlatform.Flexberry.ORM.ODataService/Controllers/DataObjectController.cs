@@ -893,8 +893,8 @@
             if (!IncludeCount || count != 0)
                 _objs = LoadObjects(_lcs, out count, callExecuteCallbackBeforeGet, false);
 
-            NameValueCollection queryParams = HttpUtility.ParseQueryString(Request.RequestUri.Query);
-
+            var uri = new Uri(Request.RequestUri.Query);
+            NameValueCollection queryParams = uri.ParseQueryString();
             if (_model.ExportService != null && (Request.Properties.ContainsKey(PostPatchHandler.AcceptApplicationMsExcel) || Convert.ToBoolean(queryParams.Get("exportExcel"))))
             {
                 return CreateExcel(queryParams);
