@@ -28,6 +28,7 @@
     {
         public IExportService ExportService { get; set; }
 
+        public IODataExportService ODataExportService { get; set; }
         /// <summary>
         /// Ссылка на IDataObjectEdmModelBuilder.
         /// </summary>
@@ -86,7 +87,14 @@
             {
                 container.LoadConfiguration();
                 if (container.IsRegistered<IExportService>("Export"))
+                {
                     ExportService = container.Resolve<IExportService>("Export");
+                }
+
+                if (container.IsRegistered<IODataExportService>())
+                {
+                    ODataExportService = container.Resolve<IODataExportService>();
+                }
             }
 
             _metadata = metadata;
