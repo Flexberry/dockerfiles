@@ -20,14 +20,21 @@
     using Microsoft.Practices.Unity;
     using Microsoft.Practices.Unity.Configuration;
     using System.Web.OData;
+    using ICSSoft.Services;
 
     /// <summary>
     /// EDM-модель, которая строится на основе сборок с объектами данных (унаследованными от <see cref="DataObject"/>).
     /// </summary>
     public class DataObjectEdmModel : EdmModel
     {
+        /// <summary>
+        /// Сервис экспорта данных из ORM.
+        /// </summary>
         public IExportService ExportService { get; set; }
 
+        /// <summary>
+        /// Сервис экспорта данных из ORM.
+        /// </summary>
         public IODataExportService ODataExportService { get; set; }
         /// <summary>
         /// Ссылка на IDataObjectEdmModelBuilder.
@@ -82,13 +89,22 @@
         {
             Contract.Requires<ArgumentNullException>(metadata != null);
             EdmModelBuilder = edmModelBuilder;
-            var container = new UnityContainer();
+            var container = UnityFactory.GetContainer();
             if (container != null)
             {
-                container.LoadConfiguration();
                 if (container.IsRegistered<IExportService>("Export"))
                 {
                     ExportService = container.Resolve<IExportService>("Export");
+                }
+
+                if (container.IsRegistered<IExportService>())
+                {
+                    ExportService = container.Resolve<IExportService>();
+                }
+
+                if (container.IsRegistered<IODataExportService>("Export"))
+                {
+                    ODataExportService = container.Resolve<IODataExportService>("Export");
                 }
 
                 if (container.IsRegistered<IODataExportService>())

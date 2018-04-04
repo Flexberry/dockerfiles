@@ -6,19 +6,19 @@
     using Xunit;
 
     /// <summary>
-    /// Класс для тестирования экспорта из Excel.
+    /// A class for testing exports from Excel.
     /// </summary>
-    public class ExcelExportTest : BaseODataServiceIntegratedTest
+    public class ExcelExportTest : SelfHostBaseODataServiceIntegratedTest
     {
         /// <summary>
-        /// Осуществляет тестирование экспорта из Excel.
+        /// Performs export testing from Excel.
         /// </summary>
         [Fact]
         public void ExportTest()
         {
             ActODataService(args =>
             {
-                // Создаем объекты и кладем их в базу данных.
+                // Create objects and put them in the database.
                 DataObject[] countries = new DataObject[5];
                 int countriesCount = countries.Length;
                 for (int i = 0; i < countriesCount; i++)
@@ -27,20 +27,18 @@
                 }
 
                 args.DataService.UpdateObjects(ref countries);
-
-                // Формируем URL запроса к OData-сервису.
+                this.ShowPauseDialog();
+                // The request URL to the OData service is generated.
                 string requestUrl = string.Format(
                     "http://localhost/odata/{0}?{1}",
                     args.Token.Model.GetEdmEntitySet(typeof(Страна)).Name,
                     "exportExcel=true&colsOrder=Название/Название&detSeparateCols=false&detSeparateRows=false&$filter=contains(Название,'1')");
 
-                // Обращаемся к OData-сервису и обрабатываем ответ.
+                // A request is made to the OData service and the response is processed.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
                 {
-                    // Убедимся, что запрос завершился успешно.
                     Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-                    // Получим строку с ответом.
                     byte[] contentExcel = response.Content.ReadAsByteArrayAsync().Result;
                 }
             });
