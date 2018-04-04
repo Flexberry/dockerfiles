@@ -907,6 +907,7 @@
                 _objs = LoadObjects(_lcs, out count, callExecuteCallbackBeforeGet, false);
 
             NameValueCollection queryParams = Request.RequestUri.ParseQueryString();
+
             if ((_model.ExportService != null || _model.ODataExportService != null) && (Request.Properties.ContainsKey(PostPatchHandler.AcceptApplicationMsExcel) || Convert.ToBoolean(queryParams.Get("exportExcel"))))
             {
                 return CreateExcel(queryParams);

@@ -28,12 +28,12 @@
     public class DataObjectEdmModel : EdmModel
     {
         /// <summary>
-        /// Сервис экспорта данных из ORM.
+        /// Service to export data from ORM.
         /// </summary>
         public IExportService ExportService { get; set; }
 
         /// <summary>
-        /// Сервис экспорта данных из ORM.
+        /// Service to export data from ORM.
         /// </summary>
         public IODataExportService ODataExportService { get; set; }
         /// <summary>
