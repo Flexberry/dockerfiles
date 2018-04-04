@@ -8,7 +8,7 @@
     /// <summary>
     /// A class for testing exports from Excel.
     /// </summary>
-    public class ExcelExportTest : SelfHostBaseODataServiceIntegratedTest
+    public class ExcelExportTest : BaseODataServiceIntegratedTest
     {
         /// <summary>
         /// Performs export testing from Excel.
@@ -27,7 +27,6 @@
                 }
 
                 args.DataService.UpdateObjects(ref countries);
-                this.ShowPauseDialog();
                 // The request URL to the OData service is generated.
                 string requestUrl = string.Format(
                     "http://localhost/odata/{0}?{1}",

@@ -138,9 +138,6 @@
     <Reference Include="ChangesToSqlBTMonitor, Version=1.0.0.1, Culture=neutral, PublicKeyToken=e5ad39f116a43e0b, processorArchitecture=MSIL">
       <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.1-alpha02\lib\net45\ChangesToSqlBTMonitor.dll</HintPath>
     </Reference>
-    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
-    </Reference>
     <Reference Include="ExternalLangDef, Version=1.0.0.0, Culture=neutral, PublicKeyToken=50dc27591ed591e6, processorArchitecture=MSIL">
       <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.1-alpha02\lib\net45\ExternalLangDef.dll</HintPath>
     </Reference>
