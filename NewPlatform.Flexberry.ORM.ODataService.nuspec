@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>NewPlatform.Flexberry.ORM.ODataService</id>
-    <version>4.1.1-alpha03</version>
+    <version>4.1.1-alpha04</version>
     <title>Flexberry ORM ODataService</title>
     <authors>New Platform Ltd.</authors>
     <owners>New Platform Ltd.</owners>
@@ -14,7 +14,8 @@
     <releaseNotes>
       Added
       1. Add exception handling in user functions.
-      1. Add permissions for masters and details.
+      2. Add permissions for masters and details.
+      3. Add export to excel with parameters.
     </releaseNotes>
     <copyright>Copyright New Platform Ltd 2018</copyright>
     <tags>Flexberry ORM OData ODataService</tags>
@@ -28,7 +29,7 @@
       <dependency id="Microsoft.OData.Edm" version="6.15.0" />
       <dependency id="Microsoft.Spatial" version="6.15.0" />
       <dependency id="NewPlatform.Flexberry.LockService" version="1.0.0" />
-      <dependency id="NewPlatform.Flexberry.ORM" version="4.1.0" />
+      <dependency id="NewPlatform.Flexberry.ORM" version="4.1.1-alpha02" />
       <dependency id="NewPlatform.Flexberry.UserSettingsService" version="2.0.0" />
       <dependency id="Newtonsoft.Json" version="8.0.3" />
     </dependencies>

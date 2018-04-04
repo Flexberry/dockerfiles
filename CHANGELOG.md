@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 1. Add exception handling in user functions.
+2. Add permissions for masters and details.
+3. Add export to excel with parameters.
+
 ### Fixed
 
 ### Changed

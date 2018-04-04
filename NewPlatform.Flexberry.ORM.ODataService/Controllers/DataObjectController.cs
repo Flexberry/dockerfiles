@@ -246,10 +246,15 @@
         internal HttpResponseMessage CreateExcel(NameValueCollection queryParams)
         {
             _lcs.View.Name = "View";
-            ExportParams par = new ExportParams { PropertiesOrder = new List<string>(), View = _lcs.View };
+            ExportParams par = new ExportParams
+            {
+                PropertiesOrder = new List<string>(),
+                View = _lcs.View,
+                DataObjectTypes = _lcs.LoadingTypes,
+                LimitFunction = _lcs.LimitFunction
+            };
 
             var colsOrder = queryParams.Get("colsOrder").Split(',').ToList();
-
             par.PropertiesOrder = new List<string>();
             par.HeaderCaptions = new List<IHeaderCaption>();
 
@@ -286,8 +291,16 @@
 
             par.DetailsInSeparateColumns = Convert.ToBoolean(queryParams.Get("detSeparateCols"));
             par.DetailsInSeparateRows = Convert.ToBoolean(queryParams.Get("detSeparateRows"));
+            MemoryStream result;
+            if (_model.ODataExportService != null)
+            {
+                result = _model.ODataExportService.CreateExportStream(_dataService, par, _objs, queryParams);
+            }
+            else
+            {
+                result = _model.ExportService.CreateExportStream(_dataService, par, _objs);
+            }
 
-            MemoryStream result = _model.ExportService.CreateExportStream(_dataService, par, _objs);
             HttpResponseMessage msg = Request.CreateResponse(HttpStatusCode.OK);
             RawOutputFormatter.PrepareHttpResponseMessage(ref msg, "application/ms-excel", _model, result.ToArray());
             msg.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
@@ -893,9 +906,9 @@
             if (!IncludeCount || count != 0)
                 _objs = LoadObjects(_lcs, out count, callExecuteCallbackBeforeGet, false);
 
-            var uri = new Uri(Request.RequestUri.Query);
-            NameValueCollection queryParams = uri.ParseQueryString();
-            if (_model.ExportService != null && (Request.Properties.ContainsKey(PostPatchHandler.AcceptApplicationMsExcel) || Convert.ToBoolean(queryParams.Get("exportExcel"))))
+            NameValueCollection queryParams = Request.RequestUri.ParseQueryString();
+
+            if ((_model.ExportService != null || _model.ODataExportService != null) && (Request.Properties.ContainsKey(PostPatchHandler.AcceptApplicationMsExcel) || Convert.ToBoolean(queryParams.Get("exportExcel"))))
             {
                 return CreateExcel(queryParams);
             }

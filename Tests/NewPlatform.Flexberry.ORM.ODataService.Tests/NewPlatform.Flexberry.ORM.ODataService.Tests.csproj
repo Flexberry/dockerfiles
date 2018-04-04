@@ -58,7 +58,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="ChangesToSqlBTMonitor, Version=1.0.0.1, Culture=neutral, PublicKeyToken=e5ad39f116a43e0b, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ChangesToSqlBTMonitor.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.1-alpha02\lib\net45\ChangesToSqlBTMonitor.dll</HintPath>
     </Reference>
     <Reference Include="CheckingLibrary, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f5217598140e5d0f, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\CheckingLibrary.dll</HintPath>
@@ -68,65 +68,65 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="ExternalLangDef, Version=1.0.0.0, Culture=neutral, PublicKeyToken=50dc27591ed591e6, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ExternalLangDef.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.1-alpha02\lib\net45\ExternalLangDef.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ICSSoft.Services.CurrentUserService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=087bc7ccdc1b0bb4, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ICSSoft.Services.CurrentUserService.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.1-alpha02\lib\net45\ICSSoft.Services.CurrentUserService.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.Services.UnityFactory, Version=1.0.0.1, Culture=neutral, PublicKeyToken=6389c2e26f4059bc, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ICSSoft.Services.UnityFactory.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.1-alpha02\lib\net45\ICSSoft.Services.UnityFactory.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.AzManBridge, Version=1.0.0.1, Culture=neutral, PublicKeyToken=68fa18c590f08613, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\ICSSoft.STORMNET.AzManBridge.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Business, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c17bb360f7843f45, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ICSSoft.STORMNET.Business.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.1-alpha02\lib\net45\ICSSoft.STORMNET.Business.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Business.Audit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8b09038b5bd09732, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NewPlatform.Flexberry.Audit.2.0.0\lib\net35\ICSSoft.STORMNET.Business.Audit.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Business.DRDataService, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cef244157a7f77f7, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ICSSoft.STORMNET.Business.DRDataService.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.1-alpha02\lib\net45\ICSSoft.STORMNET.Business.DRDataService.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Business.LINQProvider, Version=1.0.0.0, Culture=neutral, PublicKeyToken=68e48bb6f6293778, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ICSSoft.STORMNET.Business.LINQProvider.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.1-alpha02\lib\net45\ICSSoft.STORMNET.Business.LINQProvider.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Business.LockService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=68ac0e47b5ef94d8, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ICSSoft.STORMNET.Business.LockService.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.1-alpha02\lib\net45\ICSSoft.STORMNET.Business.LockService.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Business.MSSQLDataService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=49b42003269a4a66, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ICSSoft.STORMNET.Business.MSSQLDataService.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.1-alpha02\lib\net45\ICSSoft.STORMNET.Business.MSSQLDataService.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Business.ODBCDataService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=4c6916a347bdf8b1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ICSSoft.STORMNET.Business.ODBCDataService.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.1-alpha02\lib\net45\ICSSoft.STORMNET.Business.ODBCDataService.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Business.OracleDataService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=b24b342e1d86de22, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ICSSoft.STORMNET.Business.OracleDataService.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.1-alpha02\lib\net45\ICSSoft.STORMNET.Business.OracleDataService.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Business.PostgresDataService, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c1da4b21bda90afe, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ICSSoft.STORMNET.Business.PostgresDataService.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.1-alpha02\lib\net45\ICSSoft.STORMNET.Business.PostgresDataService.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Collections, Version=1.0.0.1, Culture=neutral, PublicKeyToken=898f36b7a907d804, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ICSSoft.STORMNET.Collections.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.1-alpha02\lib\net45\ICSSoft.STORMNET.Collections.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.DataObject, Version=1.0.0.1, Culture=neutral, PublicKeyToken=023a90c13b0ca8dc, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ICSSoft.STORMNET.DataObject.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.1-alpha02\lib\net45\ICSSoft.STORMNET.DataObject.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.FunctionalLanguage, Version=1.0.0.1, Culture=neutral, PublicKeyToken=88efc6f76e5cd161, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ICSSoft.STORMNET.FunctionalLanguage.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.1-alpha02\lib\net45\ICSSoft.STORMNET.FunctionalLanguage.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.RightManager, Version=1.0.0.1, Culture=neutral, PublicKeyToken=2f453919c28176ba, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\ICSSoft.STORMNET.RightManager.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Tools, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c824f5305b237be9, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ICSSoft.STORMNET.Tools.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.1-alpha02\lib\net45\ICSSoft.STORMNET.Tools.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.UserDataTypes, Version=1.0.0.1, Culture=neutral, PublicKeyToken=bc478021255def29, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ICSSoft.STORMNET.UserDataTypes.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.1.1-alpha02\lib\net45\ICSSoft.STORMNET.UserDataTypes.dll</HintPath>
     </Reference>
     <Reference Include="Interop.ActiveDs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96924c19c47317a6, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\Interop.ActiveDs.dll</HintPath>
@@ -190,6 +190,9 @@
     </Reference>
     <Reference Include="NewPlatform.Flexberry.ORM.GisPostgresDataService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c6a0c26547452df4, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.GisPostgresDataService.1.0.0-alpha02\lib\net45\NewPlatform.Flexberry.ORM.GisPostgresDataService.dll</HintPath>
+    </Reference>
+    <Reference Include="NewPlatform.Flexberry.Reports.ExportToExcel, Version=1.0.0.0, Culture=neutral, PublicKeyToken=dd3c9e296c34a5da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NewPlatform.Flexberry.Reports.ExportToExcel.1.0.0-alpha04\lib\net45\NewPlatform.Flexberry.Reports.ExportToExcel.dll</HintPath>
     </Reference>
     <Reference Include="NewPlatform.Flexberry.Security, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b04c483e14c0d306, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\NewPlatform.Flexberry.Security.dll</HintPath>
@@ -283,6 +286,9 @@
   <ItemGroup>
     <Compile Include="BaseIntegratedTest.cs" />
     <Compile Include="CRUD\GisCRUDTest.cs" />
+    <Compile Include="CRUD\Read\Excel\ExcelExportTest.cs" />
+    <Compile Include="CRUD\Read\Excel\ExportExcel.cs" />
+    <Compile Include="CRUD\Read\Excel\SpreadsheetCustomizer.cs" />
     <Compile Include="CRUD\Read\ReferenceToMasterTest.cs" />
     <Compile Include="CRUD\Read\UtfRequestsTest.cs" />
     <Compile Include="Events\AfterInternalServerErrorTest.cs" />

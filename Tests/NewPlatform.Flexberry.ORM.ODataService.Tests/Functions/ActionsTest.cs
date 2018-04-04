@@ -25,7 +25,7 @@
     public class ActionsTest : BaseODataServiceIntegratedTest
     {
         /// <summary>
-        /// Осуществляет регистрацию пользовательских OData-функций.
+        /// Осуществляет регистрацию пользовательских OData-actions.
         /// </summary>
         /// <param name="container">Container of user functions.</param>
         /// <param name="dataService">Сервис данных.</param>
