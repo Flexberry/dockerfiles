@@ -16,6 +16,7 @@
       1. Add exception handling in user functions.
       2. Add permissions for masters and details.
       3. Add export to excel with parameters.
+      4. Fix error when query contains same properties.
     </releaseNotes>
     <copyright>Copyright New Platform Ltd 2018</copyright>
     <tags>Flexberry ORM OData ODataService</tags>

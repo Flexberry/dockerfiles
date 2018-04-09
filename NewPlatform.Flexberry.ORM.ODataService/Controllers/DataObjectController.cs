@@ -393,7 +393,11 @@
                     {
                         if (item is PathSelectItem && (item as PathSelectItem).SelectedPath.FirstSegment is PropertySegment)
                         {
-                            selectedProperties.Add(((item as PathSelectItem).SelectedPath.FirstSegment as PropertySegment).Property.Name, item);
+                            string key = ((item as PathSelectItem).SelectedPath.FirstSegment as PropertySegment).Property.Name;
+                            if (!selectedProperties.ContainsKey(key))
+                            {
+                                selectedProperties.Add(key, item);
+                            }
                         }
                     }
                     else
