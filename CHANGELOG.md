@@ -9,6 +9,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 3. Add export to excel with parameters.
 
 ### Fixed
+1. Fix error when query contains same properties.
+
 
 ### Changed
 
