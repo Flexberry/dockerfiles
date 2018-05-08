@@ -2,7 +2,7 @@
 {
     using System.Web.Http.Dependencies;
 
-    using Microsoft.Practices.Unity;
+    using Unity;
 
     /// <summary>
     /// WebAPI <see cref="IDependencyResolver"/> based on Unity.

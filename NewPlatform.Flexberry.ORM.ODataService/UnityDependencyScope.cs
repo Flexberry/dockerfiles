@@ -5,7 +5,7 @@
     using System.Diagnostics.Contracts;
     using System.Web.Http.Dependencies;
 
-    using Microsoft.Practices.Unity;
+    using Unity;
 
     /// <summary>
     /// WebAPI <see cref="IDependencyScope"/> based on Unity.

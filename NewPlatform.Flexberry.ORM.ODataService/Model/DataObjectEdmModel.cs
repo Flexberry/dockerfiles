@@ -2,25 +2,27 @@
 {
     using Microsoft.Spatial;
     using System;
-    using Action = NewPlatform.Flexberry.ORM.ODataService.Functions.Action;
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
+    using System.Web.OData;
 
     using ICSSoft.STORMNET;
+
+    using NewPlatform.Flexberry.ORM.ODataService.Functions;
 
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Library.Expressions;
     using Microsoft.OData.Edm.Library.Values;
 
-    using NewPlatform.Flexberry.ORM.ODataService.Functions;
-    using Microsoft.Practices.Unity;
-    using Microsoft.Practices.Unity.Configuration;
-    using System.Web.OData;
     using ICSSoft.Services;
+
+    using Unity;
+
+    using Action = NewPlatform.Flexberry.ORM.ODataService.Functions.Action;
 
     /// <summary>
     /// EDM-модель, которая строится на основе сборок с объектами данных (унаследованными от <see cref="DataObject"/>).
@@ -36,16 +38,17 @@
         /// Service to export data from ORM.
         /// </summary>
         public IODataExportService ODataExportService { get; set; }
+
         /// <summary>
         /// Ссылка на IDataObjectEdmModelBuilder.
         /// </summary>
         public IDataObjectEdmModelBuilder EdmModelBuilder { get; set; }
-        
+
         /// <summary>
         /// Имя свойства ключа.
         /// </summary>
         public string KeyPropertyName => _metadata.KeyPropertyName;
-        
+
         /// <summary>
         /// Описание свойства ключа.
         /// </summary>
@@ -211,7 +214,7 @@
                 IEdmPrimitiveType edmPrimitiveType = EdmTypeMap.GetEdmPrimitiveType(propertyType);
                 if (edmPrimitiveType != null)
                 {
-                    EdmStructuralProperty edmProp = edmEntityType.AddStructuralProperty(GetEntityPropertName(propertyInfo) , edmPrimitiveType.PrimitiveKind);
+                    EdmStructuralProperty edmProp = edmEntityType.AddStructuralProperty(GetEntityPropertName(propertyInfo), edmPrimitiveType.PrimitiveKind);
                     this.SetAnnotationValue(edmProp, new ClrPropertyInfoAnnotation(propertyInfo));
                 }
             }
