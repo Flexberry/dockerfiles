@@ -1,7 +1,5 @@
 FROM mono
 
-ENV LANG ru_RU.UTF-8
-
 MAINTAINER mail@flexberry.ru
 
 RUN apt-get update ; \
@@ -9,6 +7,9 @@ RUN apt-get update ; \
 	curl -sL http://deb.nodesource.com/setup_6.x -o nodesource_setup.sh ; \
 	bash nodesource_setup.sh ; \
 	apt-get -y install nodejs ; \
+    curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -  ; \
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list ; \
+    apt-get update && apt-get -y install yarn ; \
 	yarn global add bower ; \
 	yarn global add ember-cli@2.4.3 ; \
 	apt-get -y install xvfb
