@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>NewPlatform.Flexberry.ORM.ODataService</id>
-    <version>4.1.1-alpha05</version>
+    <version>4.2.0-alpha01</version>
     <title>Flexberry ORM ODataService</title>
     <authors>New Platform Ltd.</authors>
     <owners>New Platform Ltd.</owners>
@@ -30,7 +30,7 @@
       <dependency id="Microsoft.OData.Edm" version="6.15.0" />
       <dependency id="Microsoft.Spatial" version="6.15.0" />
       <dependency id="NewPlatform.Flexberry.LockService" version="1.0.0" />
-      <dependency id="NewPlatform.Flexberry.ORM" version="4.1.1-alpha02" />
+      <dependency id="NewPlatform.Flexberry.ORM" version="4.2.0-alpha01" />
       <dependency id="NewPlatform.Flexberry.UserSettingsService" version="2.0.0" />
       <dependency id="Newtonsoft.Json" version="8.0.3" />
     </dependencies>

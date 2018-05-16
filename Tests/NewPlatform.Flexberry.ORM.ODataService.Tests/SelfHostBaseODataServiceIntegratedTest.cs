@@ -9,10 +9,9 @@
 
     using ICSSoft.STORMNET.Business;
 
-    using Microsoft.Practices.Unity;
-
     using NewPlatform.Flexberry.ORM.ODataService.Extensions;
-    
+
+    using Unity;
 
     /// <summary>
     /// Базовый класс для тестирования работы с данными через ODataService.

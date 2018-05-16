@@ -6,7 +6,7 @@
     using ICSSoft.Services;
     using ICSSoft.STORMNET;
 
-    using Microsoft.Practices.Unity;
+    using Unity;
     using Xunit;
 
     using Moq;
