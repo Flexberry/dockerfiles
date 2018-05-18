@@ -12,6 +12,7 @@
     using NewPlatform.Flexberry.ORM.ODataService.Extensions;
 
     using Unity;
+    using Unity.AspNet.WebApi;
 
     /// <summary>
     /// Базовый класс для тестирования работы с данными через ODataService.
