@@ -58,78 +58,75 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="ChangesToSqlBTMonitor, Version=1.0.0.1, Culture=neutral, PublicKeyToken=e5ad39f116a43e0b, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha01\lib\net45\ChangesToSqlBTMonitor.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha02\lib\net45\ChangesToSqlBTMonitor.dll</HintPath>
     </Reference>
     <Reference Include="CheckingLibrary, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f5217598140e5d0f, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\CheckingLibrary.dll</HintPath>
-    </Reference>
-    <Reference Include="CommonServiceLocator, Version=2.0.1.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Unity.5.0.2\lib\net45\CommonServiceLocator.dll</HintPath>
     </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ExternalLangDef, Version=1.0.0.0, Culture=neutral, PublicKeyToken=50dc27591ed591e6, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha01\lib\net45\ExternalLangDef.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha02\lib\net45\ExternalLangDef.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ICSSoft.Services.CurrentUserService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=087bc7ccdc1b0bb4, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha01\lib\net45\ICSSoft.Services.CurrentUserService.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha02\lib\net45\ICSSoft.Services.CurrentUserService.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.Services.UnityFactory, Version=1.0.0.1, Culture=neutral, PublicKeyToken=6389c2e26f4059bc, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha01\lib\net45\ICSSoft.Services.UnityFactory.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha02\lib\net45\ICSSoft.Services.UnityFactory.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.AzManBridge, Version=1.0.0.1, Culture=neutral, PublicKeyToken=68fa18c590f08613, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\ICSSoft.STORMNET.AzManBridge.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Business, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c17bb360f7843f45, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha01\lib\net45\ICSSoft.STORMNET.Business.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha02\lib\net45\ICSSoft.STORMNET.Business.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Business.Audit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8b09038b5bd09732, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NewPlatform.Flexberry.Audit.2.0.0\lib\net35\ICSSoft.STORMNET.Business.Audit.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Business.DRDataService, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cef244157a7f77f7, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha01\lib\net45\ICSSoft.STORMNET.Business.DRDataService.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha02\lib\net45\ICSSoft.STORMNET.Business.DRDataService.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Business.LINQProvider, Version=1.0.0.0, Culture=neutral, PublicKeyToken=68e48bb6f6293778, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha01\lib\net45\ICSSoft.STORMNET.Business.LINQProvider.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha02\lib\net45\ICSSoft.STORMNET.Business.LINQProvider.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Business.LockService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=68ac0e47b5ef94d8, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha01\lib\net45\ICSSoft.STORMNET.Business.LockService.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha02\lib\net45\ICSSoft.STORMNET.Business.LockService.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Business.MSSQLDataService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=49b42003269a4a66, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha01\lib\net45\ICSSoft.STORMNET.Business.MSSQLDataService.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha02\lib\net45\ICSSoft.STORMNET.Business.MSSQLDataService.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Business.ODBCDataService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=4c6916a347bdf8b1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha01\lib\net45\ICSSoft.STORMNET.Business.ODBCDataService.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha02\lib\net45\ICSSoft.STORMNET.Business.ODBCDataService.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Business.OracleDataService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=b24b342e1d86de22, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha01\lib\net45\ICSSoft.STORMNET.Business.OracleDataService.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha02\lib\net45\ICSSoft.STORMNET.Business.OracleDataService.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Business.PostgresDataService, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c1da4b21bda90afe, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha01\lib\net45\ICSSoft.STORMNET.Business.PostgresDataService.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha02\lib\net45\ICSSoft.STORMNET.Business.PostgresDataService.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Collections, Version=1.0.0.1, Culture=neutral, PublicKeyToken=898f36b7a907d804, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha01\lib\net45\ICSSoft.STORMNET.Collections.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha02\lib\net45\ICSSoft.STORMNET.Collections.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.DataObject, Version=1.0.0.1, Culture=neutral, PublicKeyToken=023a90c13b0ca8dc, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha01\lib\net45\ICSSoft.STORMNET.DataObject.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha02\lib\net45\ICSSoft.STORMNET.DataObject.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.FunctionalLanguage, Version=1.0.0.1, Culture=neutral, PublicKeyToken=88efc6f76e5cd161, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha01\lib\net45\ICSSoft.STORMNET.FunctionalLanguage.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha02\lib\net45\ICSSoft.STORMNET.FunctionalLanguage.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.RightManager, Version=1.0.0.1, Culture=neutral, PublicKeyToken=2f453919c28176ba, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\ICSSoft.STORMNET.RightManager.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.Tools, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c824f5305b237be9, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha01\lib\net45\ICSSoft.STORMNET.Tools.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha02\lib\net45\ICSSoft.STORMNET.Tools.dll</HintPath>
     </Reference>
     <Reference Include="ICSSoft.STORMNET.UserDataTypes, Version=1.0.0.1, Culture=neutral, PublicKeyToken=bc478021255def29, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha01\lib\net45\ICSSoft.STORMNET.UserDataTypes.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.4.2.0-alpha02\lib\net45\ICSSoft.STORMNET.UserDataTypes.dll</HintPath>
     </Reference>
     <Reference Include="Interop.ActiveDs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96924c19c47317a6, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\Interop.ActiveDs.dll</HintPath>
@@ -157,13 +154,12 @@
       <HintPath>..\..\packages\Microsoft.OData.Edm.6.15.0\lib\portable-net45+win+wpa81\Microsoft.OData.Edm.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.Spatial, Version=6.15.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Spatial.6.15.0\lib\portable-net45+win+wpa81\Microsoft.Spatial.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.XmlTransform, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
@@ -242,29 +238,29 @@
       <HintPath>..\..\packages\Microsoft.AspNet.WebApi.SelfHost.5.2.3\lib\net45\System.Web.Http.SelfHost.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.OData, Version=5.7.0.0, Culture=neutral, PublicKeyToken=606707b1029e2959, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Microsoft.AspNet.OData.5.7.0\lib\net45\System.Web.OData.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Unity.Abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Unity.5.0.2\lib\net45\Unity.Abstractions.dll</HintPath>
+    <Reference Include="Unity.Abstractions, Version=3.3.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Unity.Abstractions.3.3.0\lib\net45\Unity.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Configuration, Version=5.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Unity.5.0.2\lib\net45\Unity.Configuration.dll</HintPath>
+    <Reference Include="Unity.AspNet.WebApi, Version=5.0.13.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Unity.AspNet.WebApi.5.0.13\lib\net45\Unity.AspNet.WebApi.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Container, Version=5.0.0.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Unity.5.0.2\lib\net45\Unity.Container.dll</HintPath>
+    <Reference Include="Unity.Configuration, Version=5.2.2.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Unity.Configuration.5.2.2\lib\net45\Unity.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Interception, Version=5.0.0.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Unity.5.0.2\lib\net45\Unity.Interception.dll</HintPath>
+    <Reference Include="Unity.Container, Version=5.8.6.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Unity.Container.5.8.6\lib\net45\Unity.Container.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Interception.Configuration, Version=5.0.0.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Unity.5.0.2\lib\net45\Unity.Interception.Configuration.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.ServiceLocation, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Unity.5.0.2\lib\net45\Unity.ServiceLocation.dll</HintPath>
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\WebActivatorEx.2.2.0\lib\net40\WebActivatorEx.dll</HintPath>
     </Reference>
     <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <HintPath>..\..\packages\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
@@ -283,14 +279,6 @@
       <Private>True</Private>
     </Reference>
   </ItemGroup>
-  <Choose>
-    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-      </ItemGroup>
-    </When>
-    <Otherwise />
-  </Choose>
   <ItemGroup>
     <Compile Include="BaseIntegratedTest.cs" />
     <Compile Include="CRUD\GisCRUDTest.cs" />
@@ -388,24 +376,6 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <Choose>
-    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
