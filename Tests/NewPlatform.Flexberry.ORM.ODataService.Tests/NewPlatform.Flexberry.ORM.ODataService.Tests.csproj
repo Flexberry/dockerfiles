@@ -179,7 +179,7 @@
       <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.GisPostgresDataService.1.0.0-alpha02\lib\net45\NewPlatform.Flexberry.ORM.GisPostgresDataService.dll</HintPath>
     </Reference>
     <Reference Include="NewPlatform.Flexberry.Reports.ExportToExcel, Version=1.0.0.0, Culture=neutral, PublicKeyToken=dd3c9e296c34a5da, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.Reports.ExportToExcel.1.0.0-alpha04\lib\net45\NewPlatform.Flexberry.Reports.ExportToExcel.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.Reports.ExportToExcel.1.0.0-alpha05\lib\net45\NewPlatform.Flexberry.Reports.ExportToExcel.dll</HintPath>
     </Reference>
     <Reference Include="NewPlatform.Flexberry.Security, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b04c483e14c0d306, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\NewPlatform.Flexberry.Security.dll</HintPath>
