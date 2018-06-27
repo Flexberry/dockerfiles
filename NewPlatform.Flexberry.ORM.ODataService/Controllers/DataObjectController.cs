@@ -245,13 +245,19 @@
 
         internal HttpResponseMessage CreateExcel(NameValueCollection queryParams)
         {
-            _lcs.View.Name = "View";
+            View view = _dynamicView.View;
+            if (_lcs != null)
+            {
+                view = _lcs.View;
+            }
+
+            view.Name = "View";
             ExportParams par = new ExportParams
             {
                 PropertiesOrder = new List<string>(),
-                View = _lcs.View,
-                DataObjectTypes = _lcs.LoadingTypes,
-                LimitFunction = _lcs.LimitFunction
+                View = view,
+                DataObjectTypes = null,
+                LimitFunction = null
             };
 
             var colsOrder = queryParams.Get("colsOrder").Split(',').ToList();
@@ -265,9 +271,9 @@
                 par.HeaderCaptions.Add(new HeaderCaption { PropertyName = columnInfo[0], Caption = columnInfo[1] });
             }
 
-            for (int i = 0; i < _lcs.View.Details.Length; i++)
+            for (int i = 0; i < view.Details.Length; i++)
             {
-                DetailInView detail = _lcs.View.Details[i];
+                DetailInView detail = view.Details[i];
                 detail.View.Name = $"ViewDetail{i}";
                 var column = par.HeaderCaptions.FirstOrDefault(col => col.PropertyName == detail.Name);
                 if (column != null)

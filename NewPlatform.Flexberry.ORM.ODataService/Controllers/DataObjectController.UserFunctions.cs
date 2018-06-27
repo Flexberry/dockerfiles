@@ -20,6 +20,9 @@
     using Microsoft.OData.Core;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Values;
+    using System.Collections.Specialized;
+    using NewPlatform.Flexberry.ORM.ODataService.Handlers;
+    using System.Net.Http;
 
     /// <summary>
     /// OData controller class.
@@ -127,6 +130,14 @@
                         {
                             Count = GetObjectsCount(type, queryOpt);
                         }
+                    }
+
+                    NameValueCollection queryParams = Request.RequestUri.ParseQueryString();
+
+                    if ((_model.ExportService != null || _model.ODataExportService != null) && (Request.Properties.ContainsKey(PostPatchHandler.AcceptApplicationMsExcel) || Convert.ToBoolean(queryParams.Get("exportExcel"))))
+                    {
+                        _objs = (result as IEnumerable).Cast<DataObject>().ToArray();
+                        return ResponseMessage(CreateExcel(queryParams));
                     }
 
                     var coll = GetEdmCollection((IEnumerable)result, type, 1, null, _dynamicView);

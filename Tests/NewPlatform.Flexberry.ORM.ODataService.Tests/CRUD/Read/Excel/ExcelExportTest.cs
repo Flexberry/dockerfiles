@@ -4,6 +4,12 @@
     using System.Net.Http;
     using ICSSoft.STORMNET;
     using Xunit;
+    using NewPlatform.Flexberry.ORM.ODataService.Functions;
+    using ICSSoft.STORMNET.Business;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System;
+    using System.Web.Script.Serialization;
 
     /// <summary>
     /// A class for testing exports from Excel.
@@ -32,7 +38,6 @@
                     "http://localhost/odata/{0}?{1}",
                     args.Token.Model.GetEdmEntitySet(typeof(Страна)).Name,
                     "exportExcel=true&colsOrder=Название/Название&detSeparateCols=false&detSeparateRows=false&$filter=contains(Название,'1')");
-
                 // A request is made to the OData service and the response is processed.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
                 {
@@ -42,5 +47,55 @@
                 }
             });
         }
+
+        /// <summary>
+        /// Unit test for <see cref="IFunctionContainer.Register(Delegate)"/>.
+        /// Tests the function call with query parameters.
+        /// </summary>
+        [Fact]
+        public void TestFunctionExportTest()
+        {
+            ActODataService(args =>
+            {
+                DataServiceProvider.DataService = args.DataService;
+                args.Token.Functions.Register(new Func<QueryParameters, string, Страна[]>(FunctionExportExcel));
+                // Create objects and put them in the database.
+                DataObject[] countries = new DataObject[5];
+                int countriesCount = countries.Length;
+                for (int i = 0; i < countriesCount; i++)
+                {
+                    countries[i] = new Страна { Название = string.Format("Страна №{0}", i) };
+                }
+
+                args.DataService.UpdateObjects(ref countries);
+                string requestUrl = string.Format(
+                    "http://localhost/odata/{0}?{1}",
+                    "FunctionExportExcel(entitySet='Странаs')",
+                    "exportExcel=true&colsOrder=Название/Название&detSeparateCols=false&detSeparateRows=false&$filter=contains(Название,'1')");
+                using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
+                {
+                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                    byte[] contentExcel = response.Content.ReadAsByteArrayAsync().Result;
+                }
+            });
+        }
+
+        /// <summary>
+        /// Функция подготавливающая данные для экспорта в Excel. Для правильной работы необходимо, чтобы в декларации был указан реальный тип возвращаемых значений.
+        /// Не подходит указание типа DataObject.
+        /// </summary>
+        /// <param name="queryParameters"></param>
+        /// <param name="entitySet"></param>
+        /// <returns></returns>
+        private static Страна[] FunctionExportExcel(QueryParameters queryParameters, string entitySet)
+        {
+            SQLDataService dataService = DataServiceProvider.DataService as SQLDataService;
+            var type = queryParameters.GetDataObjectType(entitySet);
+            var lcs = queryParameters.CreateLcs(type);
+            var dobjs = dataService.LoadObjects(lcs).Cast<Страна>().ToArray();
+            return dobjs;
+        }
+
     }
 }
