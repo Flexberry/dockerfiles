@@ -1,15 +1,15 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Tests.CRUD.Read
 {
-    using System.Net;
-    using System.Net.Http;
-    using ICSSoft.STORMNET;
-    using Xunit;
-    using NewPlatform.Flexberry.ORM.ODataService.Functions;
-    using ICSSoft.STORMNET.Business;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System;
+    using System.Net;
+    using System.Net.Http;
     using System.Web.Script.Serialization;
+    using ICSSoft.STORMNET;
+    using ICSSoft.STORMNET.Business;
+    using NewPlatform.Flexberry.ORM.ODataService.Functions;
+    using Xunit;
 
     /// <summary>
     /// A class for testing exports from Excel.
@@ -49,8 +49,7 @@
         }
 
         /// <summary>
-        /// Unit test for <see cref="IFunctionContainer.Register(Delegate)"/>.
-        /// Tests the function call with query parameters.
+        /// Performs export testing from Excel for odata functions.
         /// </summary>
         [Fact]
         public void TestFunctionExportTest()
@@ -59,6 +58,7 @@
             {
                 DataServiceProvider.DataService = args.DataService;
                 args.Token.Functions.Register(new Func<QueryParameters, string, Страна[]>(FunctionExportExcel));
+
                 // Create objects and put them in the database.
                 DataObject[] countries = new DataObject[5];
                 int countriesCount = countries.Length;
@@ -91,9 +91,9 @@
         private static Страна[] FunctionExportExcel(QueryParameters queryParameters, string entitySet)
         {
             SQLDataService dataService = DataServiceProvider.DataService as SQLDataService;
-            var type = queryParameters.GetDataObjectType(entitySet);
-            var lcs = queryParameters.CreateLcs(type);
-            var dobjs = dataService.LoadObjects(lcs).Cast<Страна>().ToArray();
+            Type type = queryParameters.GetDataObjectType(entitySet);
+            LoadingCustomizationStruct lcs = queryParameters.CreateLcs(type);
+            Страна[] dobjs = dataService.LoadObjects(lcs).Cast<Страна>().ToArray();
             return dobjs;
         }
 

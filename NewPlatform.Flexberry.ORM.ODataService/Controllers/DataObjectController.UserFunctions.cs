@@ -3,26 +3,18 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.Specialized;
     using System.Linq;
+    using System.Net.Http;
     using System.Web.Http;
-    using System.Web.OData;
     using System.Web.OData.Extensions;
-    using System.Web.OData.Query;
     using System.Web.OData.Routing;
-
     using ICSSoft.STORMNET;
-
+    using Microsoft.OData.Core;
     using NewPlatform.Flexberry.ORM.ODataService.Formatter;
     using NewPlatform.Flexberry.ORM.ODataService.Functions;
-    using NewPlatform.Flexberry.ORM.ODataService.Model;
-    using NewPlatform.Flexberry.ORM.ODataService.Routing;
-    using Expressions;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Values;
-    using System.Collections.Specialized;
     using NewPlatform.Flexberry.ORM.ODataService.Handlers;
-    using System.Net.Http;
+    using NewPlatform.Flexberry.ORM.ODataService.Routing;
 
     /// <summary>
     /// OData controller class.
