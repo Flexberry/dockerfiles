@@ -3,23 +3,18 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.Specialized;
     using System.Linq;
+    using System.Net.Http;
     using System.Web.Http;
-    using System.Web.OData;
     using System.Web.OData.Extensions;
-    using System.Web.OData.Query;
     using System.Web.OData.Routing;
-
     using ICSSoft.STORMNET;
-
+    using Microsoft.OData.Core;
     using NewPlatform.Flexberry.ORM.ODataService.Formatter;
     using NewPlatform.Flexberry.ORM.ODataService.Functions;
-    using NewPlatform.Flexberry.ORM.ODataService.Model;
+    using NewPlatform.Flexberry.ORM.ODataService.Handlers;
     using NewPlatform.Flexberry.ORM.ODataService.Routing;
-    using Expressions;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Values;
 
     /// <summary>
     /// OData controller class.
@@ -127,6 +122,14 @@
                         {
                             Count = GetObjectsCount(type, queryOpt);
                         }
+                    }
+
+                    NameValueCollection queryParams = Request.RequestUri.ParseQueryString();
+
+                    if ((_model.ExportService != null || _model.ODataExportService != null) && (Request.Properties.ContainsKey(PostPatchHandler.AcceptApplicationMsExcel) || Convert.ToBoolean(queryParams.Get("exportExcel"))))
+                    {
+                        _objs = (result as IEnumerable).Cast<DataObject>().ToArray();
+                        return ResponseMessage(CreateExcel(queryParams));
                     }
 
                     var coll = GetEdmCollection((IEnumerable)result, type, 1, null, _dynamicView);

@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 1. Add exception handling in user functions.
 2. Add permissions for masters and details.
 3. Add export to excel with parameters.
+4. Add the ability to export to an excel function odata.
 
 ### Fixed
 1. Fix error when query contains same properties.
