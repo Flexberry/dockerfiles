@@ -12,7 +12,7 @@ RUN apt-get update ; \
     apt-get install -y monodevelop mono-dbg cifs-utils mate-terminal mono-xsp4 ; \
 	git clone --depth=50 --branch=mono-5.10.0.160 https://github.com/mono/mono.git /build/mono-5.10.0.160 ; \
 	git checkout mono-5.10.0.160 ; \
-	rm /*
+	rm /nodesource_setup.sh /core
 
 CMD /bin/bash
 
