@@ -124,6 +124,7 @@
             RegisterMasters();
             RegisterDetails();
             RegisterGeoIntersectsFunction();
+            RegisterGeomIntersectsFunction();
         }
 
         private void BuildTypeHierarchy()
@@ -773,6 +774,17 @@
             var edmParameterType = EdmTypeMap.GetEdmPrimitiveType(typeof(Geography));
             edmFunction.AddParameter("geography1", new EdmPrimitiveTypeReference(edmParameterType, false));
             edmFunction.AddParameter("geography2", new EdmPrimitiveTypeReference(edmParameterType, false));
+        }
+
+        private void RegisterGeomIntersectsFunction()
+        {
+            EdmFunction edmFunction;
+            var edmReturnType = EdmTypeMap.GetEdmPrimitiveType(typeof(bool));
+            edmFunction = new EdmFunction("geom", "intersects", new EdmPrimitiveTypeReference(edmReturnType, false), false, null, true);
+            AddElement(edmFunction);
+            var edmParameterType = EdmTypeMap.GetEdmPrimitiveType(typeof(Geometry));
+            edmFunction.AddParameter("geometry1", new EdmPrimitiveTypeReference(edmParameterType, false));
+            edmFunction.AddParameter("geometry2", new EdmPrimitiveTypeReference(edmParameterType, false));
         }
     }
 }
