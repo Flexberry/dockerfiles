@@ -1098,6 +1098,8 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
                 case "geo.intersects":
                     return BindGeoIntersects(node);
+                case "geom.intersects":
+                    return BindGeomIntersects(node);
                 case "now":
                     return BindNow(node);
                 case "isof":
@@ -1645,6 +1647,19 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
                 arguments[1].Type == typeof(Geography) || arguments[1].Type.IsSubclassOf(typeof(Geography)));
 
             return MakeFunctionCall(ClrCanonicalFunctions.GeoIntersects, arguments[0], arguments[1]);
+        }
+
+        private Expression BindGeomIntersects(SingleValueFunctionCallNode node)
+        {
+            Contract.Assert(node.Name == "geom.intersects");
+
+            Expression[] arguments = node.Parameters.OfType<NamedFunctionParameterNode>().Select(n => Bind(n.Value)).ToArray();
+
+            Contract.Assert(arguments.Length == 2 &&
+                (arguments[0].Type == typeof(Geometry) || arguments[0].Type.IsSubclassOf(typeof(Geometry))) &&
+                arguments[1].Type == typeof(Geometry) || arguments[1].Type.IsSubclassOf(typeof(Geometry)));
+
+            return MakeFunctionCall(ClrCanonicalFunctions.GeomIntersects, arguments[0], arguments[1]);
         }
 
         private Expression BindContains(SingleValueFunctionCallNode node)

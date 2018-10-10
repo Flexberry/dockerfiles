@@ -27,6 +27,11 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
         /// </summary>
         public static readonly MethodInfo GeoIntersects;
 
+        /// <summary>
+        /// Определение reflection для пользовательской функции GisExtensions.GeoIntersects для типа Geometry
+        /// </summary>
+        public static readonly MethodInfo GeomIntersects;
+
         // string functions
 
         /// <summary>
@@ -362,6 +367,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
         static ClrCanonicalFunctions()
         {
             GeoIntersects = MethodOf(_ => GisExtensions.GeoIntersects(default(Geography), default(Geography)));
+            GeomIntersects = MethodOf(_ => GisExtensions.GeomIntersects(default(Geometry), default(Geometry)));
 
             StartsWith = MethodOf(_ => _defaultString.StartsWith(default(string)));
             EndsWith = MethodOf(_ => _defaultString.EndsWith(default(string)));
