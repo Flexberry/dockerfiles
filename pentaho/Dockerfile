@@ -6,7 +6,7 @@
 FROM zhicwu/biserver-ce:8.0-full
 
 # Set maintainer
-MAINTAINER Zhichun Wu <zhicwu@gmail.com>
+MAINTAINER Alexey Kostarev <kaf@ics.perm.ru>
 
 # Set environment variables
 ENV BISERVER_USER=pentaho PDI_PATCH=8.0.0.0 JMX_EXPORTER_VERSION=0.10
