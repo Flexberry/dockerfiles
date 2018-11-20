@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>NewPlatform.Flexberry.ORM.ODataService</id>
-    <version>4.2.0-beta01</version>
+    <version>4.2.0-beta02</version>
     <title>Flexberry ORM ODataService</title>
     <authors>New Platform Ltd.</authors>
     <owners>New Platform Ltd.</owners>
@@ -18,6 +18,7 @@
       3. Add export to excel with parameters.
       4. Fix error when query contains same properties.
       5. Add Geometry type support.
+      6. Update NewPlatform.Flexberry.ORM to 4.2.0-beta07.
     </releaseNotes>
     <copyright>Copyright New Platform Ltd 2018</copyright>
     <tags>Flexberry ORM OData ODataService</tags>
@@ -31,7 +32,7 @@
       <dependency id="Microsoft.OData.Edm" version="6.15.0" />
       <dependency id="Microsoft.Spatial" version="6.15.0" />
       <dependency id="NewPlatform.Flexberry.LockService" version="1.0.0" />
-      <dependency id="NewPlatform.Flexberry.ORM" version="4.2.0-beta01" />
+      <dependency id="NewPlatform.Flexberry.ORM" version="4.2.0-beta07" />
       <dependency id="NewPlatform.Flexberry.UserSettingsService" version="2.0.0" />
       <dependency id="Newtonsoft.Json" version="8.0.3" />
       <dependency id="Unity.AspNet.WebApi" version="5.0.13" />

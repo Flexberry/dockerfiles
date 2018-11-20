@@ -1,13 +1,9 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Offline
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business.Audit;
-    using ICSSoft.STORMNET.Business.Audit.Exceptions;
-    using ICSSoft.STORMNET.Business.Audit.HelpStructures;
-    using ICSSoft.STORMNET.Business.Audit.Objects;
 
     /// <summary>
     /// Implementation of <see cref="AuditService"/> for offline audit mode.
@@ -17,11 +13,6 @@
     /// <seealso cref="AuditService" />
     public class OfflineAuditService : AuditService
     {
-        /// <summary>
-        /// Flag indicates that sorage contains UTC audit dates. If <c>true</c> then UTC dates else if <c>false</c> then local timezone dates. Default is <c>false</c>.
-        /// </summary>
-        public bool PersistUtcDates { get; set; }
-
         /// <summary>
         /// Adds audit information for specified new data object.
         /// Does nothing in order to preserve data at <see cref="IDataObjectWithAuditFields"/> fields.
@@ -103,59 +94,7 @@
                     throw new ArgumentOutOfRangeException($"Unknown DataObject status: {objectStatus}");
             }
 
-            if (PersistUtcDates)
-            {
-                return DateTimeOffset.UtcNow.DateTime;
-            }
-
             return base.GetAuditOperationTime(operatedObject);
-        }
-
-        /// <summary>
-        /// Подтверждение созданных ранее операций аудита
-        ///             (если аудит идёт в одну БД с приложением, то будет использован сервис данных по умолчанию).
-        /// </summary>
-        /// <param name="executionVariant">Какой статус будет присвоен операции.</param><param name="auditOperationInfoList">Информация о том, что и куда в аудит нужно добавить.</param><param name="dataServiceConnectionString">Строка соединения сервиса данных, который выполняет запись в БД приложения. </param><param name="dataServiceType">Тип сервиса данных, который выполняет запись в БД приложения. </param><param name="throwExceptions">Следует ли пробрасывать дальше возникшее исключение.</param><param name="checkClassAuditSettings">Следует ли проверять настройки аудита самого класса.</param>
-        /// <returns>
-        /// <c>True</c>, если всё закончилось без ошибок. 
-        /// </returns>
-        protected override bool RatifyAuditOperation(tExecutionVariant executionVariant, List<AuditAdditionalInfo> auditOperationInfoList, string dataServiceConnectionString, Type dataServiceType, bool throwExceptions, bool checkClassAuditSettings = false)
-        {
-            if (PersistUtcDates)
-            {
-                try
-                {
-                    if (AppSetting == null || !AppSetting.AuditEnabled)
-                    {
-                        throw new DisabledAuditException();
-                    }
-
-                    if (auditOperationInfoList != null && auditOperationInfoList.Count > 0)
-                    {
-                        // Настройки вообще есть и аудит для приложения включён.
-                        var auditRatifyParameters = new RatificationAuditParameters(
-                            executionVariant,
-                            DateTimeOffset.UtcNow.DateTime,
-                            auditOperationInfoList,
-                            AppSetting.DefaultWriteMode,
-                            ApplicationMode,
-                            AppSetting.IsDatabaseLocal ? GetConnectionStringName(dataServiceConnectionString, dataServiceType) : AppSetting.AuditConnectionStringName,
-                            IsAuditRemote)
-                        { ThrowExceptions = throwExceptions };
-
-                        CheckAndSendToAudit(auditRatifyParameters, checkClassAuditSettings);
-                    }
-
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    ErrorProcesser.ProcessAuditError(ex, "AuditService, RatifyAuditOperation", throwExceptions);
-                    return false;
-                }
-            }
-
-            return base.RatifyAuditOperation(executionVariant, auditOperationInfoList, dataServiceConnectionString, dataServiceType, throwExceptions, checkClassAuditSettings);
         }
     }
 }
