@@ -45,11 +45,11 @@ SERVER_PROM_PORT=12345
 
 ```
 If necessary, you can make adjustments to these variables.
-Generally, adjustments are required for port relocations.
-`SERVER_HTTP_PORT`,
+Generally, adjustments are required for port relocations
+(`SERVER_HTTP_PORT`,
 `SERVER_AJP_PORT`,
 `SERVER_EXT_PORT`,
-`SERVER_PROM_PORT`
+`SERVER_PROM_PORT` variables)
 if standard ports are already occupied by another service running.
 
 
