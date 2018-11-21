@@ -114,7 +114,7 @@ RUN echo "Download patches and dependencies..." \
 COPY docker-entrypoint.sh $BISERVER_HOME/docker-entrypoint.sh
 COPY repository.xml.template $BISERVER_HOME/pentaho-solutions/system/jackrabbit/repository.xml.template
 COPY purge-old-files.sh /usr/local/bin/purge-old-files.sh
-COPY add/clickhouse-jdbc-0.1-SNAPSHOT-jar-with-dependencies.jar $BISERVER_HOME/tomcat/lib/
+# COPY add/clickhouse-jdbc-0.1-SNAPSHOT-jar-with-dependencies.jar $BISERVER_HOME/tomcat/lib/
 COPY license.lic /biserver-ce/pentaho-solutions/system/saiku/
 
 # Post configuration
@@ -125,16 +125,14 @@ RUN echo "Post configuration..." \
 	&& chmod 0600 /var/spool/cron/crontabs/root \
 	&& chmod +x *.sh /usr/local/bin/*.sh
 
-COPY add/ru.json /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/I18n/po/ru.json
+#COPY add/ru.json /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/I18n/po/ru.json
 # COPY add/saikucss.tgz /tmp
 
+ADD add.tgz /
 RUN echo "Localization, replace old CSSs"; \
-  cd /biserver-ce/pentaho-solutions/system/saiku/ui; \
-  tar xvzf /tmp/saikucss.tgz; \
-  echo -ne "btn btn-select-member\nbtn-primary growthBtn\nbtn-primary formatBtn\n" | \
-  while read template; do  echo "s/$template/$template i18n/"; done | \
-  sed -f - /biserver-ce/pentaho-solutions/system/saiku/ui/saiku.min.js > /tmp/saiku.min.js; \
-  mv /tmp/saiku.min.js /biserver-ce/pentaho-solutions/system/saiku/ui/saiku.min.js;
+  sed -f /tmp/sed.txt /biserver-ce/pentaho-solutions/system/saiku/ui/saiku.min.js > /tmp/saiku.min.js; \
+  mv /tmp/saiku.min.js /biserver-ce/pentaho-solutions/system/saiku/ui/saiku.min.js
+
 
 ENTRYPOINT ["/sbin/my_init", "--", "./docker-entrypoint.sh"]
 
