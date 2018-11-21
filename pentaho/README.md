@@ -65,11 +65,11 @@ docker run -d \
   -p "${SERVER_PROM_PORT}:1234" \
   -p "${SERVER_HTTP_PORT}:8080" \
   -p "${SERVER_AJP_PORT}:8009" \
-  -v  pentaho_pentaho_hidden:/biserver-ce/.pentaho/ \
-  -v  pentaho_hsqldb:/biserver-ce/data/hsqldb/ \
-  -v  pentaho_logs:/biserver-ce/tomcat/logs \
-  -v  pentaho_repository:/biserver-ce/pentaho-solutions/system/jackrabbit/repository \
-  -v  pentaho_tmp:/biserver-ce/tmp \
+  -vhidden:/biserver-ce/.pentaho/ \
+  -v hsqldb:/biserver-ce/data/hsqldb/ \
+  -v logs:/biserver-ce/tomcat/logs \
+  -v repository:/biserver-ce/pentaho-solutions/system/jackrabbit/repository \
+  -v tmp:/biserver-ce/tmp \
   -e APPLY_PATCHES='Y' \
   -e BI_JAVA_OPTS="${BI_JAVA_OPTS}" \
   -e HOST_USER_ID=${HOST_USER_ID} \
@@ -85,29 +85,29 @@ docker run -d \
 ```
 
 For all modifiable files and directories of the container, at initial startup, the named volumes are created:
-- pentaho_hidden - hidden pentaho server files;
-- pentaho_hsqldb - internal hsql database to store current settings;
-- pentaho_repository - user file system;
-- pentaho_logs - server logs;
-- pentaho_tmp - temporarty files.
+-hidden - hidden pentaho server files;
+-hsqldb - internal hsql database to store current settings;
+-repository - user file system;
+-logs - server logs;
+-tmp - temporarty files.
 
 When restarting, the image uses data from the specified named volumes.
 Thus, the user file and current settings are saved when the container is restarted.
 
 To stop the container, use the command:
 ```sh
-# docker stop bi_pentaho
+$ docker stop bi_pentaho
 
 ```
 To resume work:
 
 ```sh
-# docker start bi_pentaho
+$ docker start bi_pentaho
 
 ```
 To remove a (working) container:
 ```sh
-# docker rm -f bi_pentaho
+$ docker rm -f bi_pentaho
 
 ```
 
@@ -156,7 +156,7 @@ volumes:
 
 Run service by command:
 ```sh
-# docker-compose up -d
+$ docker-compose up -d
 ```
 
 For all modifiable files and directories of the container, at initial startup, the named volumes are created:
@@ -166,15 +166,12 @@ For all modifiable files and directories of the container, at initial startup, t
 - pentaho_logs - server logs;
 - pentaho_tmp - temporarty files.
 
-These names coincide with the names of the volumes used when running in container mode.
-Thus, they can be used in both image launch modes.
-
 When restarting, the image uses data from the specified named volumes.
 Thus, the user file and current settings are saved when the container is restarted.
 
 To stop the service, use the command:
 ```sh
-# docker-compose down
+$ docker-compose down
 ```
 
 In case the `pentaho` service should work on the server with other docker-services (for example, Postgres, MySQL, ClickHouse databases, ...)
@@ -201,13 +198,18 @@ For all modifiable files and directories of the container, at initial startup, t
 - pentaho_logs - server logs;
 - pentaho_tmp - temporarty files.
 
-These names coincide with the names of the volumes used when running in container mode and the docker-compose service.
-Thus, they can be used in all image launch modes.
+These names coincide with the names of the volumes used when running in  mode docker-compose service.
+Thus, they can be used in  both launch modes.
 
 When restarting, the image uses data from the specified named volumes.
 Thus, the user file and current settings are saved when the container is restarted.
 
-In the event that the `pentaho` service should work in a cluster with other docker-services (for example, Postgres, MySQL, ClickHouse databases, ...)
+To stop the stack of services, use the command:
+```sh
+$ docker stack rm pentaho
+```
+
+In case the `pentaho` service should work in a cluster with other docker-services (for example, Postgres, MySQL, ClickHouse databases, ...)
 A description of additional services can be added to the `docker-compose.yml` file.
 
 

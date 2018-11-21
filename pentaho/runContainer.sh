@@ -6,11 +6,11 @@ docker run -d \
   -p "${SERVER_PROM_PORT}:1234" \
   -p "${SERVER_HTTP_PORT}:8080" \
   -p "${SERVER_AJP_PORT}:8009" \
-  -v  pentaho_pentaho_hidden:/biserver-ce/.pentaho/ \
-  -v  pentaho_hsqldb:/biserver-ce/data/hsqldb/ \
-  -v  pentaho_logs:/biserver-ce/tomcat/logs \
-  -v  pentaho_repository:/biserver-ce/pentaho-solutions/system/jackrabbit/repository \
-  -v  pentaho_tmp:/biserver-ce/tmp \
+  -v  hidden:/biserver-ce/.pentaho/ \
+  -v  hsqldb:/biserver-ce/data/hsqldb/ \
+  -v  logs:/biserver-ce/tomcat/logs \
+  -v  repository:/biserver-ce/pentaho-solutions/system/jackrabbit/repository \
+  -v  tmp:/biserver-ce/tmp \
   -e APPLY_PATCHES='Y' \
   -e BI_JAVA_OPTS="${BI_JAVA_OPTS}" \
   -e HOST_USER_ID=${HOST_USER_ID} \

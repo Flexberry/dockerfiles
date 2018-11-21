@@ -65,11 +65,11 @@ docker run -d \
   -p "${SERVER_PROM_PORT}:1234" \
   -p "${SERVER_HTTP_PORT}:8080" \
   -p "${SERVER_AJP_PORT}:8009" \
-  -v  pentaho_pentaho_hidden:/biserver-ce/.pentaho/ \
-  -v  pentaho_hsqldb:/biserver-ce/data/hsqldb/ \
-  -v  pentaho_logs:/biserver-ce/tomcat/logs \
-  -v  pentaho_repository:/biserver-ce/pentaho-solutions/system/jackrabbit/repository \
-  -v  pentaho_tmp:/biserver-ce/tmp \
+  -v  hidden:/biserver-ce/.pentaho/ \
+  -v  hsqldb:/biserver-ce/data/hsqldb/ \
+  -v  logs:/biserver-ce/tomcat/logs \
+  -v  repository:/biserver-ce/pentaho-solutions/system/jackrabbit/repository \
+  -v  tmp:/biserver-ce/tmp \
   -e APPLY_PATCHES='Y' \
   -e BI_JAVA_OPTS="${BI_JAVA_OPTS}" \
   -e HOST_USER_ID=${HOST_USER_ID} \
@@ -85,31 +85,31 @@ docker run -d \
 ```
 
 Для всех изменяемых файлов и каталогов контейнера при первоначальном запуске создаются именованые тома:
-- pentaho_hidden - скрытые файлы сервера pentaho;
-- pentaho_hsqldb - внутренняя база данных типа  hsql для хранения текущих настроек;
-- pentaho_repository - файловая система пользователей;
-- pentaho_logs - логи сервера;
-- pentaho_tmp - временные файлы сервера.
+- hidden - скрытые файлы сервера pentaho;
+- hsqldb - внутренняя база данных типа  hsql для хранения текущих настроек;
+- repository - файловая система пользователей;
+- logs - логи сервера;
+- tmp - временные файлы сервера.
 
 При повторных запусках образ использует данные из указанным именованых томов.
 Таким образом файлы пользователя и текущие настройки сохраняются при перезапуске контейнера.
 
 Для остановки работы контейнера воспользуйтесь командой:
 ```sh
-# docker stop bi_pentaho
+$ docker stop bi_pentaho
 
 ```
 
 Для возобновления работы:
 
 ```sh
-# docker start bi_pentaho
+$ docker start bi_pentaho
 
 ```
 
 Для удаления (работающего) контейнера:
 ```sh
-# docker rm -f bi_pentaho
+$ docker rm -f bi_pentaho
 
 ```
 
@@ -158,7 +158,7 @@ volumes:
 
 Запуск производится командой:
 ```sh
-# docker-compose up -d
+$ docker-compose up -d
 ```
 
 Для всех изменяемых файлов и каталогов контейнера при первоначальном запуске создаются именованые тома:
@@ -168,15 +168,12 @@ volumes:
 - pentaho_logs - логи сервера;
 - pentaho_tmp - временные файлы сервера.
 
-Данные имена совпадают с именами томов, используемых при запуске в режиме контейнера.
-Таким образом они могут быть использованы в обоих режимах запуска образа.
-
 При повторных запусках образ использует данные из указанным именованых томов.
 Таким образов файлы пользователя и текущие настройки сохраняются при перезапуске контейнера.
 
 Для остановки работы сервиса воспользуйтесь командой:
 ```sh
-# docker-compose down
+$ docker-compose down
 ```
 
 В том случае, если сервис `pentaho` должен работать на сервере  с другими docker-сервисами (например базами данных Postgres, MySQL, ClickHouse, ...)
@@ -203,11 +200,16 @@ docker-compose config | docker stack deploy -c - pentaho
 - pentaho_logs - логи сервера;
 - pentaho_tmp - временные файлы сервера.
 
-Данные имена совпадают с именами томов, используемых при запуске в режиме контейнера и docker-compose сервиса.
-Таким образом они могут быть использованы во всех режимах запуска образа.
+Данные имена совпадают с именами томов, используемых при запуске в режиме docker-compose сервиса.
+Таким образом они могут быть использованы во обоих режимах запуска образа.
 
 При повторных запусках образ использует данные из указанным именованых томов.
 Таким образов файлы пользователя и текущие настройки сохраняются при перезапуске контейнера.
+
+Для остановки работы стека сервисов воспользуйтесь командой:
+```sh
+$ docker stack rm pentaho
+```
 
 В том случае, если сервис `pentaho` должен работать в кластере  с другими docker-сервисами (например базами данных Postgres, MySQL, ClickHouse, ...)
 описание дополнительных сервисов может быть добавлено в файл `docker-compose.yml`.
