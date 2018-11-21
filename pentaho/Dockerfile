@@ -126,12 +126,15 @@ RUN echo "Post configuration..." \
 	&& chmod +x *.sh /usr/local/bin/*.sh
 
 COPY add/ru.json /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/I18n/po/ru.json
-COPY add/saikucss.tgz /tmp
+# COPY add/saikucss.tgz /tmp
 
 RUN echo "Localization, replace old CSSs"; \
   cd /biserver-ce/pentaho-solutions/system/saiku/ui; \
-  tar xvzf /tmp/saikucss.tgz
-
+  tar xvzf /tmp/saikucss.tgz; \
+  echo -ne "btn btn-select-member\nbtn-primary growthBtn\nbtn-primary formatBtn\n" | \
+  while read template; do  echo "s/$template/$template i18n/"; done | \
+  sed -f - /biserver-ce/pentaho-solutions/system/saiku/ui/saiku.min.js > /tmp/saiku.min.js; \
+  mv /tmp/saiku.min.js /biserver-ce/pentaho-solutions/system/saiku/ui/saiku.min.js;
 
 ENTRYPOINT ["/sbin/my_init", "--", "./docker-entrypoint.sh"]
 
