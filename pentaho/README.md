@@ -85,11 +85,11 @@ docker run -d \
 ```
 
 For all modifiable files and directories of the container, at initial startup, the named volumes are created:
--hidden - hidden pentaho server files;
--hsqldb - internal hsql database to store current settings;
--repository - user file system;
--logs - server logs;
--tmp - temporarty files.
+- hidden - hidden pentaho server files;
+- hsqldb - internal hsql database to store current settings;
+- repository - user file system;
+- logs - server logs;
+- tmp - temporarty files.
 
 When restarting, the image uses data from the specified named volumes.
 Thus, the user file and current settings are saved when the container is restarted.
