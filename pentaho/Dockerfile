@@ -130,9 +130,8 @@ RUN echo "Post configuration..." \
 
 ADD /add/ /
 
-#RUN echo "Localization, replace old CSSs"; \
-#  sed -f /tmp/sed.txt /biserver-ce/pentaho-solutions/system/saiku/ui/saiku.min.js > /tmp/saiku.min.js; \
-#  mv /tmp/saiku.min.js /biserver-ce/pentaho-solutions/system/saiku/ui/saiku.min.js
+RUN echo "Localization, replace old CSSs"; \
+	sed -i -e "s~<strong>All Measures - </strong>~<strong class='i18n'>All Measures - </strong>~" /biserver-ce/pentaho-solutions/system/saiku/ui/index.html
 
 
 ENTRYPOINT ["/sbin/my_init", "--", "./docker-entrypoint.sh"]
