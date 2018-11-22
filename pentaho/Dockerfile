@@ -128,7 +128,8 @@ RUN echo "Post configuration..." \
 #COPY add/ru.json /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/I18n/po/ru.json
 # COPY add/saikucss.tgz /tmp
 
-ADD add.tgz /
+ADD /add/ /
+
 RUN echo "Localization, replace old CSSs"; \
   sed -f /tmp/sed.txt /biserver-ce/pentaho-solutions/system/saiku/ui/saiku.min.js > /tmp/saiku.min.js; \
   mv /tmp/saiku.min.js /biserver-ce/pentaho-solutions/system/saiku/ui/saiku.min.js

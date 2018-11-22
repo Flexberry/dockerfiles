@@ -1,0 +1,3 @@
+s/btn btn-select-member/btn btn-select-member i18n/
+s/btn-primary growthBtn/btn-primary growthBtn i18n/
+s/btn-primary formatBtn/btn-primary formatBtn i18n/
