@@ -135,8 +135,9 @@ RUN echo "Localization, replace old CSSs"; \
 	wget  https://raw.githubusercontent.com/Flexberry/saiku/development/saiku-ui/js/saiku/plugins/I18n/plugin.js -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/I18n/plugin.js; \
 	wget  https://raw.githubusercontent.com/Flexberry/saiku/development/saiku-ui/js/saiku/plugins/I18n/po/ru.json -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/I18n/po/ru.json; \
 	sed -i -e "s~<strong>All Measures - </strong>~<strong class='i18n'>All Measures - </strong>~" \
-		-e 's/<div class="fields_list /<div class="fields_list i18n /g' \
 		/biserver-ce/pentaho-solutions/system/saiku/ui/index.html;
+
+#                -e 's/<div class="fields_list /<div class="fields_list i18n /g' \
 
 
 ENTRYPOINT ["/sbin/my_init", "--", "./docker-entrypoint.sh"]
