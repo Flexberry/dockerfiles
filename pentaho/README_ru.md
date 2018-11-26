@@ -49,7 +49,7 @@ SERVER_PROM_PORT=12345
 `SERVER_HTTP_PORT`,
 `SERVER_AJP_PORT`,
 `SERVER_EXT_PORT`,
-`SERVER_PROM_PORT)
+`SERVER_PROM_PORT`)
 в том случае, если стандартные порты уже заняты другим работающем сервисом.
 
 
