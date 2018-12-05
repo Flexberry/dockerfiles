@@ -132,6 +132,8 @@ ADD /add/ /
 
 RUN echo "Localization, replace old CSSs"; \
 	wget  https://raw.githubusercontent.com/Flexberry/saiku/development/saiku-ui/target/saiku-ui-3.17/saiku.js -O /biserver-ce/pentaho-solutions/system/saiku/ui/saiku.min.js; \
+        wget https://raw.githubusercontent.com/Flexberry/saiku/development/saiku-ui/js/saiku/plugins/CCC_Chart/pvc-d.js -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/CCC_Chart/pvc-d.js; \
+        wget https://raw.githubusercontent.com/Flexberry/saiku/development/saiku-ui/js/saiku/plugins/CCC_Chart2/pvc.js -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/CCC_Chart2/pvc.js; \
 	wget  https://raw.githubusercontent.com/Flexberry/saiku/development/saiku-ui/js/saiku/plugins/I18n/plugin.js -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/I18n/plugin.js; \
 	wget  https://raw.githubusercontent.com/Flexberry/saiku/development/saiku-ui/js/saiku/plugins/I18n/po/ru.json -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/I18n/po/ru.json; \
 	sed -i -e "s~<strong>All Measures - </strong>~<strong class='i18n'>All Measures - </strong>~" \
