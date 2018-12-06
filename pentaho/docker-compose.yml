@@ -27,6 +27,7 @@ services:
       SERVER_NAME: ${SERVER_NAME}
       SERVER_HOST: ${SERVER_HOST}
       SERVER_PORT: ${SERVER_EXT_PORT}
+      DISABLE_CHARTPLUS: ${DISABLE_CHARTPLUS}
 
 volumes:
   hidden:
