@@ -58,7 +58,7 @@ The variable DISABLED_TOOLS contains a list of disabled (experimental) tools. Cu
 - saikuplus - business graphics saikuplyus;
 - exportpdf - export tables to PDF.
 
-The delimiter is a symbol -
+The delimiter is a symbol `-`.
 
 
 ## Run in container mode
