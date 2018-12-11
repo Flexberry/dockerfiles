@@ -131,11 +131,16 @@ RUN echo "Post configuration..." \
 ADD /add/ /
 
 RUN echo "Localization, replace old CSSs"; \
+  set -x ; \
+  mkdir -p /biserver-ce/pentaho-solutions/system/saiku/org/saiku/web/export/; \
+	wget https://raw.githubusercontent.com/Flexberry/saiku/flexberry-pentaho/saiku-core/saiku-web/src/main/resources/org/saiku/web/export/fop_config.xml -O /biserver-ce/pentaho-solutions/system/saiku/org/saiku/web/export/fop_config.xml; \
+	wget https://raw.githubusercontent.com/Flexberry/saiku/flexberry-pentaho/saiku-core/saiku-web/src/main/resources/org/saiku/web/export/xhtml2fo.xsl -O /biserver-ce/pentaho-solutions/system/saiku/org/saiku/web/export/xhtml2fo.xsl; \
+	wget https://github.com/Flexberry/fop/raw/addConfigParser/fop/target/fop-2.4.0-SNAPSHOT.jar -O /biserver-ce/pentaho-solutions/system/saiku/lib/fop-2.2.jar; \
 	wget  https://raw.githubusercontent.com/Flexberry/saiku/flexberry-pentaho/saiku-ui/target/saiku-ui-3.17/saiku.js -O /biserver-ce/pentaho-solutions/system/saiku/ui/saiku.min.js; \
-        wget https://raw.githubusercontent.com/Flexberry/saiku/development/saiku-ui/js/saiku/plugins/CCC_Chart/pvc-d.js -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/CCC_Chart/pvc-d.js; \
-        wget https://raw.githubusercontent.com/Flexberry/saiku/development/saiku-ui/js/saiku/plugins/CCC_Chart2/pvc.js -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/CCC_Chart2/pvc.js; \
-	wget  https://raw.githubusercontent.com/Flexberry/saiku/development/saiku-ui/js/saiku/plugins/I18n/plugin.js -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/I18n/plugin.js; \
-	wget  https://raw.githubusercontent.com/Flexberry/saiku/development/saiku-ui/js/saiku/plugins/I18n/po/ru.json -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/I18n/po/ru.json; \
+  wget https://raw.githubusercontent.com/Flexberry/saiku/flexberry-pentaho/saiku-ui/js/saiku/plugins/CCC_Chart/pvc-d.js -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/CCC_Chart/pvc-d.js; \
+  wget https://raw.githubusercontent.com/Flexberry/saiku/flexberry-pentaho/saiku-ui/js/saiku/plugins/CCC_Chart2/pvc.js -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/CCC_Chart2/pvc.js; \
+	wget  https://raw.githubusercontent.com/Flexberry/saiku/flexberry-pentaho/saiku-ui/js/saiku/plugins/I18n/plugin.js -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/I18n/plugin.js; \
+	wget  https://raw.githubusercontent.com/Flexberry/saiku/flexberry-pentaho/saiku-ui/js/saiku/plugins/I18n/po/ru.json -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/I18n/po/ru.json; \
 	sed -i -e "s~<strong>All Measures - </strong>~<strong class='i18n'>All Measures - </strong>~" \
 		/biserver-ce/pentaho-solutions/system/saiku/ui/index.html;
 

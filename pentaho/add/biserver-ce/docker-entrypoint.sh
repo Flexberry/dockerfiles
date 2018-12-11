@@ -28,7 +28,7 @@ fix_permission() {
 	# only change when HOST_USER_ID is not empty(and not root)
 	if [ "$HOST_USER_ID" != "" ] && [ $HOST_USER_ID != 0 ]; then
 		echo "Fixing permissions..."
-		
+
 		# based on https://github.com/schmidigital/permission-fix/blob/master/tools/permission_fix
 		UNUSED_USER_ID=21338
 
@@ -44,7 +44,7 @@ fix_permission() {
 
 			usermod -o -u $HOST_USER_ID $BISERVER_USER || true
 		fi
-		
+
 		# all sub-directories
 		find $BISERVER_HOME -type d -print0 | xargs -0 chown $BISERVER_USER
 		# and then work directories and files underneath
@@ -70,7 +70,7 @@ update_db() {
 	: ${DATABASE_REPOSITORY_URL:="jdbc:mysql://$DATABASE_HOST:DATABASE_PORT/$DATABASE_REPOSITORY"}
 	: ${DATABASE_VALIDATION_QUERY:="SELECT 1"}
 	: ${DATABASE_TYPE:="mysql"}
-	
+
 	/bin/cp -f $BISERVER_HOME/pentaho-solutions/system/jackrabbit/repository.xml.template $BISERVER_HOME/pentaho-solutions/system/jackrabbit/repository.xml \
 		&& sed -i -e 's|\(jdbc.driver=\).*|\1'"$DATABASE_DRIVER"'|' pentaho-solutions/system/applicationContext-spring-security-hibernate.properties \
 		&& sed -i -e 's|\(jdbc.url=\).*|\1'"$DATABASE_HIBERNATE_URL"'|' pentaho-solutions/system/applicationContext-spring-security-hibernate.properties \
@@ -101,7 +101,7 @@ update_db() {
 		maxWait='10000' username='${DATABASE_USER}' password='${DATABASE_PASSWD}'
 		driverClassName='${DATABASE_DRIVER}' url='${DATABASE_HIBERNATE_URL}'
 		validationQuery='${DATABASE_VALIDATION_QUERY}' />
-		
+
 	<Resource name='jdbc/Quartz' auth='Container' type='javax.sql.DataSource'
 		factory='org.apache.commons.dbcp.BasicDataSourceFactory' maxActive='20' maxIdle='5'
 		maxWait='10000' username='${DATABASE_USER}' password='${DATABASE_PASSWD}'
@@ -176,7 +176,7 @@ KETTLE_DISABLE_CONSOLE_LOGGING=Y
 KETTLE_CARTE_RETRIES=3
 " > $KETTLE_HOME/.kettle/kettle.properties
 	fi
-	
+
 	if [ ! -f $KETTLE_HOME/slave-server-config.xml ]; then
 		echo "Generating master server configuration..."
 		cat <<< "<slave_config>
@@ -198,7 +198,7 @@ KETTLE_CARTE_RETRIES=3
 
 apply_changes() {
 	gen_kettle_config
-	
+
 	# you can mount a volume pointing to /pdi-ext for customization
 	if [ -d $EXT_DIR ]; then
 		# if you have custom scripts to run, let's do it
@@ -211,18 +211,18 @@ apply_changes() {
 			/bin/cp -Rf $EXT_DIR/* .
 		fi
 	fi
-	
+
 	# update database configuration as required
 	if [ "$STORAGE_TYPE" != "" ] && [ -f pentaho-solutions/system/hibernate/${STORAGE_TYPE}.hibernate.cfg.xml ]; then
 		sed -i -e 's|\(<!-- \[BEGIN HSQLDB DATABASES\]\).*|\1|' tomcat/webapps/pentaho/WEB-INF/web.xml \
 			&& sed -i -e 's|.*\(\[END HSQLDB DATABASES\] -->\)|\1|' tomcat/webapps/pentaho/WEB-INF/web.xml \
 			&& sed -i -e 's|\(<!-- \[BEGIN HSQLDB STARTER\]\).*|\1|' tomcat/webapps/pentaho/WEB-INF/web.xml \
 			&& sed -i -e 's|.*\(\[END HSQLDB STARTER\] -->\)|\1|' tomcat/webapps/pentaho/WEB-INF/web.xml
-		
+
 		if [ -f database.env ]; then
 			echo "Updating database configuration..."
 			. database.env
-			
+
 			update_db
 		else
 			echo "Skip database configuration as database.env is not available"
@@ -242,19 +242,36 @@ apply_changes() {
 }
 
 # start BI server
-if [ -n "$DISABLE_CHARTPLUS" ]
-then
-        mv /biserver-ce/pentaho-solutions/system/saiku-chart-plus /tmp
-fi
+set -x
+exec 2>/tmp/start.log
+echo "DISABLED_TOOLS=${DISABLED_TOOLS}" >&2
+ifs=$IFS
+IFS=-
+for disabledTool in ${DISABLED_TOOLS}
+do
+  echo "disabledTool='$disabledTool'" >&2;
+  case $disabledTool in
+    saikuplus)
+      mv /biserver-ce/pentaho-solutions/system/saiku-chart-plus /tmp;
+      continue;;
+    exportpdf)
+      sed -i -e 's/id="export_pdf_icon"/id="export_pdf_icon" style="display:none"/' /biserver-ce/pentaho-solutions/system/saiku/ui/index.html
+      continue;;
+    *)
+      echo "UNKNOWN DISABLED TOOL: '$disabledTool'" >&2;
+  esac
+done
+IFS=$ifs
+
 if [ "$1" = 'biserver' ]; then
 	init_biserver
 	apply_changes
 	fix_permission
-	
+
 	# update configuration based on environment variables
 	# send log output to stdout
 	#sed -i 's/^\(.*rootLogger.*\), *out *,/\1, stdout,/' system/karaf/etc/org.ops4j.pax.logging.cfg
-	#sed -i -e 's|.*\(runtimeFeatures=\).*|\1'"ssh,http,war,kar,cxf"'|' system/karaf/etc-carte/org.pentaho.features.cfg 
+	#sed -i -e 's|.*\(runtimeFeatures=\).*|\1'"ssh,http,war,kar,cxf"'|' system/karaf/etc-carte/org.pentaho.features.cfg
 
 	# now start the bi server
 	exec /sbin/setuser $BISERVER_USER $BISERVER_HOME/start-pentaho.sh
