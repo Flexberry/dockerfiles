@@ -131,6 +131,7 @@ RUN echo "Post configuration..." \
 ADD /add/ /
 
 RUN echo "Localization, replace old CSSs"; \
+	wget https://github.com/Flexberry/fop/raw/addConfigParser/fop/target/fop-2.4.0-SNAPSHOT.jar -O /biserver-ce/pentaho-solutions/system/saiku/lib/fop-2.2.jar; \
 	wget  https://raw.githubusercontent.com/Flexberry/saiku/flexberry-pentaho/saiku-ui/target/saiku-ui-3.17/saiku.js -O /biserver-ce/pentaho-solutions/system/saiku/ui/saiku.min.js; \
         wget https://raw.githubusercontent.com/Flexberry/saiku/development/saiku-ui/js/saiku/plugins/CCC_Chart/pvc-d.js -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/CCC_Chart/pvc-d.js; \
         wget https://raw.githubusercontent.com/Flexberry/saiku/development/saiku-ui/js/saiku/plugins/CCC_Chart2/pvc.js -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/CCC_Chart2/pvc.js; \
