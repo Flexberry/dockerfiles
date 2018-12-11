@@ -57,6 +57,7 @@ if standard ports are already occupied by another service running.
 The variable DISABLED_TOOLS contains a list of disabled (experimental) tools. Currently it is:
 - saikuplus - business graphics saikuplyus;
 - exportpdf - export tables to PDF.
+
 The delimiter is a symbol -
 
 
