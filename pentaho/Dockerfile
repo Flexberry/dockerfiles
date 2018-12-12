@@ -139,10 +139,14 @@ RUN echo "Localization, replace old CSSs"; \
 	wget  https://raw.githubusercontent.com/Flexberry/saiku/flexberry-pentaho/saiku-ui/target/saiku-ui-3.17/saiku.js -O /biserver-ce/pentaho-solutions/system/saiku/ui/saiku.min.js; \
   wget https://raw.githubusercontent.com/Flexberry/saiku/flexberry-pentaho/saiku-ui/js/saiku/plugins/CCC_Chart/pvc-d.js -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/CCC_Chart/pvc-d.js; \
   wget https://raw.githubusercontent.com/Flexberry/saiku/flexberry-pentaho/saiku-ui/js/saiku/plugins/CCC_Chart2/pvc.js -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/CCC_Chart2/pvc.js; \
-	wget  https://raw.githubusercontent.com/Flexberry/saiku/flexberry-pentaho/saiku-ui/js/saiku/plugins/I18n/plugin.js -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/I18n/plugin.js; \
-	wget  https://raw.githubusercontent.com/Flexberry/saiku/flexberry-pentaho/saiku-ui/js/saiku/plugins/I18n/po/ru.json -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/I18n/po/ru.json; \
-	sed -i -e "s~<strong>All Measures - </strong>~<strong class='i18n'>All Measures - </strong>~" \
-		/biserver-ce/pentaho-solutions/system/saiku/ui/index.html;
+  wget https://raw.githubusercontent.com/Flexberry/saiku/flexberry-pentaho/saiku-ui/js/saiku/plugins/CCC_Chart2/protovis.js -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/CCC_Chart2/protovis.js; \
+        wget  https://raw.githubusercontent.com/Flexberry/saiku/flexberry-pentaho/saiku-ui/js/saiku/plugins/I18n/plugin.js -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/I18n/plugin.js; \
+	wget  https://raw.githubusercontent.com/Flexberry/saiku/flexberry-pentaho/saiku-ui/js/saiku/plugins/I18n/po/ru.json -O /biserver-ce/pentaho-solutions/system/saiku/ui/js/saiku/plugins/I18n/po/ru.json;
+
+	#wget https://raw.githubusercontent.com/Flexberry/saiku/flexberry-pentaho/saiku-ui/index.html -O /biserver-ce/pentaho-solutions/system/saiku/ui/index.html;
+
+	#sed -i -e "s~<strong>All Measures - </strong>~<strong class='i18n'>All Measures - </strong>~" \
+	#	/biserver-ce/pentaho-solutions/system/saiku/ui/index.html;
 
 #                -e 's/<div class="fields_list /<div class="fields_list i18n /g' \
 
