@@ -42,7 +42,9 @@ SERVER_HTTP_PORT=8080
 SERVER_AJP_PORT=8009
 SERVER_EXT_PORT=443
 SERVER_PROM_PORT=12345
-
+#DISABLED_TOOLS=saikuplus-exportpdf
+DISABLED_TOOLS=saikuplus
+#DISABLED_TOOLS=""
 ```
 If necessary, you can make adjustments to these variables.
 Generally, adjustments are required for port relocations
@@ -51,6 +53,12 @@ Generally, adjustments are required for port relocations
 `SERVER_EXT_PORT`,
 `SERVER_PROM_PORT` variables)
 if standard ports are already occupied by another service running.
+
+The variable DISABLED_TOOLS contains a list of disabled (experimental) tools. Currently it is:
+- saikuplus - business graphics saikuplyus;
+- exportpdf - export tables to PDF.
+
+The delimiter is a symbol `-`.
 
 
 ## Run in container mode

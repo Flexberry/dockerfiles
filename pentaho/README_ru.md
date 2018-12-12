@@ -42,7 +42,9 @@ SERVER_HTTP_PORT=8080
 SERVER_AJP_PORT=8009
 SERVER_EXT_PORT=443
 SERVER_PROM_PORT=12345
-
+#DISABLED_TOOLS=saikuplus-exportpdf
+DISABLED_TOOLS=saikuplus
+#DISABLED_TOOLS=""
 ```
 В случае необходимости можно произвести корректировку указанных переменных.
 В основном корректировки требуются для перенезначения портов (переменные
@@ -51,6 +53,12 @@ SERVER_PROM_PORT=12345
 `SERVER_EXT_PORT`,
 `SERVER_PROM_PORT`)
 в том случае, если стандартные порты уже заняты другим работающем сервисом.
+
+Переменная DISABLED_TOOLS содержит список выключаемых (эксперементальных) инструментов. На настоящий момент это:
+- saikuplus - деловая графика sailuplus;
+- exportpdf - экспорт таблиц в PDF. 
+
+Разделителем служит символ `-`.
 
 
 ## Запуск в режиме контейнера
