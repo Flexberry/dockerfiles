@@ -1,4 +1,4 @@
-# Flexberry/pentaho
+# Flexberry/pentaho-saiku
 
 This image is based on Dockerfile  [zhicwu/biserver-ce:8.0 Dockerfile](https://hub.docker.com/r/zhicwu/biserver-ce/)
 

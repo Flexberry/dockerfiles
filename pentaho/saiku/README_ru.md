@@ -1,4 +1,4 @@
-# Flexberry/pentaho
+# Flexberry/pentaho-saiku
 
 Даннай образ основан на Dockerfile  [zhicwu/biserver-ce:8.0 Dockerfile](https://hub.docker.com/r/zhicwu/biserver-ce/)
 
