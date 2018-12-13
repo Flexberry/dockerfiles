@@ -22,17 +22,26 @@ RUN \
 
 RUN mkdir ${PENTAHO_HOME}; useradd -s /bin/bash -d ${PENTAHO_HOME} pentaho; chown pentaho:pentaho ${PENTAHO_HOME}
 
-USER pentaho
 
 ADD /add /
 
+
 RUN fc-cache -f -v; \
-    /usr/bin/wget --progress=dot:giga http://downloads.sourceforge.net/project/pentaho/Pentaho%20${BISERVER_VERSION}/server/pentaho-server-ce-${BISERVER_TAG}.zip -O /tmp/pentaho-server-ce-${BISERVER_TAG}.zip; \
     /usr/bin/unzip -q /tmp/pentaho-server-ce-${BISERVER_TAG}.zip -d  $PENTAHO_HOME; \
     rm -f /tmp/pentaho-server-ce-${BISERVER_TAG}.zip $PENTAHO_HOME/pentaho-server/promptuser.sh; \
     sed -i -e 's/\(exec ".*"\) start/\1 run/' $PENTAHO_HOME/pentaho-server/tomcat/bin/startup.sh; \
     chmod +x $PENTAHO_HOME/pentaho-server/start-pentaho.sh
 
+    #/usr/bin/wget --progress=dot:giga http://downloads.sourceforge.net/project/pentaho/Pentaho%20${BISERVER_VERSION}/server/pentaho-server-ce-${BISERVER_TAG}.zip -O /tmp/pentaho-server-ce-${BISERVER_TAG}.zip; \
+
+
+RUN \
+  bzip2 -d /var/lib/rpm/*bz2; \
+  apt-get update; \
+  apt-get update; \
+  apt-get install -y java-1.8.0-openjdk;
+
+USER pentaho
 WORKDIR /opt/pentaho/pentaho-server
 EXPOSE 8080
 CMD ["sh", "start-pentaho.sh"]
