@@ -2,7 +2,7 @@ version: '3.2'
 
 services:
   pentaho:
-    image: flexberry/pentaho$BI_IMAGE_TAG
+    image: flexberry/pentaho-saiku$BI_IMAGE_TAG
     command: /biserver-ce/start-pentaho.sh
     ports:
       - "${SERVER_PROM_PORT}:1234"
