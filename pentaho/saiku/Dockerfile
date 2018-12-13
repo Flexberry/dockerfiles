@@ -150,6 +150,12 @@ RUN echo "Localization, replace old CSSs"; \
 
 #                -e 's/<div class="fields_list /<div class="fields_list i18n /g' \
 
+ENV POSTGRESQL_DRIVER_VERSION=42.2.5
+
+RUN echo "Reinstall Postgres driver"; \
+     rm -f /biserver-ce/tomcat/lib/postgresql-*.jar; \ 
+     wget --progress=dot:giga https://jdbc.postgresql.org/download/postgresql-${POSTGRESQL_DRIVER_VERSION}.jar -O /biserver-ce/tomcat/lib/postgresql-${POSTGRESQL_DRIVER_VERSION}.jar
+
 
 ENTRYPOINT ["/sbin/my_init", "--", "./docker-entrypoint.sh"]
 
