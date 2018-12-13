@@ -10,9 +10,9 @@ Features of the family:
 - built-in support for SQL drivers (postgres, ...) and NoSQL (ClickHouse. ...) databases
 
 At the present moment, the family contains a single image [flexberry / pentaho-saiku] (https://github.com/Flexberry/dockerfiles/tree/pentaho-saiku_8.0/pentaho) version 8.0 with aliases:
-`` `
+```
 flexberry / pentaho = flexberry / pentaho: 8.0 = flexberry / pentaho-saiku = flexberry / pentaho-saiku: 8.0
-`` `
+```
 
 At the moment, the development of a tree of images 8.1.
 Its features are:
@@ -25,11 +25,11 @@ Its features are:
 
 The image tree will look like this:
 
-`` `
+```
 flexberry / pentaho = flexberry / pentaho: 8.0 == flexberry / pentaho-saiku = flexberry / pentaho-saiku: 8.0
                   |
                   + flexberry / pentaho: 8.1 -> flexberry / pentaho-saiku: 8.1
-`` `
+```
 
 As soon as the aliases of flexberry / pentaho, flexberry / pentaho-saiku are ready, they will be transferred from branch 8.0 to branch 8.1
 and subsequent versions of images.
