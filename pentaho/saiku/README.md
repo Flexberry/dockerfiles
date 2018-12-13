@@ -89,7 +89,7 @@ docker run -d \
   -e SERVER_NAME=${SERVER_NAME} \
   -e SERVER_HOST=${SERVER_HOST} \
   -e SERVER_PORT=${SERVER_EXT_PORT} \
-  flexberry/pentaho$BI_IMAGE_TAG
+  flexberry/pentaho-saiku$BI_IMAGE_TAG
 ```
 
 For all modifiable files and directories of the container, at initial startup, the named volumes are created:
@@ -128,7 +128,7 @@ version: '3.2'
 
 services:
   pentaho:
-    image: flexberry/pentaho
+    image: flexberry/pentaho-saiku
     command: /biserver-ce/start-pentaho.sh
     ports:
       - "${SERVER_PROM_PORT}:1234"

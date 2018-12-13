@@ -56,7 +56,7 @@ DISABLED_TOOLS=saikuplus
 
 Переменная DISABLED_TOOLS содержит список выключаемых (эксперементальных) инструментов. На настоящий момент это:
 - saikuplus - деловая графика sailuplus;
-- exportpdf - экспорт таблиц в PDF. 
+- exportpdf - экспорт таблиц в PDF.
 
 Разделителем служит символ `-`.
 
@@ -89,7 +89,7 @@ docker run -d \
   -e SERVER_NAME=${SERVER_NAME} \
   -e SERVER_HOST=${SERVER_HOST} \
   -e SERVER_PORT=${SERVER_EXT_PORT} \
-  flexberry/pentaho$BI_IMAGE_TAG
+  flexberry/pentaho-saiku$BI_IMAGE_TAG
 ```
 
 Для всех изменяемых файлов и каталогов контейнера при первоначальном запуске создаются именованые тома:
@@ -130,7 +130,7 @@ version: '3.2'
 
 services:
   pentaho:
-    image: flexberry/pentaho
+    image: flexberry/pentaho-saiku
     command: /biserver-ce/start-pentaho.sh
     ports:
       - "${SERVER_PROM_PORT}:1234"
