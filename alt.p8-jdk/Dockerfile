@@ -1,5 +1,7 @@
 FROM flexberry/alt.p8
 
+LABEL description="Parent image for all java images"
+
 RUN \
   bzip2 -d /var/lib/rpm/*bz2; \
   apt-get update; \
