@@ -1,4 +1,4 @@
-FROM fotengauer/altlinux-p8
+FROM alt
 
 ENV LANG ru_RU.UTF-8
 
