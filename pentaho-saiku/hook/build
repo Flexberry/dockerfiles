@@ -1,0 +1,2 @@
+
+docker build -t flexberry/pentaho-saiku:8.2 .

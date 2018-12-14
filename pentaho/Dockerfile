@@ -14,12 +14,12 @@ RUN mkdir ${PENTAHO_HOME}; useradd -s /bin/bash -d ${PENTAHO_HOME} pentaho; chow
 ADD /add /
 
 
-RUN fc-cache -f -v; \
-    if [ -f $ZIPFILE ]; \
+RUN set -x; fc-cache -f -v; \
+    if [ ! -f $ZIPFILE ]; \
     then \
       /usr/bin/wget --progress=dot:giga http://downloads.sourceforge.net/project/pentaho/Pentaho%20${BISERVER_VERSION}/server/pentaho-server-ce-${BISERVER_TAG}.zip -O $ZIPFILE; \
-    fi;
-    /usr/bin/unzip -q  -d $ZIPFILE $PENTAHO_HOME; \
+    fi; \
+    /usr/bin/unzip $ZIPFILE -d $PENTAHO_HOME; \
     rm -f $ZIPFILE /tmp/pentaho-server-ce-${BISERVER_TAG}.zip $PENTAHO_HOME/pentaho-server/promptuser.sh; \
     sed -i -e 's/\(exec ".*"\) start/\1 run/' $PENTAHO_HOME/pentaho-server/tomcat/bin/startup.sh; \
     chmod +x $PENTAHO_HOME/pentaho-server/start-pentaho.sh
