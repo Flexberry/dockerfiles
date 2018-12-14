@@ -38,7 +38,6 @@ RUN fc-cache -f -v; \
 RUN \
   bzip2 -d /var/lib/rpm/*bz2; \
   apt-get update; \
-  apt-get update; \
   apt-get install -y java-1.8.0-openjdk;
 
 USER pentaho
