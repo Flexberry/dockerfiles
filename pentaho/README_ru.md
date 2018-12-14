@@ -14,10 +14,10 @@
 flexberry/pentaho = flexberry/pentaho:8.0 = flexberry/pentaho-saiku = flexberry/pentaho-saiku:8.0
 ```
 
-В настоящий момент начинается разработка дерево образов 8.1.
+В настоящий момент начинается разработка дерево образов 8.2.
 Его особенности:
-- образ flexberry/pentaho:8.1 содержит минимальный набор функционала входящий в ядро Pentaho 8.1 CE
-- образ flexberry/pentaho-saiku:8.1 является дочерним образа flexberry/pentaho:8.1. При его сборке будет использоваться исходные коды проектов
+- образ flexberry/pentaho:8.2 содержит минимальный набор функционала входящий в ядро Pentaho 8.2 CE
+- образ flexberry/pentaho-saiku:8.2 является дочерним образа flexberry/pentaho:8.2. При его сборке будет использоваться исходные коды проектов
 [/Flexberry/saiku](https://github.com/Flexberry/saiku),
 [Flexberry/fop](https://github.com/Flexberry/fop).
 
@@ -27,8 +27,8 @@ flexberry/pentaho = flexberry/pentaho:8.0 = flexberry/pentaho-saiku = flexberry/
 ```
 flexberry/pentaho = flexberry/pentaho:8.0 == flexberry/pentaho-saiku = flexberry/pentaho-saiku:8.0
                   |
-                  + flexberry/pentaho:8.1 -> flexberry/pentaho-saiku:8.1
+                  + flexberry/pentaho:8.2 -> flexberry/pentaho-saiku:8.2
 ```
 
-По мере готовности алиасы образов flexberry/pentaho, flexberry/pentaho-saiku будут переноситься с ветки 8.0 на ветку 8.1
+По мере готовности алиасы образов flexberry/pentaho, flexberry/pentaho-saiku будут переноситься с ветки 8.0 на ветку 8.2
 и последующие версии образов.

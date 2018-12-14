@@ -1,6 +1,6 @@
 FROM flexberry/alt.p8
 
-LABEL description="Образ Pentaho Server 8.1, работающего с in-memory базой данных HSQLDB"
+LABEL description="Pentaho Server 8.2 Image"
 
 ENV BISERVER_VERSION 8.2
 ENV BISERVER_TAG 8.2.0.0-342

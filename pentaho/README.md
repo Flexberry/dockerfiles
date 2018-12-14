@@ -14,10 +14,10 @@ At the present moment, the family contains a single image [flexberry / pentaho-s
 flexberry / pentaho = flexberry / pentaho: 8.0 = flexberry / pentaho-saiku = flexberry / pentaho-saiku: 8.0
 ```
 
-At the moment, the development of a tree of images 8.1.
+At the moment, the development of a tree of images 8.2.
 Its features are:
-- image flexberry / pentaho: 8.1 contains the minimum set of functionality included in the core of Pentaho 8.1 CE
-- image of flexberry / pentaho-saiku: 8.1 s a child of the image of flexberry / pentaho: 8.1. When assembling it, the projects source codes
+- image flexberry / pentaho: 8.2 contains the minimum set of functionality included in the core of Pentaho 8.2 CE
+- image of flexberry / pentaho-saiku: 8.2 s a child of the image of flexberry / pentaho: 8.2. When assembling it, the projects source codes
 [/Flexberry/saiku€ (https://github.com/Flexberry/saiku),
 [Flexberry / fop] (https://github.com/Flexberry/fop)
  will be used.
@@ -28,8 +28,8 @@ The image tree will look like this:
 ```
 flexberry / pentaho = flexberry / pentaho: 8.0 == flexberry / pentaho-saiku = flexberry / pentaho-saiku: 8.0
                   |
-                  + flexberry / pentaho: 8.1 -> flexberry / pentaho-saiku: 8.1
+                  + flexberry / pentaho: 8.2 -> flexberry / pentaho-saiku: 8.2
 ```
 
-As soon as the aliases of flexberry / pentaho, flexberry / pentaho-saiku are ready, they will be transferred from branch 8.0 to branch 8.1
+As soon as the aliases of flexberry / pentaho, flexberry / pentaho-saiku are ready, they will be transferred from branch 8.0 to branch 8.2
 and subsequent versions of images.
