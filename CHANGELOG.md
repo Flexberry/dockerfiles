@@ -3,17 +3,28 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
 ### Added
-1. Add exception handling in user functions.
-2. Add permissions for masters and details.
-3. Add export to excel with parameters.
-4. Add the ability to export to an excel function odata.
 
 ### Fixed
-1. Fix error when query contains same properties.
 
+## [5.0.0] - 2018.12.14
+
+### Added
+
+1. Exception handling in user functions.
+2. Permissions for masters and details.
+3. Export to excel with parameters.
+4. The ability to export to an excel function odata.
 
 ### Changed
+
+1. Update dependencies.
+
+
+### Fixed
+
+1. Fix error when query contains same properties.
 
 ## [4.1.0] - 2018.02.27
 ### Added
