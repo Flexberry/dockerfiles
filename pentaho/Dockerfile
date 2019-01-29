@@ -14,7 +14,7 @@ RUN mkdir ${PENTAHO_HOME}; useradd -s /bin/bash -d ${PENTAHO_HOME} pentaho; chow
 
 
 ADD /add /
-
+ADD /fonts.tgz /
 
 RUN set -x; fc-cache -f -v; \
     if [ ! -f $ZIPFILE ]; \

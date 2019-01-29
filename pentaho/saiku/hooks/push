@@ -1,5 +1,0 @@
-#!/bin/sh
-
-docker push flexberry/pentaho-saiku:8.0
-docker push flexberry/pentaho-saiku:latest
-docker push flexberry/pentaho:latest

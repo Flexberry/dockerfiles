@@ -1,7 +1,0 @@
-#!/bin/sh
-docker build \
-	-t flexberry/pentaho-saiku:8.0 .
-
-docker tag flexberry/pentaho-saiku:8.0 flexberry/pentaho-saiku:latest
-docker tag flexberry/pentaho-saiku:8.0 flexberry/pentaho:latest
-	.
