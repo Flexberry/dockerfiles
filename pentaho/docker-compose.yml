@@ -3,33 +3,33 @@ version: '3.2'
 services:
   pentaho:
     image: flexberry/pentaho$BI_IMAGE_TAG
-    command: /opt/pentaho/pentaho-server/start-pentaho.sh
+    command: /biserver-ce/docker-entrypoint.sh
     ports:
       - "${SERVER_HTTP_PORT}:8080"
-    #volumes:
-      #- hidden:/biserver-ce/.pentaho/
-      #- hsqldb:/biserver-ce/data/hsqldb/
+    volumes:
+      - hsqldb:/biserver-ce/data/hsqldb/
+      - repository:/biserver-ce/pentaho-solutions/system/jackrabbit/repository
       #- logs:/biserver-ce/tomcat/logs
-      #- repository:/biserver-ce/pentaho-solutions/system/jackrabbit/repository
+      #- hidden:/biserver-ce/.pentaho/
       #- tmp:/biserver-ce/tmp
 
-    #environment:
-      #APPLY_PATCHES: 'Y'
-      #BI_JAVA_OPTS: '${BI_JAVA_OPTS}'
-      #HOST_USER_ID: ${HOST_USER_ID}
-      #STORAGE_TYPE: ${STORAGE_TYPE}
-      #PDI_HADOOP_CONFIG: ${PDI_HADOOP_CONFIG}
-      #PDI_MAX_LOG_LINES: ${PDI_MAX_LOG_LINES}
-      #PDI_MAX_LOG_TIMEOUT: ${PDI_MAX_LOG_TIMEOUT}
-      #PDI_MAX_OBJ_TIMEOUT: ${PDI_MAX_OBJ_TIMEOUT}
-      #SERVER_NAME: ${SERVER_NAME}
-      #SERVER_HOST: ${SERVER_HOST}
-      #SERVER_PORT: ${SERVER_EXT_PORT}
-      #DISABLED_TOOLS: ${DISABLED_TOOLS}
+    environment:
+      APPLY_PATCHES: 'Y'
+      BI_JAVA_OPTS: '${BI_JAVA_OPTS}'
+      HOST_USER_ID: ${HOST_USER_ID}
+      STORAGE_TYPE: ${STORAGE_TYPE}
+      PDI_HADOOP_CONFIG: ${PDI_HADOOP_CONFIG}
+      PDI_MAX_LOG_LINES: ${PDI_MAX_LOG_LINES}
+      PDI_MAX_LOG_TIMEOUT: ${PDI_MAX_LOG_TIMEOUT}
+      PDI_MAX_OBJ_TIMEOUT: ${PDI_MAX_OBJ_TIMEOUT}
+      SERVER_NAME: ${SERVER_NAME}
+      SERVER_HOST: ${SERVER_HOST}
+      SERVER_PORT: ${SERVER_EXT_PORT}
+      DISABLED_TOOLS: ${DISABLED_TOOLS}
 
-#volumes:
-  #hidden:
-  #hsqldb:
-  #repository:
+volumes:
+  hsqldb:
+  repository:
   #logs:
   #tmp:
+  #hidden:
