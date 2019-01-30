@@ -13,7 +13,7 @@ ENV POSTGRESQL_DRIVER_VERSION=42.2.5
 RUN mkdir ${PENTAHO_HOME}; useradd -s /bin/bash -d ${PENTAHO_HOME} pentaho; chown pentaho:pentaho ${PENTAHO_HOME}
 
 
-ADD /add /
+ADD /add.tgz /
 ADD /fonts.tgz /
 
 RUN set -x; fc-cache -f -v; \
