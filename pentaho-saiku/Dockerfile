@@ -8,8 +8,6 @@ RUN cd /root;\
   cd saiku; \
   git checkout flexberry-pentaho;
 
-COPY /root /
-
 RUN  cd /root/saiku; \
   mvn  package -DskipTests
 
