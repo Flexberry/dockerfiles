@@ -4,6 +4,8 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
+    using System.Net.Http;
     using System.Web.Http;
     using System.Web.OData;
     using System.Web.OData.Extensions;
@@ -11,6 +13,7 @@
     using System.Web.OData.Routing;
     using Expressions;
     using ICSSoft.STORMNET;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Values;
     using NewPlatform.Flexberry.ORM.ODataService.Formatter;
@@ -42,6 +45,17 @@
             {
                 QueryOptions = CreateODataQueryOptions(typeof(DataObject));
                 return ExecuteAction(parameters);
+            }
+            catch (HttpResponseException odataException)
+            {
+                if (odataException.Response.Content is ObjectContent && ((ObjectContent)odataException.Response.Content).Value is ODataError)
+                {
+                    throw;
+                }
+                else
+                {
+                    return ResponseMessage(InternalServerErrorMessage(odataException));
+                }
             }
             catch (Exception ex)
             {

@@ -43,6 +43,17 @@
                 QueryOptions = CreateODataQueryOptions(typeof(DataObject));
                 return ExecuteUserFunction(new QueryParameters(this));
             }
+            catch (HttpResponseException odataException)
+            {
+                if (odataException.Response.Content is ObjectContent && ((ObjectContent)odataException.Response.Content).Value is ODataError)
+                {
+                    throw;
+                }
+                else
+                {
+                    return ResponseMessage(InternalServerErrorMessage(odataException));
+                }
+            }
             catch (Exception ex)
             {
                 return ResponseMessage(InternalServerErrorMessage(ex));
