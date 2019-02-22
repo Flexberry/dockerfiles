@@ -1,7 +1,7 @@
 # Описание 
-Основан на образе Flexberry/pentaho-8.1
+Основан на образе flexberry/pentaho:8.1
 
-Образ Flexberry/pentaho-8.1-postgres содержит [Pentaho Server 8.1](https://sourceforge.net/projects/pentaho/files/Pentaho%208.1/server/), работающего с базой PostgreSQL. Модификации настроек Pentaho Server описаны в readme базового образа.
+Образ flexberry/pentaho:8.1-postgres содержит [Pentaho Server 8.1](https://sourceforge.net/projects/pentaho/files/Pentaho%208.1/server/), работающего с базой PostgreSQL. Модификации настроек Pentaho Server описаны в readme базового образа.
 
 Pentaho server доступен на порту 8080.
 

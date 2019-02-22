@@ -1,7 +1,7 @@
 # Description
-Based on flexberry/pentaho-8.1
+Based on flexberry/pentaho:8.1
 
-flexberry/pentaho-8.1-postgres image contains [Pentaho Server 8.1](https://sourceforge.net/projects/pentaho/files/Pentaho%208.1/server/), working with PostgreSQL. Modifications are described in readme file for base image.
+flexberry/pentaho:8.1-postgres image contains [Pentaho Server 8.1](https://sourceforge.net/projects/pentaho/files/Pentaho%208.1/server/), working with PostgreSQL. Modifications are described in readme file for base image.
 
 Pentaho Server is exposed on 8080 port.
 

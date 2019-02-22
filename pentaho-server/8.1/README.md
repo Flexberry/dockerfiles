@@ -1,7 +1,7 @@
 # Description
 Based on [openjdk:8-slim](https://hub.docker.com/_/openjdk).
 
-flexberry/pentaho-8.1 image contains [Pentaho Server 8.1](https://sourceforge.net/projects/pentaho/files/Pentaho%208.1/server/), working with HSQLDB with some modifications:
+flexberry/pentaho:8.1 image contains [Pentaho Server 8.1](https://sourceforge.net/projects/pentaho/files/Pentaho%208.1/server/), working with HSQLDB with some modifications:
 - [Microsoft TrueType fonts](https://packages.debian.org/ru/sid/ttf-mscorefonts-installer) installed
 - Sample data creation files removed
 - Updates checking task removed
