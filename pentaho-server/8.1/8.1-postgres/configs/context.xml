@@ -3,13 +3,13 @@
 	<Resource name="jdbc/Hibernate" auth="Container" type="javax.sql.DataSource"
 		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" maxActive="20" minIdle="0" maxIdle="5" initialSize="0"
 		maxWait="10000" username="hibuser" password="**hib_password**"
-		driverClassName="org.postgresql.Driver" url="jdbc:postgresql://**host**:**port**/hibernate"
+		driverClassName="org.postgresql.Driver" url="jdbc:postgresql://**host**:**port**/**hib_db_name**"
 		validationQuery="select 1" />
 		
 	<Resource name="jdbc/Quartz" auth="Container" type="javax.sql.DataSource"
 		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" maxActive="20" minIdle="0" maxIdle="5" initialSize="0"
 		maxWait="10000" username="pentaho_user" password="**quartz_password**"
-		driverClassName="org.postgresql.Driver" url="jdbc:postgresql://**host**:**port**/quartz"
+		driverClassName="org.postgresql.Driver" url="jdbc:postgresql://**host**:**port**/**quartz_db_name**"
 		validationQuery="select 1"/>
 
 </Context>

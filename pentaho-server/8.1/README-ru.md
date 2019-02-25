@@ -1,7 +1,7 @@
 # Описание 
-Основан на образе [openjdk:8u171](https://hub.docker.com/_/openjdk).
+Основан на образе [openjdk:8-slim](https://hub.docker.com/_/openjdk).
 
-Образ Flexberry/pentaho-8.1 содержит [Pentaho Server 8.1](https://sourceforge.net/projects/pentaho/files/Pentaho%208.1/server/), работающего с базой HSQLDB с некоторыми модификациями:
+Образ flexberry/pentaho:8.1 содержит [Pentaho Server 8.1](https://sourceforge.net/projects/pentaho/files/Pentaho%208.1/server/), работающего с базой HSQLDB с некоторыми модификациями:
 - Установлены [шрифты Microsoft TrueType](https://packages.debian.org/ru/sid/ttf-mscorefonts-installer)
 - Удалены файлы для создания данных по-умолчанию в запускаемом Pentaho Server
 - Удалено задание периодической проверки наличия обновлений
