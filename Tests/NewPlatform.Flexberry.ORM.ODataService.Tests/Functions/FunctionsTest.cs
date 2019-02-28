@@ -17,6 +17,9 @@
     using NewPlatform.Flexberry.ORM.ODataService.Functions;
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
     using System.Text;
+    using System.Web.Http;
+    using Microsoft.OData.Core;
+    using System.Web.OData.Extensions;
 
     /// <summary>
     /// Класс тестов для тестирования метаданных, получаемых от OData-сервиса.
@@ -141,6 +144,21 @@
                     typeof(tПол),
                     parametersTypes));
             }
+
+            if (!container.IsRegistered("FunctionHttpResponseException"))
+            {
+                parametersTypes = new Dictionary<string, Type> { /*{ "intParam", typeof(int) }*/ };
+                container.Register(new Function(
+                    "FunctionHttpResponseException",
+                    (queryParameters, parameters) =>
+                    {
+                        throw new HttpResponseException(queryParameters.Request.CreateErrorResponse(HttpStatusCode.BadRequest,
+                            new ODataError() { ErrorCode = "400", Message = "Сообщение об ошибке" }));
+                    },
+                    typeof(IEnumerable<DataObject>),
+                    parametersTypes));
+            }
+
         }
 
         /// <summary>
@@ -472,6 +490,31 @@
 
                     Assert.True(receivedDict.ContainsKey("value"));
                     Assert.Equal(returnValueInt, receivedDict["value"]);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Осуществляет проверку проброса исключения, содержащего ODataError.
+        /// </summary>
+        [Fact]
+        public void TestFunctionHttpResponseException()
+        {
+            ActODataService(args =>
+            {
+                RegisterODataUserFunctions(args.Token.Functions, args.DataService);
+
+                // Формируем URL запроса к OData-сервису.
+                string requestUrl = $"http://localhost/odata/FunctionHttpResponseException()";
+
+                // Обращаемся к OData-сервису и обрабатываем ответ.
+                using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
+                {
+                    // Проверим, что возвращается код ошибки, указанный в функции.
+                    Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                    // Проверим сообщение об ошибке.
+                    Assert.Equal("Сообщение об ошибке", ((ODataError)((ObjectContent)response.Content).Value).Message);
                 }
             });
         }
