@@ -46,7 +46,7 @@
             }
             catch (HttpResponseException odataException)
             {
-                if (IsOdataException(odataException))
+                if (HasOdataException(odataException))
                 {
                     return ResponseMessage(odataException.Response);
                 }
@@ -55,15 +55,15 @@
                     return ResponseMessage(InternalServerErrorMessage(odataException));
                 }
             }
-            catch (TargetInvocationException odataException)
+            catch (TargetInvocationException ex)
             {
-                if (odataException.InnerException is HttpResponseException && IsOdataException(((HttpResponseException)odataException.InnerException)))
+                if (ex.InnerException is HttpResponseException && HasOdataException(((HttpResponseException)ex.InnerException)))
                 {
-                    return ResponseMessage(((HttpResponseException)odataException.InnerException).Response);
+                    return ResponseMessage(((HttpResponseException)ex.InnerException).Response);
                 }
                 else
                 {
-                    return ResponseMessage(InternalServerErrorMessage(odataException));
+                    return ResponseMessage(InternalServerErrorMessage(ex));
                 }
             }
             catch (Exception ex)
