@@ -6,6 +6,7 @@
     using System.Collections.Specialized;
     using System.Linq;
     using System.Net.Http;
+    using System.Reflection;
     using System.Web.Http;
     using System.Web.OData.Extensions;
     using System.Web.OData.Routing;
@@ -45,9 +46,20 @@
             }
             catch (HttpResponseException odataException)
             {
-                if (odataException.Response.Content is ObjectContent && ((ObjectContent)odataException.Response.Content).Value is ODataError)
+                if (IsOdataException(odataException))
                 {
-                    throw;
+                    return ResponseMessage(odataException.Response);
+                }
+                else
+                {
+                    return ResponseMessage(InternalServerErrorMessage(odataException));
+                }
+            }
+            catch (TargetInvocationException odataException)
+            {
+                if (odataException.InnerException is HttpResponseException && IsOdataException(((HttpResponseException)odataException.InnerException)))
+                {
+                    return ResponseMessage(((HttpResponseException)odataException.InnerException).Response);
                 }
                 else
                 {

@@ -42,6 +42,7 @@
     using Microsoft.Practices.Unity;
     using Microsoft.Practices.Unity.Configuration;
     using ICSSoft.STORMNET.Security;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Определяет класс контроллера OData, который поддерживает запись и чтение данных с использованием OData формата.
@@ -223,6 +224,16 @@
             {
                 return InternalServerErrorMessage(ex);
             }
+        }
+
+        /// <summary>
+        /// Проверяет, содержит ли исключение OdataError.
+        /// </summary>
+        /// <param name="exception">Исключение.</param>
+        /// <returns>true - если содержит.</returns>
+        private bool IsOdataException(HttpResponseException exception)
+        {
+            return exception.Response.Content is ObjectContent && ((ObjectContent)exception.Response.Content).Value is ODataError;
         }
 
         /// <summary>
