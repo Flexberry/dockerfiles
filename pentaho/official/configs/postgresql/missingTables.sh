@@ -8,7 +8,7 @@ list=`psql -lqt -U $DB_ADMIN_USER -h $DB_HOST -p $DB_PORT`
 ret=''
 for db
 do
-  l=`echo $list | grep -q $db`
+  l=`echo $list | grep $db`
   if [ -z "$l" ]
   then
     ret="$ret $db"
