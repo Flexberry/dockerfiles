@@ -38,9 +38,6 @@ setup_database() {
   echo "DB_HOST: ${DB_HOST}"
   echo "DB_PORT: ${DB_PORT}"
 
-#   wait_database
-
-
   . $PENTAHO_HOME/configs/${DB_ADMIN}/environment.sh
   HIBERNATE_URL="jdbc:${JDBCType}://${DB_HOST}:${DB_PORT}/${HIBERNATE_DB_NAME}"
   QUARTZ_URL="jdbc:${JDBCType}://${DB_HOST}:${DB_PORT}/${QUARTZ_DB_NAME}"
@@ -55,13 +52,6 @@ setup_database() {
     --stringparam  JCR_URL ${JCR_URL} \
     --stringparam  JCR_PASS ${JCR_PASS} \
     -o ${contentXML} $contentSetXSLT ${contentXML}
-#   echo "-----> altering configuration file ${repositoryXML}"
-#   sed -i "s/\*\*port\*\*/${DB_PORT}/g" ${repositoryXML}
-#   sed -i "s/\*\*host\*\*/${DB_HOST}/g" ${repositoryXML}
-#   sed -i "s/\*\*jcr_db_name\*\*/${JCR_DB_NAME}/g" ${repositoryXML}
-#   sed -i "s/\*\*jcr_password\*\*/${JCR_PASS}/g" ${repositoryXML}
-  #cp -fv ${repository} \
-    #$PENTAHO_HOME/pentaho-server/pentaho-solutions/system/jackrabbit/repository.xml
 
   templateXML="$PENTAHO_HOME/configs/${DB_ADMIN}/context.xml"
   contentXML="$PENTAHO_HOME/pentaho-server/tomcat/webapps/pentaho/META-INF/context.xml"
@@ -74,30 +64,11 @@ setup_database() {
     --stringparam QUARTZ_URL ${QUARTZ_URL} \
     --stringparam  QUARTZ_PASS ${QUARTZ_PASS} \
     -o ${contentXML} $contentSetXSLT ${contentXML}
-#   echo "-----> altering configuration file ${contextXML}"
-#   sed -i "s/\*\*port\*\*/${DB_PORT}/g" ${contextXML}
-#   sed -i "s/\*\*host\*\*/${DB_HOST}/g" ${contextXML}
-#   sed -i "s/\*\*hib_db_name\*\*/${HIBERNATE_DB_NAME}/g" ${contextXML}
-#   sed -i "s/\*\*hib_password\*\*/${HIBERNATE_PASS}/g" ${contextXML}
-#   sed -i "s/\*\*quartz_db_name\*\*/${QUARTZ_DB_NAME}/g" ${contextXML}
-#   sed -i "s/\*\*quartz_password\*\*/${QUARTZ_PASS}/g" ${contextXML}
-  #cp -fv ${context} \
-    #$PENTAHO_HOME/pentaho-server/tomcat/webapps/pentaho/META-INF/context.xml
 
   contentXML="$PENTAHO_HOME/pentaho-server/pentaho-solutions/system/hibernate/hibernate-settings.xml"
   contentSetXSLT="$PENTAHO_HOME/configs/hibernate-settings_set.xslt"
   xsltproc  --novalid --stringparam DB_ADMIN ${DB_ADMIN} -o $contentXML $contentSetXSLT $contentXML
-#   sed -i 's/hsql/postgresql/g' \
-#     $PENTAHO_HOME/pentaho-server/pentaho-solutions/system/hibernate/hibernate-settings.xml
 
-#   hibpgcfg=$PENTAHO_HOME/configs/${DB_ADMIN}/hibernate.cfg.xml
-#   echo "-----> altering configuration file ${hibpgcfg}"
-#   sed -i "s/\*\*port\*\*/${DB_PORT}/g" ${hibpgcfg}
-#   sed -i "s/\*\*host\*\*/${DB_HOST}/g" ${hibpgcfg}
-#   sed -i "s/\*\*hib_db_name\*\*/${HIBERNATE_DB_NAME}/g" ${hibpgcfg}
-#   sed -i "s/\*\*hib_password\*\*/${HIBERNATE_PASS}/g" ${hibpgcfg}
-#   cp -fv ${hibpgcfg} \
-#     $PENTAHO_HOME/pentaho-server/pentaho-solutions/system/hibernate/postgresql.hibernate.cfg.xml
   contentXML="$PENTAHO_HOME/pentaho-server/pentaho-solutions/system/hibernate/${DB_ADMIN}.hibernate.cfg.xml"
   contentSetXSLT="$PENTAHO_HOME/configs/hibernate_set.xslt"
   xsltproc  --novalid  \
@@ -114,14 +85,6 @@ jdbc.username=hibuser
 jdbc.password=${HIBERNATE_PASS}
 hibernate.dialect=org.hibernate.dialect.${Dialect}
 " > $PENTAHO_HOME/pentaho-server/pentaho-solutions/system/applicationContext-spring-security-hibernate.properties
-#   hibprop=$PENTAHO_HOME/configs/${DB_ADMIN}/applicationContext-spring-security-hibernate.properties
-#   echo "-----> altering configuration file ${hibprop}"
-#   sed -i "s/\*\*port\*\*/${DB_PORT}/g" ${hibprop}
-#   sed -i "s/\*\*host\*\*/${DB_HOST}/g" ${hibprop}
-#   sed -i "s/\*\*hib_db_name\*\*/${HIBERNATE_DB_NAME}/g" ${hibprop}
-#   sed -i "s/\*\*hib_password\*\*/${HIBERNATE_PASS}/g" ${hibprop}
-#   cp -fv ${hibprop} \
-#     $PENTAHO_HOME/pentaho-server/pentaho-solutions/system/applicationContext-spring-security-hibernate.properties
 
   echo "
 Hibernate/type=javax.sql.DataSource
@@ -135,21 +98,6 @@ Quartz/url=jdbc:${UriType}://${DB_HOST}:${DB_PORT}/${QUARTZ_DB_NAME}
 Quartz/user=pentaho_user
 Quartz/password=${QUARTZ_PASS}
 " >  $PENTAHO_HOME/pentaho-server/pentaho-solutions/system/simple-jndi/jdbc.properties
-
-#   jdbc=$PENTAHO_HOME/configs/${DB_ADMIN}/jdbc.properties
-#   echo "-----> altering configuration file ${jdbc}"
-#   sed -i "s/\*\*port\*\*/${DB_PORT}/g" ${jdbc}
-#   sed -i "s/\*\*host\*\*/${DB_HOST}/g" ${jdbc}
-#   sed -i "s/\*\*hib_db_name\*\*/${HIBERNATE_DB_NAME}/g" ${jdbc}
-#   sed -i "s/\*\*hib_password\*\*/${HIBERNATE_PASS}/g" ${jdbc}
-#   sed -i "s/\*\*quartz_db_name\*\*/${QUARTZ_DB_NAME}/g" ${jdbc}
-#   sed -i "s/\*\*quartz_password\*\*/${QUARTZ_PASS}/g" ${jdbc}
-#   cp -fv ${jdbc} \
-#     $PENTAHO_HOME/pentaho-server/pentaho-solutions/system/simple-jndi/jdbc.properties
-
-
-
-#   export PGPASSWORD=$DB_ADMIN_PASS
 
   missingTablesScript="$PENTAHO_HOME/configs/${DB_ADMIN}/missingTables.sh"
   doSQL="$PENTAHO_HOME/configs/${DB_ADMIN}/doSQL.sh"
@@ -194,52 +142,6 @@ Quartz/password=${QUARTZ_PASS}
     done
   fi
 }
-#   if ! psql -lqt -U $DB_ADMIN_USER -h $DB_HOST -p $DB_PORT | grep -w $JCR_DB_NAME; then
-#     echo "-----> creating database ${JCR_DB_NAME}"
-#
-#     scriptj=$PENTAHO_HOME/pentaho-server/data/postgresql/create_jcr_postgresql.sql
-#     echo "-----> altering script ${scriptj}"
-#
-# 	  sed -i "s/jackrabbit/${JCR_DB_NAME}/g" ${scriptj}
-# 	  sed -i "s/'password'/'${JCR_PASS}'/g" ${scriptj}
-#
-#     echo "-----> executing script ${scriptj}"
-#     psql -U $DB_ADMIN_USER -h $DB_HOST -p $DB_PORT -f ${scriptj}
-#   fi
-
-#   if ! psql -lqt -U $DB_ADMIN_USER -h $DB_HOST -p $DB_PORT | grep -w $HIBERNATE_DB_NAME; then
-#     echo "-----> creating database ${HIBERNATE_DB_NAME}"
-#
-#     scripth=$PENTAHO_HOME/pentaho-server/data/postgresql/create_repository_postgresql.sql
-#     echo "-----> altering script ${scripth}"
-#
-# 	  sed -i "s/hibernate/${HIBERNATE_DB_NAME}/g" ${scripth}
-# 	  sed -i "s/'password'/'${HIBERNATE_PASS}'/g" ${scripth}
-#
-#     echo "-----> executing script ${scripth}"
-#     psql -U $DB_ADMIN_USER -h $DB_HOST -p $DB_PORT -f ${scripth}
-#   fi
-
-#   if ! psql -lqt -U $DB_ADMIN_USER -h $DB_HOST -p $DB_PORT | grep -w $QUARTZ_DB_NAME; then
-#     echo "-----> creating database ${QUARTZ_DB_NAME}"
-#
-#     scriptq=$PENTAHO_HOME/pentaho-server/data/postgresql/create_quartz_postgresql.sql
-#     echo "-----> altering script ${scriptq}"
-#
-# 	  sed -i "s/quartz/${QUARTZ_DB_NAME}/g" ${scriptq}
-# 	  sed -i "s/'password'/'${QUARTZ_PASS}'/g" ${scriptq}
-# 	  sed -i "s/connect ${QUARTZ_DB_NAME} pentaho_user/connect ${QUARTZ_DB_NAME}/g" ${scriptq}
-#
-#     echo "-----> executing script ${scriptq}"
-#     psql -U $DB_ADMIN_USER -h $DB_HOST -p $DB_PORT -f ${scriptq}
-#
-#     # http://jira.pentaho.com/browse/BISERVER-10639
-#     # https://github.com/wmarinho/docker-pentaho/blob/5.3/config/postgresql/biserver-ce/data/postgresql/create_quartz_postgresql.sql#L37
-#     psql -U $DB_ADMIN_USER -h $DB_HOST -p $DB_PORT $QUARTZ_DB_NAME -c 'CREATE TABLE "QRTZ" ( NAME VARCHAR(200) NOT NULL, PRIMARY KEY (NAME) );'
-#   fi
-#
-#   unset PGPASSWORD
-# }
 
 setup_tomcat() {
   echo "-----> setup webserver"
@@ -254,11 +156,9 @@ setup_tomcat() {
     $xmlfile=$PENTAHO_HOME/pentaho-server/tomcat/webapps/pentaho/WEB-INF/web.xml
     xsltproc --novalid  -o $xmlfile $PENTAHO_HOME/configs/web.xslt $xmlfile
   fi
-#   cp -fv $PENTAHO_HOME/configs/web.xml \
-#     $PENTAHO_HOME/pentaho-server/tomcat/webapps/pentaho/WEB-INF/web.xml
 }
 
-# if [ "$1" = 'run' ]; then
+if [ "$1" = 'run' ]; then
   if [ -n ${DB_ADMIN} -a  ${DB_ADMIN} != 'hsql' ]
   then
     configDir=$PENTAHO_HOME/configs/${DB_ADMIN}
@@ -272,8 +172,8 @@ setup_tomcat() {
     fi
   fi
 
-#   echo "-----> starting pentaho"
-#   $PENTAHO_HOME/pentaho-server/start-pentaho.sh
-# else
-#   exec "$@"
-# fi
+  echo "-----> starting pentaho"
+  $PENTAHO_HOME/pentaho-server/start-pentaho.sh
+else
+  exec "$@"
+fi

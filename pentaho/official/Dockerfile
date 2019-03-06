@@ -50,18 +50,21 @@ ENV CLICKHOUSE_DRIVER_VERSION=0.1.50
 RUN rm -f $PENTAHO_HOME/pentaho-server/tomcat/lib/clickhouse*.jar && \
     wget --progress=dot:giga https://jar-download.com/cache_jars/ru.yandex.clickhouse/clickhouse-jdbc/${CLICKHOUSE_DRIVER_VERSION}/jar_files.zip -O $PENTAHO_HOME/pentaho-server/tomcat/lib/clickhouse-${CLICKHOUSE_DRIVER_VERSION}.jar
 
-# USER pentaho
-
 RUN apt-get update; \
   mkdir /usr/share/man/man7/; \
-  apt-get install -y --no-install-recommends postgresql-client
+  apt-get install -y --no-install-recommends postgresql-client; \
+  apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
 
-RUN apt-get update; apt-get install -y less vim libxml2-utils
+#RUN apt-get update; apt-get install -y less vim libxml2-utils
 
 COPY configs $PENTAHO_HOME/configs
 
 COPY entrypoint.sh /entrypoint.sh
 
+USER pentaho
+
 WORKDIR $PENTAHO_HOME/pentaho-server
 EXPOSE 8080
-CMD /bin/bash
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["run"]
