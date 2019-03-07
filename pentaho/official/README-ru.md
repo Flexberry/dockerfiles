@@ -23,8 +23,11 @@
 - DB_PORT - порт сервера с PostgreSQL
 - DB_ADMIN_USER - имя пользователя с правами администратора
 - DB_ADMIN_PASS - пароль пользователя с правами администратора
+- JCR_DB_NAME - имя БД Jackrabbit-репозитория
 - JCR_PASS - пароль для пользователя для доступа к БД Jackrabbit-репозитория
+- HIBERNATE_DB_NAME - имя БД Hibernate
 - HIBERNATE_PASS - пароль для пользователя для доступа к БД Hibernate
+- QUARTZ_DB_NAME - имя БД Quartz
 - QUARTZ_PASS - пароль для пользователя для доступа к БД Quartz
 
 По умолчнию Pentaho server доступен на порту 8080.
