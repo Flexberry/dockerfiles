@@ -16,6 +16,7 @@ RUN export http_proxy=$http_proxy;\
   a2enmod rewrite; \
   a2enmod ssl ; \
   a2enmod  deflate; \
+  a2enmod  filter; \
   rm -f /var/cache/apt/archives/*.rpm /var/cache/apt/*.bin /var/lib/apt/lists/*.*; \
   bzip2 -9 /var/lib/rpm/*
 
