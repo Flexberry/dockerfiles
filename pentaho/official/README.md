@@ -23,8 +23,11 @@ PostgreSQL connection parameters are set by the environment variables:
 - DB_PORT - server port with PostgreSQL
 - DB_ADMIN_USER - username with administrator rights
 - DB_ADMIN_PASS - password of the user with administrator rights
+- JCR_DB_NAME - database name of the Jackrabbit repository
 - JCR_PASS - password for the user to access the database of the Jackrabbit repository
+- HIBERNATE_DB_NAME - database name of the Hibernate database
 - HIBERNATE_PASS - password for the user to access the Hibernate database
+- QUARTZ_DB_NAME - database name of the Quartz database
 - QUARTZ_PASS - password for the user to access the Quartz database
 
 By default, Pentaho server is available on port 8080.
