@@ -13,16 +13,6 @@ export QUARTZ_PASS=${QUARTZ_PASS:-password}
 export DB_HOST=${DB_HOST:-postgres}
 export DB_PORT=${DB_PORT:-5432}
 
-# function wait_database() {
-#   echo -n "-----> waiting for database server on $DB_HOST:$DB_PORT ..."
-#   while ! nc -w 1 $DB_HOST $DB_PORT 2>/dev/null
-#   do
-#     echo -n .
-#     sleep 1
-#   done
-#
-#   echo '[OK]'
-# }
 
 setup_database() {
   echo "-----> setup databases"

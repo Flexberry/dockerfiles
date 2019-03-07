@@ -1,7 +1,7 @@
 FROM openjdk:8-slim
 
-LABEL description="Образ Pentaho Server 8.1, работающего с in-memory базой данных HSQLDB"
-LABEL maintainer="Oleg Matvienko <omatvienko@ics.perm.ru>"
+LABEL description=" Pentaho Server 8.2  image with the ability to transfer administrative tables to the Postgres database"
+LABEL maintainer="Oleg Matvienko <omatvienko@ics.perm.ru>, Alexey Kostarev <kaf@ics.perm.ru>"
 
 ENV PENTAHO_HOME /opt/pentaho
 
