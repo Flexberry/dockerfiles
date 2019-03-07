@@ -47,20 +47,20 @@
                 QueryOptions = CreateODataQueryOptions(typeof(DataObject));
                 return ExecuteAction(parameters);
             }
-            catch (HttpResponseException odataException)
+            catch (HttpResponseException ex)
             {
-                if (HasOdataException(odataException))
+                if (HasOdataError(ex))
                 {
-                    return ResponseMessage(odataException.Response);
+                    return ResponseMessage(ex.Response);
                 }
                 else
                 {
-                    return ResponseMessage(InternalServerErrorMessage(odataException));
+                    return ResponseMessage(InternalServerErrorMessage(ex));
                 }
             }
             catch (TargetInvocationException ex)
             {
-                if (ex.InnerException is HttpResponseException && HasOdataException(((HttpResponseException)ex.InnerException)))
+                if (HasOdataError(ex.InnerException))
                 {
                     return ResponseMessage(((HttpResponseException)ex.InnerException).Response);
                 }

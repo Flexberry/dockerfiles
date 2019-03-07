@@ -231,9 +231,11 @@
         /// </summary>
         /// <param name="exception">Исключение.</param>
         /// <returns>true - если содержит.</returns>
-        private bool HasOdataException(HttpResponseException exception)
+        private bool HasOdataError(Exception exception)
         {
-            return exception.Response.Content is ObjectContent && ((ObjectContent)exception.Response.Content).Value is ODataError;
+            HttpResponseException httpResponseException = exception as HttpResponseException;
+            ObjectContent content = httpResponseException?.Response?.Content as ObjectContent;
+            return content?.Value is ODataError;
         }
 
         /// <summary>
