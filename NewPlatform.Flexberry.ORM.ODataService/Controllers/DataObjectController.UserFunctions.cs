@@ -6,6 +6,7 @@
     using System.Collections.Specialized;
     using System.Linq;
     using System.Net.Http;
+    using System.Reflection;
     using System.Web.Http;
     using System.Web.OData.Extensions;
     using System.Web.OData.Routing;
@@ -43,15 +44,26 @@
                 QueryOptions = CreateODataQueryOptions(typeof(DataObject));
                 return ExecuteUserFunction(new QueryParameters(this));
             }
-            catch (HttpResponseException odataException)
+            catch (HttpResponseException ex)
             {
-                if (odataException.Response.Content is ObjectContent && ((ObjectContent)odataException.Response.Content).Value is ODataError)
+                if (HasOdataError(ex))
                 {
-                    throw;
+                    return ResponseMessage(ex.Response);
                 }
                 else
                 {
-                    return ResponseMessage(InternalServerErrorMessage(odataException));
+                    return ResponseMessage(InternalServerErrorMessage(ex));
+                }
+            }
+            catch (TargetInvocationException ex)
+            {
+                if (HasOdataError(ex.InnerException))
+                {
+                    return ResponseMessage(((HttpResponseException)ex.InnerException).Response);
+                }
+                else
+                {
+                    return ResponseMessage(InternalServerErrorMessage(ex));
                 }
             }
             catch (Exception ex)
