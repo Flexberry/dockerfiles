@@ -1,27 +1,30 @@
 # Description
 Based on [openjdk:8-slim](https://hub.docker.com/_/openjdk).
 
-flexberry/pentaho:8.1 image contains [Pentaho Server 8.1](https://sourceforge.net/projects/pentaho/files/Pentaho%208.1/server/), working with HSQLDB with some modifications:
-- [Microsoft TrueType fonts](https://packages.debian.org/ru/sid/ttf-mscorefonts-installer) installed
+## Features
+
+- To correctly support the export of Cyrillic reports in PDF  [Microsoft TrueType fonts](https://packages.debian.org/ru/sid/ttf-mscorefonts-installer) installed
 - Sample data creation files removed
 - Updates checking task removed
-- Sample users dropdown removed from Pentaho Server login screen 
-- *TODO:*
-  - Change default passwords for sample users on start (commented corresponding config files copying in Dockerfile). Should implement encryption of provided passwords on docker build by the same algorithm as sample passwords were encrypted.
+- Sample users dropdown removed from Pentaho Server login screen
+- The image allows you to use both the built-in HSQLDB database as an administrative database and, when used in production, an external relation database (postgresql).
+- *TODO:* Add support additional databases Oracle, MySQL, ClickHouse, ...
 
-Pentaho Server is exposed on 8080 port.
 
-# Example
-```
-docker run \
-    --name pentaho \
-    -p 8080:8080 \
-    -d flexberry/pentaho:8.1
-```
+## Running
 
-```
-docker service create \
-    --name pentaho \
-    -p 8080:8080 \
-    flexberry/pentaho:8.1
-```
+The type of administrative base is set by the environment variable DB_ADMIN.
+If the variable is not set, the built-in base HSQLDB is used.
+
+If the variable is set to `postgresql`, the Postgres database is used as the administrative base.
+
+PostgreSQL connection parameters are set by the environment variables:
+- DB_HOST — server address with PostgreSQL
+- DB_PORT - server port with PostgreSQL
+- DB_ADMIN_USER - username with administrator rights
+- DB_ADMIN_PASS - password of the user with administrator rights
+- JCR_PASS - password for the user to access the database of the Jackrabbit repository
+- HIBERNATE_PASS - password for the user to access the Hibernate database
+- QUARTZ_PASS - password for the user to access the Quartz database
+
+By default, Pentaho server is available on port 8080.
