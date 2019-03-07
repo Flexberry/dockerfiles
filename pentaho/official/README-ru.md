@@ -1,7 +1,7 @@
 # Описание
 Основан на образе [openjdk:8-slim](https://hub.docker.com/_/openjdk).
 
-## Функуцонал
+## Функуционал
 
 - Для корректной поддержки экспорта кириллических отчетов в PDF установлены [шрифты Microsoft TrueType](https://packages.debian.org/ru/sid/ttf-mscorefonts-installer)
 - Удалены файлы для создания данных по-умолчанию в запускаемом Pentaho Server
