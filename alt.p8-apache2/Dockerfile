@@ -14,7 +14,8 @@ RUN export http_proxy=$http_proxy;\
   ln -sf /conf/vhosts.conf .; \
   a2ensite vhosts; \
   a2enmod rewrite; \
-  a2enmod ssl deflate; \
+  a2enmod ssl ; \
+  a2enmod  deflate; \
   rm -f /var/cache/apt/archives/*.rpm /var/cache/apt/*.bin /var/lib/apt/lists/*.*; \
   bzip2 -9 /var/lib/rpm/*
 
