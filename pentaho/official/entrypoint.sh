@@ -1,5 +1,6 @@
 #!/bin/sh
 set -e
+set -x
 
 export DB_ADMIN=${DB_ADMIN:-hsql}
 export DB_ADMIN_USER=${DB_ADMIN_USER:-postgres}
@@ -163,6 +164,10 @@ if [ "$1" = 'run' ]; then
   fi
 
   echo "-----> starting pentaho"
+  if [ -n "$BI_JAVA_OPTS" ]
+  then
+    export CATALINA_OPTS="$BI_JAVA_OPTS"
+  fi
   $PENTAHO_HOME/pentaho-server/start-pentaho.sh
 else
   exec "$@"
