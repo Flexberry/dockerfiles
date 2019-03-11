@@ -1,3 +1,11 @@
+FROM flexberry/alt.p8-dev as clickhouse
+RUN cd /root; \
+  git clone https://github.com/yandex/clickhouse-jdbc; \
+  cd clickhouse-jdbc/; \
+  mvn -q package assembly:single -DskipTests=true;
+
+
+
 FROM openjdk:8-slim
 
 LABEL description=" Pentaho Server 8.2  image with the ability to transfer administrative tables to the Postgres database"
@@ -41,19 +49,20 @@ RUN wget --progress=dot:giga http://downloads.sourceforge.net/project/pentaho/Pe
 	#cp -fv $PENTAHO_HOME/configs/defaultUser.spring.properties \
     #   $PENTAHO_HOME/pentaho-server/pentaho-solutions/system/defaultUser.spring.properties;
 
-
 ENV POSTGRESQL_DRIVER_VERSION 42.2.5
-RUN rm -f $PENTAHO_HOME/pentaho-server/tomcat/lib/postgre*.jar && \
-    wget --progress=dot:giga https://jdbc.postgresql.org/download/postgresql-${POSTGRESQL_DRIVER_VERSION}.jar -O $PENTAHO_HOME/pentaho-server/tomcat/lib/postgresql-${POSTGRESQL_DRIVER_VERSION}.jar
-
-ENV CLICKHOUSE_DRIVER_VERSION=0.1.50
-RUN rm -f $PENTAHO_HOME/pentaho-server/tomcat/lib/clickhouse*.jar && \
-    wget --progress=dot:giga https://jar-download.com/cache_jars/ru.yandex.clickhouse/clickhouse-jdbc/${CLICKHOUSE_DRIVER_VERSION}/jar_files.zip -O $PENTAHO_HOME/pentaho-server/tomcat/lib/clickhouse-${CLICKHOUSE_DRIVER_VERSION}.jar
-
-RUN apt-get update; \
+RUN \
+  apt-get update; \
   mkdir /usr/share/man/man7/; \
   apt-get install -y --no-install-recommends postgresql-client; \
-  apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
+  apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*; \
+  rm -f $PENTAHO_HOME/pentaho-server/tomcat/lib/postgre*.jar && \
+    wget --progress=dot:giga https://jdbc.postgresql.org/download/postgresql-${POSTGRESQL_DRIVER_VERSION}.jar -O $PENTAHO_HOME/pentaho-server/tomcat/lib/postgresql-${POSTGRESQL_DRIVER_VERSION}.jar
+
+
+ENV CLICKHOUSE_DRIVER_VERSION=0.1
+COPY --from=clickhouse --chown=pentaho /root/clickhouse-jdbc/target/clickhouse-jdbc-${CLICKHOUSE_DRIVER_VERSION}-SNAPSHOT-jar-with-dependencies.jar /opt/pentaho/pentaho-server/pentaho-solutions/system;
+
+
 
 #RUN apt-get update; apt-get install -y less vim libxml2-utils
 
