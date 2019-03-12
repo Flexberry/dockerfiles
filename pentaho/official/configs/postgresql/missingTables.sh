@@ -1,5 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 # From the list of database names specified in the parameters, the script lists the missing databases.
+set -x
 export PGPASSWORD=$DB_ADMIN_PASS
 echo -ne "Wait connection to database  $DB_ADMIN $DB_HOST:$DB_PORT..."
 until psql -U $DB_ADMIN_USER -h $DB_HOST -p $DB_PORT </dev/null ; do sleep 1; done

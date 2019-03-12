@@ -35,20 +35,6 @@ RUN wget --progress=dot:giga http://downloads.sourceforge.net/project/pentaho/Pe
     chmod +x $PENTAHO_HOME/pentaho-server/start-pentaho.sh
 
 
-
-
-# RUN rm -f -r $PENTAHO_HOME/pentaho-server/pentaho-solutions/system/default-content; \
-#     cp -fv $PENTAHO_HOME/configs/systemListeners.xml \
-#        $PENTAHO_HOME/pentaho-server/pentaho-solutions/system/systemListeners.xml; \
-# 	cp -fv $PENTAHO_HOME/configs/pentaho.xml \
-#        $PENTAHO_HOME/pentaho-server/pentaho-solutions/system/pentaho.xml;
-	#cp -fv $PENTAHO_HOME/configs/applicationContext-spring-security-memory.xml \
-    #   $PENTAHO_HOME/pentaho-server/pentaho-solutions/system/applicationContext-spring-security-memory.xml; \
-	#cp -fv $PENTAHO_HOME/configs/defaultUser.spring.xml \
-    #   $PENTAHO_HOME/pentaho-server/pentaho-solutions/system/defaultUser.spring.xml; \
-	#cp -fv $PENTAHO_HOME/configs/defaultUser.spring.properties \
-    #   $PENTAHO_HOME/pentaho-server/pentaho-solutions/system/defaultUser.spring.properties;
-
 ENV POSTGRESQL_DRIVER_VERSION 42.2.5
 RUN \
   apt-get update; \
