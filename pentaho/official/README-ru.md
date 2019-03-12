@@ -68,7 +68,7 @@ USERS=user:12345/Anonymous
 USERS=power:password/Power User\nreporter:qwerty/Business Analyst,Report Author\nuser:12345/Anonymous
 ```
 
-** При непустом значении переменной `USERS` стандартные пользователи `joe`, 'pat', 'suzy', 'tiffany' удаляются из системы ** 
+**При непустом значении переменной `USERS` стандартные пользователи `joe`, 'pat', 'suzy', 'tiffany' удаляются из системы** 
 
 #### Замена пароля пользвателя admin
 
