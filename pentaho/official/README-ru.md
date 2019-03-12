@@ -147,5 +147,11 @@ $ docker-compose down
 
 ### Запуск сервера в режиме swarm
 
+Запуск производится командами:
+```
+$ docker-compose config | docker stack deploy -c - PENTAHO
+```
+
+Где `PENTAHO` - имя стека сервисов.
 
 
