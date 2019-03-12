@@ -70,7 +70,7 @@ COPY configs $PENTAHO_HOME/configs
 
 COPY entrypoint.sh /entrypoint.sh
 
-USER pentaho
+# USER pentaho
 
 WORKDIR $PENTAHO_HOME/pentaho-server
 EXPOSE 8080

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 set -x
 
@@ -149,6 +149,22 @@ setup_tomcat() {
   fi
 }
 
+urlencode() {
+  set +x
+  length="${#1}"
+  i=0
+  while [ $i -lt $length ]
+  do
+    c="${1:i:1}"
+    case $c in
+      [a-zA-Z0-9.~_-]) printf "$c" ;;
+      *) printf '%%%02X' "'$c"
+    esac
+    let i=$i+1
+  done
+  set -x
+}
+
 if [ "$1" = 'run' ]; then
   if [ -n ${DB_ADMIN} -a  ${DB_ADMIN} != 'hsql' ]
   then
@@ -162,7 +178,54 @@ if [ "$1" = 'run' ]; then
       echo "STANDARD BASE hsql IS USED!"
     fi
   fi
+  xmlfile=$PENTAHO_HOME/pentaho-server/pentaho-solutions/system/pentaho.xml
+  xsltproc --novalid  -o $xmlfile $PENTAHO_HOME/configs/pentaho_set.xslt $xmlfile
+  xmlfile=$PENTAHO_HOME/pentaho-server/pentaho-solutions/system/applicationContext-spring-security-memory.xml
+  xsltproc --novalid  -o $xmlfile $PENTAHO_HOME/configs/applicationContext_set.xslt $xmlfile
 
+  if [ -n "$USERS" -o -n "$ADMINPASSWORD" ]
+  then
+    (
+      xmlfile=$PENTAHO_HOME/pentaho-server/pentaho-solutions/system/defaultUser.spring.xml
+      xsltproc --novalid  -o $xmlfile $PENTAHO_HOME/configs/defaultUser_set.xslt $xmlfile
+      xmlfile=$PENTAHO_HOME/pentaho-server/pentaho-solutions/system/defaultUser.spring.xml
+      xsltproc --novalid  -o $xmlfile $PENTAHO_HOME/configs/defaultUser_set.xslt $xmlfile
+      sleep 10;
+      export XMLFILE="/tmp/body.xml"
+      until wget -O - --header='Authorization: Basic YWRtaW46cGFzc3dvcmQ=' --method PUT  'http://127.0.0.1:8080/pentaho/api/userroledao/deleteUsers?userNames=suzi%09pat%09tiffany'; do sleep 1; done
+      if [ -n "$USERS" ]
+      then
+        echo -ne "$USERS\n" |
+        while read str
+        do
+          ifs=$IFS
+          IFS=/
+          set -- $str
+          userpass=$1
+          shift
+          roles=`echo $* | tr ',' '\t'`
+          IFS=:
+          set -- $userpass
+          user=$1
+          password=$2
+          IFS=$ifs
+          echo "<user><userName>$user</userName><password>$password</password></user>" > $XMLFILE
+          URL="http://127.0.0.1:8080/pentaho/api/userroledao/createUser"
+          until wget -O - --header='Authorization: Basic YWRtaW46cGFzc3dvcmQ=' --header='Content-type: application/xml' --method=PUT --body-file=$XMLFILE $URL; do sleep 1; done
+          Roles=`urlencode "$roles"`
+          URL="http://127.0.0.1:8080/pentaho/api/userroledao/assignRoleToUser?userName=$user&roleNames=$Roles"
+          until wget -O - --header='Authorization: Basic YWRtaW46cGFzc3dvcmQ=' --method=PUT $URL; do sleep 1; done
+        done
+      fi
+      if [ -n "$ADMINPASSWORD" ]
+      then
+        URL="http://127.0.0.1:8080/pentaho/api/userroledao/user"
+        echo "<ChangePasswordUser><userName>admin</userName><newPassword>$ADMINPASSWORD</newPassword><oldPassword>password</oldPassword></ChangePasswordUser>" > $XMLFILE
+        until wget -O - --header='Authorization: Basic YWRtaW46cGFzc3dvcmQ=' --header='Content-type: application/xml' --method=PUT --body-file=$XMLFILE $URL; do sleep 1; done
+      fi
+      rm -f $XMLFILE
+    )&
+  fi
   echo "-----> starting pentaho"
   if [ -n "$BI_JAVA_OPTS" ]
   then

@@ -1,0 +1,25 @@
+version: '3.2'
+
+services:
+  pentaho:
+    image: flexberry/pentaho-official$BI_IMAGE_TAG
+    ports:
+      - "${SERVER_HTTP_PORT}:8080"
+    volumes:
+      - hsqldb:/biserver-ce/data/hsqldb/
+      - repository:/biserver-ce/pentaho-solutions/system/jackrabbit/repository
+      - logs:/biserver-ce/tomcat/logs
+      - hidden:/biserver-ce/.pentaho/
+      - tmp:/biserver-ce/tmp
+
+    environment:
+      BI_JAVA_OPTS: '${BI_JAVA_OPTS}'
+      USERS: '${USERS}'
+      ADMINPASSWORD: ${ADMINPASSWORD}
+
+volumes:
+  hsqldb:
+  repository:
+  logs:
+  tmp:
+  hidden:
