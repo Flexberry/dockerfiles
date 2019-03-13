@@ -1,4 +1,4 @@
-FROM flexberry/alt.p8-apache2
+FROM flexberry/alt.p8-apache2:2.4.38
 
 ENV LANG ru_RU.UTF-8
 
