@@ -13,6 +13,45 @@
 - Образ позволяет в качестве административной баз данных использовать как встроенную базу `HSQLDB`, так и при использовании в `production` внешнюю реляционную базу (в настоящий момент `postgresql`).
 - *TODO:* Добавить поддержку баз Oracle, MySQL, ClickHouse, ...
 
+Поддержиаемые при экспорте в PDF кириллические фонты:
+- Andale Mono Обычный, Normal
+- Arial Black Обычный, Normal
+- Arial Курсив, Cursiva
+- Arial Обычный, Normal
+- Arial Полужирный, Negreta
+- Arial Полужирный Курсив, Negreta cursiva
+- Comic Sans MS Обычный, Normal
+- Comic Sans MS Полужирный, Negreta
+- Courier New Курсив, Cursiva
+- Courier New Обычный, Normal
+- Courier New Полужирный, Negreta
+- Courier New Полужирный Курсив, Negreta cursiva
+- DejaVu Sans Mono Bold, 
+- DejaVu Sans Mono Book, 
+- DejaVu Sans Bold, 
+- DejaVu Sans Book, 
+- DejaVu Serif Bold, 
+- DejaVu Serif Book, 
+- Georgia Курсив, Cursiva
+- Georgia Обычный, Normal
+- Georgia Полужирный, Negreta
+- Georgia Полужирный Курсив, Negreta cursiva
+- Impact Обычный, Normal
+- Times New Roman Курсив, cursiva
+- Times New Roman Обычный, Normal
+- Times New Roman Полужирный, Negreta
+- Times New Roman Полужирный Курсив, Negreta cursiva
+- Trebuchet MS Курсив, Cursiva
+- Trebuchet MS Обычный, Normal
+- Trebuchet MS Полужирный, Negreta
+- Trebuchet MS Полужирный Курсив, Negreta cursiva
+- Verdana Курсив, Cursiva
+- Verdana Обычный, Normal
+- Verdana Полужирный, Negreta
+- Verdana Полужирный Курсив, Negreta cursiva
+
+
+
 По умолчнию `Pentaho server` доступен на порту `8080`.
 
 ## Запуск
