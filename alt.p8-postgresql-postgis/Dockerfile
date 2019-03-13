@@ -1,4 +1,4 @@
-FROM flexberry/alt.p8-postgresql
+FROM flexberry/alt.p8-postgresql:9.6-1.1.1
 
 MAINTAINER mail@flexberry.ru
 
