@@ -22,6 +22,6 @@ RUN export http_proxy=$http_proxy;\
 
 EXPOSE 80
 
-CMD [ "/usr/sbin/httpd2", "-D", "NO_DETACH", "-k", "start" ]
+CMD [ "/bin/startApache.sh" ]
 #ENTRYPOINT [ "/usr/sbin/httpd2", "-D", "NO_DETACH", "-k", "start" ]
 
