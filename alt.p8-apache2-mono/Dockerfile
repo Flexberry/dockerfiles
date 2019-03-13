@@ -20,5 +20,5 @@ RUN  \
   bzip2 -9 /var/lib/rpm/*
 
 
-CMD [ "/usr/sbin/httpd2", "-D", "NO_DETACH", "-k", "start" ]
+# CMD [ "/usr/sbin/httpd2", "-D", "NO_DETACH", "-k", "start" ]
 #ENTRYPOINT [ "/usr/sbin/httpd2", "-D", "NO_DETACH", "-k", "start" ]
