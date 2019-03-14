@@ -1,4 +1,4 @@
-FROM alt
+FROM alt:p8
 
 ENV LANG ru_RU.UTF-8
 

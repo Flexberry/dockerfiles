@@ -18,7 +18,9 @@ RUN \
     /usr/lib64/libct.so.4 \
     /usr/lib64/libct.so.4.0.0 \
     /usr/lib64/libsybdb.so.5 \
-    /usr/lib64/libsybdb.so.5.0.0
+    /usr/lib64/libsybdb.so.5.0.0; \
+    mkdir /dockerLayer; cd /dockerLayer; \
+    tar xvzf /tmp/tds_fdw.tgz
 
 
 FROM flexberry/alt.p8
@@ -37,10 +39,9 @@ RUN  /etc/init.d/postgresql initdb;
 
 COPY data/postgresql.conf data/pg_hba.conf /var/lib/pgsql/data/
 COPY /docker-cmd.sh /
-COPY --from=dev /tmp/tds_fdw.tgz /tmp
+COPY --from=dev /dockerLayer /
 
 RUN  chmod +x /docker-cmd.sh; \
-  cd /; tar xvzf /tmp/tds_fdw.tgz; \
   chown postgres:postgres /var/lib/pgsql/data/postgresql.conf /var/lib/pgsql/data/pg_hba.conf; \
   /etc/init.d/postgresql start; \
   sleep 5; \

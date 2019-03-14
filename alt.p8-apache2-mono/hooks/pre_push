@@ -1,0 +1,13 @@
+#!/bin/sh
+
+set -x
+is=$IFS
+IFS=:
+set -- $IMAGE_NAME
+IFS=$ifs
+IMAGE=$1
+TAG=$2
+docker tag $IMAGE_NAME ${IMAGE}:latest
+docker tag $IMAGE_NAME ${IMAGE}:autobuild
+docker push ${IMAGE}:latest
+docker push ${IMAGE}:autobuild
