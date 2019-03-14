@@ -18,6 +18,11 @@ fi
 # echo "dir=$dir repository=$repository subdir=$subdir IMAGE=$IMAGE"
 echo "Собирается образ $IMAGE репозитория $repository в поддиректории $subdir"
 
+if [ ! -d .autobuild ]
+then
+  mkdir .autobuild
+fi
+
 cd .autobuild
 if [ ! -d $repository ]
 then
@@ -68,12 +73,12 @@ case $# in
     exit 3
 esac
 
-fullImage="$IMAGE:$fullTag$build"
-latestImage="$IMAGE:latest"
+fullImage="flexberry/$IMAGE:$fullTag$build"
+latestImage="flexberry/$IMAGE:latest"
 versionImage=
 if [ -n "$version" ]
 then
-  versionImage="$IMAGE:$version"
+  versionImage="flexberry/$IMAGE:$version"
 fi
 
 IFS=.
@@ -87,18 +92,20 @@ fi
 major=$1
 minor=$2
 patch=$3
-majorImage="$IMAGE:$fullTag$major"
-minorImage="$IMAGE:$fullTag$major.$minor"
+majorImage="flexberry/$IMAGE:$fullTag$major"
+minorImage="flexberry/$IMAGE:$fullTag$major.$minor"
 
 
 cd $subdir
 docker build --no-cache -t $fullImage .
-docker tag $fullImage $latestImage
-docker tag $fullImage $majorImage
-docker tag $fullImage $minorImage
-if [ -n "$versionImage" ]
-then
-  docker tag $fullImage $versionImage
-fi
+docker login -u kafnevod -p tais1993
+docker push $fullImage
+
+for image in $latestImage $majorImage $minorImage $versionImage
+do
+  docker tag $fullImage $image
+  docker push $image
+done
+
 
 
