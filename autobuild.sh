@@ -25,6 +25,7 @@ then
 fi
 cd $repository
 git checkout master
+git pull
 git pull --tags
 
 
