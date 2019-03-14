@@ -2,7 +2,7 @@
 
 Основан на образе [flexberry/pentaho-official](https://hub.docker.com/r/flexberry/pentaho-official)
 с добалением расширенной локализации для русского языка 
-[ветки OLAP сервера Saiku](https://github.com/Flexberry/saiku/tree/flexberry-pentaho). 
+[ветки OLAP сервера Saiku 3.17](https://github.com/Flexberry/saiku/tree/flexberry-pentaho). 
 
 ## Функционал
 
