@@ -89,7 +89,7 @@ When launching an image, you can:
 The variable `USERS` defines the list of pentaho users, their passwords and roles.
 The format of this variable is:
 ```
-<userNameA>: <passwordA> / <RoleA1> [, ... <RoleAN>] [\ n <userNameB>: <passwordB> / <RoleB1> [, ... <RoleBN>]]
+<userNameA>:<passwordA>/<RoleA1>[,...<RoleAN>][\n<userNameB>:<passwordB>/<RoleB1>[,...<RoleBN>]]
 ```
 The username and password are separated by a colon (`:`). The list of user roles is specified after the slash `/` and is separated by commas.
 
@@ -108,11 +108,11 @@ This image supports the following roles:
 
 Example description of the user `user` with minimal rights:
 ```
-USERS = user: 12345 / Anonymous
+USERS=user:12345/Anonymous
 ```
 Example description of three users:
 ```
-USERS = power: password / Power User \ nreporter: qwerty / Business Analyst, Report Author \ nuser: 12345 / Anonymous
+USERS=power:password/Power User\nreporter:qwerty/Business Analyst, Report Author\nuser:12345/Anonymous
 ```
 
 *If the variable `USERS` is not empty, standard users` joe`, `pat`,` suzy`, `tiffany` are deleted from the system*
@@ -122,7 +122,7 @@ USERS = power: password / Power User \ nreporter: qwerty / Business Analyst, Rep
 If there is a non-empty variable `ADMINPASSWORD`, after the server` pentaho` is initialized, the password of the `admin` user is changed to the specified string.
 For example:
 ```
-ADMINPASSWORD = qwerty
+ADMINPASSWORD=qwerty
 ```
 
 ### Setting java-machine parameters
@@ -138,20 +138,20 @@ Example variable description file `.env`:
 ```
 BI_IMAGE_TAG =: 8.2
 
-#BI_JAVA_OPTS = "- Xms4096m -Xmx6144m -XX: MaxMetaspaceSize = 256m -Djava.security.egd = file: / dev /./ urandom -Dsun.rmi.dgc.client.gcInterval = 3600000 -Dsun.rmi.dgc.c.client.gcInterval = 3600000 -Dsun.rmi.dgc.cli.cmi.dgc.client.gcInterval = 3,600,000 gcInterval = 3,600,000 -Dfile.encoding = utf8 -DDI_HOME = \ "$ DI_HOME \" "
+#BI_JAVA_OPTS="-Xms4096m -Xmx6144m -XX: MaxMetaspaceSize=256m -Djava.security.egd=file: / dev /./ urandom -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.c.client.gcInterval=3600000 -Dsun.rmi.dgc.cli.cmi.dgc.client.gcInterval=3,600,000 gcInterval=3,600,000 -Dfile.encoding=utf8 -DDI_HOME=\"$ DI_HOME\""
 BI_JAVA_OPTS =
 
-# DB_ADMIN = postgresql
-# DB_HOST = postgres
-# DB_PORT = 5432
-# DB_ADMIN_USER = postgres
-# DB_ADMIN_PASS = p @ ssw0rd
-# JCR_DB_NAME = jackrabbit
-# JCR_PASS = password
-# HIBERNATE_DB_NAME = hibernate
-# HIBERNATE_PASS = password
-# QUARTZ_DB_NAME = quartz
-# QUARTZ_PASS = password
+# DB_ADMIN=postgresql
+# DB_HOST=postgres
+# DB_PORT=5432
+# DB_ADMIN_USER=postgres
+# DB_ADMIN_PASS=p@ssw0rd
+# JCR_DB_NAME=jackrabbit
+# JCR_PASS=password
+# HIBERNATE_DB_NAME=hibernate
+# HIBERNATE_PASS=password
+# QUARTZ_DB_NAME=quartz
+# QUARTZ_PASS=password
 
 DB_ADMIN =
 DB_HOST =
@@ -165,12 +165,12 @@ HIBERNATE_PASS =
 QUARTZ_DB_NAME =
 QUARTZ_PASS =
 
-SERVER_HTTP_PORT = 8080
+SERVER_HTTP_PORT=8080
 
-# USERS = power: password / Power User \ nreporter: qwerty / Business Analyst, Report Author \ nuser: 12345 / Anonymous
+# USERS=power:password/Power User\nreporter:qwerty/Business Analyst,Report Author\nuser:12345/Anonymous
 USERS =
 
-# ADMINPASSWORD = qwerty
+# ADMINPASSWORD=qwerty
 ADMINPASSWORD =
 ```
 
@@ -182,7 +182,7 @@ services:
   pentaho:
     image: flexberry / pentaho-official $ BI_IMAGE_TAG
     ports:
-      - "$ {SERVER_HTTP_PORT}: 8080"
+      - "${SERVER_HTTP_PORT}: 8080"
     volumes:
       - hsqldb: / biserver-ce / data / hsqldb /
       - repository: / biserver-ce / pentaho-solutions / system / jackrabbit / repository
@@ -194,20 +194,20 @@ services:
       # - "postgres: 10.130.2.87"
 
     environment:
-      BI_JAVA_OPTS: '$ {BI_JAVA_OPTS}'
-      USERS: '$ {USERS}'
-      ADMINPASSWORD: $ {ADMINPASSWORD}
-      DB_ADMIN: $ {DB_ADMIN}
-      DB_HOST: $ {DB_HOST}
-      DB_PORT: $ {DB_PORT}
-      DB_ADMIN_USER: $ {DB_ADMIN_USER}
-      DB_ADMIN_PASS: $ {DB_ADMIN_PASS}
-      JCR_DB_NAME: $ {JCR_DB_NAME}
-      JCR_PASS: $ {JCR_PASS}
-      HIBERNATE_DB_NAME: $ {HIBERNATE_DB_NAME}
-      HIBERNATE_PASS: $ {HIBERNATE_PASS}
-      QUARTZ_DB_NAME: $ {QUARTZ_DB_NAME}
-      QUARTZ_PASS: $ {QUARTZ_PASS}
+      BI_JAVA_OPTS: '${BI_JAVA_OPTS}'
+      USERS: '${USERS}'
+      ADMINPASSWORD: ${ADMINPASSWORD}
+      DB_ADMIN: ${DB_ADMIN}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_ADMIN_USER: ${DB_ADMIN_USER}
+      DB_ADMIN_PASS: ${DB_ADMIN_PASS}
+      JCR_DB_NAME: ${JCR_DB_NAME}
+      JCR_PASS: ${JCR_PASS}
+      HIBERNATE_DB_NAME: ${HIBERNATE_DB_NAME}
+      HIBERNATE_PASS: ${HIBERNATE_PASS}
+      QUARTZ_DB_NAME: ${QUARTZ_DB_NAME}
+      QUARTZ_PASS: ${QUARTZ_PASS}
 
 volumes:
   hsqldb:
@@ -238,6 +238,3 @@ $ docker-compose config | docker stack deploy -c - PENTAHO
 ```
 
 Where `PENTAHO` is the name of the service stack.
-
-
-
