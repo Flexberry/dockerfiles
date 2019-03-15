@@ -8,6 +8,7 @@ set -- $IMAGE_NAME
 IFS=$ifs
 IMAGE="$2/$3"
 gitTag=$4
+IMAGE_NAME="$IMAGE:$gitTag"
 
 IFS=-
 set -- $gitTag
@@ -30,11 +31,11 @@ case $# in
     exit 3
 esac
 
-latestImage="$IMAGE_NAME:latest"
+latestImage="$IMAGE:latest"
 versionImage=
 if [ -n "$version" ]
 then
-  versionImage="$IMAGE_NAME:$version"
+  versionImage="$IMAGE:$version"
 fi
 IFS=.
 set -- $build
@@ -43,8 +44,8 @@ major=$1
 minor=$2
 patch=$3
 
-majorImage="$IMAGE_NAME:$fullTag$major"
-minorImage="$IMAGE_NAME:$fullTag$major.$minor"
+majorImage="$IMAGE:$fullTag$major"
+minorImage="$IMAGE:$fullTag$major.$minor"
 
 for image in $latestImage $majorImage $minorImage $versionImage
 do
