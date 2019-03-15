@@ -1,1 +1,0 @@
-FROM alt.p8
