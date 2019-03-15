@@ -100,7 +100,7 @@ docker pull $fullImage
 
 for image in $latestImage $majorImage $minorImage $versionImage
 do
-  echo "Загрузка алиаса $fullImage"
+  echo "Загрузка алиаса $image"
   docker pull $image
 done
 
