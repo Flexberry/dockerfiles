@@ -29,9 +29,9 @@ then
   git clone https://github.com/Flexberry/$repository
 fi
 cd $repository
-git checkout master
-git pull
-git pull --tags
+git checkout master >/dev/null 2>&1
+git pull >/dev/null 2>&1
+git pull --tags >/dev/null 2>&1
 
 
 lastTag=`git for-each-ref --format='%(*creatordate:raw)%(creatordate:raw) %(refname)' refs/tags | sort -nr | grep "refs/tags/${IMAGE}_" | head -1`
@@ -44,7 +44,7 @@ fi
 set -- $lastTag
 lastTag=$3
 lastTag=${lastTag:10}
-git checkout $lastTag
+git checkout $lastTag >/dev/null 2>&1
 
 
 IFS=_
@@ -97,14 +97,17 @@ minorImage="flexberry/$IMAGE:$fullTag$major.$minor"
 
 
 cd $subdir
+echo "Создание основного образа $fullImage"
 docker build --no-cache -t $fullImage .
 docker login -u kafnevod -p tais1993
+echo "Размещение основного образа $fullImage в репозитории"
 docker push $fullImage
 
 for image in $latestImage $majorImage $minorImage $versionImage
 do
   docker tag $fullImage $image
   docker push $image
+  echo "Размещение алиаса $image в репозитории"
 done
 
 
