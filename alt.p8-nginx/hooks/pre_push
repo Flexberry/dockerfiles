@@ -6,6 +6,7 @@ IFS=:
 set -- $IMAGE_NAME
 IFS=$ifs
 IMAGE=$1
+IMAGE=${IMAGE:16}
 gitTag=$2
 IFS=-
 set -- $gitTag
