@@ -3,18 +3,34 @@
 # Скрипт автосборки образов по протоколам https://cloud.docker.com/
 # обеспечивает сборку и размещение образов на основе локального или guthub.com git-репозитория
 # Формат вызова:
-# autobuild.sh [local|github] <каталог_репозитория_обаза> [версия сборки]
+# autobuild.sh [local|github] <каталог_репозитория_образа> [версия_сборки]
 # Скрипт запусается из родительского каталога локального git-репозитория
 # Каталог репозитория сборки включает имяя git-репозитория и тропу до каталога, где находится Dockerfile (напроимер dockerfiles/pentaho/official/)
 # и кроме основных файлов и каталогов для docker-сборки должен включать в себя файл .autobuid формата:
 # IMAGE=<имя_образа_без_префикса_flexberry/>
 # VERSION=<версия_сервиса(если_есть)>
-# BUILD=<версия_сборки>
-# Переменные IMAGE, VERSION (если есть) за
+#
+# Eсли первый параметр - local, сборка производится в локальном репозитории в каталоге <каталог_репозитория_образа>.
+# При наличии параметра версия_сборки перед сборкой производится переключение на указанный git-тег
+# (формируется из IMAGE, VERSION и  версия_сборки).
+#
+# Eсли первый параметр - github, создается (если е создан до этого каталог .autobuild) и в нем (если не сделано до этого)
+# произвоится клониование указанного препозитоия из gitub.com/Flexberry.
+# Если параметр версия_сборки не указан он берется из последней успешной локальной сборки 
+# После клонирования производится переключение на указанный git-тег (формируется из IMAGE, VERSION и  версия_сборки).
+#
+# После сборки при наличии файлов *test.yml производится тестирование собранного образа согласно этим файлам
+# При успешном тестировании производится линковка собранного образа со всеми его алиасами
+# Если параметр версия_сборки указан не был, перед линковкой запрашивается ввод версии сборки.
+# Из IMAGE, VERSION и  версия_сборки  формирутся полные тег и передается в gihub-репозитоий
+# По окончании сборки запрашивается необходимость передачи сформированных образов в hub.docker.com.
+# В случае утведительного ответа собанные образы передаются в hub.docker.com.
 
+source=$1
+dir=$2
+build=$3
 
 ifs=$IFS
-dir=$1
 IFS=/
 set -- $dir
 repository=$1
@@ -28,8 +44,30 @@ then
   echo "Отсутствует autobuildFile $autobuildFile";
   exit 1;
 fi
+IMAGE=
+VERSION=
 . $autobuildFile
-# echo "dir=$dir repository=$repository subdir=$subdir IMAGE=$IMAGE"
+# echo "dir=$dir repository=$repository subdir=$subdir IMAGE=$IMAGE VERSION=$VERSION"
+if [ -n "$VERSION" ]
+then
+  gitTagPrefix="${IMAGE}_${VERSION}-"
+else
+  gitTagPrefix="${IMAGE}_"
+fi
+
+case $source in
+  local)
+    ;;
+  github)
+    ;;
+  *)
+    echo "Не указан источник сборки local или github"
+    echo "Формат:"
+    echo "$0 [local|github] <каталог_репозитория_образа> [версия_сборки]"
+    exit 1
+esac
+
+
 echo "Собирается образ $IMAGE репозитория $repository в поддиректории $subdir"
 
 if [ ! -d .autobuild ]
@@ -48,21 +86,21 @@ git pull >/dev/null 2>&1
 git pull --tags >/dev/null 2>&1
 
 
-lastTag=`git for-each-ref --format='%(*creatordate:raw)%(creatordate:raw) %(refname)' refs/tags | sort -nr | grep "refs/tags/${IMAGE}_" | head -1`
-if [ -z "$lastTag" ]
+lastGitTag=`git for-each-ref --format='%(*creatordate:raw)%(creatordate:raw) %(refname)' refs/tags | sort -nr | grep "refs/tags/${IMAGE}_" | head -1`
+if [ -z "$lastGitTag" ]
 then
   echo "Не найдены теги для образа $IMAGE. Теги дожны иметь вид $IMAGE_[ВерсияCервиса-]ВерсияСборки"
   exit 2
 fi
 
-set -- $lastTag
-lastTag=$3
-lastTag=${lastTag:10}
-git checkout $lastTag >/dev/null 2>&1
+set -- $lastGitTag
+lastGitTag=$3
+lastGitTag=${lastGitTag:10}
+git checkout $lastGitTag >/dev/null 2>&1
 
 
 IFS=_
-set -- $lastTag
+set -- $lastGitTag
 image=$1
 gitTag=$2
 
