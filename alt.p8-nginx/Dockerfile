@@ -8,5 +8,13 @@ RUN \
   bzip2 -d /var/lib/rpm/*.bz2; \
   apt-get update && \
   apt-get install -y nginx; \
+  mkdir -p /var/www/html; \
+  echo "<html><body>test></body></html>" > /var/www/html/index.html; \
+  echo "daemon off;" >> /etc/nginx/nginx.conf; \
+  cd /etc/nginx/sites-enabled.d/; ln -sf ../sites-available.d/default.conf .; \
   rm -f /var/cache/apt/archives/*.rpm /var/cache/apt/*.bin /var/lib/apt/lists/*.*; \
   bzip2 -9 /var/lib/rpm/*
+
+COPY testNginx.sh /bin
+  
+CMD /usr/sbin/nginx
