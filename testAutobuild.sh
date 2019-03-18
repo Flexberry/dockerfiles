@@ -70,7 +70,14 @@ getBuildFromGitTag() {
 }
 
 ############ MAIN #################
-
+case $# in
+  1) ;;
+  2) ;;
+  *)
+    echo "НЕВЕРНОЕ ЧИСЛО ПАРАМЕТРОВ"
+    echo "Формат вызова: testAutobuild.sh <каталог_репозитория_образа> [версия_сборки]"
+    exit 1
+esac
 
 dir=$1
 if [ ! -d $dir ]
@@ -104,16 +111,19 @@ echo "------------------------------------------
 СБОРКА ОБРАЗА ИЗ КАТАЛОГА $subdir РЕПОЗИТОРИЯ $repository.
 ИМЯ ОБРАЗА: $IMAGE"
 
+dockerTagPrefix=
 if [ -n "$VERSION" ]
 then
   echo "ВЕРСИЯ: $VERSION";
-  gitTagPrefix="${IMAGE}_${VERSION}-"
-  imageNamePrefix="flexberry/${IMAGE}:${VERSION}-"
+  dockerTagPrefix="${VERSION}-"
+  gitTagPrefix="${IMAGE}_${dockerTagPrefix}"
+  imageNamePrefix="flexberry/${IMAGE}:${dockerTagPrefix}"
   versionImageName="flexberry/${IMAGE}:${VERSION}"
 else
-  gitTagPrefix="${IMAGE}_"
   imageNamePrefix="flexberry/${IMAGE}:"
 fi
+gitTagPrefix="${IMAGE}_${dockerTagPrefix}"
+
 latestImageName="flexberry/${IMAGE}:latest"
 
 if [ -z "$PARAMBUILD" ]
@@ -226,4 +236,24 @@ then
   git push --tags
   echo ""
 fi
+
+echo "НАСТРОЙКИ AUTOBUILD ДЛЯ ОБРАЗА $IMAGE: https://cloud.docker.com/u/flexberry/repository/docker/flexberry/$IMAGE/builds
+Source Type: Tag 
+Source: /^${gitTagPrefix}-([0-9]+).([0-9]+).([0-9]+)\$/
+Docker Tag: ${dockerTagPrefix}{\\1}.{\\2}.{\\3}
+Dockerfile location: Dockerfile
+Build Context: ${subdir}
+";
+echo -ne "ПЕРЕДАТЬ СОЗДАННЫЕ ОБРАЗЫ НА hub.docker.com(y/N)? ";
+read reply
+if [ "$reply" != 'Y' ]
+then
+  exit 0;
+fi
+
+for image in $fullImageName $latestImageName $majorImageName $minorImageName $versionImageName
+do
+  echo "ПЕРЕДАЧА ОБРАЗА $image"
+  docker push $image
+done
 
