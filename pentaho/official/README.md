@@ -12,7 +12,7 @@ Based on the [openjdk: 8-slim] image (https://hub.docker.com/_/openjdk).
 - Provided the ability to change the password of the user `admin`
 - Added database drivers: `postgresql-42.2.5`,` clickhouse-0.1.50` (the driver is compiled when creating an image);
 - The image allows you to use the built-in base `HSQLDB` as an administrative database, as well as using an external relational database (currently` postgresql`) in `production`.
-- * TODO: * Add support for Oracle databases, MySQL, ClickHouse, ...
+- *TODO:* Add support for Oracle databases, MySQL, ClickHouse, ...
 
 Cyrillic fonts supported when exporting to PDF:
 - `Andale Mono` Normal, Normal
