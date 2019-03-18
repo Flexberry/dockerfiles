@@ -1,6 +1,6 @@
 #!/bin/sh
 set -x
-/etc/init.d/nginx start &
+/usr/sbin/nginx &
 sleep 10;
 /usr/bin/wget http://localhost;
 
