@@ -2,34 +2,38 @@ version: '3.2'
 
 services:
   pentaho:
-    image: flexberry/pentaho$BI_IMAGE_TAG
-    command: /biserver-ce/docker-entrypoint.sh
+    image: flexberry/alt.p8-pentaho$BI_IMAGE_TAG
     ports:
       - "${SERVER_HTTP_PORT}:8080"
     volumes:
       - hsqldb:/biserver-ce/data/hsqldb/
       - repository:/biserver-ce/pentaho-solutions/system/jackrabbit/repository
-      #- logs:/biserver-ce/tomcat/logs
-      #- hidden:/biserver-ce/.pentaho/
-      #- tmp:/biserver-ce/tmp
+      - logs:/biserver-ce/tomcat/logs
+      - hidden:/biserver-ce/.pentaho/
+      - tmp:/biserver-ce/tmp
+
+    #extra_hosts:
+      #- "postgres:10.130.2.87"
 
     environment:
-      APPLY_PATCHES: 'Y'
       BI_JAVA_OPTS: '${BI_JAVA_OPTS}'
-      HOST_USER_ID: ${HOST_USER_ID}
-      STORAGE_TYPE: ${STORAGE_TYPE}
-      PDI_HADOOP_CONFIG: ${PDI_HADOOP_CONFIG}
-      PDI_MAX_LOG_LINES: ${PDI_MAX_LOG_LINES}
-      PDI_MAX_LOG_TIMEOUT: ${PDI_MAX_LOG_TIMEOUT}
-      PDI_MAX_OBJ_TIMEOUT: ${PDI_MAX_OBJ_TIMEOUT}
-      SERVER_NAME: ${SERVER_NAME}
-      SERVER_HOST: ${SERVER_HOST}
-      SERVER_PORT: ${SERVER_EXT_PORT}
-      DISABLED_TOOLS: ${DISABLED_TOOLS}
+      USERS: '${USERS}'
+      ADMINPASSWORD: ${ADMINPASSWORD}
+      DB_ADMIN: ${DB_ADMIN}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_ADMIN_USER: ${DB_ADMIN_USER}
+      DB_ADMIN_PASS: ${DB_ADMIN_PASS}
+      JCR_DB_NAME: ${JCR_DB_NAME}
+      JCR_PASS: ${JCR_PASS}
+      HIBERNATE_DB_NAME: ${HIBERNATE_DB_NAME}
+      HIBERNATE_PASS: ${HIBERNATE_PASS}
+      QUARTZ_DB_NAME: ${QUARTZ_DB_NAME}
+      QUARTZ_PASS: ${QUARTZ_PASS}
 
 volumes:
   hsqldb:
   repository:
-  #logs:
-  #tmp:
-  #hidden:
+  logs:
+  tmp:
+  hidden:
