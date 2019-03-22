@@ -1,6 +1,6 @@
 # Description
 
-Based on the alt.p8 image (https://hub.docker.com/r/flexberry/alt.p8-jdk).
+Based on the flexberry/alt.p8 image (https://hub.docker.com/r/flexberry/alt.p8-jdk).
 
 ## Functional
 
