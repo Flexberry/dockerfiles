@@ -1,6 +1,6 @@
 # Description
 
-Based on the [openjdk: 8-slim] image (https://hub.docker.com/_/openjdk).
+Based on the alt.p8 image (https://hub.docker.com/r/flexberry/alt.p8-jdk).
 
 ## Functional
 
