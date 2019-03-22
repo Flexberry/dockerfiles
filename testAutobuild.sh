@@ -175,7 +175,7 @@ then
   gitTag="${gitTagPrefix}${BUILD}"
   echo "ПРИНИМАЕТСЯ ВЕРСИЯ СБОРКИ $BUILD"
 else  # Указана версия сборки
-  BUILD=$build
+  BUILD=$PARAMBUILD
   parceVersion $BUILD
   git commit -a
   git checkout master
@@ -206,6 +206,10 @@ docker build -t $fullImageName .
 
 for testFile in *.test.yml
 do
+  if [ ! -f $testFile ]
+  then
+    break
+  fi
   echo -ne "\n\nТЕСТИРОВАНИЕ ОБРАЗА ФАЙЛОМ КОНИГУРАЦИИ $testFile ..."
   if docker-compose -f $testFile up --build --exit-code-from sut
   then

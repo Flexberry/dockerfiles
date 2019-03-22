@@ -1,0 +1,2 @@
+docker build -t flexberry/pentaho-official-saiku -f ./Dockerfile jars/
+docker tag flexberry/pentaho-official-saiku flexberry/pentaho-official-saiku:8.2

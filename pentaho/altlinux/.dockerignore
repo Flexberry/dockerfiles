@@ -1,0 +1,4 @@
+build.sh
+docker-compose.yml
+*.[Mm][Dd]
+tmp/*
