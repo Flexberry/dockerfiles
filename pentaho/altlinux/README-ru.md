@@ -1,5 +1,5 @@
 # Описание
-Основан на образе [openjdk:8-slim](https://hub.docker.com/_/openjdk).
+Основан на образе flexberry/alt.p8 (https://hub.docker.com/r/flexberry/alt.p8-jdk).
 
 ## Функционал
 
