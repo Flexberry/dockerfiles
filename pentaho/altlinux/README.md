@@ -4,7 +4,7 @@ Based on the flexberry/alt.p8 image (https://hub.docker.com/r/flexberry/alt.p8-j
 
 ## Functional
 
-- For correct support of exporting Cyrillic reports to PDF, [Microsoft TrueType fonts] are installed (https://packages.debian.org/ru/sid/ttf-mscorefonts-installer).
+- For correct support of exporting Cyrillic reports to PDF, [Microsoft TrueType fonts] are installed.
 - Removed files for creating default data in the launched `Pentaho Server`.
 - Removed the task of periodically checking for updates.
 - Removed the drop-down menu with test users from the login screen in `Pentaho Server`.
