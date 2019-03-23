@@ -220,20 +220,16 @@ do
   fi
 done
 
-for image in $latestImageName $majorImageName $minorImageName $versionImageName
-do
-  echo "СОЗДАНИЕ АЛИАСА $image"
-  docker tag $fullImageName $image
-done
-
 if [ -z "$PARAMBUILD" ]
 then
-  echo -ne "COMMIT..."
-  git commit -a
   echo -ne "\nPULL..."
   git pull;
-  echo -ne "\nPUSH..."
-  git push;
+  echo -ne "COMMIT..."
+  if git commit -a
+  then
+    echo -ne "\nPUSH..."
+    git push;
+  fi
   echo "НАВЕШИВАНИЕ GIT-ТЕГА $gitTag"
   git tag $gitTag
   echo -ne "\nPUSH TAGS ..."
@@ -248,6 +244,42 @@ Docker Tag: ${dockerTagPrefix}{\\1}.{\\2}.{\\3}
 Dockerfile location: Dockerfile
 Build Context: /${subdir}
 ";
+
+
+if [ -x hooks/pre_push ] 
+then
+  echo "Выполнить скрипт hooks/pre_push(Y/n)? "
+  read reply
+  if [ -z "$reply" -o "$reply" = 'y' -o  "$reply" = 'Y' ]
+  then
+    (
+    export IMAGE_NAME="/$fullImageName"
+    cd hooks; 
+    ./pre_push
+    )
+  fi
+fi
+if [ -x hooks/post_push ] 
+then
+  echo "Выполнить скрипт hooks/post_push(y/N)? "
+  read reply
+  if [ "$reply" = 'y' -o  "$reply" = 'Y' ]
+  then
+    (
+    export IMAGE_NAME="/$fullImageName"
+    cd hooks; 
+    ./post_push
+    )
+  fi
+fi
+exit
+
+for image in $latestImageName $majorImageName $minorImageName $versionImageName
+do
+  echo "СОЗДАНИЕ АЛИАСА $image"
+  docker tag $fullImageName $image
+done
+
 echo -ne "ПЕРЕДАТЬ СОЗДАННЫЕ ОБРАЗЫ НА hub.docker.com(y/N)? ";
 read reply
 if [ "$reply" != 'Y' ]
@@ -260,4 +292,5 @@ do
   echo "ПЕРЕДАЧА ОБРАЗА $image"
   docker push $image
 done
+
 
