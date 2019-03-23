@@ -243,10 +243,10 @@ fi
 
 echo "НАСТРОЙКИ AUTOBUILD ДЛЯ ОБРАЗА $IMAGE: https://cloud.docker.com/u/flexberry/repository/docker/flexberry/$IMAGE/builds
 Source Type: Tag 
-Source: /^${gitTagPrefix}-([0-9]+).([0-9]+).([0-9]+)\$/
+Source: /^${gitTagPrefix}([0-9]+).([0-9]+).([0-9]+)\$/
 Docker Tag: ${dockerTagPrefix}{\\1}.{\\2}.{\\3}
 Dockerfile location: Dockerfile
-Build Context: ${subdir}
+Build Context: /${subdir}
 ";
 echo -ne "ПЕРЕДАТЬ СОЗДАННЫЕ ОБРАЗЫ НА hub.docker.com(y/N)? ";
 read reply
