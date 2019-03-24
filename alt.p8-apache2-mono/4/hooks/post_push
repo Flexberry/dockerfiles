@@ -1,3 +1,3 @@
 #!/bin/sh
-. ./hooks/functions.sh
-pushAliases
+. ../../hookFunctions.sh
+pushAliases latest
