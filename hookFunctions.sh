@@ -60,7 +60,7 @@ setListImageAliases() {
 }
 
 setAliases() {
-  setListImageAliases;
+  setListImageAliases $*;
   for image in $ALIASES_NAMES
   do
     docker tag $IMAGE_NAME $image
@@ -68,7 +68,7 @@ setAliases() {
 }
 
 pushAliases() {
-  setListImageAliases;
+  setListImageAliases $*;
   for image in $ALIASES_NAMES
   do
     docker push $image

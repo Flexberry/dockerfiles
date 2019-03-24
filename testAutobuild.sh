@@ -252,11 +252,8 @@ then
   read reply
   if [ -z "$reply" -o "$reply" = 'y' -o  "$reply" = 'Y' ]
   then
-    (
     export IMAGE_NAME="/$fullImageName"
-    cd hooks; 
-    ./pre_push
-    )
+    ./hooks/pre_push
   fi
 fi
 if [ -x hooks/post_push ] 
@@ -265,32 +262,11 @@ then
   read reply
   if [ "$reply" = 'y' -o  "$reply" = 'Y' ]
   then
-    (
     export IMAGE_NAME="/$fullImageName"
-    cd hooks; 
-    ./post_push
-    )
+    ./hooks/post_push
   fi
 fi
 exit
 
-for image in $latestImageName $majorImageName $minorImageName $versionImageName
-do
-  echo "СОЗДАНИЕ АЛИАСА $image"
-  docker tag $fullImageName $image
-done
-
-echo -ne "ПЕРЕДАТЬ СОЗДАННЫЕ ОБРАЗЫ НА hub.docker.com(y/N)? ";
-read reply
-if [ "$reply" != 'Y' ]
-then
-  exit 0;
-fi
-
-for image in $fullImageName $latestImageName $majorImageName $minorImageName $versionImageName
-do
-  echo "ПЕРЕДАЧА ОБРАЗА $image"
-  docker push $image
-done
 
 

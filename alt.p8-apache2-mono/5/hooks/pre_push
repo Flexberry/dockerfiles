@@ -1,4 +1,4 @@
 #!/bin/sh
 pwd
-. ./hooks/functions.sh
+. ../../hookFunctions.sh
 setAliases
