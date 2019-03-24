@@ -1,3 +1,4 @@
 #!/bin/sh
-. ./functions.sh
+pwd
+. ./hooks/functions.sh
 setAliases
