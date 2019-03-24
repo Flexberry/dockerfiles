@@ -1,4 +1,3 @@
 #!/bin/sh
-pwd
 . ../../hookFunctions.sh
-setAliases latest
+pushAliases latest
