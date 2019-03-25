@@ -152,7 +152,7 @@ $ git push --tags
 ![Отображение списка тегов](images/listTags.png)
 
 
-## Добавление дополнительных тегов
+## Добавление дополнительных алиасов собранного образа
 
 Механизм публикации образов при автосборке имеет один существенный недостаток:
 при первоначальной генерации и публикации образов по шаблону
@@ -172,17 +172,20 @@ $ git push --tags
 
 Обойти эту проблему можно только с использованием 
 [механизма `hook`ов](https://docs.docker.com/docker-hub/builds/advanced/#custom-build-phase-hooks).
-путем создание скрипта 
-[hooks/pre_push](https://github.com/Flexberry/dockerfiles/blob/master/alt.p8-nginx/hooks/pre_push).
+путем создание скриптов: 
+- [hooks/pre_push](alt.p8-nginx/hooks/pre_push) - создание алиасов образа;
+- [hooks/post_push](alt.p8-nginx/hooks/post_push) - передача алиасов образов в репозиторий `hub.docker.com`.
 
-Данный скрипт до размещения сгенерированного образа генерирует имена алиасных образов
+Скрипт `hooks/pre_push` до размещения сгенерированного образа генерирует имена алиасных образов
 ```
 flexberry/alt.p8-nginx:1.14.2-0.5
 flexberry/alt.p8-nginx:1.14.2-0
 flexberry/alt.p8-nginx:1.14.2
 flexberry/alt.p8-nginx:latest
 ``` 
-и публикует их в репозитории (тег `latest` в поле `Docker tag` интерфейса `Automated build` можно убрать).
+После размещения основного созданного образа скрипт `hooks/post_push` 
+публикует fkbfcs в репозитории 
+>Тег `latest` в поле `Docker tag` интерфейса `Automated build` в этом случае необходимо убрать.
 
 Итоговые список тегов:
 ![Полный список тегов](images/fullListTags.png)
