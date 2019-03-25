@@ -25,7 +25,7 @@
 - [rebuildByTags.sh](rebuildByTags.sh) - обновляет перечисленные теги в локальном и удаленном репозитории что приводит к повторной автоматической сборке образа по указанным тегам 
 >Скрипт не производит переключение (`checkout`) на теги перед обновлением. В случае необходимости это надо сделать самостоятельно. 
 
-- [hookFunctions.sh](hookFunctions.sh) - набор shell-фукций используемых в shell-скриптах `hooks/pre_push`, `hooks/post_push`для установки алиасов образа(`setAliases()`) и размещения образов в репозитории (`pushAliases()`)
+- [hookFunctions.sh](hookFunctions.sh) - набор shell-фукций используемых в shell-скриптах [hooks/pre_push](alt.p8-nginx/hooks/pre_push), [hooks/post_push](/alt.p8-nginx/hooks/post_push) для установки алиасов образа(`setAliases()`) и размещения образов в репозитории (`pushAliases()`)
 
 #### Скрипт локальной сборки и тестирования образов `testAutobuild.sh`
 
