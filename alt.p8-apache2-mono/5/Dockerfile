@@ -8,7 +8,7 @@ COPY /root /
 
 RUN  \
   bzip2 -d /var/lib/rpm/*.bz2; \
-  apt-get update && apt-get install -y apache2-mod_mono mono-full; apt-get remove -y mono-monodoc;\
+  apt-get update && apt-get install -y apache2-mod_mono mono-full mono-web; apt-get remove -y mono-monodoc;\
   cd /etc/httpd2/conf/sites-available/; \
   mv vhosts.conf /conf; \
   ln -sf /conf/vhosts.conf .; \
