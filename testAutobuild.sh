@@ -187,18 +187,9 @@ if [ -z "$PARAMBUILD" ]
 then
   echo "ВЕРСИЯ СБОРКИ НЕ УКАЗАНА"
   buildsFile="./.builds"
-  if [ -f $buildsFile ]
-  then
-    LASTBUILD=
-    . $buildsFile
-    echo "ПРЕДЫДУЩАЯ ВЕРСИЯ СБОРКИ  В ФАЙЛЕ $buildsFile $LASTBUILD"
-  fi
-  if [ -z "$LASTBUILD" ]
-  then
-    gitTag=`getLastGitTag $gitTagPrefix`
-    LASTBUILD=`getBuildFromGitTag $gitTag`
-    echo "ВЕРСИЯ СБОРКИ НЕДОСТУПНА. ПРЕДЫДУЩАЯ ВЕРСИЯ $LASTBUILD В GIT-РЕПОЗИТОРИИ"
-  fi
+  gitTag=`getLastGitTag $gitTagPrefix`
+  LASTBUILD=`getBuildFromGitTag $gitTag`
+  echo "ПРЕДЫДУЩАЯ ВЕРСИЯ $LASTBUILD В GIT-РЕПОЗИТОРИИ"
   set -- `parceVersion $LASTBUILD`
   major=$1
   minor=$2
@@ -224,7 +215,7 @@ then
     let patch=$patch+1
     build="${major}.${minor}.${patch}"
     echo "СЛЕДУЮШАЯ PATCH-ВЕРСИЯ GIT-ТЕГА: $build"
-    echo "ЕСЛИ ЭТО PATCH-РЕЛИЗ НАЖМИТЕ <ENTER> ИЛИ ВВЕДИТЕПОЛНОЕ ИМЯ СЛЕДУЩЕЙ ВЕРСИИ (1.0.0 или 1.0.0.-alpha.0.9)";
+    echo "ЕСЛИ ЭТО PATCH-РЕЛИЗ НАЖМИТЕ <ENTER> ИЛИ ВВЕДИТЕ ПОЛНОЕ ИМЯ СЛЕДУЩЕЙ ВЕРСИИ (1.0.0 или 1.0.0.-alpha.0.9)";
     read reply
     if [ -n "$reply" ]
     then
@@ -240,7 +231,7 @@ then
     do
       parseDockerTag $reply
     done
-    gitTagPrefix="${IMAGE}_${reply}"
+#     gitTagPrefix="${IMAGE}_${reply}"
     BUILD=$build
   fi
   echo "ПРИНИМАЕТСЯ ВЕРСИЯ СБОРКИ $BUILD"
@@ -327,8 +318,8 @@ fi
 
 echo "НАСТРОЙКИ AUTOBUILD ДЛЯ ОБРАЗА $IMAGE: https://cloud.docker.com/u/flexberry/repository/docker/flexberry/$IMAGE/builds
 Source Type: Tag
-Source: /^${gitTagPrefix}([0-9]+).([0-9]+).([0-9]+)\$/
-Docker Tag: ${dockerTagPrefix}{\\1}.{\\2}.{\\3}
+Source: /^${gitTagPrefix}([0-9]+).([0-9]+).([0-9]+)([0-9a-zA-Z.-]*)\$/
+Docker Tag: ${dockerTagPrefix}{\\1}.{\\2}.{\\3}{\\4}
 Dockerfile location: Dockerfile
 Build Context: /${subdir}
 ";
