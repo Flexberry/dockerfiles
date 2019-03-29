@@ -118,8 +118,9 @@ getBuildFromGitTag() {
 
   IFS=-
   set -- $gitTag
+  shift
+  echo $*
   IFS=$ifs
-  echo $2
 }
 
 ############ MAIN #################
