@@ -23,16 +23,69 @@
 # При успешном тестировании производится линковка собранного образа со всеми его алиасами
 # сформированный git-тег добавляется git-репозиторий и передается (`git pull`) на githib.com
 
+isPreRelease() {
+  if=$IFS
+  IFS=" 0123456789."
+  set -- $1
+  v=`echo $*`
+  IFS=$ifs
+  if [ -n "$v" ]
+  then
+    return 0
+  fi
+  return 1
+}
+
 parceVersion() {
+  IFS=-
+  set -- $1
+  IFS=$ifs
+  prerelease=$2
   IFS=.
   set -- $1
   IFS=$ifs
-  if [ $# -ne 3 ]
-  then
-    echo "Неверный формат версии сборки. Версия сборки имеет вид MAJOR.MINOR.PATCH (См. https://semver.org/spec/v2.0.0.html)"
-    exit 4
-  fi
-  echo $*
+  echo $* $prerelease
+}
+
+# СКРИПТ РАЗБИВАЕТ DOCKER-ТЕГ На ЧАСТИ: version, build, prerelease
+# version, build - опциональны и могут быть пустыми после анализа
+parseDockerTag() {
+  IFS=-
+  set -- $1
+  IFS=$ifs
+  version=
+  build=
+  prerelease=
+  case $# in
+    3)
+      version=$1
+      build=$2
+      prerelease="$3"
+      echo "Service version $version, build version $build, prerelease $prerelease"
+      fullTag="${version}-"
+      ;;
+    2)
+      if isPreRelease $2
+      then
+        build=$1
+        prerelease="$2"
+        echo "Build version $build , prerelease $prerelease"
+        fullTag=
+      else
+        version=$1
+        build=$2
+        echo "Service version $version, build version $build"
+        fullTag="${version}-"
+      fi
+      ;;
+    1)
+      build=$1
+      echo "Build version $build"
+      fullTag=
+    ;;
+    *)
+      echo "Incorrect verison format in tag. Tags must have a look [ServiceVersion-]BuildVersion[-Prereleaseversion]"
+  esac
 }
 
 parentImagesFromDockerfile() {
@@ -70,6 +123,10 @@ getBuildFromGitTag() {
 }
 
 ############ MAIN #################
+export version
+export build
+export prerelease
+
 case $# in
   1) ;;
   2) ;;
@@ -146,42 +203,69 @@ then
   major=$1
   minor=$2
   patch=$3
-  let patch=$patch+1
-  BUILD="${major}.${minor}.${patch}"
-  echo "СЛЕДУЮШАЯ PATCH-ВЕРСИЯ GIT-ТЕГА: $BUILD"
-  echo "ЕСЛИ ЭТО PATCH-РЕЛИЗ НАЖМИТЕ <ENTER> ИЛИ ВВЕДИТЕ МИНОРНУЮ (МАЖОР.МИНОР) ИЛИ МАЖОРНУЮ (МАЖОР) ВЕРСИЮ";
-  while read majorminor
-  do
-    if [ -z "$majorminor" ]
+  prerelease=$4
+  if [ -n "$prerelease" ]
+  then
+    echo "ПОСЛЕДНЯЯ ВЕРСИЯ  $major.$minor.$patch БЫЛА ПРЕДРЕЛИЗНОЙ: $prerelease. ВВЕДИТЕ:";
+    echo "<ENTER>, ЕСЛИ ПЛАНИРУЕТЕ СОБРАТЬ РЕЛИЗНУЮ ВЕРСИЮ  $major.$minor.$patch";
+    echo "ИМЯ СЛЕДУЮШЕЙ ПРЕДРЕЛИЗНОЙ ВЕРСИИ (ДОЛЖНО СОДЕРЖАТЬ АЛФАВИТНЫЕ СИМВОЛЫ [A-Z][a-z], например alpha.0.9) :"
+    echo "ПОЛНОЕ ИМЯ СЛЕДУЩЕЙ ВЕРСИИ (1.0.0 или 1.0.0.-alpha.0.9)";
+    read reply
+    if [ -z "$reply" ]
     then
-      break;
+      build="$major.$minor.$patch"
+    else
+      if isPreRelease $reply
+      then
+        build="$major.$minor.$patch-$reply"
+      fi
     fi
-    IFS=.
-    set -- $majorminor
-    IFS=$ifs
-    case $# in
-    1)
-      BUILD="${majorminor}.0.0"
-      break
-      ;;
-    2)
-      BUILD="${majorminor}.0"
-      break
-      ;;
-    *)
-      echo "НЕВЕРНЫЙ ФОРМАТ ВЕРСИИ. КОРРЕКТНЫЙ ФОРМАТ: МИНОРНАЯ (МАЖОР.МИНОР) ИЛИ МАЖОРНАЯ (МАЖОР)"
-    esac
-  done
-  gitTag="${gitTagPrefix}${BUILD}"
+  else
+    let patch=$patch+1
+    build="${major}.${minor}.${patch}"
+    echo "СЛЕДУЮШАЯ PATCH-ВЕРСИЯ GIT-ТЕГА: $build"
+    echo "ЕСЛИ ЭТО PATCH-РЕЛИЗ НАЖМИТЕ <ENTER> ИЛИ ВВЕДИТЕПОЛНОЕ ИМЯ СЛЕДУЩЕЙ ВЕРСИИ (1.0.0 или 1.0.0.-alpha.0.9)";
+    read reply
+    if [ -n "$reply" ]
+    then
+      build=
+    fi
+  fi
+
+  if [ -n "$build" ]
+  then
+    BUILD=$build
+  else
+    while [ -z "$build" ]
+    do
+      parseDockerTag $reply
+    done
+    gitTagPrefix="${IMAGE}_${reply}"
+    BUILD=$build
+  fi
   echo "ПРИНИМАЕТСЯ ВЕРСИЯ СБОРКИ $BUILD"
+  gitTag="${gitTagPrefix}${BUILD}"
+  if [ -n "$prerelease" ]
+  then
+    gitTag="$gitTag-$prerelease"
+    echo "С ПРЕДРЕЛИЗНОЙ ВЕРСИЕЙ $prerelease"
+  fi
 else  # Указана версия сборки
-  BUILD=$PARAMBUILD
+  parseDockerTag $PARAMBUILD
+  BUILD=$build
+  echo "ПРИНИМАЕТСЯ ВЕРСИЯ СБОРКИ $BUILD"
   parceVersion $BUILD
   git commit -a
   git checkout master
   gitTag="${gitTagPrefix}${BUILD}"
+  if [ -n "$prerelease" ]
+  then
+    gitTag="$gitTag-$prerelease"
+    echo "С ПРЕДРЕЛИЗНОЙ ВЕРСИЕЙ $prerelease"
+  fi
   git checkout $gitTag
 fi
+
 
 echo "СОБИРАЕТСЯ ОБРАЗ $IMAGE РЕПОЗИТОРИЯ $repository В ПОДДИРЕКТОРИИ $subdir С GIT-ТЕГОМ $gitTag"
 
@@ -193,6 +277,10 @@ do
 done
 
 fullImageName="${imageNamePrefix}${BUILD}"
+if [ -n "$prerelease" ]
+then
+  fullImageName="$fullImageName-$prerelease"
+fi
 set -- ` parceVersion $BUILD`
 major=$1
 minor=$2
@@ -238,7 +326,7 @@ then
 fi
 
 echo "НАСТРОЙКИ AUTOBUILD ДЛЯ ОБРАЗА $IMAGE: https://cloud.docker.com/u/flexberry/repository/docker/flexberry/$IMAGE/builds
-Source Type: Tag 
+Source Type: Tag
 Source: /^${gitTagPrefix}([0-9]+).([0-9]+).([0-9]+)\$/
 Docker Tag: ${dockerTagPrefix}{\\1}.{\\2}.{\\3}
 Dockerfile location: Dockerfile
@@ -246,7 +334,7 @@ Build Context: /${subdir}
 ";
 
 
-if [ -x hooks/pre_push ] 
+if [ -x hooks/pre_push ]
 then
   echo "Выполнить скрипт hooks/pre_push(Y/n)? "
   read reply
@@ -256,7 +344,7 @@ then
     ./hooks/pre_push
   fi
 fi
-if [ -x hooks/post_push ] 
+if [ -x hooks/post_push ]
 then
   echo "Выполнить скрипт hooks/post_push(y/N)? "
   read reply

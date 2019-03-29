@@ -1,29 +1,36 @@
-BI_IMAGE_TAG=:latest
-BI_CONTAINER_NAME=bi_pentaho
+BI_IMAGE_TAG=:8.2
 
-BI_JAVA_OPTS="-javaagent:./jmx-exporter.jar=1234:/dev/null -XX:+UseG1GC -XX:+UseStringDeduplication -Xms4096m -Xmx4096m -XX:+AlwaysPreTouch -XX:+ScavengeBeforeFullGC -XX:+DisableExplicitGC -XX:+PreserveFramePointer -Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Dpentaho.karaf.root.copy.dest.folder=../../tmp/osgi/karaf -Dpentaho.karaf.root.transient=false -XX:ErrorFile=../logs/jvm_error.log -verbose:gc -Xloggc:../logs/gc.log -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCDateStamps -XX:+PrintHeapAtGC -XX:+PrintAdaptiveSizePolicy -XX:+PrintStringDeduplicationStatistics -XX:+PrintTenuringDistribution -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=2 -XX:GCLogFileSize=64M -XX:OnOutOfMemoryError=/usr/bin/oom_killer -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000 -Dfile.encoding=utf8 -DDI_HOME=\"$DI_HOME\""
+#BI_JAVA_OPTS="-Xms4096m -Xmx6144m -XX:MaxMetaspaceSize=256m -Djava.security.egd=file:/dev/./urandom -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000 -Dfile.encoding=utf8 -DDI_HOME=\"$DI_HOME\""
+BI_JAVA_OPTS=
 
-# add current user id(same as $UID) if you run with non-root user
-HOST_USER_ID=
+#DB_ADMIN=postgresql
+#DB_HOST=postgres
+#DB_PORT=5432
+#DB_ADMIN_USER=postgres
+#DB_ADMIN_PASS=p@ssw0rd
+#JCR_DB_NAME=jackrabbit
+#JCR_PASS=password
+#HIBERNATE_DB_NAME=hibernate
+#HIBERNATE_PASS=password
+#QUARTZ_DB_NAME=quartz
+#QUARTZ_PASS=password
 
-# leave this empty to use hsqldb or mysql5 if you prefer external database
-STORAGE_TYPE=
+DB_ADMIN=
+DB_HOST=
+DB_PORT=
+DB_ADMIN_USER=
+DB_ADMIN_PASS=
+JCR_DB_NAME=
+JCR_PASS=
+HIBERNATE_DB_NAME=
+HIBERNATE_PASS=
+QUARTZ_DB_NAME=
+QUARTZ_PASS=
 
-LOCALE_LANGUAGE=ru
-LOCALE_COUNTRY=RU
-
-PDI_HADOOP_CONFIG=hdp25
-
-PDI_MAX_LOG_LINES=10000
-PDI_MAX_LOG_TIMEOUT=1440
-PDI_MAX_OBJ_TIMEOUT=240
-
-SERVER_NAME=pentaho-ce
-SERVER_HOST=
 SERVER_HTTP_PORT=8080
-SERVER_AJP_PORT=8009
-SERVER_EXT_PORT=443
-SERVER_PROM_PORT=1234
-#DISABLED_TOOLS=saikuplus-exportpdf
-DISABLED_TOOLS=saikuplus
-#DISABLED_TOOLS=""
+
+#USERS=power:password/Power User\nreporter:qwerty/Business Analyst,Report Author\nuser:12345/Anonymous
+USERS=
+
+#ADMINPASSWORD=qwerty
+ADMINPASSWORD=
