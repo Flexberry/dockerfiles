@@ -270,10 +270,10 @@ do
 done
 
 fullImageName="${imageNamePrefix}${BUILD}"
-if [ -n "$prerelease" ]
-then
-  fullImageName="$fullImageName-$prerelease"
-fi
+# if [ -n "$prerelease" ]
+# then
+#   fullImageName="$fullImageName-$prerelease"
+# fi
 set -- ` parceVersion $BUILD`
 major=$1
 minor=$2
