@@ -240,7 +240,7 @@ then
   gitTag="${gitTagPrefix}${BUILD}"
   if [ -n "$prerelease" ]
   then
-    gitTag="$gitTag-$prerelease"
+#     gitTag="$gitTag-$prerelease"
     echo "С ПРЕДРЕЛИЗНОЙ ВЕРСИЕЙ $prerelease"
   fi
 else  # Указана версия сборки
