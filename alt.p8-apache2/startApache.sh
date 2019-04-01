@@ -1,4 +1,5 @@
 #!/bin/sh
+set -x
 rm -f /var/run/httpd2/httpd.pid;
 if [ -z "$MODULES" ]
 then
