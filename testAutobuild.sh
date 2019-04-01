@@ -119,8 +119,8 @@ getBuildFromGitTag() {
   IFS=-
   set -- $gitTag
   shift
-  echo $*
   IFS=$ifs
+  echo $*
 }
 
 ############ MAIN #################
@@ -189,13 +189,14 @@ then
   echo "ВЕРСИЯ СБОРКИ НЕ УКАЗАНА"
   buildsFile="./.builds"
   gitTag=`getLastGitTag $gitTagPrefix`
-  LASTBUILD=`getBuildFromGitTag $gitTag`
-  echo "ПРЕДЫДУЩАЯ ВЕРСИЯ $LASTBUILD В GIT-РЕПОЗИТОРИИ"
+  set -- `getBuildFromGitTag $gitTag`
+  LASTBUILD=$1
+  prerelease=$2
+  echo "ПРЕДЫДУЩАЯ ВЕРСИЯ $LASTBUILD В GIT-РЕПОЗИТОРИИ С ТЕГОМ $gitTag"
   set -- `parceVersion $LASTBUILD`
   major=$1
   minor=$2
   patch=$3
-  prerelease=$4
   if [ -n "$prerelease" ]
   then
     echo "ПОСЛЕДНЯЯ ВЕРСИЯ  $major.$minor.$patch БЫЛА ПРЕДРЕЛИЗНОЙ: $prerelease. ВВЕДИТЕ:";
