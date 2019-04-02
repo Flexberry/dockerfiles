@@ -1,6 +1,6 @@
 # Description
 
-This image supports the functionality [apache-mono (version 4.6.2.7)] (https://github.com/Flexberry/dockerfiles/blob/master/alt.p8-apache2/README-ru.md) of the server and is the base image for creating specialized images of launching `apache-mono` applications.
+This image supports the functionality [apache-mono (version 4.6.2.7)](https://github.com/Flexberry/dockerfiles/blob/master/alt.p8-apache2/README-ru.md) of the server and is the base image for creating specialized images of launching `apache-mono` applications.
 
 ## Environment Variables
 
