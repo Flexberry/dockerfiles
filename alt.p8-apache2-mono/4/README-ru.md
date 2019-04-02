@@ -50,3 +50,54 @@ CMD /bin/change_XMLconfig_from_env.sh && \
 В случае успешного завершения запускает WEB-сервис, котоый инициирует запуск сервиса `mono`.
 
 Если в дочерних образах необходимо запустить дополнительные сервисы необходимо переопределить оператор `CMD` в `Dockerfile`. 
+
+## Пример
+
+Рассмотрим корректировку XML-файла конфигурации  `/var/www/web-api/app/Web.config` вида: 
+```
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <appSettings>
+    <add key="DefaultConnectionStringName" value="DefConnStr" />
+    <add key="ActivityServicesApiUrl" value="%%ACTIVITY_SERVICES_API_URL%%" />
+  </appSettings>
+  <connectionStrings>
+    <add name="DefConnStr" connectionString="%%BPM_CONNECTION_STRING%%" />
+    <add name="AgentSyncConnStr" connectionString="%%DMS_CONNECTION_STRING%%" />
+  </connectionStrings>
+  <quartz>
+    <add key="quartz.scheduler.instanceName" value="FlowpointFlexberryTimerClient" />
+    <add key="quartz.scheduler.instanceId" value="AUTO" />
+    <add key="quartz.scheduler.proxy" value="true" />
+    <add key="quartz.scheduler.proxy.address" value="%%BPM_TIMER_URL%%" />
+    <add key="quartz.threadPool.type" value="Quartz.Simpl.SimpleThreadPool, Quartz" />
+    <add key="quartz.threadPool.threadCount" value="0" />
+  </quartz>
+</configuration>
+```
+
+Имя корректируемого файла конфигурации указывается в переменной `XMLTEMPLATES файла `Dockerfile` при создании подобраза:
+  ```
+  FROM flexberry/alt.p8-apache2-mono:4.6.2.7-1.3
+  ...
+  ENV XMLTEMPLATES "/var/www/web-api/app/Web.config"
+  ...
+  ```
+Значения переменных 
+`ACTIVITY_SERVICES_API_URL`, 
+`JBPM_API_URL`,  
+``BPM_CONNECTION_STRING,  
+`DMS_CONNECTION_STRING`,  
+`BPM_TIMER_URL` 
+указываьмя в YML-файле описания сервиса:
+```
+services:
+monoservice:
+  image: ...
+    environment:
+      - ACTIVITY_SERVICES_API_URL=http://...
+      - JBPM_API_URL=http://...
+      - BPM_CONNECTION_STRING=Server=SrvBPM;Port=5432;...
+      - DMS_CONNECTION_STRING=Server=SrvDMS;Port=5432;...
+      - BPM_TIMER_URL="http://...
+  ```
