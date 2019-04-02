@@ -86,8 +86,8 @@ CMD /bin/change_XMLconfig_from_env.sh && \
 Значения переменных 
 `ACTIVITY_SERVICES_API_URL`, 
 `JBPM_API_URL`,  
-`BPM_CONNECTION_STRING,  
-`DMS_CONNECTION_STRING`,  
+`BPM_CONNECTION_STRING`,  
+`DMS_CONNECTION_STRING`,
 `BPM_TIMER_URL`
 указываются в YML-файле описания сервиса:
 ```
