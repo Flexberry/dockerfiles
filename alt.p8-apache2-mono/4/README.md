@@ -21,16 +21,16 @@ When launching the image container, all variables specified in the templates sho
 If at least one variable is not defined or has an empty value, the container terminates its work.
 Environment variables can be set in the following ways:
 - initialization in the `ENV` statement of the` Dockerfile` file when creating an image. For example:
-  `` `
+  ```
   FROM flexberry / alt.p8-apache2-mono: 4.6.2.7-1.3
   ...
   ENV XMLTEMPLATES "/var/www/web-api/app/Web.config"
   ...
-  `` `
+  ```
 - initialization when the container is started via the `-e` flag. For example:
-  `` `
+  ```
   $ docker run -e "XMLTEMPLATES = / var / www / web-api / app / Web.config" ...
-  `` `
+  ```
   
 - initialization to a YML file.
 For example:
