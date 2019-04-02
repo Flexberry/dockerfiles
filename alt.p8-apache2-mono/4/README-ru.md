@@ -89,7 +89,7 @@ CMD /bin/change_XMLconfig_from_env.sh && \
 ``BPM_CONNECTION_STRING,  
 `DMS_CONNECTION_STRING`,  
 `BPM_TIMER_URL` 
-указываьмя в YML-файле описания сервиса:
+указываются в YML-файле описания сервиса:
 ```
 services:
 monoservice:
