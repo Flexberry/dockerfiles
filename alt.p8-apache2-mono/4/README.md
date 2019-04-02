@@ -34,20 +34,22 @@ Environment variables can be set in the following ways:
   
 - initialization to a YML file.
 For example:
-  `` `
+  ```
   services:
   monoservice:
     image: ...
       environment:
         - XMLTEMPLATES = / var / www / web-api / app / Web.config
+```
 
 > RECOMMENDED A VARIABLE `XMLTEMPLATES` INITIALIZING in a SUBSCRIPTION Dockerfile. VARIABLES USED FOR CORRECTION CERTAINLY SHOULD BE SPECIFIED WHEN STARTING A CONTAINER / SERVICE IN PEMETS OR YML FILE.
 
 When the container / service is started, the following commands of the `CMD` operator are executed:
-`` `
+```
 Cmd /bin/change_XMLconfig_from_env.sh && \
     / usr / sbin / httpd2 -D NO_DETACH -k start
-`` `
+```
+
 The `change_XMLconfig_from_env.sh` script in the files listed in the` XMLTEMPLATES 'variable makes an adjustment to the arguments.
 Upon successful completion, launches the WEB service that initiates the launch of the `mono` service.
 
@@ -56,7 +58,7 @@ If you need to start additional services in child images, you must override the 
 ## Example
 
 Consider adjusting the XML configuration file `/ var / www / web-api / app / Web.config`:
-`` `
+```
 <? xml version = "1.0" encoding = "utf-8"?>
 <configuration>
   <appSettings>
@@ -76,18 +78,19 @@ Consider adjusting the XML configuration file `/ var / www / web-api / app / Web
     <add key = "quartz.threadPool.threadCount" value = "0" />
   </ quartz>
 </ configuration>
-`` `
+```
 
 The name of the configuration file to be adjusted is specified in the `XMLTEMPLATES` variable in the` Dockerfile` file when creating the image:
-  `` `
+  ```
   FROM flexberry / alt.p8-apache2-mono: 4.6.2.7-1.3
   ...
   ENV XMLTEMPLATES "/var/www/web-api/app/Web.config"
   ...
-  `` `
+  ```
+
 Variable values
 `ACTIVITY_SERVICES_API_URL`,` JBPM_API_URL`, `BPM_CONNECTION_STRING`,` DMS_CONNECTION_STRING`, `BPM_TIMER_URL` are specified in the YML service description file:
-`` `
+```
 services:
 monoservice:
   image: ...
@@ -97,4 +100,4 @@ monoservice:
       - BPM_CONNECTION_STRING = Server = SrvBPM; Port = 5432; ...
       - DMS_CONNECTION_STRING = Server = SrvDMS; Port = 5432; ...
       - BPM_TIMER_URL = http: // ...
-  `` `
+      ```
