@@ -40,7 +40,7 @@ For example:
     image: ...
       environment:
         - XMLTEMPLATES = / var / www / web-api / app / Web.config
-```
+  ```
 
 >RECOMMENDED A VARIABLE `XMLTEMPLATES` INITIALIZING in a SUBSCRIPTION Dockerfile. VARIABLES USED FOR CORRECTION CERTAINLY SHOULD BE SPECIFIED WHEN STARTING A CONTAINER / SERVICE IN PEMETS OR YML FILE.
 
