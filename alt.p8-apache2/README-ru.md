@@ -8,7 +8,7 @@
 - `MODULES` - список инициализируемых apache-модулей.
 
 Если переменная `MODULES` не определена подключаются модули:
-`access_compat`, `alias authz_core`, `authz_host`, `autoindex`, `deflate`, `dir`, `filter`, `include`, `log_config`, `logio`, `mime`, `negotiation`, `rewrite`, `ssl`
+`access_compat`, `alias authz_core`, `authz_host`, `autoindex`, `deflate`, `dir`, `filter`, `include`, `log_config`, `logio`, `mime`, `negotiation`, `rewrite`, `ssl`.
 
 
 Список доступных с инциализации модулей:
