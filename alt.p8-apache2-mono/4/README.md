@@ -57,7 +57,7 @@ If you need to start additional services in child images, you must override the 
 
 ## Example
 
-Consider adjusting the XML configuration file `/ var / www / web-api / app / Web.config`:
+Consider adjusting the XML configuration file `/var/www/web-api/app/Web.config`:
 ```
 <? xml version = "1.0" encoding = "utf-8"?>
 <configuration>
