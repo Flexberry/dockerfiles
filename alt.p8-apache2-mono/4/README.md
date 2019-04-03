@@ -10,7 +10,7 @@ This image supports the functionality [apache-mono (version 4.6.2.7)](https://gi
 ## Functional
 
 Starting from version `4.6.2.7-1.3.0`, the ability to customize the arguments of tags of XML files is supported.
-If the argument tag of the XML file contains a pattern like `%%%VARIABLE_NAME%%`,
+If the argument tag of the XML file contains a pattern like `%%VARIABLE_NAME%%`,
 then the value of this argument is replaced with the value of the specified variable.
 
 The list of corrected files is specified in the environment variable `XMLTEMPLATES`.
