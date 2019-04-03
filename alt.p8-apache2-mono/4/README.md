@@ -42,9 +42,9 @@ For example:
           - XMLTEMPLATES=/var/www/web-api/app/Web.config
   ```
 
->RECOMMENDED A VARIABLE `XMLTEMPLATES` INITIALIZING in a SUBSCRIPTION Dockerfile. VARIABLES USED FOR CORRECTION CERTAINLY SHOULD BE SPECIFIED WHEN STARTING A CONTAINER / SERVICE IN PEMETS OR YML FILE.
+>RECOMMENDED A VARIABLE `XMLTEMPLATES` INITIALIZING in a  `Dockerfile`. VARIABLES USED FOR CORRECTION CERTAINLY SHOULD BE SPECIFIED WHEN STARTING A CONTAINER/SERVICE IN PARAMETERS OR YML FILE.
 
-When the container / service is started, the following commands of the `CMD` operator are executed:
+When the container/service is started, the following commands of the `CMD` operator are executed:
 ```
 CMD /bin/change_XMLconfig_from_env.sh && \
     /usr/sbin/httpd2 -D NO_DETACH -k start
