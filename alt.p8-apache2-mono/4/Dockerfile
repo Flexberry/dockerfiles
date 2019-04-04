@@ -21,10 +21,10 @@ RUN  \
   bzip2 -9 /var/lib/rpm/*
 
 COPY /change_XMLconfig_from_env.sh /bin
-  
-# XMLTEMPLATES may contain list of XML template files, configured by change_XMLconfig_from_env.sh script   
-#ENV XMLTEMPLATES   
-    
+
+# XMLTEMPLATES may contain list of XML template files, configured by change_XMLconfig_from_env.sh script
+#ENV XMLTEMPLATES
+
 CMD /bin/change_XMLconfig_from_env.sh && \
-    /usr/sbin/httpd2 -D NO_DETACH -k start
+    /bin/startApache.sh
 
