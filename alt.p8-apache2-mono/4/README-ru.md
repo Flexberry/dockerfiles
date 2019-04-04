@@ -40,17 +40,36 @@
         environment:
           - XMLTEMPLATES=/var/www/web-api/app/Web.config
 
-> РЕКОМЕНДУЕТСЯ ПЕРЕМЕННУЮ `XMLTEMPLATES` ИНИЦИАЛИЗИРОАТЬ в `Dockerfile` ДОЧЕРНЕГО ОБРАЗА. ПЕРЕМЕННЫЕ, ИСПОЛЬЗУЕМЫЕ ДЛЯ КОРЕКТИРОВКИ ЦЕЛЕСООБАЗНЕЕ УКАЗЫВАТЬ ПРИ ЗАПУСКЕ КОНТЕЙНЕРА/СЕРВИСА В ПАРАМЕТРАХ ИЛИ YML-ФАЙЛАХ.   
+> Рекомендуется переменную `XMLTEMPLATES` и `default`'ные значения переменных используемых для коректировки инициализироать в `Dockerfile` дочернего образа. Текущие значения переменных целесообазнее указывать при запуске контейнера/сервиса в параметрах или `yml-файлах`.
 
 При запуске контейнера/сервиса производится выполнение следующих команд оператора `CMD`:
 ```
 CMD /bin/change_XMLconfig_from_env.sh && \
-    /usr/sbin/httpd2 -D NO_DETACH -k start
+    /bin/startApache.sh
 ```
 Скрипт `change_XMLconfig_from_env.sh` в файлах, перечисленных в переменной `XMLTEMPLATES`производит корректировку аргументов.
-В случае успешного завершения запускает WEB-сервис, который инициирует запуск сервиса `mono`.
+В случае успешного завершения запускает скрипт `/bin/startApache.sh`:
+```
+#!/bin/sh
+set -x
+rm -f /var/run/httpd2/httpd.pid;
+if [ -z "$MODULES" ]
+then
+  MODULES="rewrite ssl deflate filter"
+fi
 
-Если в дочерних образах необходимо запустить дополнительные сервисы необходимо переопределить оператор `CMD` в `Dockerfile`. 
+for module in $MODULES
+do
+  a2enmod $module
+done
+
+/usr/sbin/httpd2 -D NO_DETACH -k start
+```
+Данный скрипт загружает указанные модули WEB-сервера `apache2:2.4.38` и запускает сам WEB-сервис, 
+который инициирует запуск сервиса `mono`.
+
+Если в дочерних образах необходимо запустить дополнительные сервисы необходимо  поместить в `/bin/startApache.sh` подобраза собственный вариант скрипта. 
+
 
 ## Пример
 
@@ -82,6 +101,7 @@ CMD /bin/change_XMLconfig_from_env.sh && \
   FROM flexberry/alt.p8-apache2-mono:4.6.2.7-1.3
   ...
   ENV XMLTEMPLATES "/var/www/web-api/app/Web.config"
+  ENV ACTIVITY_SERVICES_API_URL=http://localhost:1234/...
   ...
   ```
 Значения переменных 
