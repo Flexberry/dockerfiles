@@ -44,7 +44,7 @@ For example:
           - XMLTEMPLATES=/var/www/web-api/app/Web.config
   ```
 
->RECOMMENDED A VARIABLE `XMLTEMPLATES` INITIALIZING in a  `Dockerfile`. VARIABLES USED FOR CORRECTION CERTAINLY SHOULD BE SPECIFIED WHEN STARTING A CONTAINER/SERVICE IN PARAMETERS OR YML FILE.
+>It is recommended that the variable `XMLTEMPLATES` and `default values` of the variables used for correction be initialized in the `Dockerfile` of the child image. It is more expedient to specify the current values of variables when starting the container/service in parameters of `yml-files`.
 
 ## Change start functionality
 
