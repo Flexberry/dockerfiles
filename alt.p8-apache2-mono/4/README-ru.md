@@ -6,6 +6,9 @@
 
 - `XMLTEMPLATES` - список корректируемых XML-файлов.
 - Переменные, перечисленные в корректируемых XML-файлах.
+- `MODULES` - наследуемая переменная. Содержит список инициализируемых apache-модулей. См. [https://github.com/Flexberry/dockerfiles/blob/master/alt.p8-apache2/README-ru.md](https://github.com/Flexberry/dockerfiles/blob/master/alt.p8-apache2/README-ru.md).
+- `BOOTUP_CHECK_URL` - наследуемая переменная, Содержит локальный `URL` вида `http:/0.0.0.0:<PORT>/<PATH>`. При наличии этой переменной после запуска WEB-сервера стартовый скрипт ожидает доступность сервиса по этому `URL` и только после этого заканчивает работу. См. [https://github.com/Flexberry/dockerfiles/blob/master/alt.p8-apache2/README-ru.md](https://github.com/Flexberry/dockerfiles/blob/master/alt.p8-apache2/README-ru.md).
+
 
 ## Функционал
 
