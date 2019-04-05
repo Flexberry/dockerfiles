@@ -6,6 +6,8 @@ This image supports the functionality [apache-mono (version 4.6.2.7)](https://gi
 
 - `XMLTEMPLATES` - list of corrected XML files.
 - Variables listed in corrected XML files.
+- BOOTUP_CHECK_URL - inherited variable. Contains a local URL of the form http:/0.0.0.0:/. If this variable is present after the start of the WEB server, the startup script waits for the service to be available at this URL. See [https://github.com/Flexberry/dockerfiles/blob/master/alt.p8-apache2/README.md](https://github.com/Flexberry/dockerfiles/blob/master/alt.p8-apache2/README.md).
+- MODULES - inherited variable. Contains a list of initialized apache-modules. See [https://github.com/Flexberry/dockerfiles/blob/master/alt.p8-apache2/README.md](https://github.com/Flexberry/dockerfiles/blob/master/alt.p8-apache2/README.md).
 
 ## Functional
 
