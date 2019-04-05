@@ -69,6 +69,17 @@ do
 done
 
 /usr/sbin/httpd2 -D NO_DETACH -k start
+
+if [ -n  "$BOOTUP_CHECK_URL" ]
+then
+  until wget -c $BOOTUP_CHECK_URL >/dev/null  2>&1
+  do
+    echo "Wait for start up apache service"
+    sleep 1;
+  done
+fi
+
+/usr/sbin/httpd2 -D NO_DETACH -k start
 ```
 Данный скрипт загружает указанные модули WEB-сервера `apache2:2.4.38` и запускает сам WEB-сервис, 
 который инициирует запуск сервиса `mono`.
