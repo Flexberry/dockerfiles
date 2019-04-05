@@ -6,6 +6,8 @@ This image supports the functionality [apache-mono (version 4.6.2.7)](https://gi
 
 - `XMLTEMPLATES` - list of corrected XML files.
 - Variables listed in corrected XML files.
+- BOOTUP_CHECK_URL - inherited variable. Contains a local URL of the form `http://0.0.0.0:<PORT>/<PATH>`. If this variable is present after the start of the WEB server, the startup script waits for the service to be available at this URL. See [https://github.com/Flexberry/dockerfiles/blob/master/alt.p8-apache2/README.md](https://github.com/Flexberry/dockerfiles/blob/master/alt.p8-apache2/README.md).
+- MODULES - inherited variable. Contains a list of initialized apache-modules. See [https://github.com/Flexberry/dockerfiles/blob/master/alt.p8-apache2/README.md](https://github.com/Flexberry/dockerfiles/blob/master/alt.p8-apache2/README.md).
 
 ## Functional
 
@@ -42,7 +44,7 @@ For example:
           - XMLTEMPLATES=/var/www/web-api/app/Web.config
   ```
 
->RECOMMENDED A VARIABLE `XMLTEMPLATES` INITIALIZING in a  `Dockerfile`. VARIABLES USED FOR CORRECTION CERTAINLY SHOULD BE SPECIFIED WHEN STARTING A CONTAINER/SERVICE IN PARAMETERS OR YML FILE.
+>It is recommended that the variable `XMLTEMPLATES` and `default values` of the variables used for correction be initialized in the `Dockerfile` of the child image. It is more expedient to specify the current values of variables when starting the container/service in parameters of `yml-files`.
 
 ## Change start functionality
 
