@@ -1,18 +1,33 @@
-# FROM flexberry/alt.p8-dev as dev
-#
-#
-# USER root
-#
-# COPY /root /
-#
-# RUN cd /root;\
-#   git clone https://github.com/Flexberry/saiku; \
-#   cd saiku; \
-#   git checkout flexberry-pentaho;
-#
-# RUN  cd /root/saiku; \
-#   mvn  package -DskipTests
-#
+FROM flexberry/alt.p8-dev as dev
+
+
+USER root
+
+COPY /root /
+
+RUN cd /root;\
+  git clone https://github.com/Flexberry/saiku; \
+  cd saiku; \
+  git checkout flexberry-pentaho;
+
+RUN  cd /root/saiku/saiku-ui; \
+  mvn  package -DskipTests; \
+  mkdir -p tmp/system/saiku/ui/; \
+  cp target/saiku-ui/saiku.min.js tmp/system/saiku/ui/; \
+  mkdir -p tmp/system/saiku/ui/js/saiku/plugins/CCC_Chart/; \
+  cp target/saiku-ui/js/saiku/plugins/CCC_Chart/pvc-d.js tmp/system/saiku/ui/js/saiku/plugins/CCC_Chart/; \
+  mkdir -p tmp/system/saiku/ui/js/saiku/plugins/CCC_Chart2/; \
+  cp target/saiku-ui/js/saiku/plugins/CCC_Chart2/pvc.js tmp/system/saiku/ui/js/saiku/plugins/CCC_Chart2/; \
+  cp target/saiku-ui/js/saiku/plugins/CCC_Chart2/protovis.js tmp/system/saiku/ui/js/saiku/plugins/CCC_Chart2/; \
+  mkdir -p tmp/system/saiku/ui/js/saiku/plugins/I18n/; \
+  cp target/saiku-ui/js/saiku/plugins/I18n/plugin.js tmp/system/saiku/ui/js/saiku/plugins/I18n/; \
+  mkdir -p tmp/system/saiku/ui/js/saiku/plugins/I18n/po/; \
+  cp target/saiku-ui/js/saiku/plugins/I18n/po/ru.json tmp/system/saiku/ui/js/saiku/plugins/I18n/po/; \
+  cd tmp; tar cvzf /tmp/saikuLocalization.tgz .
+  
+  
+  
+  
 # COPY /add /root/saiku/saiku-bi-platform-plugin-p7.1/target/dist/saiku/
 
 
@@ -32,9 +47,11 @@ RUN echo "Download plugins..." ;\
 			http://ctools.pentaho.com/files/d3ComponentLibrary/17.07.24/d3ComponentLibrary-17.07.24.zip \
 			http://ctools.pentaho.com/files/cdv/17.05.12/7.x/cdv-7.1-17.05.12.zip \
 	&& echo "Installing plugins..." \
-		&& for i in *.zip; do echo "Unpacking $i..." && unzip -q -d pentaho-solutions/system $i && rm -f $i; done
+        && for i in *.zip; do echo "Unpacking $i..." && unzip -q -d pentaho-solutions/system $i && rm -f $i; done
 
 COPY add/ /opt/pentaho/pentaho-server/pentaho-solutions/system/saiku/
 
 
-# COPY --from=dev --chown=pentaho /root/saiku/saiku-bi-platform-plugin-p7.1/target/dist/ /opt/pentaho/pentaho-server/pentaho-solutions/system
+COPY --from=dev  /tmp/saikuLocalization.tgz /tmp/saikuLocalization.tgz
+
+RUN cd /opt/pentaho/pentaho-server/pentaho-solutions/system; tar xvzf /tmp/saikuLocalization.tgz
