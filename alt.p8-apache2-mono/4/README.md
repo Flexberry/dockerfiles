@@ -44,6 +44,8 @@ For example:
 
 >RECOMMENDED A VARIABLE `XMLTEMPLATES` INITIALIZING in a  `Dockerfile`. VARIABLES USED FOR CORRECTION CERTAINLY SHOULD BE SPECIFIED WHEN STARTING A CONTAINER/SERVICE IN PARAMETERS OR YML FILE.
 
+## Change start functionality
+
 When the container/service is started, the following commands of the `CMD` operator are executed:
 ```
 CMD /bin/change_XMLconfig_from_env.sh && \
@@ -51,9 +53,36 @@ CMD /bin/change_XMLconfig_from_env.sh && \
 ```
 
 The `change_XMLconfig_from_env.sh` script in the files listed in the `XMLTEMPLATES` variable makes an adjustment to the arguments.
-Upon successful completion, launches the WEB service that initiates the launch of the `mono` service.
+If successful, runs the script `/bin/startApache.sh`:
+```
+#!/bin/sh
+set -x
+rm -f /var/run/httpd2/httpd.pid;
+if [ -z "$MODULES" ]
+then
+  MODULES="rewrite ssl deflate filter"
+fi
 
-If you need to start additional services in child images, you must override the `CMD` operator in` Dockerfile`.
+for module in $MODULES
+do
+  a2enmod $module
+done
+
+/usr/sbin/httpd2 -D NO_DETACH -k start
+
+if [ -n  "$BOOTUP_CHECK_URL" ]
+then
+  until wget -c $BOOTUP_CHECK_URL >/dev/null  2>&1
+  do
+    echo "Wait for start up apache service"
+    sleep 1;
+  done
+fi
+
+/usr/sbin/httpd2 -D NO_DETACH -k start
+```
+
+If you need to run additional services in the child images, you need to put your own variant of the script in the `/ bin / startApache.sh` child's-image.
 
 ## Example
 
