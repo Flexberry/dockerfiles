@@ -6,6 +6,7 @@
 ## Переменные среды
 
 - `MODULES` - список инициализируемых apache-модулей.
+- BOOTUPCHECKURL - локальный URL вида http:/0.0.0.0:<PORT>/<PATH>. При наличии этой переменной после запуска WEB-сервера стартовый скрипт ожидает доступность сервиса по этому URL и только после этого заканчивает работу.
 
 Если переменная `MODULES` не определена подключаются модули:
 `access_compat`, `alias authz_core`, `authz_host`, `autoindex`, `deflate`, `dir`, `filter`, `include`, `log_config`, `logio`, `mime`, `negotiation`, `rewrite`, `ssl`.
