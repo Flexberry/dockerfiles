@@ -6,7 +6,7 @@ and is a basic way to create specialized images of running `apache2` application
 ## Environment Variables
 
 - `MODULES` - a list of initialized apache-modules.
-- BOOTUPCHECKURL is a local URL of the form http:/0.0.0.0:<PORT>/<PATH>. If this variable is present after the start of the WEB server, the startup script waits for the service to be available at this URL.
+- BOOTUP_CHECK_URL is a local URL of the form http:/0.0.0.0:<PORT>/<PATH>. If this variable is present after the start of the WEB server, the startup script waits for the service to be available at this URL.
 
 If the variable `MODULES` is not defined, the modules are connected:
 `access_compat`,` alias authz_core`, `authz_host`,` autoindex`, `deflate`,` dir`, `filter`,` include`, `log_config`,` logio`, `mime`,` negotiation`, ` rewrite`, `ssl`.
