@@ -12,3 +12,12 @@ do
 done
 
 /usr/sbin/httpd2 -D NO_DETACH -k start
+
+if [ -n  "$BOOTUPCHECKURL" ]
+then
+  until wget -c $BOOTUPCHECKURL >/dev/null  2>&1
+  do
+    echo "Wait for start up apache service"
+    sleep 1;
+  done
+fi
