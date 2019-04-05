@@ -1,16 +1,16 @@
 #!/bin/sh
 set -x
-exec 2>/tmp/change.log
+exec 2>&1
 for XMLTEMPLATE in $XMLTEMPLATES
 do
-  vars=`xsltproc - $XMLTEMPLATE <<EOF
+  vars=`xsltproc - $XMLTEMPLATE  <<EOF | sort -u
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:beans="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util">
   <xsl:output method="text" encoding="UTF-8"/>
-  <xsl:template match="@*|node()">
+  <xsl:template match="node()">
     <xsl:for-each select="//*/@*[starts-with(.,'%%') and substring(.,string-length(.)-1)='%%']">
       <xsl:value-of select="substring(substring(.,1,string-length(.)-2),3)" />
-      <xsl:text> </xsl:text>
+      <xsl:text>&#010;</xsl:text>
     </xsl:for-each>
   </xsl:template>
 </xsl:stylesheet>
@@ -22,6 +22,16 @@ EOF
   then
     continue;
   fi
+
+  for var in $vars
+  do
+    value=${!var}
+    if [ -z "$value" ]
+    then
+      echo "Variable \"$var\" doesn't exist in environment" >&2
+      exit 1
+    fi
+  done
 
   TMPFILE=/tmp/config$$.xml
   {
@@ -39,11 +49,6 @@ EOF
   for var in $vars
   do
     value=${!var}
-    if [ -z "$value" ]
-    then
-      echo "Variable \"$var\" doesn't exist in environment" >&2
-      exit 1
-    fi
     cat <<EOF
   <xsl:template match="//*/@*[.='%%$var%%']">
     <xsl:attribute name="{name()}">$value</xsl:attribute>
@@ -53,7 +58,7 @@ EOF
   cat <<EOF
 </xsl:stylesheet>
 EOF
-  } | 
+  } |
   xsltproc - $XMLTEMPLATE >$TMPFILE
   if [ $? -eq 0 ]
   then
