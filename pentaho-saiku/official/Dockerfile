@@ -22,7 +22,7 @@ RUN  cd /root/saiku/saiku-ui; \
   mkdir -p /tmp/build/system/saiku/ui/js/saiku/plugins/I18n/; \
   cp target/saiku-ui/js/saiku/plugins/I18n/plugin.js /tmp/build/system/saiku/ui/js/saiku/plugins/I18n/; \
   mkdir -p /tmp/build/system/saiku/ui/js/saiku/plugins/I18n/po/; \
-  cp target/saiku-ui/js/saiku/plugins/I18n/po/ru.json tmp/system/saiku/ui/js/saiku/plugins/I18n/po/; 
+  cp target/saiku-ui/js/saiku/plugins/I18n/po/ru.json /tmp/build/system/saiku/ui/js/saiku/plugins/I18n/po/; 
   
 RUN  cd /root;\
   git clone https://github.com/Flexberry/fop; \
@@ -35,7 +35,7 @@ RUN  cd /root;\
   cp fop/target/fop-2.4.0-SNAPSHOT.jar /tmp/build/system/saiku/lib/;
   
 RUN   cd /tmp/build/; \
-  tar cvzf /tmp/saikuLocalization.tgz .; \
+  tar cvzf /tmp/saikuLocalization.tgz .; 
   
   
   
