@@ -12,18 +12,31 @@ RUN cd /root;\
 
 RUN  cd /root/saiku/saiku-ui; \
   mvn  package -DskipTests; \
-  mkdir -p tmp/system/saiku/ui/; \
-  cp target/saiku-ui/saiku.min.js tmp/system/saiku/ui/; \
-  mkdir -p tmp/system/saiku/ui/js/saiku/plugins/CCC_Chart/; \
-  cp target/saiku-ui/js/saiku/plugins/CCC_Chart/pvc-d.js tmp/system/saiku/ui/js/saiku/plugins/CCC_Chart/; \
-  mkdir -p tmp/system/saiku/ui/js/saiku/plugins/CCC_Chart2/; \
-  cp target/saiku-ui/js/saiku/plugins/CCC_Chart2/pvc.js tmp/system/saiku/ui/js/saiku/plugins/CCC_Chart2/; \
-  cp target/saiku-ui/js/saiku/plugins/CCC_Chart2/protovis.js tmp/system/saiku/ui/js/saiku/plugins/CCC_Chart2/; \
-  mkdir -p tmp/system/saiku/ui/js/saiku/plugins/I18n/; \
-  cp target/saiku-ui/js/saiku/plugins/I18n/plugin.js tmp/system/saiku/ui/js/saiku/plugins/I18n/; \
-  mkdir -p tmp/system/saiku/ui/js/saiku/plugins/I18n/po/; \
-  cp target/saiku-ui/js/saiku/plugins/I18n/po/ru.json tmp/system/saiku/ui/js/saiku/plugins/I18n/po/; \
-  cd tmp; tar cvzf /tmp/saikuLocalization.tgz .
+  mkdir -p /tmp/build/system/saiku/ui/; \
+  cp target/saiku-ui/saiku.min.js /tmp/build/system/saiku/ui/; \
+  mkdir -p /tmp/build/system/saiku/ui/js/saiku/plugins/CCC_Chart/; \
+  cp target/saiku-ui/js/saiku/plugins/CCC_Chart/pvc-d.js /tmp/build/system/saiku/ui/js/saiku/plugins/CCC_Chart/; \
+  mkdir -p /tmp/build/system/saiku/ui/js/saiku/plugins/CCC_Chart2/; \
+  cp target/saiku-ui/js/saiku/plugins/CCC_Chart2/pvc.js /tmp/build/system/saiku/ui/js/saiku/plugins/CCC_Chart2/; \
+  cp target/saiku-ui/js/saiku/plugins/CCC_Chart2/protovis.js /tmp/build/system/saiku/ui/js/saiku/plugins/CCC_Chart2/; \
+  mkdir -p /tmp/build/system/saiku/ui/js/saiku/plugins/I18n/; \
+  cp target/saiku-ui/js/saiku/plugins/I18n/plugin.js /tmp/build/system/saiku/ui/js/saiku/plugins/I18n/; \
+  mkdir -p /tmp/build/system/saiku/ui/js/saiku/plugins/I18n/po/; \
+  cp target/saiku-ui/js/saiku/plugins/I18n/po/ru.json tmp/system/saiku/ui/js/saiku/plugins/I18n/po/; 
+  
+RUN  cd /root;\
+  git clone https://github.com/Flexberry/fop; \
+  cd fop/; \
+  git checkout addConfigParser; 
+  
+ RUN cd /root/fop; \
+  mvn package; \
+  mkdir -p /tmp/build/system/saiku/lib/; \
+  cp fop/target/fop-2.4.0-SNAPSHOT.jar /tmp/build/system/saiku/lib/;
+  
+RUN   cd /tmp/build/; \
+  tar cvzf /tmp/saikuLocalization.tgz .; \
+  
   
   
   
