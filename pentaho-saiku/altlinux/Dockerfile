@@ -33,11 +33,6 @@ RUN  cd /root;\
 
 COPY /add  /tmp/build/system/saiku/
 
-RUN   cd /tmp/build/; \
-  tar cvzf /tmp/saikuLocalization.tgz .;
-
-
-
 
 # USER pentaho
 
@@ -54,4 +49,4 @@ RUN echo "Download plugins..." ;\
 	&& echo "Installing plugins..." \
         && for i in *.zip; do echo "Unpacking $i..." && unzip -q -d pentaho-solutions/system $i && rm -f $i; done
 
-COPY --from=dev  /tmp/saikuLocalization.tgz /opt/pentaho/pentaho-server/pentaho-solutions/system
+COPY --from=dev  /tmp/build/ /opt/pentaho/pentaho-server/pentaho-solutions/
