@@ -1,6 +1,5 @@
 FROM flexberry/alt.p8-dev as dev
 
-
 USER root
 
 COPY /root /
@@ -22,28 +21,20 @@ RUN  cd /root/saiku/saiku-ui; \
   mkdir -p /tmp/build/system/saiku/ui/js/saiku/plugins/I18n/; \
   cp target/saiku-ui/js/saiku/plugins/I18n/plugin.js /tmp/build/system/saiku/ui/js/saiku/plugins/I18n/; \
   mkdir -p /tmp/build/system/saiku/ui/js/saiku/plugins/I18n/po/; \
-  cp target/saiku-ui/js/saiku/plugins/I18n/po/ru.json /tmp/build/system/saiku/ui/js/saiku/plugins/I18n/po/; 
-  
+  cp target/saiku-ui/js/saiku/plugins/I18n/po/ru.json /tmp/build/system/saiku/ui/js/saiku/plugins/I18n/po/;
+
 RUN  cd /root;\
   git clone https://github.com/Flexberry/fop; \
   cd fop/; \
-  git checkout addConfigParser; 
-  
+  git checkout addConfigParser;
+
  RUN cd /root/fop; \
   mvn package; \
   mkdir -p /tmp/build/system/saiku/lib/; \
   cp fop/target/fop-2.4.0-SNAPSHOT.jar /tmp/build/system/saiku/lib/;
-  
+
 RUN   cd /tmp/build/; \
-  tar cvzf /tmp/saikuLocalization.tgz .; 
-  
-  
-  
-  
-  
-# COPY /add /root/saiku/saiku-bi-platform-plugin-p7.1/target/dist/saiku/
-
-
+  tar cvzf /tmp/saikuLocalization.tgz .;
 
 # USER pentaho
 
@@ -64,7 +55,6 @@ RUN echo "Download plugins..." ;\
 
 COPY add/ /opt/pentaho/pentaho-server/pentaho-solutions/system/saiku/
 
+COPY --from=dev  /tmp/saikuLocalization.tgz /opt/pentaho/pentaho-server/pentaho-solutions/system
 
-COPY --from=dev  /tmp/saikuLocalization.tgz /tmp/saikuLocalization.tgz
-
-RUN cd /opt/pentaho/pentaho-server/pentaho-solutions/system; tar xvzf /tmp/saikuLocalization.tgz
+# RUN cd /opt/pentaho/pentaho-server/pentaho-solutions/system; tar xvzf /tmp/saikuLocalization.tgz
