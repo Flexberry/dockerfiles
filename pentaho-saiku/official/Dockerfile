@@ -31,12 +31,8 @@ RUN  cd /root;\
   mkdir -p /tmp/build/system/saiku/lib/; \
   cp fop/target/fop-2.4.0-SNAPSHOT.jar /tmp/build/system/saiku/lib/;
 
-COPY . .
-
 COPY /add  /tmp/build/system/saiku/
 
-RUN   cd /tmp/build/; \
-  tar cvzf /tmp/saikuLocalization.tgz .;
 
 # USER pentaho
 
@@ -56,9 +52,5 @@ RUN echo "Download plugins..." ;\
 	&& echo "Installing plugins..." \
         && for i in *.zip; do echo "Unpacking $i..." && unzip -q -d pentaho-solutions/system $i && rm -f $i; done
 
-# COPY add/ /opt/pentaho/pentaho-server/pentaho-solutions/system/saiku/
 
-COPY --from=dev  /tmp/saikuLocalization.tgz /tmp
-COPY --from=dev  /tmp/saikuLocalization.tgz /opt/pentaho/pentaho-server/pentaho-solutions/system
-
-# RUN cd /opt/pentaho/pentaho-server/pentaho-solutions/system; tar xvzf /tmp/saikuLocalization.tgz
+COPY --from=dev  /tmp/build/ /opt/pentaho/pentaho-server/pentaho-solutions/

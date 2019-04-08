@@ -301,6 +301,13 @@ do
   fi
 done
 
+echo "Выполнить формирование тегов и удаленную сборку(Y/n)?";
+read reply
+if [ -n "$reply" -a "$reply" != 'y' -a  "$reply" != 'Y' ]
+then
+  exit
+fi
+
 if [ -z "$PARAMBUILD" ]
 then
   echo -ne "\nPULL..."
