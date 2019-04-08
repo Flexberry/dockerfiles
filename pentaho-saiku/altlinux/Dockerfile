@@ -2,8 +2,6 @@ FROM flexberry/alt.p8-dev as dev
 
 USER root
 
-COPY /root /
-
 RUN cd /root;\
   git clone https://github.com/Flexberry/saiku; \
   cd saiku; \
@@ -55,7 +53,5 @@ RUN echo "Download plugins..." ;\
 			http://ctools.pentaho.com/files/cdv/17.05.12/7.x/cdv-7.1-17.05.12.zip \
 	&& echo "Installing plugins..." \
         && for i in *.zip; do echo "Unpacking $i..." && unzip -q -d pentaho-solutions/system $i && rm -f $i; done
-
-COPY add/ /opt/pentaho/pentaho-server/pentaho-solutions/system/saiku/
 
 COPY --from=dev  /tmp/saikuLocalization.tgz /opt/pentaho/pentaho-server/pentaho-solutions/system
