@@ -31,6 +31,7 @@ RUN  cd /root;\
   mkdir -p /tmp/build/system/saiku/lib/; \
   cp fop/target/fop-2.4.0-SNAPSHOT.jar /tmp/build/system/saiku/lib/;
 
+
 COPY /add  /tmp/build/system/saiku/
 
 RUN   cd /tmp/build/; \
@@ -41,6 +42,7 @@ RUN   cd /tmp/build/; \
 # See https://github.com/zhicwu/docker-biserver-ce/blob/7.1-full/Dockerfile
 FROM flexberry/pentaho-official
 LABEL description="Pentaho Server 8.2 Image with saiku (OLAP)"
+
 
 RUN echo "Download plugins..." ;\
   cd /opt/pentaho/pentaho-server/; \
