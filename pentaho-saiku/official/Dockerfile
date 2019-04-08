@@ -31,6 +31,7 @@ RUN  cd /root;\
   mkdir -p /tmp/build/system/saiku/lib/; \
   cp fop/target/fop-2.4.0-SNAPSHOT.jar /tmp/build/system/saiku/lib/;
 
+COPY . .
 
 COPY /add  /tmp/build/system/saiku/
 
