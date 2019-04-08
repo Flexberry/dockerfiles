@@ -2,8 +2,6 @@ FROM flexberry/alt.p8-dev as dev
 
 USER root
 
-COPY /root /
-
 RUN cd /root;\
   git clone https://github.com/Flexberry/saiku; \
   cd saiku; \
