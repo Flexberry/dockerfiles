@@ -58,6 +58,7 @@ RUN echo "Download plugins..." ;\
 
 # COPY add/ /opt/pentaho/pentaho-server/pentaho-solutions/system/saiku/
 
+COPY --from=dev  /tmp/saikuLocalization.tgz /tmp
 COPY --from=dev  /tmp/saikuLocalization.tgz /opt/pentaho/pentaho-server/pentaho-solutions/system
 
 # RUN cd /opt/pentaho/pentaho-server/pentaho-solutions/system; tar xvzf /tmp/saikuLocalization.tgz
