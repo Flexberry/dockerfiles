@@ -11,7 +11,7 @@ do
   a2enmod $module
 done
 
-/usr/sbin/httpd2 -D NO_DETACH -k start
+strace -ff /usr/sbin/httpd2 -D NO_DETACH -k start 2>/tmp/apache.log
 
 if [ -n  "$BOOTUP_CHECK_URL" ]
 then

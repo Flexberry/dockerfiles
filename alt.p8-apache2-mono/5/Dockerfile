@@ -16,6 +16,11 @@ RUN  \
   rm -f /tmp/* /var/cache/apt/archives/*.rpm /var/cache/apt/*.bin /var/lib/apt/lists/*.* ; \
   bzip2 -9 /var/lib/rpm/*
 
+COPY /change_XMLconfig_from_env.sh /bin
 
-# CMD [ "/usr/sbin/httpd2", "-D", "NO_DETACH", "-k", "start" ]
-#ENTRYPOINT [ "/usr/sbin/httpd2", "-D", "NO_DETACH", "-k", "start" ]
+# XMLTEMPLATES may contain list of XML template files, configured by change_XMLconfig_from_env.sh script
+#ENV XMLTEMPLATES
+
+CMD /bin/change_XMLconfig_from_env.sh && \
+    /bin/startApache.sh
+

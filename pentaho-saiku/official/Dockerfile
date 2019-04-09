@@ -10,16 +10,17 @@ RUN cd /root;\
 RUN  cd /root/saiku/saiku-ui; \
   mvn  package -DskipTests; \
   mkdir -p /tmp/build/system/saiku/ui/; \
-  cp target/saiku-ui/saiku.min.js /tmp/build/system/saiku/ui/; \
-  mkdir -p /tmp/build/system/saiku/ui/js/saiku/plugins/CCC_Chart/; \
-  cp target/saiku-ui/js/saiku/plugins/CCC_Chart/pvc-d.js /tmp/build/system/saiku/ui/js/saiku/plugins/CCC_Chart/; \
-  mkdir -p /tmp/build/system/saiku/ui/js/saiku/plugins/CCC_Chart2/; \
-  cp target/saiku-ui/js/saiku/plugins/CCC_Chart2/pvc.js /tmp/build/system/saiku/ui/js/saiku/plugins/CCC_Chart2/; \
-  cp target/saiku-ui/js/saiku/plugins/CCC_Chart2/protovis.js /tmp/build/system/saiku/ui/js/saiku/plugins/CCC_Chart2/; \
-  mkdir -p /tmp/build/system/saiku/ui/js/saiku/plugins/I18n/; \
-  cp target/saiku-ui/js/saiku/plugins/I18n/plugin.js /tmp/build/system/saiku/ui/js/saiku/plugins/I18n/; \
-  mkdir -p /tmp/build/system/saiku/ui/js/saiku/plugins/I18n/po/; \
-  cp target/saiku-ui/js/saiku/plugins/I18n/po/ru.json /tmp/build/system/saiku/ui/js/saiku/plugins/I18n/po/;
+  rsync -av . /tmp/build/system/saiku/ui/
+#   cp target/saiku-ui/saiku.min.js /tmp/build/system/saiku/ui/; \
+#   mkdir -p /tmp/build/system/saiku/ui/js/saiku/plugins/CCC_Chart/; \
+#   cp target/saiku-ui/js/saiku/plugins/CCC_Chart/pvc-d.js /tmp/build/system/saiku/ui/js/saiku/plugins/CCC_Chart/; \
+#   mkdir -p /tmp/build/system/saiku/ui/js/saiku/plugins/CCC_Chart2/; \
+#   cp target/saiku-ui/js/saiku/plugins/CCC_Chart2/pvc.js /tmp/build/system/saiku/ui/js/saiku/plugins/CCC_Chart2/; \
+#   cp target/saiku-ui/js/saiku/plugins/CCC_Chart2/protovis.js /tmp/build/system/saiku/ui/js/saiku/plugins/CCC_Chart2/; \
+#   mkdir -p /tmp/build/system/saiku/ui/js/saiku/plugins/I18n/; \
+#   cp target/saiku-ui/js/saiku/plugins/I18n/plugin.js /tmp/build/system/saiku/ui/js/saiku/plugins/I18n/; \
+#   mkdir -p /tmp/build/system/saiku/ui/js/saiku/plugins/I18n/po/; \
+#   cp target/saiku-ui/js/saiku/plugins/I18n/po/ru.json /tmp/build/system/saiku/ui/js/saiku/plugins/I18n/po/;
 
 RUN  cd /root;\
   git clone https://github.com/Flexberry/fop; \
@@ -52,5 +53,5 @@ RUN echo "Download plugins..." ;\
 	&& echo "Installing plugins..." \
         && for i in *.zip; do echo "Unpacking $i..." && unzip -q -d pentaho-solutions/system $i && rm -f $i; done
 
-
-COPY --from=dev  /tmp/build/ /opt/pentaho/pentaho-server/pentaho-solutions/
+COPY /add/license.lic /opt/pentaho/pentaho-server/pentaho-solutions/system/saiku
+# COPY --from=dev  /tmp/build/ /opt/pentaho/pentaho-server/pentaho-solutions/
