@@ -21,6 +21,8 @@ COPY /change_XMLconfig_from_env.sh /bin
 # XMLTEMPLATES may contain list of XML template files, configured by change_XMLconfig_from_env.sh script
 #ENV XMLTEMPLATES
 
+ENV MONO_MANAGED_WATCHER=dummy
+
 CMD /bin/change_XMLconfig_from_env.sh && \
     /bin/startApache.sh
 
