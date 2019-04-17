@@ -7,4 +7,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [8.2-6] - 2019-04-10
 ### Added
 
-- Environ variable ENV MONO_MANAGED_WATCHER=dummy
+- Environment variable ENV MONO_MANAGED_WATCHER=dummy
