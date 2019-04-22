@@ -1,5 +1,4 @@
 /packages/
-*/bin/
 */obj/
 /.vs
 *.csproj.user

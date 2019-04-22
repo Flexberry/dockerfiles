@@ -14,10 +14,8 @@ RUN export http_proxy=$http_proxy;\
   rm -f /var/cache/apt/archives/*.rpm /var/cache/apt/*.bin /var/lib/apt/lists/*.*; \
   bzip2 -9 /var/lib/rpm/*
 
-COPY /startApache.sh /bin/startApache.sh
+COPY bin /bin/
 
 EXPOSE 80
 
 CMD [ "/bin/startApache.sh" ]
-#ENTRYPOINT [ "/usr/sbin/httpd2", "-D", "NO_DETACH", "-k", "start" ]
-
