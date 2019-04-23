@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Correct support BOOTUP_CHECK_URL. Testing URL process called in background before startup httpd 
+ See https://github.com/Flexberry/dockerfiles/blob/master/alt.p8-apache2/CHANGELOG.md#2438-123-2019-04-23
 
 
 ## [4.6.2.7-1.3.3] 2019-04-05
