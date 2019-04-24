@@ -6,7 +6,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+1. Handle httpResponseException with OdataError wrapped in targetInvocationException.
+
 ### Fixed
+
+1. Fix error with POST request and header "Prefer".
 
 ## [5.0.0] - 2018.12.14
 

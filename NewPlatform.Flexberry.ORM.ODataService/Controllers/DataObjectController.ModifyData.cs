@@ -308,10 +308,10 @@
         {
             if (Request.Headers.Contains("Prefer"))
             {
-                var header = Request.Headers.FirstOrDefault(h => h.Key == "Prefer");
-                if (header.Value.Contains("return=minimal"))
+                KeyValuePair<string, IEnumerable<string>> header = Request.Headers.FirstOrDefault(h => h.Key == "Prefer");
+                if (header.Value != null && header.Value.Contains("return=minimal"))
                 {
-                    var result = Request.CreateResponse(System.Net.HttpStatusCode.NoContent);
+                    HttpResponseMessage result = Request.CreateResponse(HttpStatusCode.NoContent);
                     result.Headers.Add("Preference-Applied", "return=minimal");
                     return result;
                 }
