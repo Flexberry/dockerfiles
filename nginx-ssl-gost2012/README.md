@@ -19,10 +19,10 @@
 
 В нашем случае это сертифицироанная версия 
 ```
-КриптоПро CSP 4.0 для Linux (x64, rpm)
+КриптоПро CSP 5.0 для Linux (x64, rpm)
 Контрольная сумма
-ГОСТ: 5069CD5888780A5C97744D31D786073E46462DD23B92A3FF8E81509CD6D96F4F
-MD5: eba649ae2c974a8c9d0cd69d2b508ae7
+ГОСТ: 0FC217AFB78E43F213289DCD16B691A7C0F7CD4AB11B5D711CA3A94818C86C23
+MD5: 11fa99df04978b4debb5fcb1c59cd447
 ```
 Скаченный файл имеет имя `linux-amd64.tgz`.
 
@@ -64,7 +64,7 @@ MD5: eba649ae2c974a8c9d0cd69d2b508ae7
 ```
 После запроса
 ```
-CryptCP 4.0 (c) "Crypto-Pro", 2002-2018.
+CryptCP 5.0 (c) "Crypto-Pro", 2002-2018.
 Command prompt Utility for file signature and encryption.
 Creating request...
 Press keys...
