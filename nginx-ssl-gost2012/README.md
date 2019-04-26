@@ -13,7 +13,7 @@
 - ALTLinux как и дистрибутивы centos, red hatиспользует пакеты RPM, но командой установки пакетов является команда `apt-get`, а не `yum`;
 - для установки компиляторов `gcc`, `gcc-c++` требуется указать конкретную версию (в нашем случае 4.7) компиляторов из доступного набора.
 
-Данный скрипт был доработан и размещен в `git` репозитории под аналогичным именем [install-nginx.sh](https://github.com/kafnevod/nginx-gost-2.0/blob/master/install-nginx.sh).
+Данный скрипт был доработан и размещен в `git` репозитории под аналогичным именем [install-nginx.sh](https://github.com/Flexberry/dockerfiles/blob/master/nginx-ssl-gost2012/install-nginx.sh).
 
 Перед установкой `nginx` необходимо в каталог, где  размещен скрипт `install-nginx.sh` (здесь и далее каталог `/root/`) поместить требуемую `X64/RPM` версию `КриптоПро CSP/UNIX` со страницы [КриптоПро CSP - Загрузка файлов](https://www.cryptopro.ru/products/csp/downloads).
 
