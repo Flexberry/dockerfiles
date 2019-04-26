@@ -1,0 +1,25 @@
+ARG BASEIMAGE
+FROM $BASEIMAGE as dev
+
+COPY /install-nginx.sh /root
+
+COPY /linux-amd64.tgz /root
+
+RUN \
+  apt-get update;
+
+RUN  cd /root/; \
+  ./install-nginx.sh --csp=linux-amd64.tgz;exit 0;
+
+COPY /set-certs.sh /root/
+COPY nginx /etc/init.d/
+
+RUN \
+  cd /root; \
+  wget https://raw.githubusercontent.com/fullincome/scripts/master/nginx-gost/install-certs.sh; \
+  chmod +x install-certs.sh; \
+  rm -f /etc/nginx/srvtestRSA.key; \
+  rm -f /etc/nginx/srvtestRSA.pem
+
+
+
