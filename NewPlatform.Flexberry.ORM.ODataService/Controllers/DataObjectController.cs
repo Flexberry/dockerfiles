@@ -1027,7 +1027,7 @@
         private DataObject LoadObject(Type objType, View view, object keyValue)
         {
             var ldef = SQLWhereLanguageDef.LanguageDef;
-            LoadingCustomizationStruct lcs = LoadingCustomizationStruct.GetSimpleStruct(objType, view);
+            LoadingCustomizationStruct lcs = LoadingCustomizationStruct.GetSimpleStruct(objType, _dynamicView.View);
             lcs.LimitFunction = ldef.GetFunction(ldef.funcEQ, new VariableDef(ldef.GuidType, SQLWhereLanguageDef.StormMainObjectKey), keyValue);
             int count = -1;
             DataObject[] dobjs = LoadObjects(lcs, out count);
