@@ -1,18 +1,18 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Model
 {
-    using System.Collections;
     using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
-    using System.Web.Script.Serialization;
 
     using ICSSoft.STORMNET;
-
-    using Xunit;
+    using ICSSoft.STORMNET.Windows.Forms;
 
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
-    using ICSSoft.STORMNET.Windows.Forms;
-    using Helpers;
+    using NewPlatform.Flexberry.ORM.ODataService.Tests.Helpers;
+
+    using Newtonsoft.Json;
+
+    using Xunit;
 
     /// <summary>
     /// Класс тестов для тестирования метаданных, получаемых от OData-сервиса.
@@ -170,12 +170,12 @@
 
                 requestJsonData = наследник.ToJson(наследникDynamicView, args.Token.Model);
                 DataObjectDictionary objJsonНаследник = DataObjectDictionary.Parse(requestJsonData, наследникDynamicView, args.Token.Model);
-                Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedJsonMaster);
+                Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedJsonMaster);
                 objJsonНаследник.Add("Master@odata.bind", string.Format(
                     "{0}({1})",
                     args.Token.Model.GetEdmEntitySet(typeof(Master)).Name,
                     receivedDict["__PrimaryKey"]));
-                receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedJsonМастер);
+                receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedJsonМастер);
                 objJsonНаследник.Add("MasterAlias@odata.bind", string.Format(
                     "{0}({1})",
                     args.Token.Model.GetEdmEntitySet(typeof(Мастер)).Name,

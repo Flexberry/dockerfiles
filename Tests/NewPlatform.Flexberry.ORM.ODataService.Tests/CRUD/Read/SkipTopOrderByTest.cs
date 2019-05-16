@@ -5,13 +5,14 @@
     using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
-    using System.Web.Script.Serialization;
 
     using ICSSoft.STORMNET;
+    using ICSSoft.STORMNET.UserDataTypes;
     using ICSSoft.STORMNET.Windows.Forms;
+
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
 
-    using ICSSoft.STORMNET.UserDataTypes;
+    using Newtonsoft.Json;
 
     using Xunit;
 
@@ -51,7 +52,7 @@
                     string receivedJsonCountries = response.Content.ReadAsStringAsync().Result.Beautify();
 
                     // Преобразуем полученный объект в словарь.
-                    Dictionary<string, object> receivedCountries = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedJsonCountries);
+                    Dictionary<string, object> receivedCountries = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedJsonCountries);
 
                     // Убедимся, что объекты получены и их нужное количество.
                     Assert.True(receivedCountries.ContainsKey("value"));
@@ -101,7 +102,7 @@
                     string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
 
                     // Преобразуем полученный объект в словарь.
-                    Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
+                    Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
                     Assert.Equal(4, ((ArrayList)receivedDict["value"]).Count);
 
@@ -126,7 +127,7 @@
                     string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
 
                     // Преобразуем полученный объект в словарь.
-                    Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
+                    Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
                     Assert.Equal(4, ((ArrayList)receivedDict["value"]).Count);
 
@@ -178,7 +179,7 @@
                     string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
 
                     // Преобразуем полученный объект в словарь.
-                    Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
+                    Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
                     Assert.Equal(4, ((ArrayList)receivedDict["value"]).Count);
 
@@ -233,7 +234,7 @@
                     string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
 
                     // Преобразуем полученный объект в словарь.
-                    Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
+                    Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
                     Assert.Equal(4, ((ArrayList)receivedDict["value"]).Count);
 

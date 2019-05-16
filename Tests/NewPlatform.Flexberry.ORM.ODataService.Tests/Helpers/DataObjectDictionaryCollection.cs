@@ -3,10 +3,12 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Web.Script.Serialization;
 
     using ICSSoft.STORMNET;
-    using ODataService.Model;
+
+    using NewPlatform.Flexberry.ORM.ODataService.Model;
+
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Класс, представляющий коллекцию объектов данных, в виде коллекции словарей.
@@ -62,15 +64,14 @@
                 return result;
             }
 
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
-            Dictionary<string, object> dictionary = serializer.Deserialize<Dictionary<string, object>>(jsonDataObjects);
+            Dictionary<string, object> dictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonDataObjects);
 
             object value;
             if (dictionary.TryGetValue("value", out value) && value is ArrayList)
             {
                 Dictionary<string, object>[] dataObjects = ((ArrayList)value).Cast<Dictionary<string, object>>().ToArray();
                 DataObjectDictionary[] dataObjectsDictionaries = dataObjects
-                    .Select(x => DataObjectDictionary.Parse(serializer.Serialize(x), dataObjectsView, model, castValues))
+                    .Select(x => DataObjectDictionary.Parse(JsonConvert.SerializeObject(x), dataObjectsView, model, castValues))
                     .ToArray();
 
                 result.AddRange(dataObjectsDictionaries);

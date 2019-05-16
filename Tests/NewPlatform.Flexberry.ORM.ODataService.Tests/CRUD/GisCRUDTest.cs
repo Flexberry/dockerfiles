@@ -1,21 +1,20 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Tests.CRUD
 {
-    using Extensions;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Net;
+    using System.Net.Http;
+
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business.LINQProvider.Extensions;
     using ICSSoft.STORMNET.KeyGen;
     using ICSSoft.STORMNET.Windows.Forms;
-    using Microsoft.Spatial;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Script.Serialization;
+
+    using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
+
+    using Newtonsoft.Json;
+
     using Xunit;
 
     /// <summary>
@@ -58,7 +57,7 @@
                     string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
 
                     // Преобразуем полученный объект в словарь.
-                    Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
+                    Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
                     Assert.Equal(1, ((ArrayList)receivedDict["value"]).Count);
                 }

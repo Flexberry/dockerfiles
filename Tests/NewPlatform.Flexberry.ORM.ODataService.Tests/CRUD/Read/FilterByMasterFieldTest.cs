@@ -3,18 +3,19 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Net;
-    using System.Web.Script.Serialization;
 
     using ICSSoft.STORMNET;
 
-    using Xunit;
-
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
+
+    using Newtonsoft.Json;
+
+    using Xunit;
 
     /// <summary>
     /// Unit-test class for filtering data through OData service by master fields.
     /// </summary>
-    
+
     public class FilterByMasterFieldTest : BaseODataServiceIntegratedTest
     {
         /// <summary>
@@ -49,7 +50,7 @@
                     Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
                     string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
-                    Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
+                    Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
                     Assert.Equal(4, ((ArrayList)receivedDict["value"]).Count);
                 }
             });

@@ -1,26 +1,27 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Functions
 {
     using System;
-    using Action = NewPlatform.Flexberry.ORM.ODataService.Functions.Action;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
-    using System.Web.Script.Serialization;
+    using System.Web.Http;
+    using System.Web.OData.Extensions;
 
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
-    using ICSSoft.STORMNET.Business.LINQProvider;
 
-    using Xunit;
+    using Microsoft.OData.Core;
 
     using NewPlatform.Flexberry.ORM.ODataService.Functions;
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
-    using System.Text;
-    using System.Web.Http;
-    using Microsoft.OData.Core;
-    using System.Web.OData.Extensions;
+
+    using Newtonsoft.Json;
+
+    using Xunit;
+
+    using Action = NewPlatform.Flexberry.ORM.ODataService.Functions.Action;
 
     /// <summary>
     /// Класс тестов для тестирования метаданных, получаемых от OData-сервиса.
@@ -138,7 +139,7 @@
                     string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
 
                     // Преобразуем полученный объект в словарь.
-                    Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
+                    Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
                     Assert.True(receivedDict.ContainsKey("value"));
                     Assert.Equal(1, (receivedDict["value"] as ArrayList).Count);
@@ -170,7 +171,7 @@
                     string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
 
                     // Преобразуем полученный объект в словарь.
-                    Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
+                    Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
                     Assert.True(receivedDict.ContainsKey("value"));
                     Assert.True(receivedDict["value"] as string == "Мужской");
@@ -213,7 +214,7 @@
                     string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
 
                     // Преобразуем полученный объект в словарь.
-                    Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
+                    Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
                     Assert.True(receivedDict.ContainsKey("value"));
                     Assert.Equal(1, (receivedDict["value"] as ArrayList).Count);
@@ -232,7 +233,7 @@
                     string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
 
                     // Преобразуем полученный объект в словарь.
-                    Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
+                    Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
                     Assert.True(receivedDict.ContainsKey("value"));
                     Assert.Equal(1, (receivedDict["value"] as ArrayList).Count);

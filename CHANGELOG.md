@@ -8,6 +8,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 1. Handle httpResponseException with OdataError wrapped in targetInvocationException.
 
+### Changed
+
+1. JavaScriptSerializer replaced with Newtonsoft.Json.JsonConvert for better performance.
+
 ### Fixed
 
 1. Fix error with POST request and header "Prefer".

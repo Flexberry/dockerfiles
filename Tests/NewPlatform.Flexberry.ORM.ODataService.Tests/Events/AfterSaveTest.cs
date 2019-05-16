@@ -5,21 +5,21 @@
     using System.Net;
     using System.Net.Http;
     using System.Web.OData;
-    using System.Web.Script.Serialization;
 
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Exceptions;
 
-    using Xunit;
-
     using NewPlatform.Flexberry.ORM.ODataService.Controllers;
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
+
+    using Newtonsoft.Json;
+
+    using Xunit;
 
     /// <summary>
     /// Класс тестов для тестирования логики после операций модификации данных OData-сервисом (вставка, обновление, удаление).
     /// </summary>
-    
     public class AfterSaveTest : BaseODataServiceIntegratedTest
     {
         /// <summary>
@@ -114,7 +114,7 @@
 
                 // В ответе приходит объект с созданной сущностью.
                 // Преобразуем полученный объект в словарь.
-                Dictionary<string, object> receivedObjs = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedJsonObjs);
+                Dictionary<string, object> receivedObjs = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedJsonObjs);
 
                 // Проверяем созданный объект, вычитав с помощью DataService
                 DataObject createdObj = new Медведь { __PrimaryKey = медв.__PrimaryKey };

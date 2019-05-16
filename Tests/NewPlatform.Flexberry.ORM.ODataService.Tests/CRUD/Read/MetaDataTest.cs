@@ -4,13 +4,14 @@
     using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
-    using System.Web.Script.Serialization;
 
     using ICSSoft.STORMNET;
 
-    using Xunit;
-
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
+
+    using Newtonsoft.Json;
+
+    using Xunit;
 
     /// <summary>
     /// Класс тестов для тестирования метаданных, получаемых от OData-сервиса.
@@ -48,7 +49,7 @@
                     string receivedJsonCountries = response.Content.ReadAsStringAsync().Result.Beautify();
 
                     // Преобразуем полученный объект в словарь.
-                    Dictionary<string, object> receivedCountries = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedJsonCountries);
+                    Dictionary<string, object> receivedCountries = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedJsonCountries);
 
                     // Убедимся, что объекты получены и их нужное количество.
                     Assert.True(receivedCountries.ContainsKey("value"));

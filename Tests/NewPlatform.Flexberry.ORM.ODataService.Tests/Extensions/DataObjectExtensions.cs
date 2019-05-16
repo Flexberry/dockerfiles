@@ -1,10 +1,11 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions
 {
-    using System.Web.Script.Serialization;
-
     using ICSSoft.STORMNET;
+
+    using NewPlatform.Flexberry.ORM.ODataService.Model;
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Helpers;
-    using ODataService.Model;
+
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Класс, содержащий вспомогательные методы для работы со строками.
@@ -19,7 +20,7 @@
         /// <returns>JSON-строка, представляющая объект данных.</returns>
         public static string ToJson(this DataObject dataObject, View dataObjectView, DataObjectEdmModel model)
         {
-            return new JavaScriptSerializer().Serialize(new DataObjectDictionary(dataObject, dataObjectView, model, true));
+            return JsonConvert.SerializeObject(new DataObjectDictionary(dataObject, dataObjectView, model, true));
         }
     }
 }
