@@ -23,7 +23,12 @@ createTable() {
     IFS=' '
     set -- $type
     type0=$1
-    echo -n "\"$attr\" " 
+    if [ "$isnull" = "YES" ]
+    then
+      echo -n "Nullable(\"$attr\") " 
+    else
+      echo -n "\"$attr\" " 
+    fi
     if [ $type0 = 'timestamp' ]
     then
       echo -n "DateTime"
