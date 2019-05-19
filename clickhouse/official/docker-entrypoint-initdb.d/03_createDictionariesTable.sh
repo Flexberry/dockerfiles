@@ -52,4 +52,11 @@ createTable() {
   echo ")  Engine = Dictionary(\"$table\");"
 }
 
-createTable $1 $2
+for dictDesc in $PGDicrionaries
+do
+  IFS=/
+  set -- $dictDesc
+  IFS="$ifs"
+  $dict=$1
+  createTable ${PGDatabase} $dict
+done

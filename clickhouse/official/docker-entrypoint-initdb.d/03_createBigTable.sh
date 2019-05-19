@@ -57,4 +57,8 @@ createTable() {
   echo ")  Engine = Dictionary(\"$table\");"
 }
 
-createTable $1 $2
+if [ -z "$PGBigTable" ]
+then
+  exit 0;
+fi
+createTable $PGDatabase $PGBigTable
