@@ -23,7 +23,7 @@
 
 Перед запуском сервере ClickHouse а контейнере образа создаются следующие файлы:
 - /etc/odbc.ini - инициализционный файл сервиса ODBC описывающий коннект с сервером Postgres(имя коннекта postgresConnection);
-- /etc/clickhouse-server/&lt;PGDatabase&gt;_dictionary.xml - описание внешних словарей, перечисленных в переменной PGDicrionaries  (где <PGDatabase> - имя базы данных).
+- /etc/clickhouse-server/&lt;PGDatabase&gt;_dictionary.xml - описание внешних словарей, перечисленных в переменной PGDicrionaries  (где &lt;PGDatabase&gt; - имя базы данных).
  
  После запуска сервера ClickHouse  в базе данных PGDatabase создаются перечисленные в переменной PGDicrionaries таблицы ClickHouse типа Dictionary.
  
