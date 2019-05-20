@@ -6,14 +6,14 @@ isKey() {
   IFS=,
   set -- $2
   IFS="$ifs"
-  for key 
+  for key
   do
     if [ "$attr" = "$key" ]
     then
-      return 1
+      return 0
     fi
   done
-  return 0
+  return 1
 }
 
 writeAttr() {
@@ -36,33 +36,35 @@ writeAttr() {
     fi
   fi
   isnull=$3
-  if [ -z "$notKeyTag"] 
+  if [ -z "$notKeyTag" ]
   then
     isnull=''
+  else
+    isnull='YES'
   fi
   type=$4
   prec=$5
   echo "\t\t\t<attribute>"
-  echo "\t\t\t\t<name>$attr</name>" 
+  echo "\t\t\t\t<name>$attr</name>"
   ifs="$IFS"
   IFS=' '
-  set -- $typw
+  set -- $type
   IFS="$ifs"
   type0=$1
   if [ $type0 = 'timestamp' ]
-  then    
+  then
     echo "\t\t\t\t<type>DateTime</type>"
     if [ "$isnull" = 'YES' ]
     then
-      echo "\t\t\t\t<null_value>0000-00-00 00:00:00</null_value>" 
+      echo "\t\t\t\t<null_value>0000-00-00 00:00:00</null_value>"
     fi
-  fi 
+  fi
   if [ $type0 = 'character' ]
   then
     echo "\t\t\t\t<type>String</type>"
     if [ "$isnull" = 'YES' ]
     then
-      echo "\t\t\t\t<null_value></null_value>" 
+      echo "\t\t\t\t<null_value></null_value>"
     fi
   fi
   if [ $type0 = 'uuid' ]
@@ -70,23 +72,23 @@ writeAttr() {
     echo "\t\t\t\t<type>UUID</type>"
     if [ "$isnull" = 'YES' ]
     then
-      echo "\t\t\t\t<null_value>00000000-0000-0000-0000-000000000000</null_value>" 
-    fi      
+      echo "\t\t\t\t<null_value>00000000-0000-0000-0000-000000000000</null_value>"
+    fi
   fi
   if [ $type0 = 'integer' ]
   then
     echo "\t\t\t\t<type>Int$prec</type>"
     if [ "$isnull" = 'YES' ]
     then
-      echo "\t\t\t\t<null_value>-1</null_value>" 
-    fi      
+      echo "\t\t\t\t<null_value>-1</null_value>"
+    fi
   fi
   if [ $type0 = 'boolean' ]
   then
     echo "\t\t\t\t<type>Int8</type>"
     if [ "$isnull" = 'YES' ]
     then
-      echo "\t\t\t\t<null_value>0</null_value>" 
+      echo "\t\t\t\t<null_value>0</null_value>"
     fi
   fi
   if [ $type0 = 'numeric' ]
@@ -94,7 +96,7 @@ writeAttr() {
     echo "\t\t\t\t<type>Float64</type>"
     if [ "$isnull" = 'YES' ]
     then
-      echo "\t\t\t\t<null_value>0.0</null_value>" 
+      echo "\t\t\t\t<null_value>0.0</null_value>"
     fi
   fi
   echo "\t\t\t</attribute>"
@@ -123,26 +125,31 @@ dictXML() {
 
   TMPFile=/tmp/setDict.$$
 
+  until isql postgresConnection </dev/null >/dev/null 2>&1; do sleep 5; done
+
   echo "SELECT column_name,ordinal_position,is_nullable,data_type,numeric_precision FROM information_schema.COLUMNS  WHERE table_catalog='${PGDatabase}' AND table_name='$dict' ORDER BY ordinal_position;" |
   isql postgresConnection -b -x0x09  >$TMPFile
 
   echo "\t\t\t<key>"
-  while read str <$TMPFile
+  while read str
   do
-    writeAttr ""  "$str" 
-  done
-  echo "\t\t\t</key>"  
-  
-  while read str <$TMPFile
+    writeAttr ""  "$str"
+  done <$TMPFile
+
+  echo "\t\t\t</key>"
+
+  while read str
   do
-    writeAttr "Y"  "$str" 
-  done
-  
+    writeAttr "Y"  "$str"
+  done <$TMPFile
+
   echo "\t\t</structure>"
+  echo "\t\t<lifetime>300</lifetime>"
   echo "\t</dictionary>"
-  echo 
+  echo
 }
 
+exec > /etc/clickhouse-server/${PGDatabase}_dictionary.xml
 
 echo "<?xml version='1.0' encoding='UTF-8'?>"
 echo "<yandex>"

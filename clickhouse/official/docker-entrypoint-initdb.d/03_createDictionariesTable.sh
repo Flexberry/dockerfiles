@@ -23,7 +23,7 @@ createTable() {
     IFS=' '
     set -- $type
     type0=$1
-    echo -n "\"$attr\" " 
+    echo -n "\"$attr\" "
     if [ $type0 = 'timestamp' ]
     then
       echo -n "DateTime"
@@ -38,25 +38,28 @@ createTable() {
     fi
     if [ $type0 = 'integer' ]
     then
-      echo -n " Int"$prec 
+      echo -n " Int"$prec
     fi
     if [ $type0 = 'boolean' ]
     then
-      echo -n "Int8" 
+      echo -n "Int8"
     fi
     if [ $type0 = 'numeric' ]
     then
-      echo -n "Float64" 
+      echo -n "Float64"
     fi
   done
   echo ")  Engine = Dictionary(\"$table\");"
 }
 
+(
+until echo "show databases" | clickhouse-client >/dev/null; do sleep 5; done
 for dictDesc in $PGDicrionaries
 do
   IFS=/
   set -- $dictDesc
   IFS="$ifs"
-  $dict=$1
-  createTable ${PGDatabase} $dict
+  dict=$1
+  createTable ${PGDatabase} $dict | clickhouse-client -d ${PGDatabase}
 done
+) &

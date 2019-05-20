@@ -3,7 +3,7 @@
 if [ -z "$PGPort" ]
 then
   PGPort=5432
-fi  
+fi
 
 if [ -z "$PGProtocol" ]
 then
@@ -16,7 +16,7 @@ Driver = postgresConnection
 [postgresConnection]
 Description         = PostgreSQL connection
 Driver              = /usr/lib/x86_64-linux-gnu/odbc/psqlodbcw.so
-Database            = ${PGDatabase} 
+Database            = ${PGDatabase}
 Servername          = ${PGServername}
 UserName            = ${PGUserName}
 Password            = ${PGPassword}
@@ -26,4 +26,4 @@ ReadOnly            = No
 RowVersioning       = No
 ShowSystemTables    = No
 ConnSettings        =
-" >/etc/ODBC.ini
+" >/etc/odbc.ini
