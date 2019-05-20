@@ -23,3 +23,22 @@
 - PGDicrionaries - список таблиц для которых необходимо создать внешние словари и соответствующие таблицы ClickHouse; 
 - PGBigTable - имя таблицы для которой необходимо создать схему аналогичной таблицы в ClickHouse 
 
+Перед запуском сервере ClickHouse а контейнере образа создаются следующие файлы:
+- /etc/odbc.ini - инициализционный файл сервиса ODBC описывающий коннект с сервером Postgres(имя коннекта postgresConnection);
+- /etc/clickhouse-server/<PGDatabase>_dictionary.xml - описание внешних словарей, перечисленных в переменной PGDicrionaries  (где <PGDatabase> - имя базы данных).
+ 
+ После запуска сервера ClickHouse  в базе данных PGDatabase создаются перечисленные в переменной PGDicrionaries таблицы ClickHouse типа Dictionary.
+ 
+ Для формирования типа атрибутов таблий ClickHouse производится обращение к описанию атрибутов указанных Postgres-таблиц.
+ Маппинг типов атрибутов Postgres в типы атрибутов ClickHouse:
+ 
+ Тип Postgres | Тип ClickHouse | Значение по умолчанию
+ -------------|----------------|----------------------
+ timestamp .* | DateTime | 0000-00-00 00:00:00
+ character .* | String | '' (пустая строка)
+ uuid | UUID | 00000000-0000-0000-0000-000000000000
+integer [8, 16, 32, 64] | Int8, Int16, Int32, Int64 | -1
+boolean | Int8 | 0
+numeric | Float64 | 0.0
+
+
