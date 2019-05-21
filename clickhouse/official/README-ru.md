@@ -1,10 +1,10 @@
 # Описание
 
-Образ основан на стандартом образе [yandex/clickhouse-server](https://hub.docker.com/r/yandex/clickhouse-server).
+Образ [flexberry/clickhouse-official](https://hub.docker.com/r/flexberry/clickhouse-official) основан на стандартом образе [yandex/clickhouse-server](https://hub.docker.com/r/yandex/clickhouse-server).
 
 ## Функционал
 
-Данный образ поддерживает следующие возможности:
+Образ [flexberry/clickhouse-official](https://hub.docker.com/r/flexberry/clickhouse-official) поддерживает следующие возможности:
 - Интеграция с базой данных Postgres:
   * Настройка ODBC-драйвера на указаную базу данных Postgres;
   - автоматическое создание clickhouse-словарей из базы данных postres;
