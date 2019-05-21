@@ -15,6 +15,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 1. Fix error with POST request and header "Prefer".
+2. Getting objects by primary key with using `$select` and `$expand` query options.
 
 ## [5.0.0] - 2018.12.14
 
