@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
     using System.Net.Http;
     using ICSSoft.STORMNET;
@@ -85,6 +86,134 @@
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
                     Assert.Equal(1, ((ArrayList)receivedDict["value"]).Count);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Осуществляет проверку применения функций $select, $expand, $select  $expand, а так же запроса беза опций.
+        /// </summary>
+        [Fact]
+        public void TestGuid()
+        {
+            ActODataService(args =>
+            {
+            ExternalLangDef.LanguageDef.DataService = args.DataService;
+
+            DateTime date = new DateTimeOffset(DateTime.Now).UtcDateTime;
+            КлассСМножествомТипов класс = new КлассСМножествомТипов() { PropertyEnum = Цифра.Семь, PropertyDateTime = date };
+            Медведь медв = new Медведь { Вес = 48, Пол = tПол.Мужской, __PrimaryKey = new Guid("3f5cc1ca-6b2c-4c38-ba02-4b3fd5f1726c") };
+            Медведь медв2 = new Медведь { Вес = 148, Пол = tПол.Мужской };
+            Лес лес1 = new Лес { Название = "Бор" };
+            Лес лес2 = new Лес { Название = "Березовая роща" };
+            медв.ЛесОбитания = лес1;
+            var берлога1 = new Берлога { Наименование = "Для хорошего настроения", ЛесРасположения = лес1 };
+            var берлога2 = new Берлога { Наименование = "Для плохого настроения", ЛесРасположения = лес2 };
+            var берлога3 = new Берлога { Наименование = "Для хорошего настроения", ЛесРасположения = лес1 };
+            медв.Берлога.Add(берлога1);
+            медв.Берлога.Add(берлога2);
+            медв2.Берлога.Add(берлога3);
+            Блоха блоха = new Блоха() { Кличка = "1", МедведьОбитания = медв };
+            var objs = new DataObject[] { класс, медв, медв2, берлога2, берлога1, берлога3, лес1, лес2, блоха };
+            args.DataService.UpdateObjects(ref objs);
+            string requestUrl;
+
+            // Проверка запроса без опций
+            requestUrl = "http://localhost/odata/Медведьs(3f5cc1ca-6b2c-4c38-ba02-4b3fd5f1726c)";
+
+            // Обращаемся к OData-сервису и обрабатываем ответ.
+            using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
+            {
+                // Убедимся, что запрос завершился успешно.
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                // Получим строку с ответом.
+                string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
+
+                // Преобразуем полученный объект в словарь.
+                Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
+
+                // Должны возвращаться собственные свойства + @odata.context
+                Assert.Equal(14, receivedDict.Count);
+                Assert.Equal(null, receivedDict["Creator"]);
+                Assert.Equal(48, receivedDict["Вес"]);
+            }
+
+            // Проверка запроса с $select
+            requestUrl = "http://localhost/odata/Медведьs(3f5cc1ca-6b2c-4c38-ba02-4b3fd5f1726c)?$select=Вес,Пол";
+
+            // Обращаемся к OData-сервису и обрабатываем ответ.
+            using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
+            {
+                // Убедимся, что запрос завершился успешно.
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                // Получим строку с ответом.
+                string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
+
+                // Преобразуем полученный объект в словарь.
+                Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
+
+                // Должны возвращаться свойства, перечисленные в select + @odata.context
+                Assert.Equal(3, receivedDict.Count);
+                Assert.Equal("http://localhost/odata/$metadata#Медведьs(Вес,Пол)/$entity", receivedDict["@odata.context"]);
+                Assert.Equal("Мужской", receivedDict["Пол"]);
+                Assert.Equal(48, receivedDict["Вес"]);
+            }
+
+            // Проверка запроса с $expand
+            requestUrl = "http://localhost/odata/Медведьs(3f5cc1ca-6b2c-4c38-ba02-4b3fd5f1726c)?$expand=Берлога";
+
+            // Обращаемся к OData-сервису и обрабатываем ответ.
+            using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
+            {
+                // Убедимся, что запрос завершился успешно.
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                // Получим строку с ответом.
+                string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
+
+                // Преобразуем полученный объект в словарь.
+                Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
+
+                // Должны возвращаться собственные свойства + свойства, перечисленные в Expand + @odata.context
+                Assert.Equal(15, receivedDict.Count);
+
+                // У медведя с таким первичным ключом две берлоги
+                Assert.Equal(2, ((ArrayList)receivedDict["Берлога"]).Count);
+                Assert.Equal(48, receivedDict["Вес"]);
+            }
+
+            // Проверка запроса с $expand и $select
+            requestUrl = "http://localhost/odata/Медведьs(3f5cc1ca-6b2c-4c38-ba02-4b3fd5f1726c)?$expand=Берлога($select=Наименование)";
+
+            // Обращаемся к OData-сервису и обрабатываем ответ.
+            using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
+            {
+                // Убедимся, что запрос завершился успешно.
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                // Получим строку с ответом.
+                string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
+
+                // Преобразуем полученный объект в словарь.
+                Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
+
+                // Должны возвращаться собственные свойства + свойства, перечисленные в Expand + @odata.context
+                Assert.Equal(15, receivedDict.Count);
+
+                // У медведя с таким первичным ключом две берлоги
+                Assert.Equal(2, ((ArrayList)receivedDict["Берлога"]).Count);
+
+                // Для каждой берлоги должно вернуться название
+                var берлоги = new List<Dictionary<string, object>>();
+                берлоги.Add((Dictionary<string, object>)((ArrayList)receivedDict["Берлога"])[0]);
+                берлоги.Add((Dictionary<string, object>)((ArrayList)receivedDict["Берлога"])[1]);
+                берлоги = берлоги.OrderBy(x => x["Наименование"]).ToList();
+
+                Assert.Equal("Для плохого настроения", берлоги.First()["Наименование"]);
+
+                Assert.Equal("Для хорошего настроения", берлоги.Last()["Наименование"]);
                 }
             });
         }
