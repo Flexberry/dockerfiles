@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
-    using System.Web.Script.Serialization;
 
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
@@ -12,15 +11,16 @@
     using ICSSoft.STORMNET.KeyGen;
     using ICSSoft.STORMNET.Windows.Forms;
 
-    using Xunit;
-
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Helpers;
+
+    using Newtonsoft.Json;
+
+    using Xunit;
 
     /// <summary>
     /// Класс тестов для тестирования операций модификации данных OData-сервисом (вставка, обновление, удаление).
     /// </summary>
-    
     public class ModifyDataTest : BaseODataServiceIntegratedTest
     {
         /// <summary>
@@ -198,7 +198,7 @@
 
                 string requestJsonDataМедв = медв.ToJson(медвDynamicView, args.Token.Model);
                 DataObjectDictionary objJsonМедв = DataObjectDictionary.Parse(requestJsonDataМедв, медвDynamicView, args.Token.Model);
-                Dictionary<string, object> receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedJsonЛес1);
+                Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedJsonЛес1);
 
                 objJsonМедв.Add("ЛесОбитания@odata.bind", string.Format(
                     "{0}({1})",
@@ -219,7 +219,7 @@
 
                 var requestJsonDataБерлога = берлога1.ToJson(берлогаDynamicView, args.Token.Model);
                 var objJson = DataObjectDictionary.Parse(requestJsonDataБерлога, берлогаDynamicView, args.Token.Model);
-                receivedDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedJsonМедв);
+                receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedJsonМедв);
                 objJson.Add("Медведь@odata.bind", string.Format(
                     "{0}({1})",
                     args.Token.Model.GetEdmEntitySet(typeof(Медведь)).Name,
@@ -287,7 +287,7 @@
 
                 // В ответе приходит объект с созданной сущностью.
                 // Преобразуем полученный объект в словарь.
-                Dictionary<string, object> receivedObjs = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedJsonObjs);
+                Dictionary<string, object> receivedObjs = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedJsonObjs);
 
                 // Проверяем созданный объект, вычитав с помощью DataService
                 DataObject createdObj = new Медведь { __PrimaryKey = медв.__PrimaryKey };

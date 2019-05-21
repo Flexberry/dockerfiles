@@ -9,13 +9,11 @@
     using System.Web;
     using System.Web.Http;
     using System.Web.Http.Cors;
-    using System.Web.Script.Serialization;
-
-    //using Microsoft.QualityTools.Testing.Fakes;
-    //using NUnit.Framework;
 
     using NewPlatform.Flexberry.ORM.ODataService.Files;
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
+
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Класс, содержащий модульные тесты для метаданных, описывающих файловые свойства объектов данных.
@@ -410,7 +408,7 @@
             foreach (string serializedFileDescription in serializedFileDescriptions)
             {
                 // Преобразуем сериализованное описание файла в словарь.
-                Dictionary<string, object> deserializedFileDescription = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(serializedFileDescription);
+                Dictionary<string, object> deserializedFileDescription = JsonConvert.DeserializeObject<Dictionary<string, object>>(serializedFileDescription);
                 /*
                 Assert.AreEqual(5, deserializedFileDescription.Keys.Count);
                 Assert.AreEqual(fileName, deserializedFileDescription["fileName"]);

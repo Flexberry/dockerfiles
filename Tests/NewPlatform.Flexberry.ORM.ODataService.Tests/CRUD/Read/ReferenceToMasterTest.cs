@@ -5,11 +5,15 @@
     using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
-    using System.Web.Script.Serialization;
+
     using ICSSoft.STORMNET;
-    using Xunit;
+
     using NewPlatform.Flexberry.ORM.ODataService.Extensions;
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
+
+    using Newtonsoft.Json;
+
+    using Xunit;
 
     /// <summary>
     /// Unit-test class for read data with reference to master through OData service.
@@ -57,7 +61,7 @@
 
                     string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
                     Dictionary<string, object> receivedDict =
-                        new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
+                        JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
                     Assert.Equal(1, ((ArrayList) receivedDict["value"]).Count);
 
                     var value = ((ArrayList) receivedDict["value"])[0];
@@ -101,7 +105,7 @@
 
                     string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
                     Dictionary<string, object> receivedDict =
-                        new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedStr);
+                        JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
                     Assert.Equal(1, ((ArrayList)receivedDict["value"]).Count);
                 }
             });

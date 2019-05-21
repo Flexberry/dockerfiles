@@ -1,19 +1,20 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Helpers
 {
-    using Microsoft.Spatial;
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using System.Web.Script.Serialization;
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.KeyGen;
     using ICSSoft.STORMNET.UserDataTypes;
+
+    using Microsoft.Spatial;
+
     using NewPlatform.Flexberry.ORM.ODataService.Extensions;
+    using NewPlatform.Flexberry.ORM.ODataService.Model;
+
     using Newtonsoft.Json;
-    using ODataService.Model;
-    using ICSSoft.STORMNET.Business.LINQProvider.Extensions;
 
     /// <summary>
     /// Класс, представляющий объект данных <see cref="DataObject"/> в виде словаря <see cref="Dictionary{String,Object}"/>.
@@ -235,7 +236,7 @@
                 return new DataObjectDictionary();
             }
 
-            Dictionary<string, object> result = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(jsonDataObject);
+            Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonDataObject);
             result.Keys.Where(x => x.StartsWith(MetaDataPrefix)).ToList().ForEach(x => result.Remove(x));
 
             return new DataObjectDictionary(result, dataObjectView, model, !castValues);

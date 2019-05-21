@@ -3,18 +3,19 @@
     using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
-    using System.Web.Script.Serialization;
 
     using ICSSoft.STORMNET.Business;
 
-    using Xunit;
-
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
+
+    using Newtonsoft.Json;
+
+    using Xunit;
 
     /// <summary>
     /// Класс тестов для тестирования бизнес-серверов.
     /// </summary>
-    
+
     public class BusinessServersTest : BaseODataServiceIntegratedTest
     {
         /// <summary>
@@ -68,7 +69,7 @@
 
                 // В ответе приходит объект с созданной сущностью.
                 // Преобразуем полученный объект в словарь.
-                Dictionary<string, object> receivedObjs = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(receivedJsonObjs);
+                Dictionary<string, object> receivedObjs = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedJsonObjs);
                 Assert.Equal("Object created.", receivedObjs["ПолеБС"]);
 
                 // Проверяем что созданы зависимые объекты, вычитав с помощью args.DataService
