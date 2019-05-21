@@ -1,6 +1,5 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Tests.CRUD.Read
 {
-    using System.Collections;
     using System.Collections.Generic;
     using System.Net;
 
@@ -9,13 +8,13 @@
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
 
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
     using Xunit;
 
     /// <summary>
     /// Unit-test class for filtering data through OData service by master fields.
     /// </summary>
-
     public class FilterByMasterFieldTest : BaseODataServiceIntegratedTest
     {
         /// <summary>
@@ -51,7 +50,7 @@
 
                     string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
-                    Assert.Equal(4, ((ArrayList)receivedDict["value"]).Count);
+                    Assert.Equal(4, ((JArray)receivedDict["value"]).Count);
                 }
             });
         }

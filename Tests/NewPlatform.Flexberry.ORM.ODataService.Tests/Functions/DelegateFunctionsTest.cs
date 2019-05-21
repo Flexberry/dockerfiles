@@ -32,7 +32,7 @@
                     var resultText = response.Content.ReadAsStringAsync().Result;
                     var result = JsonConvert.DeserializeObject<Dictionary<string, object>>(resultText);
 
-                    Assert.Equal(4, result["value"]);
+                    Assert.Equal(4, (int)(long)result["value"]);
                 }
             });
         }
@@ -54,7 +54,7 @@
                     var resultText = response.Content.ReadAsStringAsync().Result;
                     var result = JsonConvert.DeserializeObject<Dictionary<string, object>>(resultText);
 
-                    Assert.Equal(4, result["value"]);
+                    Assert.Equal(4, (int)(long)result["value"]);
                 }
             });
         }

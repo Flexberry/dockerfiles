@@ -1,7 +1,6 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Tests.CRUD.Read
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
@@ -13,13 +12,13 @@
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
 
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
     using Xunit;
 
     /// <summary>
     /// Класс тестов для тестирования применения $filter в OData-сервисе.
     /// </summary>
-
     public class FilterTest : BaseODataServiceIntegratedTest
     {
         [Fact]
@@ -46,7 +45,7 @@
                     // Преобразуем полученный объект в словарь.
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
-                    Assert.Equal(1, ((ArrayList)receivedDict["value"]).Count);
+                    Assert.Equal(1, ((JArray)receivedDict["value"]).Count);
                 }
             });
         }
@@ -131,7 +130,7 @@
                     // Преобразуем полученный объект в словарь.
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
-                    Assert.Equal(1, ((ArrayList)receivedDict["value"]).Count);
+                    Assert.Equal(1, ((JArray)receivedDict["value"]).Count);
                 }
             });
         }
@@ -166,7 +165,7 @@
                     // Преобразуем полученный объект в словарь.
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
-                    Assert.Equal(1, ((ArrayList)receivedDict["value"]).Count);
+                    Assert.Equal(1, ((JArray)receivedDict["value"]).Count);
                 }
             });
         }
@@ -219,7 +218,7 @@
                     // Преобразуем полученный объект в словарь.
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
-                    Assert.Equal(2, ((ArrayList)receivedDict["value"]).Count);
+                    Assert.Equal(2, ((JArray)receivedDict["value"]).Count);
                 }
 
                 // Проверка использования в фильтрации DateTime.
@@ -237,7 +236,7 @@
                     // Преобразуем полученный объект в словарь.
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
-                    Assert.Equal(1, ((ArrayList)receivedDict["value"]).Count);
+                    Assert.Equal(1, ((JArray)receivedDict["value"]).Count);
                 }
 
                 // Проверка использования в фильтрации поля __PrimaryKey.
@@ -256,7 +255,7 @@
                     // Преобразуем полученный объект в словарь.
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
-                    Assert.Equal(1, ((ArrayList)receivedDict["value"]).Count);
+                    Assert.Equal(1, ((JArray)receivedDict["value"]).Count);
                 }
             });
         }
@@ -290,7 +289,7 @@
                     // Преобразуем полученный объект в словарь.
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
-                    Assert.Equal(1, ((ArrayList)receivedDict["value"]).Count);
+                    Assert.Equal(1, ((JArray)receivedDict["value"]).Count);
                 }
             });
         }

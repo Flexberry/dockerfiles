@@ -121,7 +121,7 @@
                 args.DataService.LoadObject(createdObj);
 
                 Assert.Equal(ObjectStatus.UnAltered, createdObj.GetStatus());
-                Assert.Equal(((Медведь)createdObj).Вес, receivedObjs["Вес"]);
+                Assert.Equal(((Медведь)createdObj).Вес, (int)(long)receivedObjs["Вес"]);
 
                 // Проверяем что созданы все зависимые объекты, вычитав с помощью DataService
                 var ldef = ICSSoft.STORMNET.FunctionalLanguage.SQLWhere.SQLWhereLanguageDef.LanguageDef;

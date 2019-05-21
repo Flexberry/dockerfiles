@@ -1,6 +1,5 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Tests.CRUD.Read
 {
-    using System.Collections;
     using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
@@ -10,6 +9,7 @@
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
 
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
     using Xunit;
 
@@ -53,15 +53,14 @@
 
                     // Убедимся, что объекты получены и их нужное количество.
                     Assert.True(receivedCountries.ContainsKey("value"));
-                    Assert.Equal(((ArrayList)receivedCountries["value"]).Count, countriesCount);
+                    Assert.Equal(((JArray)receivedCountries["value"]).Count, countriesCount);
 
                     // Убедимся, что метаданные о количестве объектов получены.
                     Assert.True(receivedCountries.ContainsKey("@odata.count"));
 
                     // Убедимся, что количество объектов в метаданных совпадает, с ожидаемым количеством.
                     object receivedMetadataCount = receivedCountries["@odata.count"];
-                    Assert.IsType(typeof(int), receivedMetadataCount);
-                    Assert.Equal((int)receivedMetadataCount, countriesCount);
+                    Assert.Equal((int)(long)receivedMetadataCount, countriesCount);
                 }
             });
         }

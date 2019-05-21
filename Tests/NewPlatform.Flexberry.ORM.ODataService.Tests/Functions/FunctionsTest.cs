@@ -1,7 +1,6 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Functions
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
@@ -19,6 +18,7 @@
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
 
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
     using Xunit;
 
@@ -229,7 +229,7 @@
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
                     Assert.True(receivedDict.ContainsKey("value"));
-                    Assert.Equal(1, receivedDict["value"]);
+                    Assert.Equal(1, (int)(long)receivedDict["value"]);
                 }
 
                 requestUrl = $"http://localhost/odata/FunctionWithLcs1(entitySet='Странаs')?$filter=Название eq 'Страна №1'";
@@ -247,7 +247,7 @@
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
                     Assert.True(receivedDict.ContainsKey("value"));
-                    Assert.Equal(1, (receivedDict["value"] as ArrayList).Count);
+                    Assert.Equal(1, ((JArray)receivedDict["value"]).Count);
                 }
             });
         }
@@ -291,12 +291,12 @@
                     // Преобразуем полученный объект в словарь.
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
-                    Assert.Equal(expectedResult[intParam].Вес, receivedDict["Вес"]);
+                    Assert.Equal(expectedResult[intParam].Вес, (int)(long)receivedDict["Вес"]);
 
                     for (int i = 0; i < expectedResult[intParam].Берлога.Count; i++)
                     {
-                        Assert.Equal(expectedResult[intParam].Берлога[i].Наименование, ((receivedDict["Берлога"] as ArrayList)[i] as Dictionary<string, object>)["Наименование"] as string);
-                        Assert.Equal(1, ((receivedDict["Берлога"] as ArrayList)[i] as Dictionary<string, object>).Count);
+                        Assert.Equal(expectedResult[intParam].Берлога[i].Наименование, (string)((JArray)receivedDict["Берлога"])[i].ToObject<Dictionary<string, object>>()["Наименование"]);
+                        Assert.Equal(1, ((JArray)receivedDict["Берлога"])[i].ToObject<Dictionary<string, object>>().Count);
                     }
                 }
             });
@@ -385,15 +385,14 @@
 
                     // Убедимся, что объекты получены и их нужное количество.
                     Assert.True(receivedDict.ContainsKey("value"));
-                    Assert.Equal(((ArrayList)receivedDict["value"]).Count, intParam);
+                    Assert.Equal(((JArray)receivedDict["value"]).Count, intParam);
 
                     // Убедимся, что метаданные о количестве объектов получены.
                     Assert.True(receivedDict.ContainsKey("@odata.count"));
 
                     // Убедимся, что количество объектов в метаданных совпадает, с ожидаемым количеством.
                     object receivedMetadataCount = receivedDict["@odata.count"];
-                    Assert.IsType(typeof(int),receivedMetadataCount);
-                    Assert.Equal((int)receivedMetadataCount, intParam);
+                    Assert.Equal((int)(long)receivedMetadataCount, intParam);
                 }
             });
         }
@@ -436,7 +435,7 @@
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
                     Assert.True(receivedDict.ContainsKey("value"));
-                    Assert.Equal(intParam, ((ArrayList)receivedDict["value"]).Count);
+                    Assert.Equal(intParam, ((JArray)receivedDict["value"]).Count);
                 }
             });
         }
@@ -490,7 +489,7 @@
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
                     Assert.True(receivedDict.ContainsKey("value"));
-                    Assert.Equal(returnValueInt, receivedDict["value"]);
+                    Assert.Equal(returnValueInt, (int)(long)receivedDict["value"]);
                 }
             });
         }

@@ -1,7 +1,6 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Tests.CRUD.Read
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
@@ -13,6 +12,7 @@
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
 
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
     using Xunit;
 
@@ -56,7 +56,7 @@
 
                     // Убедимся, что объекты получены и их нужное количество.
                     Assert.True(receivedCountries.ContainsKey("value"));
-                    Assert.Equal(((ArrayList)receivedCountries["value"]).Count, 5);
+                    Assert.Equal(((JArray)receivedCountries["value"]).Count, 5);
                 }
             });
         }
@@ -104,14 +104,14 @@
                     // Преобразуем полученный объект в словарь.
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
-                    Assert.Equal(4, ((ArrayList)receivedDict["value"]).Count);
+                    Assert.Equal(4, ((JArray)receivedDict["value"]).Count);
 
                     int[] expectedValues = { 48, 22, 58, 62 };
 
                     for (int i = 0; i < expectedValues.Length; i++)
                     {
-                        var медведь = ((ArrayList)receivedDict["value"])[i];
-                        Assert.Equal(expectedValues[i], (int)((Dictionary<string, object>)медведь)["Вес"]);
+                        var медведь = ((JArray)receivedDict["value"])[i];
+                        Assert.Equal(expectedValues[i], (int)(long)медведь.ToObject<Dictionary<string, object>>()["Вес"]);
                     }
                 }
 
@@ -129,14 +129,14 @@
                     // Преобразуем полученный объект в словарь.
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
-                    Assert.Equal(4, ((ArrayList)receivedDict["value"]).Count);
+                    Assert.Equal(4, ((JArray)receivedDict["value"]).Count);
 
                     int[] expectedValues = { 22, 48, 62, 58 };
 
                     for (int i = 0; i < expectedValues.Length; i++)
                     {
-                        var медведь = ((ArrayList)receivedDict["value"])[i];
-                        Assert.Equal(expectedValues[i], (int)((Dictionary<string, object>)медведь)["Вес"]);
+                        var медведь = ((JArray)receivedDict["value"])[i];
+                        Assert.Equal(expectedValues[i], (int)(long)медведь.ToObject<Dictionary<string, object>>()["Вес"]);
                     }
                 }
 
@@ -181,14 +181,14 @@
                     // Преобразуем полученный объект в словарь.
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
-                    Assert.Equal(4, ((ArrayList)receivedDict["value"]).Count);
+                    Assert.Equal(4, ((JArray)receivedDict["value"]).Count);
 
                     NullableDateTime[] expectedValues = { dt1, dt2, dt3, dt4 };
 
                     for (int i = 0; i < expectedValues.Length; i++)
                     {
-                        var лес = ((ArrayList)receivedDict["value"])[i];
-                        Assert.Equal(expectedValues[i], (NullableDateTime)new DateTimeOffset(DateTime.Parse((string)((Dictionary<string, object>)лес)["ДатаПоследнегоОсмотра"])).UtcDateTime);
+                        var лес = ((JArray)receivedDict["value"])[i];
+                        Assert.Equal(expectedValues[i], (NullableDateTime)new DateTimeOffset((DateTime)лес.ToObject<Dictionary<string, object>>()["ДатаПоследнегоОсмотра"]).UtcDateTime);
                     }
                 }
             });
@@ -236,15 +236,15 @@
                     // Преобразуем полученный объект в словарь.
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
-                    Assert.Equal(4, ((ArrayList)receivedDict["value"]).Count);
+                    Assert.Equal(4, ((JArray)receivedDict["value"]).Count);
 
                     NullableDateTime[] expectedValues = { dt1, dt2, dt3, dt4 };
 
                     for (int i = 0; i < expectedValues.Length; i++)
                     {
-                        var медведь = ((ArrayList)receivedDict["value"])[i];
-                        var лес = ((Dictionary<string, object>)медведь)["ЛесОбитания"];
-                        Assert.Equal(expectedValues[i], (NullableDateTime)new DateTimeOffset(DateTime.Parse((string)((Dictionary<string, object>)лес)["ДатаПоследнегоОсмотра"])).UtcDateTime);
+                        var медведь = ((JArray)receivedDict["value"])[i];
+                        var лес = медведь.ToObject<Dictionary<string, JToken>>()["ЛесОбитания"];
+                        Assert.Equal(expectedValues[i], (NullableDateTime)new DateTimeOffset((DateTime)лес.ToObject<Dictionary<string, object>>()["ДатаПоследнегоОсмотра"]).UtcDateTime);
                     }
                 }
             });

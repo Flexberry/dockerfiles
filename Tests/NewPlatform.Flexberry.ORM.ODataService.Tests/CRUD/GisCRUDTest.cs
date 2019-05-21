@@ -1,7 +1,6 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Tests.CRUD
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
@@ -14,6 +13,7 @@
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
 
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
     using Xunit;
 
@@ -59,7 +59,7 @@
                     // Преобразуем полученный объект в словарь.
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
-                    Assert.Equal(1, ((ArrayList)receivedDict["value"]).Count);
+                    Assert.Equal(1, ((JArray)receivedDict["value"]).Count);
                 }
             });
 

@@ -1,7 +1,6 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Tests.CRUD.Read
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
@@ -11,6 +10,7 @@
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
 
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
     using Xunit;
 
@@ -67,7 +67,7 @@
                     // Преобразуем полученный объект в словарь.
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
-                    Assert.Equal(2, ((ArrayList)receivedDict["value"]).Count);
+                    Assert.Equal(2, ((JArray)receivedDict["value"]).Count);
                 }
 
                 // Проверка использования в фильтрации функции all.
@@ -85,7 +85,7 @@
                     // Преобразуем полученный объект в словарь.
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
-                    Assert.Equal(1, ((ArrayList)receivedDict["value"]).Count);
+                    Assert.Equal(1, ((JArray)receivedDict["value"]).Count);
                 }
             });
         }
@@ -136,7 +136,7 @@
                     // Должны возвращаться собственные свойства + @odata.context
                     Assert.Equal(14, receivedDict.Count);
                     Assert.Equal(null, receivedDict["Creator"]);
-                    Assert.Equal(48, receivedDict["Вес"]);
+                    Assert.Equal(48, (int)(long)receivedDict["Вес"]);
                 }
 
                 // Проверка запроса с $select
@@ -158,7 +158,7 @@
                     Assert.Equal(3, receivedDict.Count);
                     Assert.Equal("http://localhost/odata/$metadata#Медведьs(Вес,Пол)/$entity", receivedDict["@odata.context"]);
                     Assert.Equal("Мужской", receivedDict["Пол"]);
-                    Assert.Equal(48, receivedDict["Вес"]);
+                    Assert.Equal(48, (int)(long)receivedDict["Вес"]);
                 }
 
                 // Проверка запроса с $expand
@@ -180,8 +180,8 @@
                     Assert.Equal(15, receivedDict.Count);
 
                     // У медведя с таким первичным ключом две берлоги
-                    Assert.Equal(2, ((ArrayList)receivedDict["Берлога"]).Count);
-                    Assert.Equal(48, receivedDict["Вес"]);
+                    Assert.Equal(2, ((JArray)receivedDict["Берлога"]).Count);
+                    Assert.Equal(48, (int)(long)receivedDict["Вес"]);
                 }
 
                 // Проверка запроса с $expand и $select
@@ -203,12 +203,12 @@
                     Assert.Equal(15, receivedDict.Count);
 
                     // У медведя с таким первичным ключом две берлоги
-                    Assert.Equal(2, ((ArrayList)receivedDict["Берлога"]).Count);
+                    Assert.Equal(2, ((JArray)receivedDict["Берлога"]).Count);
 
                     // Для каждой берлоги должно вернуться название
                     var берлоги = new List<Dictionary<string, object>>();
-                    берлоги.Add((Dictionary<string, object>)((ArrayList)receivedDict["Берлога"])[0]);
-                    берлоги.Add((Dictionary<string, object>)((ArrayList)receivedDict["Берлога"])[1]);
+                    берлоги.Add(((JArray)receivedDict["Берлога"])[0].ToObject<Dictionary<string, object>>());
+                    берлоги.Add(((JArray)receivedDict["Берлога"])[1].ToObject<Dictionary<string, object>>());
                     берлоги = берлоги.OrderBy(x => x["Наименование"]).ToList();
 
                     Assert.Equal("Для плохого настроения", берлоги.First()["Наименование"]);
@@ -256,7 +256,7 @@
                     // Преобразуем полученный объект в словарь.
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
-                    Assert.Equal(3, ((ArrayList)receivedDict["value"]).Count);
+                    Assert.Equal(3, ((JArray)receivedDict["value"]).Count);
                 }
 
                 // Использование $filter с функцией isof. Должны вернуться сущности только дочернего типа.
@@ -274,7 +274,7 @@
                     // Преобразуем полученный объект в словарь.
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
-                    Assert.Equal(2, ((ArrayList)receivedDict["value"]).Count);
+                    Assert.Equal(2, ((JArray)receivedDict["value"]).Count);
                 }
 
                 // Без использования $filter. Должны вернуться также сущности, имеющие дочерний тип.
@@ -292,7 +292,7 @@
                     // Преобразуем полученный объект в словарь.
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
-                    Assert.Equal(3, ((ArrayList)receivedDict["value"]).Count);
+                    Assert.Equal(3, ((JArray)receivedDict["value"]).Count);
                 }
             });
         }
@@ -327,7 +327,7 @@
                     // Преобразуем полученный объект в словарь.
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
-                    Assert.Equal(0, ((ArrayList)receivedDict["value"]).Count);
+                    Assert.Equal(0, ((JArray)receivedDict["value"]).Count);
                 }
 
                 requestUrl = $"http://localhost/odata/КлассСМножествомТиповs?$filter=PropertyDateTime le now()";
@@ -344,7 +344,7 @@
                     // Преобразуем полученный объект в словарь.
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
-                    Assert.Equal(1, ((ArrayList)receivedDict["value"]).Count);
+                    Assert.Equal(1, ((JArray)receivedDict["value"]).Count);
                 }
 
                 requestUrl = $"http://localhost/odata/КлассСМножествомТиповs?$filter=PropertyDateTime eq now()";
@@ -361,7 +361,7 @@
                     // Преобразуем полученный объект в словарь.
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
-                    Assert.Equal(0, ((ArrayList)receivedDict["value"]).Count);
+                    Assert.Equal(0, ((JArray)receivedDict["value"]).Count);
                 }
             });
         }

@@ -1,7 +1,6 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Functions
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
@@ -18,6 +17,7 @@
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
 
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
     using Xunit;
 
@@ -142,7 +142,7 @@
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
                     Assert.True(receivedDict.ContainsKey("value"));
-                    Assert.Equal(1, (receivedDict["value"] as ArrayList).Count);
+                    Assert.Equal(1, ((JArray)receivedDict["value"]).Count);
                 }
             });
         }
@@ -217,7 +217,7 @@
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
                     Assert.True(receivedDict.ContainsKey("value"));
-                    Assert.Equal(1, (receivedDict["value"] as ArrayList).Count);
+                    Assert.Equal(1, ((JArray)receivedDict["value"]).Count);
                 }
 
                 DataServiceProvider.DataService = args.DataService;
@@ -236,7 +236,7 @@
                     Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
 
                     Assert.True(receivedDict.ContainsKey("value"));
-                    Assert.Equal(1, (receivedDict["value"] as ArrayList).Count);
+                    Assert.Equal(1, ((JArray)receivedDict["value"]).Count);
                 }
 
                 requestUrl = $"http://localhost/odata/ActionVoid";
