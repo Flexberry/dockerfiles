@@ -48,30 +48,36 @@ EOF
 
 
 #MAIN
-ConfigXSLTFILE=/tmp/ConfigXSLTFILE.xslt
-(
-xsltHead;
-clikchouseConfigXSLT ${CLICKHOUSECONFIG}
-xsltTail;
-) > $ConfigXSLTFILE
-
-xsltproc $ConfigXSLTFILE /etc/clickhouse-server/config.xml >/tmp/config.xml
-
-if xmllint --noout /etc/clickhouse-server/config.xml
+if [ -n "${CLICKHOUSECONFIG}" ]
 then
-  mv /tmp/config.xml /etc/clickhouse-server/config.xml
+  ConfigXSLTFILE=/tmp/ConfigXSLTFILE.xslt
+  (
+  xsltHead;
+  clikchouseConfigXSLT ${CLICKHOUSECONFIG}
+  xsltTail;
+  ) > $ConfigXSLTFILE
+
+  xsltproc $ConfigXSLTFILE /etc/clickhouse-server/config.xml >/tmp/config.xml
+
+  if xmllint --noout /etc/clickhouse-server/config.xml
+  then
+    mv /tmp/config.xml /etc/clickhouse-server/config.xml
+  fi
 fi
 
-UserConfigXSLTFILE=/tmp/UserConfigXSLTFILE.xslt
-(
-xsltHead;
-clikchouseConfigXSLT ${CLICKHOUSEUSERCONFIG}
-xsltTail;
-) > $UserConfigXSLTFILE
-
-xsltproc $UserConfigXSLTFILE /etc/clickhouse-server/users.xml > /tmp/users.xml
-
-if xmllint --noout /etc/clickhouse-server/users.xml
+if [ -n "${CLICKHOUSEUSERCONFIG}" ]
 then
-  mv /tmp/users.xml /etc/clickhouse-server/users.xml
+  UserConfigXSLTFILE=/tmp/UserConfigXSLTFILE.xslt
+  (
+  xsltHead;
+  clikchouseConfigXSLT ${CLICKHOUSEUSERCONFIG}
+  xsltTail;
+  ) > $UserConfigXSLTFILE
+
+  xsltproc $UserConfigXSLTFILE /etc/clickhouse-server/users.xml > /tmp/users.xml
+
+  if xmllint --noout /etc/clickhouse-server/users.xml
+  then
+    mv /tmp/users.xml /etc/clickhouse-server/users.xml
+  fi
 fi
