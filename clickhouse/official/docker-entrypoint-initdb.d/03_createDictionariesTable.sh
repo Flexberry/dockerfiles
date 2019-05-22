@@ -1,5 +1,10 @@
 #!/bin/sh
 
+createDB() {
+  db=$1
+  echo "CREATE DATABASE IF NOT EXISTS \"$1\";" 
+}
+
 createTable() {
   db=$1
   table=$2
@@ -52,8 +57,15 @@ createTable() {
   echo ")  Engine = Dictionary(\"$table\");"
 }
 
+set -x
+exec 2>/tmp/createDictionaries.log
+
 (
 until echo "show databases" | clickhouse-client >/dev/null; do sleep 5; done
+
+while echo "select last_exception  from system.dictionaries" | clickhouse-client | grep Exception; do sleep 5; echo "system reload dictionaries" | clickhouse-client; done
+
+createDB ${PGDatabase} | clickhouse-client 
 for dictDesc in $PGDicrionaries
 do
   IFS=/

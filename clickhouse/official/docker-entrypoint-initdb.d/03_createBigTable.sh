@@ -1,5 +1,10 @@
 #!/bin/sh
 
+createDB() {
+  db=$1
+  echo "CREATE DATABASE IF NOT EXISTS \"$1\"" 
+}
+
 createTable() {
   db=$1
   table=$2
@@ -61,4 +66,5 @@ if [ -z "$PGBigTable" ]
 then
   exit 0;
 fi
-createTable $PGDatabase $PGBigTable
+createDB ${PGDatabase} | clickhouse-client 
+createTable $PGDatabase $PGBigTable  | clickhouse-client -d ${PGDatabase}

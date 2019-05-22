@@ -149,8 +149,7 @@ dictXML() {
   echo
 }
 
-exec > /etc/clickhouse-server/${PGDatabase}_dictionary.xml
-
+(
 echo "<?xml version='1.0' encoding='UTF-8'?>"
 echo "<yandex>"
 ifs="$IFS"
@@ -163,5 +162,5 @@ do
   dictXML $*
 done
 echo "</yandex>"
-
+) > /etc/clickhouse-server/${PGDatabase}_dictionary.xml
 
