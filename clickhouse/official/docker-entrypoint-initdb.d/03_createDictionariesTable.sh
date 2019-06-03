@@ -28,30 +28,32 @@ createTable() {
     IFS=' '
     set -- $type
     type0=$1
-    echo -n "\"$attr\" "
-    if [ $type0 = 'timestamp' ]
+    attrType=
+    case $type0 in
+    'timestamp')
+      attrType="DateTime"
+    ;;
+    'character')
+      attrType="String"
+    ;;
+    'uuid')
+      attrType="UUID"
+    ;;
+    'integer')
+      attrType=" Int$prec"
+    ;;
+    'boolean')
+      attrType="Int8"
+    ;;
+    'numeric')
+      attrType="Float64"
+    ;;
+    esac
+    if [ -n "$attrType" ]
     then
-      echo -n "DateTime"
-    fi
-    if [ $type0 = 'character' ]
-    then
-      echo -n "String"
-    fi
-    if [ $type0 = 'uuid' ]
-    then
-      echo -n "UUID"
-    fi
-    if [ $type0 = 'integer' ]
-    then
-      echo -n " Int"$prec
-    fi
-    if [ $type0 = 'boolean' ]
-    then
-      echo -n "Int8"
-    fi
-    if [ $type0 = 'numeric' ]
-    then
-      echo -n "Float64"
+      echo -n "\"$attr\" $attrType"
+    else
+      first=
     fi
   done
   echo ")  Engine = Dictionary(\"$table\");"
@@ -72,6 +74,6 @@ do
   set -- $dictDesc
   IFS="$ifs"
   dict=$1
-  createTable ${PGDatabase} $dict | clickhouse-client -d ${PGDatabase}
+  createTable ${PGDatabase} $dict | tee -a /tmp/db | clickhouse-client -d ${PGDatabase}
 done
 ) &

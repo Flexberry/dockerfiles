@@ -27,12 +27,12 @@ writeAttr() {
   then
     if [ -n "$notKeyTag" ]
     then
-      continue
+      return
     fi
   else
    if [ -z "$notKeyTag" ]
     then
-      continue
+      return
     fi
   fi
   isnull=$3
@@ -44,63 +44,65 @@ writeAttr() {
   fi
   type=$4
   prec=$5
-  echo "\t\t\t<attribute>"
-  echo "\t\t\t\t<name>$attr</name>"
   ifs="$IFS"
   IFS=' '
   set -- $type
   IFS="$ifs"
   type0=$1
-  if [ $type0 = 'timestamp' ]
-  then
-    echo "\t\t\t\t<type>DateTime</type>"
+  attrDesc=
+  case "$type0" in
+  'timestamp')
+    attrDesc="\t\t\t\t<type>DateTime</type>\n"
     if [ "$isnull" = 'YES' ]
     then
-      echo "\t\t\t\t<null_value>0000-00-00 00:00:00</null_value>"
+      attrDesc="$attrDesc\t\t\t\t<null_value>0000-00-00 00:00:00</null_value>"
     fi
-  fi
-  if [ $type0 = 'character' ]
-  then
-    echo "\t\t\t\t<type>String</type>"
+    ;;
+  'character')
+    attrDesc="\t\t\t\t<type>String</type>\n"
     if [ "$isnull" = 'YES' ]
     then
-      echo "\t\t\t\t<null_value></null_value>"
+      attrDesc="$attrDesc\t\t\t\t<null_value></null_value>"
     fi
-  fi
-  if [ $type0 = 'uuid' ]
-  then
-    echo "\t\t\t\t<type>UUID</type>"
+    ;;
+  'uuid')
+    attrDesc="\t\t\t\t<type>UUID</type>\n"
     if [ "$isnull" = 'YES' ]
     then
-      echo "\t\t\t\t<null_value>00000000-0000-0000-0000-000000000000</null_value>"
+      attrDesc="$attrDesc\t\t\t\t<null_value>00000000-0000-0000-0000-000000000000</null_value>"
     fi
-  fi
-  if [ $type0 = 'integer' ]
-  then
-    echo "\t\t\t\t<type>Int$prec</type>"
+  ;;
+  'integer')
+    attrDesc="\t\t\t\t<type>Int$prec</type>\n"
     if [ "$isnull" = 'YES' ]
     then
-      echo "\t\t\t\t<null_value>-1</null_value>"
+      attrDesc="$attrDesc\n\t\t\t\t<null_value>-1</null_value>"
     fi
-  fi
-  if [ $type0 = 'boolean' ]
-  then
-    echo "\t\t\t\t<type>Int8</type>"
+  ;;
+  'boolean')
+    attrDesc="\t\t\t\t<type>Int8</type>\n"
     if [ "$isnull" = 'YES' ]
     then
-      echo "\t\t\t\t<null_value>0</null_value>"
+      attrDesc="$attrDesc\t\t\t\t<null_value>0</null_value>"
     fi
-  fi
-  if [ $type0 = 'numeric' ]
-  then
-    echo "\t\t\t\t<type>Float64</type>"
+  ;;
+  'numeric' | 'real')
+    attrDesc="\t\t\t\t<type>Float64</type>\n"
     if [ "$isnull" = 'YES' ]
     then
-      echo "\t\t\t\t<null_value>0.0</null_value>"
+      attrDesc="$attrDesc\t\t\t\t<null_value>0.0</null_value>"
     fi
+  ;;
+  esac
+  if [ -n "$attrDesc" ]
+  then
+    echo "\t\t\t<attribute>"
+    echo "\t\t\t\t<name>$attr</name>"
+    echo $attrDesc;
+    echo "\t\t\t</attribute>"
   fi
-  echo "\t\t\t</attribute>"
 }
+
 
 dictXML() {
   dict=$1
