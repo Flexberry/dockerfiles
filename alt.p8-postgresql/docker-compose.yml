@@ -1,0 +1,6 @@
+version: "3.2"
+services:
+  Postgres:
+    image: "flexberry/alt.p8-postgresql:latest"
+    ports:
+     - 5432:5432
