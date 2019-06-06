@@ -7,3 +7,5 @@ services:
     volumes:
      - db:/var/lib/pgsql/data/
      - /etc/localtime:/etc/localtime
+volumes:
+  db:
