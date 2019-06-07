@@ -41,7 +41,7 @@ docker ps
 ```
 В списке запущенных контейнеров будет контейнер типа:
 ```
-fdcc3b0584d0        flexberry/alt.p8-postgresql:latest   "/bin/sh -c /docker-…"   8 seconds ago       Up 3 seconds        0.0.0.0:5432->5432/tcp   testpg_postgres_1
+fdcc3b0584d0 flexberry/alt.p8-postgresql:latest ... 0.0.0.0:5432->5432/tcp testpg_postgres_1
 ```
 Где `testpg` - имя каталога запуска контейнера.
 
