@@ -3,7 +3,7 @@ version: '3.2'
 services:
   clickhouse:
     image: flexberry/clickhouse-official
-        ports:
+    ports:
       - "8123:8123"
       - "9000:9000"
     volumes:
