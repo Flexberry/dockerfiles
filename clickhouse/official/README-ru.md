@@ -88,7 +88,7 @@ docker-compose exec clickhouse clickhouse-client
 ```
  winpty docker-compose exec clickhouse clickhouse-client
 ```
-После запуска клиент выедет подсказку:
+После запуска клиент выведет подсказку:
 ```
 ClickHouse client version 19.5.3.8 (official build).
 Connecting to localhost:9000 as user default.
@@ -96,13 +96,39 @@ Connected to ClickHouse server version 19.5.3 revision 54417.
 
 ... :) 
 ```
+Для проверки работы наберите простые команды:
+```
+show databases
+use system
+show tables
+select 1
+```
 
 Документация по работе с clickhouse-client приведена на странице
 [Клиент командной строки](https://clickhouse.yandex/docs/ru/single/#klient-komandnoi-stroki).
 
 
+
+
 #### Экранно-ориентированные интерфейсы для работы с clickhouse-server
 
+Список стороннего программного обеспечения для работы с clickhouse-server приведен на странице:
+[Визуальные интерфейсы от сторонних разработчиков](https://clickhouse.yandex/docs/ru/interfaces/third-party/gui/)
+
+Для запуска docker-контейнера WEB-интерфейса `Tabix` наберите команду:
+```
+docker run -d -p 8080:80 spoonest/clickhouse-tabix-web-client
+```
+
+WEB-интерфейс будет доступен по URL: `http://localhost:8080/`.
+
+Введите:
+- Имя сессии (`Name`)  (например test)
+- URL REST-интерфейса (http://localhost:8123/ при локальном сервере);
+- Login (default)
+- Password (пустой)
+
+и нажмите `IGN IN`.
 
 
 ## Запуск с конфигурацией
