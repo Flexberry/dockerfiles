@@ -8,3 +8,6 @@ services:
       - "9000:9000"
     volumes:
       - clickhousedb:/var/lib/clickhouse
+      
+volumes:
+  clickhousedb:
