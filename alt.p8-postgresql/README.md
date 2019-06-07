@@ -5,6 +5,39 @@
 - в качестве базового образа используется  [образ дистрибутив ALTLinux P8](https://hub.docker.com/r/fotengauer/altlinux-p8/). входяшего  в [Единый реестр российских программ для электронных вычислительных машин и баз данных](https://reestr.minsvyaz.ru/);
 - задание основных параметров конфигурации при запуске контейнера путем определения параметров среды. 
 
+## Быстрый старт
+
+### Запуск контейнера  в режиме docker-compose
+
+1. Создайте каталог для запуска образа в режиме `docker-compose` (например `testPG`) 
+2. Скопируйте файл [docker-compose.yml](https://github.com/Flexberry/dockerfiles/blob/master/alt.p8-postgresql/docker-compose.yml) в создайный каталог
+или создайте файл самостоятельно на основе шаблона
+```
+version: "3.2"
+services:
+  postgres:
+    image: flexberry/alt.p8-postgresql:latest
+    ports:
+     - 5432:5432
+    volumes:
+     - db:/var/lib/pgsql/data/
+     - /etc/localtime:/etc/localtime
+volumes:
+  db:
+```
+Если у Вас порт TCP-порт `5432` уже занят другим приложением укажите в mapping'е портов свободный порт. Например 15432:
+```
+...
+    - 15432:5432
+```
+
+3. Перейдите в каталог и запустите команду:
+```
+docker-compose up -d
+```
+
+### Работа с контейнером
+
 ## Запуск образа в виде swarm сервиса
 
 ### Описание сервиса
