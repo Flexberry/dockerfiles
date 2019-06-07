@@ -9,7 +9,7 @@
 
 ### Запуск контейнера  в режиме docker-compose
 
-1. Создайте каталог для запуска образа в режиме `docker-compose` (например `testPG`) 
+1. Создайте каталог для запуска образа в режиме `docker-compose` (например `testpg`) 
 2. Скопируйте файл [docker-compose.yml](https://github.com/Flexberry/dockerfiles/blob/master/alt.p8-postgresql/docker-compose.yml) в создайный каталог
 или создайте файл самостоятельно на основе шаблона
 ```
@@ -39,6 +39,21 @@ docker-compose up -d
 ```
 docker ps
 ```
+В списке запущенных контейнеров будет контейнер типа:
+```
+fdcc3b0584d0        flexberry/alt.p8-postgresql:latest   "/bin/sh -c /docker-…"   8 seconds ago       Up 3 seconds        0.0.0.0:5432->5432/tcp   testpg_postgres_1
+```
+Где `testpg` - имя каталога запуска контейнера.
+
+База данных контейнера располагается в именованом томе. Проверить наличие именованого тома можно командой:
+```
+docker volume ls
+```
+В списке томов отобрахиться том:
+```
+local               testpg_db
+```
+Где `testpg` - имя каталога запуска контейнера.
 
 
 ### Работа с контейнером
