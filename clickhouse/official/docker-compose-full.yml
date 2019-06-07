@@ -21,3 +21,6 @@ services:
       PGProtocol: ${PGProtocol}
       PGDicrionaries: ${PGDicrionaries}
       PGBigTable: ${PGBigTable}
+      
+volumes:
+  clickhousedb:
