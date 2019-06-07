@@ -9,14 +9,6 @@
 
 ### Запуск контейнера  в режиме docker-compose
 
-Здесь и далее если Вы рвботаете в Windows Вы должны к имени docker-команды добавлять суффикс `.exe`:
-
-Linux | Windows
-------|--------
-docker | docker.exe
-docker-compose | docker-compose.exe
-... | ...
-
 1. Создайте каталог для запуска образа в режиме `docker-compose` (например `testpg`) 
 2. Скопируйте файл [docker-compose.yml](https://github.com/Flexberry/dockerfiles/blob/master/alt.p8-postgresql/docker-compose.yml) в созданный каталог
 или создайте файл самостоятельно на основе шаблона
@@ -71,6 +63,20 @@ local               testpg_db
 - TCP-порт postgres-сервера (по умолчанию `5432`);
 - имя пользователя - `postgres`;
 - пароль - `p@ssw0rd`
+
+Строка соединения при работе с локальным контейнером:
+```
+Server=localhost;Port=5432;User Id=postgres;Password=p@ssw0rd;Database=postgres;
+```
+
+### Остановка контейнера
+
+Для остановки работы контейнера запустите в каталоге где он был запущен команду:
+```
+docker-compose down 
+```
+База данных сохранится в именованом томе (`testpg_db`) и будет использована при следующем вызове конетейнера.
+
 
 ## Запуск образа в виде swarm сервиса
 
