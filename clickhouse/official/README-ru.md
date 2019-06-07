@@ -128,7 +128,7 @@ WEB-интерфейс будет доступен по URL: `http://localhost:8
 - Login (default)
 - Password (пустой)
 
-и нажмите `IGN IN`.
+и нажмите `SIGN IN`.
 
 
 ## Запуск с конфигурацией
