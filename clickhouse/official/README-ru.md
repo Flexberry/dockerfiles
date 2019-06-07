@@ -76,6 +76,34 @@ local               testch_clickhousedb
 - имя пользователя - `default`;
 - пароль - `` (пустая строка)
 
+#### Работа из встрокнного терминального клиента clickhouse-client
+
+Образ включает в себя терминальный клиент `clickhouse-client`.
+Запустить его можно следующей командой:
+- Linux
+```
+docker-compose exec clickhouse clickhouse-client
+```
+- Windows
+```
+ winpty docker-compose exec clickhouse clickhouse-client
+```
+После запуска клиент выедет подсказку:
+```
+ClickHouse client version 19.5.3.8 (official build).
+Connecting to localhost:9000 as user default.
+Connected to ClickHouse server version 19.5.3 revision 54417.
+
+... :) 
+```
+
+Документация по работе с clickhouse-client приведена на странице
+[Клиент командной строки](https://clickhouse.yandex/docs/ru/single/#klient-komandnoi-stroki).
+
+
+#### Экранно-ориентированные интерфейсы для работы с clickhouse-server
+
+
 
 ## Запуск с конфигурацией
 
