@@ -8,8 +8,7 @@ services:
       - "19000:9000"
       - "19009:9009"
     volumes:
-      - clickhouse:/var/lib/clickhouse
-      - clickhouse-config:/etc/clickhouse-server/
+      - clickhousedb:/var/lib/clickhouse
       - /etc/localtime:/etc/localtime
     environment:
       CLICKHOUSECONFIG: ${CLICKHOUSECONFIG}
