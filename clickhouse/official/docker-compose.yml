@@ -8,17 +8,4 @@ services:
       - "19000:9000"
       - "19009:9009"
     volumes:
-      - clickhouse:/var/lib/clickhouse
-      - clickhouse-config:/etc/clickhouse-server/
-      - /etc/localtime:/etc/localtime
-    environment:
-      CLICKHOUSECONFIG: ${CLICKHOUSECONFIG}
-      CLICKHOUSEUSERCONFIG: ${CLICKHOUSEUSERCONFIG}
-      PGDatabase: ${PGDatabase}
-      PGServername: ${PGServername}
-      PGUserName: ${PGUserName}
-      PGPassword: ${PGPassword}
-      PGPort: ${PGPort}
-      PGProtocol: ${PGProtocol}
-      PGDicrionaries: ${PGDicrionaries}
-      PGBigTable: ${PGBigTable}
+      - clickhousedb:/var/lib/clickhouse
