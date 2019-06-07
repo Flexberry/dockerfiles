@@ -10,6 +10,7 @@
 ### Запуск контейнера  в режиме docker-compose
 
 Здесь и далее если Вы рвботаете в Windows Вы должны к имени docker-команды добавлять суффикс `.exe`:
+
 Linux | Windows
 ------|--------
 docker | docker.exe
