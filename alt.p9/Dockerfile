@@ -1,4 +1,4 @@
-FROM alt:sisyphus
+FROM alt:p9
 
 ENV LANG ru_RU.UTF-8
 
