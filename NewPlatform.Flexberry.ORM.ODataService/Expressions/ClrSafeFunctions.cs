@@ -1,10 +1,6 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
-// Licensed under the MIT License.  See License.txt in the project root for license information.
-// Branch of https://github.com/OData/WebApi/blob/v5.7.0/OData/src/System.Web.OData/OData/Query/Expressions/ClrSafeFunctions.cs
-namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
+﻿namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 {
     using System;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// This class contains safe equivalents of CLR functions that
@@ -20,7 +16,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
         /// <returns>Подстрока.</returns>
         public static string SubstringStart(string str, int startIndex)
         {
-            Contract.Assert(str != null);
+            if (str == null)
+            {
+                throw new ArgumentNullException(nameof(str), "Contract assertion not met: str != null");
+            }
 
             if (startIndex < 0)
             {
@@ -42,7 +41,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
         /// <returns>Подстрока.</returns>
         public static string SubstringStartAndLength(string str, int startIndex, int length)
         {
-            Contract.Assert(str != null);
+            if (str == null)
+            {
+                throw new ArgumentNullException(nameof(str), "Contract assertion not met: str != null");
+            }
 
             if (startIndex < 0)
             {

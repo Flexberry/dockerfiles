@@ -1,8 +1,7 @@
-namespace NewPlatform.Flexberry.ORM.ODataService.Functions
+﻿namespace NewPlatform.Flexberry.ORM.ODataService.Functions
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -28,7 +27,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Functions
         /// <param name="token">The OData Service token.</param>
         public FunctionContainer(ManagementToken token)
         {
-            Contract.Requires<ArgumentNullException>(token != null);
+            if (token == null)
+            {
+                throw new ArgumentNullException(nameof(token), "Contract assertion not met: token != null");
+            }
 
             _token = token;
         }

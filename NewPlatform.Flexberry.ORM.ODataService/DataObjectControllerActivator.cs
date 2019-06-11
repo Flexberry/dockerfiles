@@ -1,7 +1,6 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService
 {
     using System;
-    using System.Diagnostics.Contracts;
     using System.Net.Http;
     using System.Web.Http.Controllers;
     using System.Web.Http.Dependencies;
@@ -31,7 +30,10 @@
         /// <param name="fallbackActivator">Activator for all controllers except <see cref="DataObjectController"/>.</param>
         public DataObjectControllerActivator(IHttpControllerActivator fallbackActivator)
         {
-            Contract.Requires<ArgumentNullException>(fallbackActivator != null);
+            if (fallbackActivator == null)
+            {
+                throw new ArgumentNullException(nameof(fallbackActivator), "Contract assertion not met: fallbackActivator != null");
+            }
 
             _fallbackActivator = fallbackActivator;
         }

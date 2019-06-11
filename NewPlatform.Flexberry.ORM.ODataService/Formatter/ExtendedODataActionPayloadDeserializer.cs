@@ -3,7 +3,6 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
@@ -57,7 +56,10 @@
             }
 
             IEdmAction action = GetAction(readContext);
-            Contract.Assert(action != null);
+            if (action == null)
+            {
+                throw new ArgumentException("Contract assertion not met: action != null", "value");
+            }
 
             // Create the correct resource type;
             Dictionary<string, object> payload;
@@ -83,7 +85,11 @@
                         parameterName = reader.Name;
                         parameter = action.Parameters.SingleOrDefault(p => p.Name == parameterName);
                         // ODataLib protects against this but asserting just in case.
-                        Contract.Assert(parameter != null, String.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName));
+                        if (parameter == null)
+                        {
+                            throw new ArgumentException(String.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName), "value");
+                        }
+
                         if (parameter.Type.IsPrimitive())
                         {
                             payload[parameterName] = reader.Value;
@@ -99,9 +105,17 @@
                         parameterName = reader.Name;
                         parameter = action.Parameters.SingleOrDefault(p => p.Name == parameterName);
                         // ODataLib protects against this but asserting just in case.
-                        Contract.Assert(parameter != null, String.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName));
+                        if (parameter == null)
+                        {
+                            throw new ArgumentException(String.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName), "value");
+                        }
+
                         IEdmCollectionTypeReference collectionType = parameter.Type as IEdmCollectionTypeReference;
-                        Contract.Assert(collectionType != null);
+                        if (collectionType == null)
+                        {
+                            throw new ArgumentException("Contract assertion not met: collectionType != null", "value");
+                        }
+
                         ODataCollectionValue value = ReadCollection(reader.CreateCollectionReader());
                         ODataCollectionDeserializer collectionDeserializer = (ODataCollectionDeserializer)DeserializerProvider.GetEdmTypeDeserializer(collectionType);
                         payload[parameterName] = collectionDeserializer.ReadInline(value, collectionType, readContext);
@@ -110,10 +124,16 @@
                     case ODataParameterReaderState.Entry:
                         parameterName = reader.Name;
                         parameter = action.Parameters.SingleOrDefault(p => p.Name == parameterName);
-                        Contract.Assert(parameter != null, String.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName));
+                        if (parameter == null)
+                        {
+                            throw new ArgumentException(String.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName), "value");
+                        }
 
                         IEdmEntityTypeReference entityTypeReference = parameter.Type as IEdmEntityTypeReference;
-                        Contract.Assert(entityTypeReference != null);
+                        if (entityTypeReference == null)
+                        {
+                            throw new ArgumentException("Contract assertion not met: entityTypeReference != null", "value");
+                        }
 
                         ODataReader entryReader = reader.CreateEntryReader();
                         object item = ODataEntityDeserializer.ReadEntryOrFeed(entryReader);
@@ -132,10 +152,16 @@
                     case ODataParameterReaderState.Feed:
                         parameterName = reader.Name;
                         parameter = action.Parameters.SingleOrDefault(p => p.Name == parameterName);
-                        Contract.Assert(parameter != null, String.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName));
+                        if (parameter == null)
+                        {
+                            throw new ArgumentException(String.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName), "value");
+                        }
 
                         IEdmCollectionTypeReference feedType = parameter.Type as IEdmCollectionTypeReference;
-                        Contract.Assert(feedType != null);
+                        if (feedType == null)
+                        {
+                            throw new ArgumentException("Contract assertion not met: feedType != null", "value");
+                        }
 
                         ODataReader feedReader = reader.CreateFeedReader();
                         object feed = ODataEntityDeserializer.ReadEntryOrFeed(feedReader);
@@ -162,7 +188,10 @@
                         object result = feedDeserializer.ReadInline(feed, feedType, readContext);
 
                         IEdmTypeReference elementTypeReference = feedType.ElementType();
-                        Contract.Assert(elementTypeReference.IsEntity());
+                        if (!(elementTypeReference.IsEntity()))
+                        {
+                            throw new ArgumentException("Contract assertion not met: elementTypeReference.IsEntity()", "value");
+                        }
 
                         enumerable = result as IEnumerable;
                         if (enumerable != null)

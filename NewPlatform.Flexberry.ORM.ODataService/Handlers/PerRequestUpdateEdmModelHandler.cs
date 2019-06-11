@@ -1,7 +1,6 @@
-namespace NewPlatform.Flexberry.ORM.ODataService.Handlers
+﻿namespace NewPlatform.Flexberry.ORM.ODataService.Handlers
 {
     using System;
-    using System.Diagnostics.Contracts;
     using System.Net.Http;
     using System.Reflection;
     using System.Threading;
@@ -41,8 +40,15 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Handlers
         /// </param>
         public PerRequestUpdateEdmModelHandler(ManagementToken token, IDataObjectEdmModelBuilder modelBuilder)
         {
-            Contract.Requires<ArgumentNullException>(token != null);
-            Contract.Requires<ArgumentNullException>(modelBuilder != null);
+            if (token == null)
+            {
+                throw new ArgumentNullException(nameof(token), "Contract assertion not met: token != null");
+            }
+
+            if (modelBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(modelBuilder), "Contract assertion not met: modelBuilder != null");
+            }
 
             // In current Microsoft implementation of OData for WebAPI, EDM model is stored
             // in ODataPathRouteConstraint, but doesn't have public setter.

@@ -4,7 +4,6 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Extensions
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Net.Http;
     using System.Web.Http;
     using System.Web.Http.Dispatcher;
@@ -41,12 +40,35 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Extensions
             string routeName = DataObjectRoutingConventions.DefaultRouteName,
             string routePrefix = DataObjectRoutingConventions.DefaultRoutePrefix)
         {
-            Contract.Requires<ArgumentNullException>(config != null);
-            Contract.Requires<ArgumentNullException>(builder != null);
-            Contract.Requires<ArgumentNullException>(routeName != null);
-            Contract.Requires<ArgumentException>(routeName != string.Empty);
-            Contract.Requires<ArgumentNullException>(routePrefix != null);
-            Contract.Requires<ArgumentException>(routePrefix != string.Empty);
+            if (config == null)
+            {
+                throw new ArgumentNullException(nameof(config), "Contract assertion not met: config != null");
+            }
+
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder), "Contract assertion not met: builder != null");
+            }
+
+            if (routeName == null)
+            {
+                throw new ArgumentNullException(nameof(routeName), "Contract assertion not met: routeName != null");
+            }
+
+            if (!(routeName != string.Empty))
+            {
+                throw new ArgumentException("Contract assertion not met: routeName != string.Empty", nameof(routeName));
+            }
+
+            if (routePrefix == null)
+            {
+                throw new ArgumentNullException(nameof(routePrefix), "Contract assertion not met: routePrefix != null");
+            }
+
+            if (!(routePrefix != string.Empty))
+            {
+                throw new ArgumentException("Contract assertion not met: routePrefix != string.Empty", nameof(routePrefix));
+            }
 
             // Model.
             var model = builder.Build();

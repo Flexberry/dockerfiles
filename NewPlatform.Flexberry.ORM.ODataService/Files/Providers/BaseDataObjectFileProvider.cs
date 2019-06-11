@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
     using System.Web;
@@ -41,7 +40,10 @@
         /// <param name="dataService">Сервис данных для операций с БД.</param>
         protected BaseDataObjectFileProvider(IDataService dataService)
         {
-            Contract.Requires<ArgumentNullException>(dataService != null);
+            if (dataService == null)
+            {
+                throw new ArgumentNullException(nameof(dataService), "Contract assertion not met: dataService != null");
+            }
 
             _dataService = dataService;
         }

@@ -1,7 +1,6 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Controllers
 {
     using System;
-    using System.Diagnostics.Contracts;
     using System.Web.Http;
 
     using NewPlatform.Flexberry.Services;
@@ -21,7 +20,10 @@
         /// <param name="lockService">The lock service.</param>
         public LockController(ILockService lockService)
         {
-            Contract.Requires<ArgumentNullException>(lockService != null);
+            if (lockService == null)
+            {
+                throw new ArgumentNullException(nameof(lockService), "Contract assertion not met: lockService != null");
+            }
 
             _lockService = lockService;
         }

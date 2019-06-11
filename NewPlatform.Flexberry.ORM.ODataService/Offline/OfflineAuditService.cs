@@ -1,7 +1,6 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Offline
 {
     using System;
-    using System.Diagnostics.Contracts;
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business.Audit;
 
@@ -48,7 +47,10 @@
         /// <exception cref="ArgumentException">Thrown when data object doesn't implement <see cref="IDataObjectWithAuditFields"/> in order to use with offline audit.</exception>
         protected override DateTime GetAuditOperationTime(DataObject operatedObject)
         {
-            Contract.Requires<ArgumentNullException>(operatedObject != null);
+            if (operatedObject == null)
+            {
+                throw new ArgumentNullException(nameof(operatedObject), "Contract assertion not met: operatedObject != null");
+            }
 
             var auditableDataObject = operatedObject as IDataObjectWithAuditFields;
             if (auditableDataObject == null)

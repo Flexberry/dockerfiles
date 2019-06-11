@@ -1,13 +1,8 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
-// Licensed under the MIT License.  See License.txt in the project root for license information.
-// Branch of https://github.com/OData/WebApi/blob/v5.7.0/OData/src/System.Web.OData/OData/Formatter/EdmPrimitiveHelpers.cs
-
-namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
+﻿namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 {
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.Data.Linq;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Web.Http;
     using System.Web.OData.Properties;
@@ -27,8 +22,15 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
         /// <returns>Преобразованное значение</returns>
         public static object ConvertPrimitiveValue(object value, Type type)
         {
-            Contract.Assert(value != null);
-            Contract.Assert(type != null);
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value), "Contract assertion not met: value != null");
+            }
+
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type), "Contract assertion not met: type != null");
+            }
 
             // if value is of the same type nothing to do here.
             if (value.GetType() == type || value.GetType() == Nullable.GetUnderlyingType(type))
@@ -104,7 +106,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
                 }
                 else
                 {
-                    Contract.Assert(type == typeof(uint) || type == typeof(ushort) || type == typeof(ulong));
+                    if (!(type == typeof(uint) || type == typeof(ushort) || type == typeof(ulong)))
+                    {
+                        throw new ArgumentException("Contract assertion not met: type == typeof(uint) || type == typeof(ushort) || type == typeof(ulong)", nameof(type));
+                    }
 
                     // Note that we are not casting the return value to nullable<T> as even if we do it
                     // CLR would unbox it back to T.

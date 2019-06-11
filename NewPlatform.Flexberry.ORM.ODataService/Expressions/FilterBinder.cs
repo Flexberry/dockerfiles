@@ -9,7 +9,6 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
     using System.Collections.Generic;
     using System.Data.Linq;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
@@ -93,9 +92,20 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
         private FilterBinder(IEdmModel model, ODataQuerySettings querySettings)
         {
-            Contract.Assert(model != null);
-            Contract.Assert(querySettings != null);
-            Contract.Assert(querySettings.HandleNullPropagation != HandleNullPropagationOption.Default);
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model), "Contract assertion not met: model != null");
+            }
+
+            if (querySettings == null)
+            {
+                throw new ArgumentNullException(nameof(querySettings), "Contract assertion not met: querySettings != null");
+            }
+
+            if (!(querySettings.HandleNullPropagation != HandleNullPropagationOption.Default))
+            {
+                throw new ArgumentException("Contract assertion not met: querySettings.HandleNullPropagation != HandleNullPropagationOption.Default", nameof(querySettings));
+            }
 
             IsOfTypesList = new List<string>();
             _querySettings = querySettings;
@@ -114,10 +124,25 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
         public static LambdaExpression Bind(
             OrderByClause orderBy, Type elementType, IEdmModel model, ODataQuerySettings querySettings)
         {
-            Contract.Assert(orderBy != null);
-            Contract.Assert(elementType != null);
-            Contract.Assert(model != null);
-            Contract.Assert(querySettings != null);
+            if (orderBy == null)
+            {
+                throw new ArgumentNullException(nameof(orderBy), "Contract assertion not met: orderBy != null");
+            }
+
+            if (elementType == null)
+            {
+                throw new ArgumentNullException(nameof(elementType), "Contract assertion not met: elementType != null");
+            }
+
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model), "Contract assertion not met: model != null");
+            }
+
+            if (querySettings == null)
+            {
+                throw new ArgumentNullException(nameof(querySettings), "Contract assertion not met: querySettings != null");
+            }
 
             FilterBinder binder = new FilterBinder(model, querySettings);
             LambdaExpression orderByLambda = binder.BindExpression(orderBy.Expression, orderBy.RangeVariable, elementType);
@@ -220,10 +245,17 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
         private static Expression Any(Expression source, Expression filter)
         {
-            Contract.Assert(source != null);
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source), "Contract assertion not met: source != null");
+            }
+
             Type elementType;
             source.Type.IsCollection(out elementType);
-            Contract.Assert(elementType != null);
+            if (elementType == null)
+            {
+                throw new ArgumentException("Contract assertion not met: elementType != null", "value");
+            }
 
             if (filter == null)
             {
@@ -251,12 +283,22 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
         private static Expression All(Expression source, Expression filter)
         {
-            Contract.Assert(source != null);
-            Contract.Assert(filter != null);
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source), "Contract assertion not met: source != null");
+            }
+
+            if (filter == null)
+            {
+                throw new ArgumentNullException(nameof(filter), "Contract assertion not met: filter != null");
+            }
 
             Type elementType;
             source.Type.IsCollection(out elementType);
-            Contract.Assert(elementType != null);
+            if (elementType == null)
+            {
+                throw new ArgumentException("Contract assertion not met: elementType != null", "value");
+            }
 
             if (IsIQueryable(source.Type))
             {
@@ -376,14 +418,29 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
             if (expression.NodeType == ExpressionType.MemberAccess)
             {
                 MemberExpression memberAccess = expression as MemberExpression;
-                Contract.Assert(memberAccess != null);
+                if (memberAccess == null)
+                {
+                    throw new ArgumentException("Contract assertion not met: memberAccess != null", "value");
+                }
+
                 if (memberAccess.Expression.NodeType == ExpressionType.Constant)
                 {
                     ConstantExpression constant = memberAccess.Expression as ConstantExpression;
-                    Contract.Assert(constant != null);
-                    Contract.Assert(constant.Value != null);
+                    if (constant == null)
+                    {
+                        throw new ArgumentException("Contract assertion not met: constant != null", "value");
+                    }
+
+                    if (!(constant.Value != null))
+                    {
+                        throw new ArgumentException("Contract assertion not met: constant.Value != null", "value");
+                    }
+
                     LinqParameterContainer value = constant.Value as LinqParameterContainer;
-                    Contract.Assert(value != null, "Constants are already embedded into LinqParameterContainer");
+                    if (value == null)
+                    {
+                        throw new ArgumentException("Constants are already embedded into LinqParameterContainer", "value");
+                    }
 
                     return value.Property;
                 }
@@ -498,8 +555,15 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
         private static Expression OfType(Expression source, Type elementType)
         {
-            Contract.Assert(source != null);
-            Contract.Assert(elementType != null);
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source), "Contract assertion not met: source != null");
+            }
+
+            if (elementType == null)
+            {
+                throw new ArgumentNullException(nameof(elementType), "Contract assertion not met: elementType != null");
+            }
 
             if (IsIQueryable(source.Type))
             {
@@ -689,11 +753,17 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
         private Expression BindSingleEntityCastFunctionCall(SingleEntityFunctionCallNode node)
         {
-            Contract.Assert(node.Name == ClrCanonicalFunctions.CastFunctionName);
+            if (!(node.Name == ClrCanonicalFunctions.CastFunctionName))
+            {
+                throw new ArgumentException("Contract assertion not met: node.Name == ClrCanonicalFunctions.CastFunctionName", nameof(node));
+            }
 
             Expression[] arguments = BindArguments(node.Parameters);
 
-            Contract.Assert(arguments.Length == 2);
+            if (!(arguments.Length == 2))
+            {
+                throw new ArgumentException("Contract assertion not met: arguments.Length == 2", "value");
+            }
 
             string targetEdmTypeName = (string)((ConstantNode)node.Parameters.Last()).Value;
             IEdmType targetEdmType = _model.FindType(targetEdmTypeName);
@@ -719,7 +789,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
         private Expression BindSingleEntityCastNode(SingleEntityCastNode node)
         {
             IEdmEntityTypeReference entity = node.EntityTypeReference;
-            Contract.Assert(entity != null, "NS casts can contain only entity types");
+            if (entity == null)
+            {
+                throw new ArgumentException("NS casts can contain only entity types", "value");
+            }
 
             Type clrType = EdmLibHelpers.GetClrType(entity, _model);
 
@@ -730,7 +803,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
         private Expression BindEntityCollectionCastNode(EntityCollectionCastNode node)
         {
             IEdmEntityTypeReference entity = node.EntityItemType;
-            Contract.Assert(entity != null, "NS casts can contain only entity types");
+            if (entity == null)
+            {
+                throw new ArgumentException("NS casts can contain only entity types", "value");
+            }
 
             Type clrType = EdmLibHelpers.GetClrType(entity, _model);
 
@@ -818,7 +894,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
         private Expression BindConstantNode(ConstantNode constantNode)
         {
-            Contract.Assert(constantNode != null);
+            if (constantNode == null)
+            {
+                throw new ArgumentNullException(nameof(constantNode), "Contract assertion not met: constantNode != null");
+            }
 
             // no need to parameterize null's as there cannot be multiple values for null.
             if (constantNode.Value == null)
@@ -833,7 +912,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
             {
                 ODataEnumValue odataEnumValue = (ODataEnumValue)value;
                 string strValue = odataEnumValue.Value;
-                Contract.Assert(strValue != null);
+                if (strValue == null)
+                {
+                    throw new ArgumentException("Contract assertion not met: strValue != null", "value");
+                }
 
                 constantType = Nullable.GetUnderlyingType(constantType) ?? constantType;
                 value = Enum.Parse(constantType, strValue);
@@ -851,8 +933,15 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
         private Expression BindConvertNode(ConvertNode convertNode)
         {
-            Contract.Assert(convertNode != null);
-            Contract.Assert(convertNode.TypeReference != null);
+            if (convertNode == null)
+            {
+                throw new ArgumentNullException(nameof(convertNode), "Contract assertion not met: convertNode != null");
+            }
+
+            if (!(convertNode.TypeReference != null))
+            {
+                throw new ArgumentException("Contract assertion not met: convertNode.TypeReference != null", nameof(convertNode));
+            }
 
             Expression source = Bind(convertNode.Source);
 
@@ -1153,7 +1242,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
         // as an argument.
         private Expression RemoveInnerNullPropagation(Expression expression)
         {
-            Contract.Assert(expression != null);
+            if (expression == null)
+            {
+                throw new ArgumentNullException(nameof(expression), "Contract assertion not met: expression != null");
+            }
 
             if (_querySettings.HandleNullPropagation == HandleNullPropagationOption.True)
             {
@@ -1165,12 +1257,18 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
                     if (conditionalExpr.Test.NodeType != ExpressionType.OrElse)
                     {
                         expression = conditionalExpr.IfFalse;
-                        Contract.Assert(expression != null);
+                        if (expression == null)
+                        {
+                            throw new ArgumentNullException(nameof(expression), "Contract assertion not met: expression != null");
+                        }
 
                         if (expression.NodeType == ExpressionType.Convert)
                         {
                             UnaryExpression unaryExpression = expression as UnaryExpression;
-                            Contract.Assert(unaryExpression != null);
+                            if (unaryExpression == null)
+                            {
+                                throw new ArgumentException("Contract assertion not met: unaryExpression != null", "value");
+                            }
 
                             if (Nullable.GetUnderlyingType(unaryExpression.Type) == unaryExpression.Operand.Type)
                             {
@@ -1188,7 +1286,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
         // creates an expression for the corresponding OData function.
         private Expression MakeFunctionCall(MemberInfo member, params Expression[] arguments)
         {
-            Contract.Assert(member.MemberType == MemberTypes.Property || member.MemberType == MemberTypes.Method);
+            if (!(member.MemberType == MemberTypes.Property || member.MemberType == MemberTypes.Method))
+            {
+                throw new ArgumentException("Contract assertion not met: member.MemberType == MemberTypes.Property || member.MemberType == MemberTypes.Method", nameof(member));
+            }
 
             IEnumerable<Expression> functionCallArguments = arguments;
             if (_querySettings.HandleNullPropagation == HandleNullPropagationOption.True)
@@ -1243,10 +1344,16 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
         private Expression BindCastSingleValue(SingleValueFunctionCallNode node)
         {
-            Contract.Assert(node.Name == ClrCanonicalFunctions.CastFunctionName);
+            if (!(node.Name == ClrCanonicalFunctions.CastFunctionName))
+            {
+                throw new ArgumentException("Contract assertion not met: node.Name == ClrCanonicalFunctions.CastFunctionName", nameof(node));
+            }
 
             Expression[] arguments = BindArguments(node.Parameters);
-            Contract.Assert(arguments.Length == 1 || arguments.Length == 2);
+            if (!(arguments.Length == 1 || arguments.Length == 2))
+            {
+                throw new ArgumentException("Contract assertion not met: arguments.Length == 1 || arguments.Length == 2", "value");
+            }
 
             Expression source = arguments.Length == 1 ? _lambdaParameters[ODataItParameterName] : arguments[0];
             string targetTypeName = (string)((ConstantNode)node.Parameters.Last()).Value;
@@ -1346,11 +1453,17 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
         private Expression BindCeiling(SingleValueFunctionCallNode node)
         {
-            Contract.Assert(node.Name == "ceiling");
+            if (!(node.Name == "ceiling"))
+            {
+                throw new ArgumentException("Contract assertion not met: node.Name == \"ceiling\"", nameof(node));
+            }
 
             Expression[] arguments = BindArguments(node.Parameters);
 
-            Contract.Assert(arguments.Length == 1 && IsDoubleOrDecimal(arguments[0].Type));
+            if (!(arguments.Length == 1 && IsDoubleOrDecimal(arguments[0].Type)))
+            {
+                throw new ArgumentException("Contract assertion not met: arguments.Length == 1 && IsDoubleOrDecimal(arguments[0].Type)", "value");
+            }
 
             MethodInfo ceiling = IsType<double>(arguments[0].Type)
                 ? ClrCanonicalFunctions.CeilingOfDouble
@@ -1360,11 +1473,17 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
         private Expression BindFloor(SingleValueFunctionCallNode node)
         {
-            Contract.Assert(node.Name == "floor");
+            if (!(node.Name == "floor"))
+            {
+                throw new ArgumentException("Contract assertion not met: node.Name == \"floor\"", nameof(node));
+            }
 
             Expression[] arguments = BindArguments(node.Parameters);
 
-            Contract.Assert(arguments.Length == 1 && IsDoubleOrDecimal(arguments[0].Type));
+            if (!(arguments.Length == 1 && IsDoubleOrDecimal(arguments[0].Type)))
+            {
+                throw new ArgumentException("Contract assertion not met: arguments.Length == 1 && IsDoubleOrDecimal(arguments[0].Type)", "value");
+            }
 
             MethodInfo floor = IsType<double>(arguments[0].Type)
                 ? ClrCanonicalFunctions.FloorOfDouble
@@ -1374,11 +1493,17 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
         private Expression BindRound(SingleValueFunctionCallNode node)
         {
-            Contract.Assert(node.Name == "round");
+            if (!(node.Name == "round"))
+            {
+                throw new ArgumentException("Contract assertion not met: node.Name == \"round\"", nameof(node));
+            }
 
             Expression[] arguments = BindArguments(node.Parameters);
 
-            Contract.Assert(arguments.Length == 1 && IsDoubleOrDecimal(arguments[0].Type));
+            if (!(arguments.Length == 1 && IsDoubleOrDecimal(arguments[0].Type)))
+            {
+                throw new ArgumentException("Contract assertion not met: arguments.Length == 1 && IsDoubleOrDecimal(arguments[0].Type)", "value");
+            }
 
             MethodInfo round = IsType<double>(arguments[0].Type)
                 ? ClrCanonicalFunctions.RoundOfDouble
@@ -1388,23 +1513,35 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
         private Expression BindNow(SingleValueFunctionCallNode node)
         {
-            Contract.Assert(node.Name == "now");
+            if (!(node.Name == "now"))
+            {
+                throw new ArgumentException("Contract assertion not met: node.Name == \"now\"", nameof(node));
+            }
 
             Expression[] arguments = BindArguments(node.Parameters);
 
-            Contract.Assert(arguments.Length == 0);
+            if (!(arguments.Length == 0))
+            {
+                throw new ArgumentException("Contract assertion not met: arguments.Length == 0", "value");
+            }
 
             return Expression.Property(null, ClrCanonicalFunctions.Now);
         }
 
         private Expression BindDate(SingleValueFunctionCallNode node)
         {
-            Contract.Assert(node.Name == "date");
+            if (!(node.Name == "date"))
+            {
+                throw new ArgumentException("Contract assertion not met: node.Name == \"date\"", nameof(node));
+            }
 
             Expression[] arguments = BindArguments(node.Parameters);
 
             // We should support DateTime & DateTimeOffset even though DateTime is not part of OData v4 Spec.
-            Contract.Assert(arguments.Length == 1 && IsDateOrOffset(arguments[0].Type));
+            if (!(arguments.Length == 1 && IsDateOrOffset(arguments[0].Type)))
+            {
+                throw new ArgumentException("Contract assertion not met: arguments.Length == 1 && IsDateOrOffset(arguments[0].Type)", "value");
+            }
 
             // EF doesn't support new Date(int, int, int), also doesn't support other property access, for example DateTime.Date.
             // Therefore, we just return the source (DateTime or DateTimeOffset).
@@ -1413,12 +1550,18 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
         private Expression BindTime(SingleValueFunctionCallNode node)
         {
-            Contract.Assert(node.Name == "time");
+            if (!(node.Name == "time"))
+            {
+                throw new ArgumentException("Contract assertion not met: node.Name == \"time\"", nameof(node));
+            }
 
             Expression[] arguments = BindArguments(node.Parameters);
 
             // We should support DateTime & DateTimeOffset even though DateTime is not part of OData v4 Spec.
-            Contract.Assert(arguments.Length == 1 && IsDateOrOffset(arguments[0].Type));
+            if (!(arguments.Length == 1 && IsDateOrOffset(arguments[0].Type)))
+            {
+                throw new ArgumentException("Contract assertion not met: arguments.Length == 1 && IsDateOrOffset(arguments[0].Type)", "value");
+            }
 
             // EF doesn't support new TimeOfDay(int, int, int, int), also doesn't support other property access, for example DateTimeOffset.DateTime.
             // Therefore, we just return the source (DateTime or DateTimeOffset).
@@ -1427,10 +1570,16 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
         private Expression BindFractionalSeconds(SingleValueFunctionCallNode node)
         {
-            Contract.Assert(node.Name == "fractionalseconds");
+            if (!(node.Name == "fractionalseconds"))
+            {
+                throw new ArgumentException("Contract assertion not met: node.Name == \"fractionalseconds\"", nameof(node));
+            }
 
             Expression[] arguments = BindArguments(node.Parameters);
-            Contract.Assert(arguments.Length == 1 && IsTimeRelated(arguments[0].Type));
+            if (!(arguments.Length == 1 && IsTimeRelated(arguments[0].Type)))
+            {
+                throw new ArgumentException("Contract assertion not met: arguments.Length == 1 && IsTimeRelated(arguments[0].Type)", "value");
+            }
 
             // We should support DateTime & DateTimeOffset even though DateTime is not part of OData v4 Spec.
             Expression parameter = arguments[0];
@@ -1461,7 +1610,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
         private Expression BindDateRelatedProperty(SingleValueFunctionCallNode node)
         {
             Expression[] arguments = BindArguments(node.Parameters);
-            Contract.Assert(arguments.Length == 1 && IsDateRelated(arguments[0].Type));
+            if (!(arguments.Length == 1 && IsDateRelated(arguments[0].Type)))
+            {
+                throw new ArgumentException("Contract assertion not met: arguments.Length == 1 && IsDateRelated(arguments[0].Type)", "value");
+            }
 
             // We should support DateTime & DateTimeOffset even though DateTime is not part of OData v4 Spec.
             Expression parameter = arguments[0];
@@ -1469,17 +1621,29 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
             PropertyInfo property;
             if (IsDate(parameter.Type))
             {
-                Contract.Assert(ClrCanonicalFunctions.DateProperties.ContainsKey(node.Name));
+                if (!(ClrCanonicalFunctions.DateProperties.ContainsKey(node.Name)))
+                {
+                    throw new ArgumentException("Contract assertion not met: ClrCanonicalFunctions.DateProperties.ContainsKey(node.Name)", nameof(node));
+                }
+
                 property = ClrCanonicalFunctions.DateProperties[node.Name];
             }
             else if (IsDateTime(parameter.Type))
             {
-                Contract.Assert(ClrCanonicalFunctions.DateTimeProperties.ContainsKey(node.Name));
+                if (!(ClrCanonicalFunctions.DateTimeProperties.ContainsKey(node.Name)))
+                {
+                    throw new ArgumentException("Contract assertion not met: ClrCanonicalFunctions.DateTimeProperties.ContainsKey(node.Name)", nameof(node));
+                }
+
                 property = ClrCanonicalFunctions.DateTimeProperties[node.Name];
             }
             else
             {
-                Contract.Assert(ClrCanonicalFunctions.DateTimeOffsetProperties.ContainsKey(node.Name));
+                if (!(ClrCanonicalFunctions.DateTimeOffsetProperties.ContainsKey(node.Name)))
+                {
+                    throw new ArgumentException("Contract assertion not met: ClrCanonicalFunctions.DateTimeOffsetProperties.ContainsKey(node.Name)", nameof(node));
+                }
+
                 property = ClrCanonicalFunctions.DateTimeOffsetProperties[node.Name];
             }
 
@@ -1489,7 +1653,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
         private Expression BindTimeRelatedProperty(SingleValueFunctionCallNode node)
         {
             Expression[] arguments = BindArguments(node.Parameters);
-            Contract.Assert(arguments.Length == 1 && IsTimeRelated(arguments[0].Type));
+            if (!(arguments.Length == 1 && IsTimeRelated(arguments[0].Type)))
+            {
+                throw new ArgumentException("Contract assertion not met: arguments.Length == 1 && IsTimeRelated(arguments[0].Type)", "value");
+            }
 
             // We should support DateTime & DateTimeOffset even though DateTime is not part of OData v4 Spec.
             Expression parameter = arguments[0];
@@ -1497,17 +1664,29 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
             PropertyInfo property;
             if (IsTimeOfDay(parameter.Type))
             {
-                Contract.Assert(ClrCanonicalFunctions.TimeOfDayProperties.ContainsKey(node.Name));
+                if (!(ClrCanonicalFunctions.TimeOfDayProperties.ContainsKey(node.Name)))
+                {
+                    throw new ArgumentException("Contract assertion not met: ClrCanonicalFunctions.TimeOfDayProperties.ContainsKey(node.Name)", nameof(node));
+                }
+
                 property = ClrCanonicalFunctions.TimeOfDayProperties[node.Name];
             }
             else if (IsDateTime(parameter.Type))
             {
-                Contract.Assert(ClrCanonicalFunctions.DateTimeProperties.ContainsKey(node.Name));
+                if (!(ClrCanonicalFunctions.DateTimeProperties.ContainsKey(node.Name)))
+                {
+                    throw new ArgumentException("Contract assertion not met: ClrCanonicalFunctions.DateTimeProperties.ContainsKey(node.Name)", nameof(node));
+                }
+
                 property = ClrCanonicalFunctions.DateTimeProperties[node.Name];
             }
             else
             {
-                Contract.Assert(ClrCanonicalFunctions.DateTimeOffsetProperties.ContainsKey(node.Name));
+                if (!(ClrCanonicalFunctions.DateTimeOffsetProperties.ContainsKey(node.Name)))
+                {
+                    throw new ArgumentException("Contract assertion not met: ClrCanonicalFunctions.DateTimeOffsetProperties.ContainsKey(node.Name)", nameof(node));
+                }
+
                 property = ClrCanonicalFunctions.DateTimeOffsetProperties[node.Name];
             }
 
@@ -1516,67 +1695,100 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
         private Expression BindConcat(SingleValueFunctionCallNode node)
         {
-            Contract.Assert(node.Name == "concat");
+            if (!(node.Name == "concat"))
+            {
+                throw new ArgumentException("Contract assertion not met: node.Name == \"concat\"", nameof(node));
+            }
 
             Expression[] arguments = BindArguments(node.Parameters);
             ValidateAllStringArguments(node.Name, arguments);
 
-            Contract.Assert(arguments.Length == 2 && arguments[0].Type == typeof(string) && arguments[1].Type == typeof(string));
+            if (!(arguments.Length == 2 && arguments[0].Type == typeof(string) && arguments[1].Type == typeof(string)))
+            {
+                throw new ArgumentException("Contract assertion not met: arguments.Length == 2 && arguments[0].Type == typeof(string) && arguments[1].Type == typeof(string)", "value");
+            }
 
             return MakeFunctionCall(ClrCanonicalFunctions.Concat, arguments);
         }
 
         private Expression BindTrim(SingleValueFunctionCallNode node)
         {
-            Contract.Assert(node.Name == "trim");
+            if (!(node.Name == "trim"))
+            {
+                throw new ArgumentException("Contract assertion not met: node.Name == \"trim\"", nameof(node));
+            }
 
             Expression[] arguments = BindArguments(node.Parameters);
             ValidateAllStringArguments(node.Name, arguments);
 
-            Contract.Assert(arguments.Length == 1 && arguments[0].Type == typeof(string));
+            if (!(arguments.Length == 1 && arguments[0].Type == typeof(string)))
+            {
+                throw new ArgumentException("Contract assertion not met: arguments.Length == 1 && arguments[0].Type == typeof(string)", "value");
+            }
 
             return MakeFunctionCall(ClrCanonicalFunctions.Trim, arguments);
         }
 
         private Expression BindToUpper(SingleValueFunctionCallNode node)
         {
-            Contract.Assert(node.Name == "toupper");
+            if (!(node.Name == "toupper"))
+            {
+                throw new ArgumentException("Contract assertion not met: node.Name == \"toupper\"", nameof(node));
+            }
 
             Expression[] arguments = BindArguments(node.Parameters);
             ValidateAllStringArguments(node.Name, arguments);
 
-            Contract.Assert(arguments.Length == 1 && arguments[0].Type == typeof(string));
+            if (!(arguments.Length == 1 && arguments[0].Type == typeof(string)))
+            {
+                throw new ArgumentException("Contract assertion not met: arguments.Length == 1 && arguments[0].Type == typeof(string)", "value");
+            }
 
             return MakeFunctionCall(ClrCanonicalFunctions.ToUpper, arguments);
         }
 
         private Expression BindToLower(SingleValueFunctionCallNode node)
         {
-            Contract.Assert(node.Name == "tolower");
+            if (!(node.Name == "tolower"))
+            {
+                throw new ArgumentException("Contract assertion not met: node.Name == \"tolower\"", nameof(node));
+            }
 
             Expression[] arguments = BindArguments(node.Parameters);
             ValidateAllStringArguments(node.Name, arguments);
 
-            Contract.Assert(arguments.Length == 1 && arguments[0].Type == typeof(string));
+            if (!(arguments.Length == 1 && arguments[0].Type == typeof(string)))
+            {
+                throw new ArgumentException("Contract assertion not met: arguments.Length == 1 && arguments[0].Type == typeof(string)", "value");
+            }
 
             return MakeFunctionCall(ClrCanonicalFunctions.ToLower, arguments);
         }
 
         private Expression BindIndexOf(SingleValueFunctionCallNode node)
         {
-            Contract.Assert(node.Name == "indexof");
+            if (!(node.Name == "indexof"))
+            {
+                throw new ArgumentException("Contract assertion not met: node.Name == \"indexof\"", nameof(node));
+            }
 
             Expression[] arguments = BindArguments(node.Parameters);
             ValidateAllStringArguments(node.Name, arguments);
 
-            Contract.Assert(arguments.Length == 2 && arguments[0].Type == typeof(string) && arguments[1].Type == typeof(string));
+            if (!(arguments.Length == 2 && arguments[0].Type == typeof(string) && arguments[1].Type == typeof(string)))
+            {
+                throw new ArgumentException("Contract assertion not met: arguments.Length == 2 && arguments[0].Type == typeof(string) && arguments[1].Type == typeof(string)", "value");
+            }
 
             return MakeFunctionCall(ClrCanonicalFunctions.IndexOf, arguments);
         }
 
         private Expression BindSubstring(SingleValueFunctionCallNode node)
         {
-            Contract.Assert(node.Name == "substring");
+            if (!(node.Name == "substring"))
+            {
+                throw new ArgumentException("Contract assertion not met: node.Name == \"substring\"", nameof(node));
+            }
 
             Expression[] arguments = BindArguments(node.Parameters);
             if (arguments[0].Type != typeof(string))
@@ -1587,7 +1799,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
             Expression functionCall;
             if (arguments.Length == 2)
             {
-                Contract.Assert(IsInteger(arguments[1].Type));
+                if (!(IsInteger(arguments[1].Type)))
+                {
+                    throw new ArgumentException("Contract assertion not met: IsInteger(arguments[1].Type)", "value");
+                }
 
                 // When null propagation is allowed, we use a safe version of String.Substring(int).
                 // But for providers that would not recognize custom expressions like this, we map
@@ -1605,7 +1820,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
             else
             {
                 // arguments.Length == 3 implies String.Substring(int, int)
-                Contract.Assert(arguments.Length == 3 && IsInteger(arguments[1].Type) && IsInteger(arguments[2].Type));
+                if (!(arguments.Length == 3 && IsInteger(arguments[1].Type) && IsInteger(arguments[2].Type)))
+                {
+                    throw new ArgumentException("Contract assertion not met: arguments.Length == 3 && IsInteger(arguments[1].Type) && IsInteger(arguments[2].Type)", "value");
+                }
 
                 // When null propagation is allowed, we use a safe version of String.Substring(int, int).
                 // But for providers that would not recognize custom expressions like this, we map
@@ -1626,45 +1844,66 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
         private Expression BindLength(SingleValueFunctionCallNode node)
         {
-            Contract.Assert(node.Name == "length");
+            if (!(node.Name == "length"))
+            {
+                throw new ArgumentException("Contract assertion not met: node.Name == \"length\"", nameof(node));
+            }
 
             Expression[] arguments = BindArguments(node.Parameters);
             ValidateAllStringArguments(node.Name, arguments);
 
-            Contract.Assert(arguments.Length == 1 && arguments[0].Type == typeof(string));
+            if (!(arguments.Length == 1 && arguments[0].Type == typeof(string)))
+            {
+                throw new ArgumentException("Contract assertion not met: arguments.Length == 1 && arguments[0].Type == typeof(string)", "value");
+            }
 
             return MakeFunctionCall(ClrCanonicalFunctions.Length, arguments);
         }
 
         private Expression BindGeoIntersects(SingleValueFunctionCallNode node)
         {
-            Contract.Assert(node.Name == "geo.intersects");
+            if (!(node.Name == "geo.intersects"))
+            {
+                throw new ArgumentException("Contract assertion not met: node.Name == \"geo.intersects\"", nameof(node));
+            }
 
             Expression[] arguments = node.Parameters.OfType<NamedFunctionParameterNode>().Select(n => Bind(n.Value)).ToArray();
 
-            Contract.Assert(arguments.Length == 2 &&
+            if (!(arguments.Length == 2 &&
                 (arguments[0].Type == typeof(Geography) || arguments[0].Type.IsSubclassOf(typeof(Geography))) &&
-                arguments[1].Type == typeof(Geography) || arguments[1].Type.IsSubclassOf(typeof(Geography)));
+                arguments[1].Type == typeof(Geography) || arguments[1].Type.IsSubclassOf(typeof(Geography))))
+            {
+                throw new ArgumentException("Contract assertion not met: arguments.Length == 2 &&\n                (arguments[0].Type == typeof(Geography) || arguments[0].Type.IsSubclassOf(typeof(Geography))) &&\n                arguments[1].Type == typeof(Geography) || arguments[1].Type.IsSubclassOf(typeof(Geography))", "value");
+            }
 
             return MakeFunctionCall(ClrCanonicalFunctions.GeoIntersects, arguments[0], arguments[1]);
         }
 
         private Expression BindGeomIntersects(SingleValueFunctionCallNode node)
         {
-            Contract.Assert(node.Name == "geom.intersects");
+            if (!(node.Name == "geom.intersects"))
+            {
+                throw new ArgumentException("Contract assertion not met: node.Name == \"geom.intersects\"", nameof(node));
+            }
 
             Expression[] arguments = node.Parameters.OfType<NamedFunctionParameterNode>().Select(n => Bind(n.Value)).ToArray();
 
-            Contract.Assert(arguments.Length == 2 &&
+            if (!(arguments.Length == 2 &&
                 (arguments[0].Type == typeof(Geometry) || arguments[0].Type.IsSubclassOf(typeof(Geometry))) &&
-                arguments[1].Type == typeof(Geometry) || arguments[1].Type.IsSubclassOf(typeof(Geometry)));
+                arguments[1].Type == typeof(Geometry) || arguments[1].Type.IsSubclassOf(typeof(Geometry))))
+            {
+                throw new ArgumentException("Contract assertion not met: arguments.Length == 2 &&\n                (arguments[0].Type == typeof(Geometry) || arguments[0].Type.IsSubclassOf(typeof(Geometry))) &&\n                arguments[1].Type == typeof(Geometry) || arguments[1].Type.IsSubclassOf(typeof(Geometry))", "value");
+            }
 
             return MakeFunctionCall(ClrCanonicalFunctions.GeomIntersects, arguments[0], arguments[1]);
         }
 
         private Expression BindContains(SingleValueFunctionCallNode node)
         {
-            Contract.Assert(node.Name == "contains");
+            if (!(node.Name == "contains"))
+            {
+                throw new ArgumentException("Contract assertion not met: node.Name == \"contains\"", nameof(node));
+            }
 
             Expression[] arguments = BindArguments(node.Parameters);
             for (int i = 0; i < arguments.Length; i++)
@@ -1675,39 +1914,61 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
             ValidateAllStringArguments(node.Name, arguments);
 
-            Contract.Assert(arguments.Length == 2 && arguments[0].Type == typeof(string) && arguments[1].Type == typeof(string));
+            if (!(arguments.Length == 2 && arguments[0].Type == typeof(string) && arguments[1].Type == typeof(string)))
+            {
+                throw new ArgumentException("Contract assertion not met: arguments.Length == 2 && arguments[0].Type == typeof(string) && arguments[1].Type == typeof(string)", "value");
+            }
 
             return MakeFunctionCall(ClrCanonicalFunctions.Contains, arguments[0], arguments[1]);
         }
 
         private Expression BindStartsWith(SingleValueFunctionCallNode node)
         {
-            Contract.Assert(node.Name == "startswith");
+            if (!(node.Name == "startswith"))
+            {
+                throw new ArgumentException("Contract assertion not met: node.Name == \"startswith\"", nameof(node));
+            }
 
             Expression[] arguments = BindArguments(node.Parameters);
             ValidateAllStringArguments(node.Name, arguments);
 
-            Contract.Assert(arguments.Length == 2 && arguments[0].Type == typeof(string) && arguments[1].Type == typeof(string));
+            if (!(arguments.Length == 2 && arguments[0].Type == typeof(string) && arguments[1].Type == typeof(string)))
+            {
+                throw new ArgumentException("Contract assertion not met: arguments.Length == 2 && arguments[0].Type == typeof(string) && arguments[1].Type == typeof(string)", "value");
+            }
 
             return MakeFunctionCall(ClrCanonicalFunctions.StartsWith, arguments);
         }
 
         private Expression BindEndsWith(SingleValueFunctionCallNode node)
         {
-            Contract.Assert(node.Name == "endswith");
+            if (!(node.Name == "endswith"))
+            {
+                throw new ArgumentException("Contract assertion not met: node.Name == \"endswith\"", nameof(node));
+            }
 
             Expression[] arguments = BindArguments(node.Parameters);
             ValidateAllStringArguments(node.Name, arguments);
 
-            Contract.Assert(arguments.Length == 2 && arguments[0].Type == typeof(string) && arguments[1].Type == typeof(string));
+            if (!(arguments.Length == 2 && arguments[0].Type == typeof(string) && arguments[1].Type == typeof(string)))
+            {
+                throw new ArgumentException("Contract assertion not met: arguments.Length == 2 && arguments[0].Type == typeof(string) && arguments[1].Type == typeof(string)", "value");
+            }
 
             return MakeFunctionCall(ClrCanonicalFunctions.EndsWith, arguments);
         }
 
         private Expression BindHas(Expression left, Expression flag)
         {
-            Contract.Assert(TypeHelper.IsEnum(left.Type));
-            Contract.Assert(flag.Type == typeof(Enum));
+            if (!(TypeHelper.IsEnum(left.Type)))
+            {
+                throw new ArgumentException("Contract assertion not met: TypeHelper.IsEnum(left.Type)", nameof(left));
+            }
+
+            if (!(flag.Type == typeof(Enum)))
+            {
+                throw new ArgumentException("Contract assertion not met: flag.Type == typeof(Enum)", nameof(flag));
+            }
 
             Expression[] arguments = new[] { left, flag };
             return MakeFunctionCall(ClrCanonicalFunctions.HasFlag, arguments);
@@ -1724,11 +1985,18 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
             FillFilterDetailProperties(allNode);
 
             Expression source;
-            Contract.Assert(allNode.Source != null);
+            if (!(allNode.Source != null))
+            {
+                throw new ArgumentException("Contract assertion not met: allNode.Source != null", nameof(allNode));
+            }
+
             source = Bind(allNode.Source);
 
             Expression body = source;
-            Contract.Assert(allNode.Body != null);
+            if (!(allNode.Body != null))
+            {
+                throw new ArgumentException("Contract assertion not met: allNode.Body != null", nameof(allNode));
+            }
 
             body = Bind(allNode.Body);
             body = ApplyNullPropagationForFilterBody(body);
@@ -1802,7 +2070,11 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
             ParameterExpression anyIt = HandleLambdaParameters(anyNode.RangeVariables);
             FillFilterDetailProperties(anyNode);
             Expression source;
-            Contract.Assert(anyNode.Source != null);
+            if (!(anyNode.Source != null))
+            {
+                throw new ArgumentException("Contract assertion not met: anyNode.Source != null", nameof(anyNode));
+            }
+
             source = Bind(anyNode.Source);
 
             Expression body = null;
@@ -1861,7 +2133,11 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
                     }
 
                     parameter = Expression.Parameter(EdmLibHelpers.GetClrType(edmTypeReference, _model, _assembliesResolver), rangeVariable.Name);
-                    Contract.Assert(lambdaIt == null, "There can be only one parameter in an Any/All lambda");
+                    if (lambdaIt != null)
+                    {
+                        throw new ArgumentException("There can be only one parameter in an Any/All lambda", "value");
+                    }
+
                     lambdaIt = parameter;
                 }
 
@@ -1890,7 +2166,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
             {
                 Type sourceType = TypeHelper.GetUnderlyingTypeOrSelf(source.Type);
 
-                Contract.Assert(sourceType != conversionType);
+                if (!(sourceType != conversionType))
+                {
+                    throw new ArgumentException("Contract assertion not met: sourceType != conversionType", "value");
+                }
 
                 Expression convertedExpression = null;
 
@@ -1940,7 +2219,11 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
                             break;
 
                         default:
-                            Contract.Assert(false, Error.Format("missing non-standard type support for {0}", sourceType.Name));
+                            if (!(false))
+                            {
+                                throw new ArgumentException(Error.Format("missing non-standard type support for {0}", sourceType.Name), "value");
+                            }
+
                             break;
                     }
                 }
@@ -1964,7 +2247,11 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
         private void EnterLambdaScope()
         {
-            Contract.Assert(_lambdaParameters != null);
+            if (_lambdaParameters == null)
+            {
+                throw new ArgumentException("Contract assertion not met: _lambdaParameters != null", "value");
+            }
+
             _parametersStack.Push(_lambdaParameters);
         }
 
