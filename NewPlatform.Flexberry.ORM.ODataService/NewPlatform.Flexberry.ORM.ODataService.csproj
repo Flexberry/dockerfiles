@@ -258,7 +258,6 @@
     <Compile Include="Formatter\ExtendedODataEntityDeserializer.cs" />
     <Compile Include="Handlers\PostPatchHandler.cs" />
     <Compile Include="Offline\DefaultOfflineManager.cs" />
-    <Compile Include="Offline\OfflineManagerContract.cs" />
     <Compile Include="Routing\DataObjectRoutingConvention.cs" />
     <Compile Include="Controllers\DataObjectController.cs" />
     <Compile Include="Model\EdmTypeMap.cs" />
