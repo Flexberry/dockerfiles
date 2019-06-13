@@ -10,4 +10,4 @@ RUN \
 
 COPY /docker-entrypoint-initdb.d /docker-entrypoint-initdb.d
 
-#ENTRYPOINT ["/entrypoint.sh", "/startClickhouse.sh"]
+ENTRYPOINT "/entrypoint.sh gosu clickhouse:clickhouse /usr/bin/clickhouse-server --config-file=/etc/clickhouse-server/config.xml"
