@@ -10,7 +10,7 @@
 ### Запуск контейнера  в режиме docker-compose
 
 1. Создайте каталог для запуска образа в режиме `docker-compose` (например `testpg`) 
-2. Скопируйте файл [docker-compose.yml](https://github.com/Flexberry/dockerfiles/blob/master/alt.p8-postgresql/docker-compose.yml) в созданный каталог
+2. Скопируйте файл [docker-compose-mini.yml](https://raw.githubusercontent.com/Flexberry/dockerfiles/master/alt.p8-postgresql/docker-compose-mini.yml) в файл docker-compose.yml в созданном каталоге
 или создайте файл самостоятельно на основе шаблона
 ```
 version: "3.2"
@@ -78,9 +78,26 @@ docker-compose down
 База данных сохранится в именованом томе (`testpg_db`) и будет использована при следующем вызове конетейнера.
 
 
-## Запуск образа в виде swarm сервиса
+## Настройка, запуск образа в виде swarm сервиса
+
+### Настройка
+
+Для настройки необходимо:
+- доопределить файл описания сервиса [docker-compose.yml](https://raw.githubusercontent.com/Flexberry/dockerfiles/master/alt.p8-postgresql/.env);
+- создать файл [.env](https://raw.githubusercontent.com/Flexberry/dockerfiles/master/alt.p8-postgresql/.env) описания параметров настройки сервиса.
+
+### Доопределение файл описания сервиса `docker-compose.yml`
+
+### Создание файла описания параметров настройки сервиса `.env`
+
+
+
+
+
 
 ### Описание сервиса
+
+
 
 При запуске образа в виде swarm сервиса можно вопользоваться следующим шаблоном YML-файла описания серисов:
 ```
