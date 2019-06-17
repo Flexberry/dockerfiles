@@ -117,10 +117,19 @@ volumes:
 Секция `deploy` определяет узел кластера, где производится запуск сервиса.
 - [Описание формата секции deploy](https://docs.docker.com/compose/compose-file/#deploy);
 - [Описание формата подсекции placement](https://docs.docker.com/engine/swarm/services/#placement-constraints).
+
 При запуске в режиме `docker-compose` данная секция не учитывается и запуск производится на текущем сервере. 
 
 ### Создание файла описания параметров настройки сервиса `.env`
 
+Файл описания переменных среды содержит инициализацию переменных в форамте:
+```
+имя_перменной=значение
+```
+
+
+- [пример .env](https://raw.githubusercontent.com/Flexberry/dockerfiles/master/alt.p8-postgresql/.env);
+- [описание файла конфигурации переменных среды](https://docs.docker.com/compose/env-file/)
 
 
 
