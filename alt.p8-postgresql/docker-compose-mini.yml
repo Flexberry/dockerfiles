@@ -6,12 +6,5 @@ services:
      - 5432:5432
     volumes:
      - db:/var/lib/pgsql/data/
-    environment:
-      - POSTGRES_max_connections=${POSTGRES_max_connections}
-    deploy:
-      placement:
-        constraints:
-          - 'node.role==manager'
-
 volumes:
   db:
