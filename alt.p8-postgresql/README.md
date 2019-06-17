@@ -83,8 +83,8 @@ docker-compose down
 ### Настройка
 
 Для настройки необходимо:
-- доопределить файл описания сервиса `[docker-compose.yml](https://raw.githubusercontent.com/Flexberry/dockerfiles/master/alt.p8-postgresql/.env)`;
-- создать файл `[.env](https://raw.githubusercontent.com/Flexberry/dockerfiles/master/alt.p8-postgresql/.env)` описания параметров настройки сервиса.
+- доопределить файл описания сервиса [docker-compose.yml](https://raw.githubusercontent.com/Flexberry/dockerfiles/master/alt.p8-postgresql/.env);
+- создать файл [.env](https://raw.githubusercontent.com/Flexberry/dockerfiles/master/alt.p8-postgresql/.env) описания параметров настройки сервиса.
 
 ### Доопределение файл описания сервиса `docker-compose.yml`
 
