@@ -124,15 +124,14 @@ volumes:
 
 Файл описания переменных среды содержит инициализацию переменных в форамте:
 ```
-имя_перменной=значение
+имя_переменной=значение
 ```
-
 
 - [пример .env](https://raw.githubusercontent.com/Flexberry/dockerfiles/master/alt.p8-postgresql/.env);
 - [описание файла конфигурации переменных среды](https://docs.docker.com/compose/env-file/)
+- [список конфигурационных параметров postgres](https://raw.githubusercontent.com/Flexberry/dockerfiles/master/alt.p8-postgresql/postgresql.conf).
 
-
-
+> Если в файле `docker-compose.yml` описаны сервисы, работающие с сервисом `postgres` и в доступе к базе данных `postgres`  нет необходимости, то секцию `ports` необходимо исключить. Это повысиь уровенб защищенности системы.  
 
 
 ### Описание сервиса
