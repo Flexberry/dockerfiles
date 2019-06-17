@@ -21,7 +21,6 @@ services:
      - 5432:5432
     volumes:
      - db:/var/lib/pgsql/data/
-     - /etc/localtime:/etc/localtime
 volumes:
   db:
 ```
@@ -87,6 +86,38 @@ docker-compose down
 - создать файл [.env](https://raw.githubusercontent.com/Flexberry/dockerfiles/master/alt.p8-postgresql/.env) описания параметров настройки сервиса.
 
 ### Доопределение файл описания сервиса `docker-compose.yml`
+
+Добавьте в файл `docker-compose.yml` описания сервиса `postgres` секции `environment` и `deploy` или скопируйте файл
+[docker-compose.yml](https://raw.githubusercontent.com/Flexberry/dockerfiles/master/alt.p8-postgresql/docker-compose.yml) из репозитория.
+
+```
+version: "3.2"
+services:
+  postgres:
+    image: flexberry/alt.p8-postgresql:latest
+    ports:
+     - 5432:5432
+    volumes:
+     - db:/var/lib/pgsql/data/
+    environment:
+      - POSTGRES_max_connections=${POSTGRES_max_connections}
+    deploy:
+      placement:
+        constraints:
+          - 'node.role==manager'
+
+volumes:
+  db:
+```
+
+В секции `environment` инициализируются параметры конфиграционного файла `postgres.conf`.
+Список параметров приведен в файле [postgres.conf](https://raw.githubusercontent.com/Flexberry/dockerfiles/master/alt.p8-postgresql/postgresql.conf).
+К имени параметра добавляется префикс `POSTGRES_`.
+
+Секция `deploy` определяет узел кластера, где производится запуск сервиса.
+- [Описание формата секции deploy](https://docs.docker.com/compose/compose-file/#deploy);
+- [Описание формата подсекции placement](https://docs.docker.com/engine/swarm/services/#placement-constraints).
+При запуске в режиме `docker-compose` данная секция не учитывается и запуск производится на текущем сервере. 
 
 ### Создание файла описания параметров настройки сервиса `.env`
 
