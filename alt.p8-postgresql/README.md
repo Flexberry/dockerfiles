@@ -10,7 +10,7 @@
 ### Запуск контейнера  в режиме docker-compose
 
 1. Создайте каталог для запуска образа в режиме `docker-compose` (например `testpg`) 
-2. Скопируйте файл [docker-compose.yml](https://github.com/Flexberry/dockerfiles/blob/master/alt.p8-postgresql/docker-compose.yml) в созданный каталог
+2. Скопируйте файл [docker-compose-mini.yml](https://raw.githubusercontent.com/Flexberry/dockerfiles/master/alt.p8-postgresql/docker-compose-mini.yml) в файл docker-compose.yml в созданном каталоге
 или создайте файл самостоятельно на основе шаблона
 ```
 version: "3.2"
