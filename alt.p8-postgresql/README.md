@@ -157,7 +157,7 @@ volumes:
 - [описание файла конфигурации переменных среды](https://docs.docker.com/compose/env-file/)
 - [список конфигурационных параметров postgres](https://raw.githubusercontent.com/Flexberry/dockerfiles/master/alt.p8-postgresql/postgresql.conf).
 
-> Если в файле `docker-compose.yml` описаны сервисы, работающие с сервисом `postgres` и в доступе к базе данных `postgres`  нет необходимости, то секцию `ports` необходимо исключить. Это повысиь уровенб защищенности системы.  
+> Если в файле `docker-compose.yml` описаны сервисы, работающие с сервисом `postgres` и в доступе извне к базе данных `postgres`  нет необходимости, то секцию `ports` необходимо исключить. Это повысиь уровень защищенности системы.  
 
 
 ### Запуск в режиме docker compose
