@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -19,7 +18,10 @@
         /// <returns>IList</returns>
         public static IList<T> AsIList<T>(this IEnumerable<T> enumerable)
         {
-            Contract.Assert(enumerable != null);
+            if (enumerable == null)
+            {
+                throw new ArgumentNullException(nameof(enumerable), "Contract assertion not met: enumerable != null");
+            }
 
             IList<T> list = enumerable as IList<T>;
             if (list != null)

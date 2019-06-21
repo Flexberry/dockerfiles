@@ -9,7 +9,6 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
     using System.Collections.Generic;
     using System.Data.Linq;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -116,7 +115,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
         /// <returns>Ссылку на IEdmType.</returns>
         public static IEdmTypeReference ToEdmTypeReference(this IEdmType edmType, bool isNullable)
         {
-            Contract.Assert(edmType != null);
+            if (edmType == null)
+            {
+                throw new ArgumentNullException(nameof(edmType), "Contract assertion not met: edmType != null");
+            }
 
             switch (edmType.TypeKind)
             {
@@ -194,7 +196,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
         {
             IEdmSchemaType edmSchemaType = edmType as IEdmSchemaType;
 
-            Contract.Assert(edmSchemaType != null);
+            if (edmSchemaType == null)
+            {
+                throw new ArgumentException("Contract assertion not met: edmSchemaType != null", "value");
+            }
 
             ClrTypeAnnotation annotation = edmModel.GetAnnotationValue<ClrTypeAnnotation>(edmSchemaType);
             if (annotation != null)
@@ -363,7 +368,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
         // TODO (workitem 336): Support nested types and anonymous types.
         private static string MangleClrTypeName(Type type)
         {
-            Contract.Assert(type != null);
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type), "Contract assertion not met: type != null");
+            }
 
             if (!type.IsGenericType)
             {
@@ -420,8 +428,15 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
         private static QueryableRestrictionsAnnotation GetPropertyRestrictions(IEdmProperty edmProperty, IEdmModel edmModel)
         {
-            Contract.Assert(edmProperty != null);
-            Contract.Assert(edmModel != null);
+            if (edmProperty == null)
+            {
+                throw new ArgumentNullException(nameof(edmProperty), "Contract assertion not met: edmProperty != null");
+            }
+
+            if (edmModel == null)
+            {
+                throw new ArgumentNullException(nameof(edmModel), "Contract assertion not met: edmModel != null");
+            }
 
             return edmModel.GetAnnotationValue<QueryableRestrictionsAnnotation>(edmProperty);
         }

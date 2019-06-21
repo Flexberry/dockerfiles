@@ -6,7 +6,6 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Web.Http;
@@ -115,7 +114,11 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
                     }
 
                     openPropertiesSoFar.Add(openPropertyNode.PropertyName);
-                    Contract.Assert(openPropertyNode.OrderByClause != null);
+                    if (openPropertyNode.OrderByClause == null)
+                    {
+                        throw new ArgumentException("Contract assertion not met: openPropertyNode.OrderByClause != null", "value");
+                    }
+
                     querySoFar = AddOrderByQueryForProperty(query, querySettings, openPropertyNode.OrderByClause, querySoFar, openPropertyNode.Direction, alreadyOrdered);
                     alreadyOrdered = true;
                 }

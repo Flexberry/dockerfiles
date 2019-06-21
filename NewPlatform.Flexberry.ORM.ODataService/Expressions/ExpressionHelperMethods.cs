@@ -7,7 +7,6 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -166,9 +165,20 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
         {
             LambdaExpression lambdaExpression = expression as LambdaExpression;
 
-            Contract.Assert(expression.NodeType == ExpressionType.Lambda);
-            Contract.Assert(lambdaExpression != null);
-            Contract.Assert(lambdaExpression.Body.NodeType == ExpressionType.Call);
+            if (expression.NodeType != ExpressionType.Lambda)
+            {
+                throw new ArgumentException("Contract assertion not met: expression.NodeType == ExpressionType.Lambda", nameof(expression));
+            }
+
+            if (lambdaExpression == null)
+            {
+                throw new ArgumentException("Contract assertion not met: lambdaExpression != null", "value");
+            }
+
+            if (lambdaExpression.Body.NodeType != ExpressionType.Call)
+            {
+                throw new ArgumentException("Contract assertion not met: lambdaExpression.Body.NodeType == ExpressionType.Call", "value");
+            }
 
             return (lambdaExpression.Body as MethodCallExpression).Method.GetGenericMethodDefinition();
         }

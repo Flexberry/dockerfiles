@@ -4,7 +4,6 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
     using System.Web.OData;
@@ -90,7 +89,6 @@
 
         public DataObjectEdmModel(DataObjectEdmMetadata metadata, IDataObjectEdmModelBuilder edmModelBuilder = null)
         {
-            Contract.Requires<ArgumentNullException>(metadata != null);
             EdmModelBuilder = edmModelBuilder;
             var container = UnityFactory.GetContainer();
             if (container != null)
@@ -116,7 +114,7 @@
                 }
             }
 
-            _metadata = metadata;
+            _metadata = metadata ?? throw new ArgumentNullException(nameof(metadata), "Contract assertion not met: metadata != null");
 
             BuildTypeHierarchy();
             BuildEdmEntityTypes();
@@ -132,7 +130,10 @@
             foreach (Type dataObjectType in _metadata.Types)
             {
                 Type baseDataObjectType = dataObjectType.BaseType;
-                Contract.Assume(baseDataObjectType != null);
+                if (baseDataObjectType == null)
+                {
+                    throw new ArgumentException("Contract assertion not met: baseDataObjectType != null", "value");
+                }
 
                 if (!_typeHierarchy.ContainsKey(baseDataObjectType))
                     _typeHierarchy[baseDataObjectType] = new List<Type> { dataObjectType };
@@ -153,7 +154,10 @@
             foreach (Type dataObjectType in _metadata.Types)
             {
                 Type baseType = dataObjectType.BaseType;
-                Contract.Assume(baseType != null);
+                if (baseType == null)
+                {
+                    throw new ArgumentException("Contract assertion not met: baseType != null", "value");
+                }
 
                 // TODO: гарантирована сортировка от базового типа к дочернему?
                 EdmEntityType baseEdmEntityType;
@@ -330,7 +334,10 @@
 
         public bool IsDataObjectRegistered(Type dataObjectType)
         {
-            Contract.Requires<ArgumentNullException>(dataObjectType != null);
+            if (dataObjectType == null)
+            {
+                throw new ArgumentNullException(nameof(dataObjectType), "Contract assertion not met: dataObjectType != null");
+            }
 
             return _metadata.Contains(dataObjectType);
         }
@@ -342,7 +349,11 @@
         /// <returns>Тип EDM-сущности, соответствующий заданному типу объекта данных.</returns>
         public IEdmEntityType GetEdmEntityType(Type dataObjectType)
         {
-            Contract.Requires<ArgumentNullException>(dataObjectType != null);
+            if (dataObjectType == null)
+            {
+                throw new ArgumentNullException(nameof(dataObjectType), "Contract assertion not met: dataObjectType != null");
+            }
+
             if (!_registeredEdmEntityTypes.ContainsKey(dataObjectType))
                 return null;
             return _registeredEdmEntityTypes[dataObjectType];
@@ -355,7 +366,11 @@
         /// <returns>Тип EDM-перечисления, соответствующий заданному типу clr-перечисления.</returns>
         public EdmEnumType GetEdmEnumType(Type enumType)
         {
-            Contract.Requires<ArgumentNullException>(enumType != null);
+            if (enumType == null)
+            {
+                throw new ArgumentNullException(nameof(enumType), "Contract assertion not met: enumType != null");
+            }
+
             if (!_registeredEnums.ContainsKey(enumType))
                 return null;
             return _registeredEnums[enumType];
@@ -493,7 +508,10 @@
         /// <returns>Представление по умолчанию, соответствующее заданному типу объекта данных.</returns>
         public View GetDataObjectDefaultView(Type dataObjectType)
         {
-            Contract.Requires<ArgumentNullException>(dataObjectType != null);
+            if (dataObjectType == null)
+            {
+                throw new ArgumentNullException(nameof(dataObjectType), "Contract assertion not met: dataObjectType != null");
+            }
 
             return _metadata[dataObjectType].DefaultView;
         }
@@ -523,8 +541,15 @@
         /// <returns>Типа объекта данных, соответствующий заданному имени набора сущностей в EDM-модели.</returns>
         public Type GetDataObjectType(string edmEntitySetName)
         {
-            Contract.Requires<ArgumentNullException>(edmEntitySetName != null);
-            Contract.Requires<ArgumentException>(edmEntitySetName != string.Empty);
+            if (edmEntitySetName == null)
+            {
+                throw new ArgumentNullException(nameof(edmEntitySetName), "Contract assertion not met: edmEntitySetName != null");
+            }
+
+            if (edmEntitySetName == string.Empty)
+            {
+                throw new ArgumentException("Contract assertion not met: edmEntitySetName != string.Empty", nameof(edmEntitySetName));
+            }
 
             Type dataObjectType;
             _registeredCollections.TryGetValue(edmEntitySetName, out dataObjectType);
@@ -554,7 +579,10 @@
         /// <returns>Набор EDM-сущностей, соответствующий заданному типу объекта данных.</returns>
         public EdmEntitySet GetEdmEntitySet(Type dataObjectType)
         {
-            Contract.Requires<ArgumentNullException>(dataObjectType != null);
+            if (dataObjectType == null)
+            {
+                throw new ArgumentNullException(nameof(dataObjectType), "Contract assertion not met: dataObjectType != null");
+            }
 
             return GetEdmEntitySet(GetEdmEntityType(dataObjectType));
         }

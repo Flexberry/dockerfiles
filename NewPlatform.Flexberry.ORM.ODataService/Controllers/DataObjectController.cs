@@ -4,7 +4,6 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Specialized;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
     using System.Linq.Expressions;
@@ -101,8 +100,7 @@
             IEventHandlerContainer events,
             IFunctionContainer functions)
         {
-            Contract.Requires<ArgumentNullException>(dataService != null);
-            _dataService = dataService;
+            _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService), "Contract assertion not met: dataService != null");
             _model = model;
             _events = events;
             _functions = functions;

@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Collections.Generic;
     using System.Collections.Specialized;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Net.Http;
     using System.Text;
@@ -67,7 +66,10 @@
             }
             else
             {
-                Contract.Assert(serviceRoot != null);
+                if (serviceRoot == null)
+                {
+                    throw new ArgumentNullException(nameof(serviceRoot), "Contract assertion not met: serviceRoot != null");
+                }
 
                 serviceRootUri = new Uri(
                     serviceRoot.EndsWith("/", StringComparison.Ordinal) ?
@@ -171,8 +173,15 @@
 
         private static void CheckNavigableProperty(ODataPath path, IEdmModel model)
         {
-            Contract.Assert(path != null);
-            Contract.Assert(model != null);
+            if (path == null)
+            {
+                throw new ArgumentNullException(nameof(path), "Contract assertion not met: path != null");
+            }
+
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model), "Contract assertion not met: model != null");
+            }
 
             foreach (ODataPathSegment segment in path.Segments)
             {
@@ -189,8 +198,6 @@
                 }
             }
         }
-
-
     }
 
     internal class ODataUriResolverSetttings
