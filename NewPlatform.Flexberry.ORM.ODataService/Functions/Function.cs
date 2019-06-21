@@ -42,24 +42,14 @@
                 throw new ArgumentNullException(nameof(functionName), "Contract assertion not met: functionName != null");
             }
 
-            if (!(functionName != string.Empty))
+            if (functionName == string.Empty)
             {
                 throw new ArgumentException("Contract assertion not met: functionName != string.Empty", nameof(functionName));
             }
 
-            if (handler == null)
-            {
-                throw new ArgumentNullException(nameof(handler), "Contract assertion not met: handler != null");
-            }
-
-            if (returnType == null)
-            {
-                throw new ArgumentNullException(nameof(returnType), "Contract assertion not met: returnType != null");
-            }
-
             Name = functionName;
-            Handler = handler;
-            ReturnType = returnType;
+            Handler = handler ?? throw new ArgumentNullException(nameof(handler), "Contract assertion not met: handler != null");
+            ReturnType = returnType ?? throw new ArgumentNullException(nameof(returnType), "Contract assertion not met: returnType != null");
 
             if (parametersTypes == null)
                 parametersTypes = new Dictionary<string, Type>();

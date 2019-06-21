@@ -100,12 +100,7 @@
             IEventHandlerContainer events,
             IFunctionContainer functions)
         {
-            if (dataService == null)
-            {
-                throw new ArgumentNullException(nameof(dataService), "Contract assertion not met: dataService != null");
-            }
-
-            _dataService = dataService;
+            _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService), "Contract assertion not met: dataService != null");
             _model = model;
             _events = events;
             _functions = functions;

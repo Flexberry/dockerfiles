@@ -20,12 +20,7 @@
         /// <param name="lockService">The lock service.</param>
         public LockController(ILockService lockService)
         {
-            if (lockService == null)
-            {
-                throw new ArgumentNullException(nameof(lockService), "Contract assertion not met: lockService != null");
-            }
-
-            _lockService = lockService;
+            _lockService = lockService ?? throw new ArgumentNullException(nameof(lockService), "Contract assertion not met: lockService != null");
         }
 
         /// <summary>

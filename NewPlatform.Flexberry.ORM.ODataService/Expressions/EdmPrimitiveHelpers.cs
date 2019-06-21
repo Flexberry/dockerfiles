@@ -110,7 +110,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
                 }
                 else
                 {
-                    if (!(type == typeof(uint) || type == typeof(ushort) || type == typeof(ulong)))
+                    if (type != typeof(uint) || type != typeof(ushort) || type != typeof(ulong))
                     {
                         throw new ArgumentException("Contract assertion not met: type == typeof(uint) || type == typeof(ushort) || type == typeof(ulong)", nameof(type));
                     }

@@ -114,7 +114,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
                     }
 
                     openPropertiesSoFar.Add(openPropertyNode.PropertyName);
-                    if (!(openPropertyNode.OrderByClause != null))
+                    if (openPropertyNode.OrderByClause == null)
                     {
                         throw new ArgumentException("Contract assertion not met: openPropertyNode.OrderByClause != null", "value");
                     }

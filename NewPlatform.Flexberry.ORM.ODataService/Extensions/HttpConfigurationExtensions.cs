@@ -55,7 +55,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Extensions
                 throw new ArgumentNullException(nameof(routeName), "Contract assertion not met: routeName != null");
             }
 
-            if (!(routeName != string.Empty))
+            if (routeName == string.Empty)
             {
                 throw new ArgumentException("Contract assertion not met: routeName != string.Empty", nameof(routeName));
             }
@@ -65,7 +65,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Extensions
                 throw new ArgumentNullException(nameof(routePrefix), "Contract assertion not met: routePrefix != null");
             }
 
-            if (!(routePrefix != string.Empty))
+            if (routePrefix == string.Empty)
             {
                 throw new ArgumentException("Contract assertion not met: routePrefix != string.Empty", nameof(routePrefix));
             }

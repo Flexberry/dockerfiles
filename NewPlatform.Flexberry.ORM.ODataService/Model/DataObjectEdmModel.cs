@@ -89,11 +89,6 @@
 
         public DataObjectEdmModel(DataObjectEdmMetadata metadata, IDataObjectEdmModelBuilder edmModelBuilder = null)
         {
-            if (metadata == null)
-            {
-                throw new ArgumentNullException(nameof(metadata), "Contract assertion not met: metadata != null");
-            }
-
             EdmModelBuilder = edmModelBuilder;
             var container = UnityFactory.GetContainer();
             if (container != null)
@@ -119,7 +114,7 @@
                 }
             }
 
-            _metadata = metadata;
+            _metadata = metadata ?? throw new ArgumentNullException(nameof(metadata), "Contract assertion not met: metadata != null");
 
             BuildTypeHierarchy();
             BuildEdmEntityTypes();
@@ -551,7 +546,7 @@
                 throw new ArgumentNullException(nameof(edmEntitySetName), "Contract assertion not met: edmEntitySetName != null");
             }
 
-            if (!(edmEntitySetName != string.Empty))
+            if (edmEntitySetName == string.Empty)
             {
                 throw new ArgumentException("Contract assertion not met: edmEntitySetName != string.Empty", nameof(edmEntitySetName));
             }

@@ -40,16 +40,6 @@
         /// </param>
         public PerRequestUpdateEdmModelHandler(ManagementToken token, IDataObjectEdmModelBuilder modelBuilder)
         {
-            if (token == null)
-            {
-                throw new ArgumentNullException(nameof(token), "Contract assertion not met: token != null");
-            }
-
-            if (modelBuilder == null)
-            {
-                throw new ArgumentNullException(nameof(modelBuilder), "Contract assertion not met: modelBuilder != null");
-            }
-
             // In current Microsoft implementation of OData for WebAPI, EDM model is stored
             // in ODataPathRouteConstraint, but doesn't have public setter.
             // In order to rebuild EDM model for different requests (e.g. authorized users),
@@ -60,8 +50,8 @@
                 throw new InvalidOperationException("Current OData API cannot be used for editing EDM model.");
             }
 
-            _token = token;
-            _modelBuilder = modelBuilder;
+            _token = token ?? throw new ArgumentNullException(nameof(token), "Contract assertion not met: token != null");
+            _modelBuilder = modelBuilder ?? throw new ArgumentNullException(nameof(modelBuilder), "Contract assertion not met: modelBuilder != null");
         }
 
         /// <summary>

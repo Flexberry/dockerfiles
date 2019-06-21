@@ -18,12 +18,7 @@
         /// <param name="detailType">The type of detail.</param>
         public DataObjectEdmDetailSettings(Type detailType)
         {
-            if (detailType == null)
-            {
-                throw new ArgumentNullException(nameof(detailType), "Contract assertion not met: detailType != null");
-            }
-
-            DetailType = detailType;
+            DetailType = detailType ?? throw new ArgumentNullException(nameof(detailType), "Contract assertion not met: detailType != null");
         }
     }
 }

@@ -165,7 +165,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
         {
             LambdaExpression lambdaExpression = expression as LambdaExpression;
 
-            if (!(expression.NodeType == ExpressionType.Lambda))
+            if (expression.NodeType != ExpressionType.Lambda)
             {
                 throw new ArgumentException("Contract assertion not met: expression.NodeType == ExpressionType.Lambda", nameof(expression));
             }
@@ -175,7 +175,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
                 throw new ArgumentException("Contract assertion not met: lambdaExpression != null", "value");
             }
 
-            if (!(lambdaExpression.Body.NodeType == ExpressionType.Call))
+            if (lambdaExpression.Body.NodeType != ExpressionType.Call)
             {
                 throw new ArgumentException("Contract assertion not met: lambdaExpression.Body.NodeType == ExpressionType.Call", "value");
             }

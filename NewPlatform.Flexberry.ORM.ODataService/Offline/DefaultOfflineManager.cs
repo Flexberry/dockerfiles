@@ -18,18 +18,8 @@
 
         public DefaultOfflineManager(ILockService lockService, CurrentUserService.IUser currentUser)
         {
-            if (lockService == null)
-            {
-                throw new ArgumentNullException(nameof(lockService), "Contract assertion not met: lockService != null");
-            }
-
-            if (currentUser == null)
-            {
-                throw new ArgumentNullException(nameof(currentUser), "Contract assertion not met: currentUser != null");
-            }
-
-            _lockService = lockService;
-            _currentUser = currentUser;
+            _lockService = lockService ?? throw new ArgumentNullException(nameof(lockService), "Contract assertion not met: lockService != null");
+            _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser), "Contract assertion not met: currentUser != null");
         }
 
         protected override bool IsLockingRequired(ODataQueryOptions queryOptions, DataObject dataObject)

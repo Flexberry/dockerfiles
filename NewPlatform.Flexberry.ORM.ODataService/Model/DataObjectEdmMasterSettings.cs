@@ -23,12 +23,7 @@
         /// <param name="masterType">The type of the master.</param>
         public DataObjectEdmMasterSettings(Type masterType)
         {
-            if (masterType == null)
-            {
-                throw new ArgumentNullException(nameof(masterType), "Contract assertion not met: masterType != null");
-            }
-
-            MasterType = masterType;
+            MasterType = masterType ?? throw new ArgumentNullException(nameof(masterType), "Contract assertion not met: masterType != null");
         }
     }
 }

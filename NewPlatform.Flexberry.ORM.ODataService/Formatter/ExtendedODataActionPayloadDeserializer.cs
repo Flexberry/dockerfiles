@@ -32,12 +32,7 @@
         public ExtendedODataActionPayloadDeserializer(ODataDeserializerProvider deserializerProvider)
             : base(ODataPayloadKind.Parameter)
         {
-            if (deserializerProvider == null)
-            {
-                throw Error.ArgumentNull("deserializerProvider");
-            }
-
-            DeserializerProvider = deserializerProvider;
+            DeserializerProvider = deserializerProvider ?? throw new ArgumentNullException(nameof(deserializerProvider));
         }
 
         /// <summary>
@@ -52,13 +47,13 @@
         {
             if (messageReader == null)
             {
-                throw Error.ArgumentNull("messageReader");
+                throw new ArgumentNullException(nameof(messageReader));
             }
 
             IEdmAction action = GetAction(readContext);
             if (action == null)
             {
-                throw new ArgumentException("Contract assertion not met: action != null", "value");
+                throw new ArgumentException("Contract assertion not met: action != null", nameof(readContext));
             }
 
             // Create the correct resource type;
@@ -87,7 +82,7 @@
                         // ODataLib protects against this but asserting just in case.
                         if (parameter == null)
                         {
-                            throw new ArgumentException(String.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName), "value");
+                            throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName), "value");
                         }
 
                         if (parameter.Type.IsPrimitive())
@@ -107,7 +102,7 @@
                         // ODataLib protects against this but asserting just in case.
                         if (parameter == null)
                         {
-                            throw new ArgumentException(String.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName), "value");
+                            throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName), "value");
                         }
 
                         IEdmCollectionTypeReference collectionType = parameter.Type as IEdmCollectionTypeReference;
@@ -126,7 +121,7 @@
                         parameter = action.Parameters.SingleOrDefault(p => p.Name == parameterName);
                         if (parameter == null)
                         {
-                            throw new ArgumentException(String.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName), "value");
+                            throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName), "value");
                         }
 
                         IEdmEntityTypeReference entityTypeReference = parameter.Type as IEdmEntityTypeReference;
@@ -154,7 +149,7 @@
                         parameter = action.Parameters.SingleOrDefault(p => p.Name == parameterName);
                         if (parameter == null)
                         {
-                            throw new ArgumentException(String.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName), "value");
+                            throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName), "value");
                         }
 
                         IEdmCollectionTypeReference feedType = parameter.Type as IEdmCollectionTypeReference;
@@ -188,7 +183,7 @@
                         object result = feedDeserializer.ReadInline(feed, feedType, readContext);
 
                         IEdmTypeReference elementTypeReference = feedType.ElementType();
-                        if (!(elementTypeReference.IsEntity()))
+                        if (!elementTypeReference.IsEntity())
                         {
                             throw new ArgumentException("Contract assertion not met: elementTypeReference.IsEntity()", "value");
                         }

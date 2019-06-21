@@ -45,18 +45,8 @@
 
         public ManagementToken(ODataRoute route, DataObjectEdmModel model)
         {
-            if (route == null)
-            {
-                throw new ArgumentNullException(nameof(route), "Contract assertion not met: route != null");
-            }
-
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model), "Contract assertion not met: model != null");
-            }
-
-            Route = route;
-            _model = model;
+            Route = route ?? throw new ArgumentNullException(nameof(route), "Contract assertion not met: route != null");
+            _model = model ?? throw new ArgumentNullException(nameof(model), "Contract assertion not met: model != null");
             Functions = new FunctionContainer(this);
         }
     }

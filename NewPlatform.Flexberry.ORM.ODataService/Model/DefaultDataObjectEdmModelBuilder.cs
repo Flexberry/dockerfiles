@@ -65,12 +65,7 @@
         /// <param name="useNamespaceInEntitySetName">Is need to add the whole type namespace for EDM entity set.</param>
         public DefaultDataObjectEdmModelBuilder(IEnumerable<Assembly> searchAssemblies, bool useNamespaceInEntitySetName = true)
         {
-            if (searchAssemblies == null)
-            {
-                throw new ArgumentNullException(nameof(searchAssemblies), "Contract assertion not met: searchAssemblies != null");
-            }
-
-            _searchAssemblies = searchAssemblies;
+            _searchAssemblies = searchAssemblies ?? throw new ArgumentNullException(nameof(searchAssemblies), "Contract assertion not met: searchAssemblies != null");
             _useNamespaceInEntitySetName = useNamespaceInEntitySetName;
 
             EntitySetNameBuilder = BuildEntitySetName;
@@ -181,7 +176,7 @@
             Type baseType = dataObjectType.BaseType;
             if (baseType == null)
             {
-                throw new ArgumentException("Contract assertion not met: baseType != null", "value");
+                throw new ArgumentException("Contract assertion not met: baseType != null", nameof(dataObjectType));
             }
 
             AddDataObjectWithHierarchy(meta, baseType);
@@ -219,7 +214,7 @@
             }
             else
             {
-                if (!(dataObjectType.BaseType == typeof(DataObject)))
+                if (dataObjectType.BaseType != typeof(DataObject))
                 {
                     throw new ArgumentException($"Запрещено переопределение ключа в типе {dataObjectType.FullName}, т.к он не наследуется непосредственно от DataObject.", nameof(dataObjectType));
                 }

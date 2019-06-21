@@ -179,7 +179,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
                 throw new ArgumentNullException(nameof(readContext), "Contract assertion not met: readContext != null");
             }
 
-            if (!(readContext.Model != null))
+            if (readContext.Model == null)
             {
                 throw new ArgumentException("Contract assertion not met: readContext.Model != null", nameof(readContext));
             }
@@ -187,7 +187,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
             IEnumerable collection = value as IEnumerable;
             if (collection == null)
             {
-                throw new ArgumentException("Contract assertion not met: collection != null", "value");
+                throw new ArgumentException("Contract assertion not met: collection != null", nameof(value));
             }
 
             Type resourceType = resource.GetType();
@@ -289,7 +289,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
                 typeKind = EdmTypeKind.Collection;
                 return ConvertCollectionValue(collection, ref propertyType, deserializerProvider, readContext);
             }
-            
+
             typeKind = EdmTypeKind.Primitive;
             return oDataValue;
         }
@@ -327,14 +327,14 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
             if (propertyType == null)
             {
                 // open complex property
-                if (String.IsNullOrEmpty(complexValue.TypeName))
+                if (string.IsNullOrEmpty(complexValue.TypeName))
                 {
                     throw new ArgumentException("ODataLib should have verified that open complex value has a type name since we provided metadata.", nameof(complexValue));
                 }
 
                 IEdmModel model = readContext.Model;
                 IEdmType edmType = model.FindType(complexValue.TypeName);
-                if (!(edmType.TypeKind == EdmTypeKind.Complex))
+                if (edmType.TypeKind != EdmTypeKind.Complex)
                 {
                     throw new ArgumentException("ODataLib should have verified that complex value has a complex resource type.", "value");
                 }
@@ -394,7 +394,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
             if (propertyType == null)
             {
                 // dynamic collection property
-                if (String.IsNullOrEmpty(collection.TypeName))
+                if (string.IsNullOrEmpty(collection.TypeName))
                 {
                     throw new ArgumentException("ODataLib should have verified that dynamic collection value has a type name " + "since we provided metadata.", nameof(collection));
                 }
@@ -432,14 +432,14 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
             if (propertyType == null)
             {
                 // dynamic enum property
-                if (String.IsNullOrEmpty(enumValue.TypeName))
+                if (string.IsNullOrEmpty(enumValue.TypeName))
                 {
                     throw new ArgumentException("ODataLib should have verified that dynamic enum value has a type name since we provided metadata.", nameof(enumValue));
                 }
 
                 IEdmModel model = readContext.Model;
                 IEdmType edmType = model.FindType(enumValue.TypeName);
-                if (!(edmType.TypeKind == EdmTypeKind.Enum))
+                if (edmType.TypeKind != EdmTypeKind.Enum)
                 {
                     throw new ArgumentException("ODataLib should have verified that enum value has a enum resource type.", "value");
                 }

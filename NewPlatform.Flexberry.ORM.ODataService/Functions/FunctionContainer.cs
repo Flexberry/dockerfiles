@@ -27,12 +27,7 @@
         /// <param name="token">The OData Service token.</param>
         public FunctionContainer(ManagementToken token)
         {
-            if (token == null)
-            {
-                throw new ArgumentNullException(nameof(token), "Contract assertion not met: token != null");
-            }
-
-            _token = token;
+            _token = token ?? throw new ArgumentNullException(nameof(token), "Contract assertion not met: token != null");
         }
 
         /// <summary>

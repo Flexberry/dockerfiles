@@ -40,12 +40,7 @@
         /// <param name="dataService">Сервис данных для операций с БД.</param>
         protected BaseDataObjectFileProvider(IDataService dataService)
         {
-            if (dataService == null)
-            {
-                throw new ArgumentNullException(nameof(dataService), "Contract assertion not met: dataService != null");
-            }
-
-            _dataService = dataService;
+            _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService), "Contract assertion not met: dataService != null");
         }
 
         /// <summary>

@@ -30,12 +30,7 @@
         /// <param name="fallbackActivator">Activator for all controllers except <see cref="DataObjectController"/>.</param>
         public DataObjectControllerActivator(IHttpControllerActivator fallbackActivator)
         {
-            if (fallbackActivator == null)
-            {
-                throw new ArgumentNullException(nameof(fallbackActivator), "Contract assertion not met: fallbackActivator != null");
-            }
-
-            _fallbackActivator = fallbackActivator;
+            _fallbackActivator = fallbackActivator ?? throw new ArgumentNullException(nameof(fallbackActivator), "Contract assertion not met: fallbackActivator != null");
         }
 
         /// <summary>
