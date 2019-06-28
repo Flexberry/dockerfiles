@@ -299,9 +299,9 @@
         }
 
         /// <summary>
-        /// Осуществляет проверку применения функции now() в запросах OData.
+        /// Осуществляет проверку применения функции now() в запросах OData. Если не работает, проверьте синхронизировано ли время на сервере СУБД с сервером, исполняющим этот тест.
         /// </summary>
-        [Fact(Skip = "Sometimes this test work incorrect")]
+        [Fact]
         public void TestFilterNow()
         {
             ActODataService(args =>
