@@ -1,19 +1,17 @@
-﻿using System.Linq;
-
-namespace NewPlatform.Flexberry.ORM.ODataService.Extensions
+﻿namespace NewPlatform.Flexberry.ORM.ODataService.Extensions
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net.Http;
     using System.Web.Http;
     using System.Web.Http.Dispatcher;
     using System.Web.Http.Routing;
+    using System.Web.OData.Batch;
     using System.Web.OData.Extensions;
     using System.Web.OData.Formatter;
-    using System.Web.OData.Routing;
-
     using ICSSoft.STORMNET.Business;
-
+    using NewPlatform.Flexberry.ORM.ODataService.Batch;
     using NewPlatform.Flexberry.ORM.ODataService.Controllers;
     using NewPlatform.Flexberry.ORM.ODataService.Files.Providers;
     using NewPlatform.Flexberry.ORM.ODataService.Formatter;
@@ -31,12 +29,14 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Extensions
         /// </summary>
         /// <param name="config">The current HTTP configuration.</param>
         /// <param name="builder">The EDM model builder.</param>
+        /// <param name="httpServer">HttpServer instance (GlobalConfiguration.DefaultServer).</param>
         /// <param name="routeName">The name of the route (<see cref="DataObjectRoutingConventions.DefaultRouteName"/> be default).</param>
         /// <param name="routePrefix">The route prefix (<see cref="DataObjectRoutingConventions.DefaultRoutePrefix"/> be default).</param>
         /// <returns>OData service registration token.</returns>
         public static ManagementToken MapODataServiceDataObjectRoute(
             this HttpConfiguration config,
             IDataObjectEdmModelBuilder builder,
+            HttpServer httpServer,
             string routeName = DataObjectRoutingConventions.DefaultRouteName,
             string routePrefix = DataObjectRoutingConventions.DefaultRoutePrefix)
         {
@@ -73,7 +73,19 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Extensions
             // Model.
             var model = builder.Build();
 
-            // Routing.
+            // Support batch requests.
+            IDataService dataService = (IDataService)config.DependencyResolver.GetService(typeof(IDataService));
+
+            if (dataService == null)
+            {
+                throw new InvalidOperationException("IDataService is not registered in the dependency scope.");
+            }
+
+            ODataBatchHandler batchHandler = new DataObjectODataBatchHandler(dataService, httpServer);
+            batchHandler.ODataRouteName = routeName;
+            config.Routes.MapHttpBatchRoute(routeName + "Batch", routePrefix + "/$batch", batchHandler);
+
+            // Routing for DataObjects.
             var pathHandler = new ExtendedODataPathHandler();
             var routingConventions = DataObjectRoutingConventions.CreateDefault();
             var route = config.MapODataServiceRoute(routeName, routePrefix, model, pathHandler, routingConventions);
@@ -96,7 +108,9 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Extensions
 
             // Handlers.
             if (config.MessageHandlers.FirstOrDefault(h => h is PostPatchHandler) == null)
+            {
                 config.MessageHandlers.Add(new PostPatchHandler());
+            }
 
             return token;
         }

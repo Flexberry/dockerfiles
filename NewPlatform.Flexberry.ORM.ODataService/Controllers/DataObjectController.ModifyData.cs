@@ -12,25 +12,21 @@
     using System.Web.Http.Results;
     using System.Web.Http.Validation;
     using System.Web.OData;
-
+    using System.Web.OData.Extensions;
+    using System.Web.OData.Routing;
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.FunctionalLanguage;
     using ICSSoft.STORMNET.FunctionalLanguage.SQLWhere;
-
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-
+    using NewPlatform.Flexberry.ORM.ODataService.Batch;
     using NewPlatform.Flexberry.ORM.ODataService.Files;
     using NewPlatform.Flexberry.ORM.ODataService.Files.Providers;
     using NewPlatform.Flexberry.ORM.ODataService.Formatter;
     using NewPlatform.Flexberry.ORM.ODataService.Handlers;
-
     using Newtonsoft.Json;
-
     using File = ICSSoft.STORMNET.FileType.File;
-    using System.Web.OData.Routing;
-    using System.Web.OData.Extensions;
 
     /// <summary>
     /// Определяет класс контроллера OData, который поддерживает запись и чтение данных с использованием OData формата.
@@ -219,7 +215,17 @@
                 obj.SetStatus(ObjectStatus.Deleted);
 
                 if (ExecuteCallbackBeforeDelete(obj))
-                    _dataService.UpdateObject(obj);
+                {
+                    if (Request.Properties.ContainsKey(DataObjectODataBatchHandler.DataObjectsToUpdatePropertyKey))
+                    {
+                        List<DataObject> dataObjectsToUpdate = (List<DataObject>)Request.Properties[DataObjectODataBatchHandler.DataObjectsToUpdatePropertyKey];
+                        dataObjectsToUpdate.Add(obj);
+                    }
+                    else
+                    {
+                        _dataService.UpdateObject(obj);
+                    }
+                }
 
                 // При успешном удалении вычищаем из файловой системы, файлы подлежащие удалению.
                 FileController.RemoveFileUploadDirectories(_removingFileDescriptions);
@@ -333,7 +339,13 @@
 
             Stream stream;
 
-            string json = (string)Request.Properties[PostPatchHandler.RequestContent];
+            string requestContentKey = PostPatchHandler.RequestContent;
+            if (Request.Properties.ContainsKey(PostPatchHandler.PropertyKeyBatchRequest) && (bool)Request.Properties[PostPatchHandler.PropertyKeyBatchRequest] == true)
+            {
+                requestContentKey = PostPatchHandler.RequestContent + $"_{PostPatchHandler.PropertyKeyContentId}_{Request.Properties[PostPatchHandler.PropertyKeyContentId]}";
+            }
+
+            string json = (string)Request.Properties[requestContentKey];
 
             Dictionary<string, object> props = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
             var keys = props.Keys.ToArray();
@@ -448,8 +460,15 @@
 
                 // Список объектов для обновления без UnAltered.
                 var objsArrSmall = objsArr.Where(t => t.GetStatus() != ObjectStatus.UnAltered).ToArray();
-
-                _dataService.UpdateObjects(ref objsArrSmall);
+                if (Request.Properties.ContainsKey(DataObjectODataBatchHandler.DataObjectsToUpdatePropertyKey))
+                {
+                    List<DataObject> dataObjectsToUpdate = (List<DataObject>)Request.Properties[DataObjectODataBatchHandler.DataObjectsToUpdatePropertyKey];
+                    dataObjectsToUpdate.Add(obj);
+                }
+                else
+                {
+                    _dataService.UpdateObjects(ref objsArrSmall);
+                }
 
                 // При успешном обновлении вычищаем из файловой системы, файлы подлежащие удалению.
                 FileController.RemoveFileUploadDirectories(_removingFileDescriptions);

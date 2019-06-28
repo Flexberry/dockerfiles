@@ -189,6 +189,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Batch\DataObjectODataBatchHandler.cs" />
     <Compile Include="Controllers\DataObjectController.Events.cs" />
     <Compile Include="Controllers\DataObjectController.Actions.cs" />
     <Compile Include="Controllers\DataObjectController.UserFunctions.cs" />

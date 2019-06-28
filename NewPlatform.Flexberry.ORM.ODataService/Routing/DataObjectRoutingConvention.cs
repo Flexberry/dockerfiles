@@ -39,6 +39,13 @@
                 return base.SelectController(odataPath, request);
             }
 
+            // Запросы типа odata или odata/$batch должны обрабатываться стандартным образом.
+            BatchPathSegment batchPathSegment = odataPath.Segments.FirstOrDefault() as BatchPathSegment;
+            if (odataPath.Segments.Count == 0 || batchPathSegment != null)
+            {
+                return base.SelectController(odataPath, request);
+            }
+
             // Остальные запросы должны обрабатываться контроллером Controllers.DataObjectController.
             return "DataObject";
         }

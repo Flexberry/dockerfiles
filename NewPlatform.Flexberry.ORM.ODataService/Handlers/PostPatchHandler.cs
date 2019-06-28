@@ -19,6 +19,16 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Handlers
         public const string RequestContent = "PostPatchHandler_RequestContent";
 
         /// <summary>
+        /// Ключ к объекту в свойствах запроса, указывающий на то, что это часть batch-запроса.
+        /// </summary>
+        public const string PropertyKeyBatchRequest = "MS_BatchRequest";
+
+        /// <summary>
+        /// Ключ к объекту в свойствах запроса, указывающий на Id контента batch-запроса.
+        /// </summary>
+        public const string PropertyKeyContentId = "ContentId";
+
+        /// <summary>
         /// Строковая константа, которая используется для доступа к оригинальному заголовку запроса Accept.
         /// </summary>
         public const string AcceptApplicationMsExcel = "PostPatchHandler_AcceptApplicationMsExcel";
@@ -37,9 +47,16 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Handlers
 
             request.Headers.Accept.Clear();
             request.Headers.Remove("X-Requested-With");
+
+            string key = RequestContent;
+            if (request.Properties.ContainsKey(PropertyKeyBatchRequest) && (bool)request.Properties[PropertyKeyBatchRequest] == true)
+            {
+                key = RequestContent + $"_{PropertyKeyContentId}_{request.Properties[PropertyKeyContentId]}";
+            }
+
             if (request.Method.Method == "POST" || request.Method.Method == "PATCH")
             {
-                request.Properties.Add(RequestContent, request.Content.ReadAsStringAsync().Result);
+                request.Properties.Add(key, request.Content.ReadAsStringAsync().Result);
             }
 
             /*
