@@ -2,6 +2,8 @@
 FROM mdillon/postgis:9.6
 
 # via tds_fdw https://github.com/kirychenkav/docker-postgres-tds-fdw/blob/master/9.6-1.0.8/Dockerfile
+RUN localedef -i ru_RU -c -f UTF-8 -A /usr/share/locale/locale.alias ru_RU.UTF-8
+ENV LANG ru_RU.utf8
 RUN  buildDependencies="ca-certificates \
     libsybdb5 \
     freetds-dev \
