@@ -1,4 +1,4 @@
-﻿namespace NewPlatform.Flexberry.ORM.ODataService.Model
+namespace NewPlatform.Flexberry.ORM.ODataService.Model
 {
     using System;
     using System.Collections.Generic;
@@ -252,6 +252,7 @@
                         {
                             view.AddMasterInView(prop);
                             view.AddProperty(prop, prop, true, string.Empty);
+                            view.AddProperty($"{prop}.{nameof(DataObject.__PrimaryKey)}");
                         }
                         else
                         {
