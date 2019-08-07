@@ -197,9 +197,7 @@ if [ "$1" = 'run' ]; then
   then
     (
       xmlfile=$PENTAHO_HOME/pentaho-server/pentaho-solutions/system/defaultUser.spring.xml
-      xsltproc --novalid  -o $xmlfile $PENTAHO_HOME/configs/defaultUser_set.xslt $xmlfile
-      xmlfile=$PENTAHO_HOME/pentaho-server/pentaho-solutions/system/defaultUser.spring.xml
-      xsltproc --novalid  -o $xmlfile $PENTAHO_HOME/configs/defaultUser_set.xslt $xmlfile
+      xsltproc --novalid  -o $xmlfile $PENTAHO_HOME/configs/defaultUser_set.xslt $xmlfile      
       sleep 10;
       export XMLFILE="/tmp/body.xml"
       until wget -O - --header='Authorization: Basic YWRtaW46cGFzc3dvcmQ=' --method PUT  'http://127.0.0.1:8080/pentaho/api/userroledao/deleteUsers?userNames=suzi%09pat%09tiffany'; do sleep 1; done
