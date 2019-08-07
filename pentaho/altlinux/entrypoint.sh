@@ -135,7 +135,8 @@ Quartz/password=${QUARTZ_PASS}
         sed -i "s/'password'/'${QUARTZ_PASS}'/g" ${scriptq}
         sed -i "s/connect ${QUARTZ_DB_NAME} ${QUARTZ_USER}/connect ${QUARTZ_DB_NAME}/g" ${scriptq}
         echo "-----> executing script ${scriptq}"
-        echo $CREATE_QUARTZ_SQL >> ${scriptq};
+        echo "
+        $CREATE_QUARTZ_SQL" >> ${scriptq};
         $doSQL ${scriptq}
         ;;
       esac
