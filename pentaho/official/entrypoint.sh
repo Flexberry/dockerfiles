@@ -103,6 +103,7 @@ Quartz/password=${QUARTZ_PASS}
         scriptj=$PENTAHO_HOME/pentaho-server/data/$CREATE_JCR_DB
         echo "-----> altering script ${scriptj}"
         sed -i "s/jackrabbit/${JCR_DB_NAME}/g" ${scriptj}
+        sed -i "s/jcr_user/${JCR_USER}/g" ${scriptj}
         sed -i "s/'password'/'${JCR_PASS}'/g" ${scriptj}
         echo "-----> executing script ${scriptj}"
         $doSQL ${scriptj}
@@ -113,6 +114,7 @@ Quartz/password=${QUARTZ_PASS}
         scripth=$PENTAHO_HOME/pentaho-server/data/$CREATE_REPOSITORY_DB
         echo "-----> altering script ${scripth}"
         sed -i "s/hibernate/${HIBERNATE_DB_NAME}/g" ${scripth}
+        sed -i "s/hibuser/${HIBERNATE_USER}/g" ${scripth}
         sed -i "s/'password'/'${HIBERNATE_PASS}'/g" ${scripth}
         echo "-----> executing script ${scripth}"
         $doSQL ${scripth}
@@ -123,8 +125,9 @@ Quartz/password=${QUARTZ_PASS}
         scriptq=$PENTAHO_HOME/pentaho-server/data/postgresql/create_quartz_postgresql.sql
         echo "-----> altering script ${scriptq}"
         sed -i "s/quartz/${QUARTZ_DB_NAME}/g" ${scriptq}
+        sed -i "s/pentaho_user/${QUARTZ_USER}/g" ${scriptq}
         sed -i "s/'password'/'${QUARTZ_PASS}'/g" ${scriptq}
-        sed -i "s/connect ${QUARTZ_DB_NAME} pentaho_user/connect ${QUARTZ_DB_NAME}/g" ${scriptq}
+        sed -i "s/connect ${QUARTZ_DB_NAME} ${QUARTZ_USER}/connect ${QUARTZ_DB_NAME}/g" ${scriptq}
         echo "-----> executing script ${scriptq}"
         echo $CREATE_QUARTZ_SQL >> ${scriptq};
         $doSQL ${scriptq}
@@ -141,10 +144,10 @@ setup_tomcat() {
   rm -rf "$PENTAHO_HOME/pentaho-server/tomcat/temp/*"
   rm -rf "$PENTAHO_HOME/pentaho-server/tomcat/work/*"
 
-  if [ ${DM_ADMIN} != 'hsql' ]
+  if [ ${DB_ADMIN} != 'hsql' ]
   then
     echo "Remove HsqldbStartupListener"
-    $xmlfile=$PENTAHO_HOME/pentaho-server/tomcat/webapps/pentaho/WEB-INF/web.xml
+    xmlfile=$PENTAHO_HOME/pentaho-server/tomcat/webapps/pentaho/WEB-INF/web.xml
     xsltproc --novalid  -o $xmlfile $PENTAHO_HOME/configs/web.xslt $xmlfile
   fi
 }

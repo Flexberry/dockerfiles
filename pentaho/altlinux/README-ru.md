@@ -63,13 +63,16 @@
 - `DB_ADMIN_USER` - имя пользователя БД с правами администратора (по умолчанию `postgres`);
 - `DB_ADMIN_PASS` - пароль пользователя БД с правами администратора (по умолчанию `p@ssw0rd`);
 - `JCR_DB_NAME` - имя БД Jackrabbit-репозитория (по умолчанию `jackrabbit`);
-- `JCR_PASS` - пароль для пользователя `jcr_user` для доступа к БД Jackrabbit-репозитория (по умолчанию `password`);
+- `JCR_USER` - имя пользователя БД для подключения к БД Jackrabbit-репозитория (по умолчанию `jcr_user`);
+- `JCR_PASS` - пароль для пользователя `$JCR_USER` для доступа к БД Jackrabbit-репозитория (по умолчанию `password`);
 - `HIBERNATE_DB_NAME` - имя БД Hibernate (по умолчанию `hibernate`);
-- `HIBERNATE_PASS` - пароль для пользователя `hibuser` для доступа к БД `Hibernate` (по умолчанию `password`);
+- `HIBERNATE_USER` - имя пользователя БД для подключения к БД `Hibernate` (по умолчанию `hibuser`);
+- `HIBERNATE_PASS` - пароль для пользователя `$HIBERNATE_USER` для доступа к БД `Hibernate` (по умолчанию `password`);
 - `QUARTZ_DB_NAME` - имя БД Quartz (по умолчанию `quartz`);
-- `QUARTZ_PASS` - пароль для пользователя `pentaho_user` для доступа к БД Quartz (по умолчанию `password`).
+- `QUARTZ_USER` - имя пользователя БД для подключения к БД Quartz (по умолчанию `pentaho_user`);
+- `QUARTZ_PASS` - пароль для пользователя `$QUARTZ_USER` для доступа к БД Quartz (по умолчанию `password`).
 
-*Рекомендуется перед запуском удалить из базы данных удалить перечисленные выше базы и пользователей*
+*Рекомендуется перед запуском удалить перечисленные выше базы и пользователей на сервере БД*
 
 ### Настройка авторизации и аутентификации
 
@@ -134,29 +137,36 @@ BI_IMAGE_TAG=:8.2
 #BI_JAVA_OPTS="-Xms4096m -Xmx6144m -XX:MaxMetaspaceSize=256m -Djava.security.egd=file:/dev/./urandom -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000 -Dfile.encoding=utf8 -DDI_HOME=\"$DI_HOME\""
 BI_JAVA_OPTS=
 
-#DB_ADMIN=postgresql
-#DB_HOST=postgres
-#DB_PORT=5432
-#DB_ADMIN_USER=postgres
-#DB_ADMIN_PASS=p@ssw0rd
-#JCR_DB_NAME=jackrabbit
-#JCR_PASS=password
-#HIBERNATE_DB_NAME=hibernate
-#HIBERNATE_PASS=password
-#QUARTZ_DB_NAME=quartz
-#QUARTZ_PASS=password
+# DB_ADMIN=postgresql
+# DB_HOST=postgres
+# DB_PORT=5432
+# DB_ADMIN_USER=postgres
+# DB_ADMIN_PASS=p@ssw0rd
+# JCR_DB_NAME=jackrabbit
+# JCR_USER=jcr_user
+# JCR_PASS=password
+# HIBERNATE_DB_NAME=hibernate
+# HIBERNATE_USER=hibuser
+# HIBERNATE_PASS=password
+# QUARTZ_DB_NAME=quartz
+# QUARTZ_USER=pentaho_user
+# QUARTZ_PASS=password
 
-DB_ADMIN=
-DB_HOST=
-DB_PORT=
-DB_ADMIN_USER=
-DB_ADMIN_PASS=
-JCR_DB_NAME=
-JCR_PASS=
-HIBERNATE_DB_NAME=
-HIBERNATE_PASS=
-QUARTZ_DB_NAME=
-QUARTZ_PASS=
+
+DB_ADMIN =
+DB_HOST =
+DB_PORT =
+DB_ADMIN_USER =
+DB_ADMIN_PASS =
+JCR_DB_NAME =
+JCR_USER = 
+JCR_PASS =
+HIBERNATE_DB_NAME =
+HIBERNATE_USER = 
+HIBERNATE_PASS =
+QUARTZ_DB_NAME =
+QUARTZ_USER = 
+QUARTZ_PASS =
 
 SERVER_HTTP_PORT=8080
 
@@ -196,10 +206,13 @@ services:
       DB_ADMIN_USER: ${DB_ADMIN_USER}
       DB_ADMIN_PASS: ${DB_ADMIN_PASS}
       JCR_DB_NAME: ${JCR_DB_NAME}
+      JCR_USER: ${JCR_USER}
       JCR_PASS: ${JCR_PASS}
       HIBERNATE_DB_NAME: ${HIBERNATE_DB_NAME}
+      HIBERNATE_USER: ${HIBERNATE_USER}
       HIBERNATE_PASS: ${HIBERNATE_PASS}
       QUARTZ_DB_NAME: ${QUARTZ_DB_NAME}
+      QUARTZ_USER: ${QUARTZ_USER}
       QUARTZ_PASS: ${QUARTZ_PASS}
 
 volumes:
