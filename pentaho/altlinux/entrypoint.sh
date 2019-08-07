@@ -141,7 +141,7 @@ setup_tomcat() {
   rm -rf "$PENTAHO_HOME/pentaho-server/tomcat/temp/*"
   rm -rf "$PENTAHO_HOME/pentaho-server/tomcat/work/*"
 
-  if [ ${DM_ADMIN} != 'hsql' ]
+  if [ ${DB_ADMIN} != 'hsql' ]
   then
     echo "Remove HsqldbStartupListener"
     $xmlfile=$PENTAHO_HOME/pentaho-server/tomcat/webapps/pentaho/WEB-INF/web.xml
