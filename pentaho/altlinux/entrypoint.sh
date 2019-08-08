@@ -62,7 +62,7 @@ setup_database() {
     --stringparam  HIBERNATE_PASS ${HIBERNATE_PASS} \
     --stringparam QUARTZ_URL ${QUARTZ_URL} \
     --stringparam QUARTZ_USER ${QUARTZ_USER} \
-    --stringparam  QUARTZ_PASS ${QUARTZ_PASS} \    
+    --stringparam  QUARTZ_PASS ${QUARTZ_PASS} \
     -o ${contentXML} $contentSetXSLT ${contentXML}
 
   contentXML="$PENTAHO_HOME/pentaho-server/pentaho-solutions/system/hibernate/hibernate-settings.xml"
