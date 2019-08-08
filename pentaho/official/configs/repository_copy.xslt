@@ -16,4 +16,7 @@
   <xsl:template match="Repository/DataStore">
     <xsl:copy-of select="$file/Repository/DataStore"/>
   </xsl:template>
+  <xsl:template match="Repository/PersistenceManager">
+    <xsl:copy-of select="$file/Repository/PersistenceManager"/>
+  </xsl:template>
 </xsl:stylesheet>
