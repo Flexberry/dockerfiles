@@ -19,12 +19,18 @@
   <xsl:template match="/Repository/FileSystem/param[@name='url']/@value">
    <xsl:attribute name="{name()}"><xsl:value-of select='$JCR_URL'/></xsl:attribute>
   </xsl:template>
+  <xsl:template match="/Repository/FileSystem/param[@name='user']/@value">
+   <xsl:attribute name="{name()}"><xsl:value-of select='$JCR_USER'/></xsl:attribute>
+  </xsl:template>
 
   <xsl:template match="/Repository/DataStore/param[@name='password']/@value">
     <xsl:attribute name="{name()}"><xsl:value-of select='$JCR_PASS'/></xsl:attribute>
   </xsl:template>
   <xsl:template match="/Repository/DataStore/param[@name='url']/@value">
     <xsl:attribute name="{name()}"><xsl:value-of select='$JCR_URL'/></xsl:attribute>
+  </xsl:template>
+  <xsl:template match="/Repository/DataStore/param[@name='user']/@value">
+    <xsl:attribute name="{name()}"><xsl:value-of select='$JCR_USER'/></xsl:attribute>
   </xsl:template>
 
 </xsl:stylesheet>

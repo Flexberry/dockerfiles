@@ -6,10 +6,13 @@ export DB_ADMIN=${DB_ADMIN:-hsql}
 export DB_ADMIN_USER=${DB_ADMIN_USER:-postgres}
 export DB_ADMIN_PASS=${DB_ADMIN_PASS:-p@ssw0rd}
 export JCR_DB_NAME=${JCR_DB_NAME:-jackrabbit}
+export JCR_USER=${JCR_USER:-jcr_user}
 export JCR_PASS=${JCR_PASS:-password}
 export HIBERNATE_DB_NAME=${HIBERNATE_DB_NAME:-hibernate}
+export HIBERNATE_USER=${HIBERNATE_USER:-hibuser}
 export HIBERNATE_PASS=${HIBERNATE_PASS:-password}
 export QUARTZ_DB_NAME=${QUARTZ_DB_NAME:-quartz}
+export QUARTZ_USER=${QUARTZ_USER:-pentaho_user}
 export QUARTZ_PASS=${QUARTZ_PASS:-password}
 export DB_HOST=${DB_HOST:-postgres}
 export DB_PORT=${DB_PORT:-5432}
@@ -21,10 +24,13 @@ setup_database() {
   echo "DB_ADMIN_USER: ${DB_ADMIN_USER}"
   echo "DB_ADMIN_PASS: ${DB_ADMIN_PASS}"
   echo "JCR_DB_NAME: ${JCR_DB_NAME}"
+  echo "JCR_USER: ${JCR_USER}"
   echo "JCR_PASS: ${JCR_PASS}"
   echo "HIBERNATE_DB_NAME: ${HIBERNATE_DB_NAME}"
+  echo "HIBERNATE_USER: ${HIBERNATE_USER}"
   echo "HIBERNATE_PASS: ${HIBERNATE_PASS}"
   echo "QUARTZ_DB_NAME: ${QUARTZ_DB_NAME}"
+  echo "QUARTZ_USER: ${QUARTZ_USER}"
   echo "QUARTZ_PASS: ${QUARTZ_PASS}"
   echo "DB_HOST: ${DB_HOST}"
   echo "DB_PORT: ${DB_PORT}"
@@ -41,6 +47,7 @@ setup_database() {
   xsltproc  --novalid --param file "document('$templateXML')" -o ${contentXML} $contentCopyXSLT ${contentXML}
   xsltproc  --novalid \
     --stringparam  JCR_URL ${JCR_URL} \
+    --stringparam  JCR_USER ${JCR_USER} \
     --stringparam  JCR_PASS ${JCR_PASS} \
     -o ${contentXML} $contentSetXSLT ${contentXML}
 
@@ -51,9 +58,11 @@ setup_database() {
   xsltproc  --novalid --param file "document('$templateXML')" -o ${contentXML} $contentCopyXSLT ${contentXML}
   xsltproc  --novalid \
     --stringparam  HIBERNATE_URL ${HIBERNATE_URL} \
+    --stringparam HIBERNATE_USER ${HIBERNATE_USER} \
     --stringparam  HIBERNATE_PASS ${HIBERNATE_PASS} \
     --stringparam QUARTZ_URL ${QUARTZ_URL} \
-    --stringparam  QUARTZ_PASS ${QUARTZ_PASS} \
+    --stringparam QUARTZ_USER ${QUARTZ_USER} \
+    --stringparam  QUARTZ_PASS ${QUARTZ_PASS} \    
     -o ${contentXML} $contentSetXSLT ${contentXML}
 
   contentXML="$PENTAHO_HOME/pentaho-server/pentaho-solutions/system/hibernate/hibernate-settings.xml"
@@ -64,6 +73,7 @@ setup_database() {
   contentSetXSLT="$PENTAHO_HOME/configs/hibernate_set.xslt"
   xsltproc  --novalid  \
     --stringparam  HIBERNATE_URL ${HIBERNATE_URL} \
+    --stringparam HIBERNATE_USER ${HIBERNATE_USER} \
     --stringparam HIBERNATE_PASS ${HIBERNATE_PASS} \
     -o $contentXML $contentSetXSLT $contentXML
 
@@ -72,7 +82,7 @@ setup_database() {
 
   echo "jdbc.driver=${Driver}
 jdbc.url=jdbc:${UriType}://${DB_HOST}:/${DB_PORT}/${HIBERNATE_DB_NAME}
-jdbc.username=hibuser
+jdbc.username=${HIBERNATE_USER}
 jdbc.password=${HIBERNATE_PASS}
 hibernate.dialect=org.hibernate.dialect.${Dialect}
 " > $PENTAHO_HOME/pentaho-server/pentaho-solutions/system/applicationContext-spring-security-hibernate.properties
@@ -81,12 +91,12 @@ hibernate.dialect=org.hibernate.dialect.${Dialect}
 Hibernate/type=javax.sql.DataSource
 Hibernate/driver=${Driver}
 Hibernate/url=jdbc:${UriType}://${DB_HOST}:${DB_PORT}/${HIBERNATE_DB_NAME}
-Hibernate/user=hibuser
+Hibernate/user=${HIBERNATE_USER}
 Hibernate/password=${HIBERNATE_PASS}
 Quartz/type=javax.sql.DataSource
 Quartz/driver=${Driver}
 Quartz/url=jdbc:${UriType}://${DB_HOST}:${DB_PORT}/${QUARTZ_DB_NAME}
-Quartz/user=pentaho_user
+Quartz/user=${QUARTZ_USER}
 Quartz/password=${QUARTZ_PASS}
 " >  $PENTAHO_HOME/pentaho-server/pentaho-solutions/system/simple-jndi/jdbc.properties
 

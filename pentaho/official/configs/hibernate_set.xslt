@@ -14,6 +14,9 @@
   <xsl:template match="hibernate-configuration/session-factory/property[@name='connection.url']/text()"
     ><xsl:value-of select='$HIBERNATE_URL'/>
   </xsl:template>
+  <xsl:template match="hibernate-configuration/session-factory/property[@name='connection.username']/text()"
+    ><xsl:value-of select='$HIBERNATE_USER'/>
+  </xsl:template>
   <xsl:template match="hibernate-configuration/session-factory/property[@name='connection.password']/text()"
     ><xsl:value-of select='$HIBERNATE_PASS'/>
   </xsl:template>

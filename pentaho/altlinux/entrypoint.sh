@@ -47,6 +47,7 @@ setup_database() {
   xsltproc  --novalid --param file "document('$templateXML')" -o ${contentXML} $contentCopyXSLT ${contentXML}
   xsltproc  --novalid \
     --stringparam  JCR_URL ${JCR_URL} \
+    --stringparam  JCR_USER ${JCR_USER} \
     --stringparam  JCR_PASS ${JCR_PASS} \
     -o ${contentXML} $contentSetXSLT ${contentXML}
 
@@ -57,9 +58,11 @@ setup_database() {
   xsltproc  --novalid --param file "document('$templateXML')" -o ${contentXML} $contentCopyXSLT ${contentXML}
   xsltproc  --novalid \
     --stringparam  HIBERNATE_URL ${HIBERNATE_URL} \
+    --stringparam HIBERNATE_USER ${HIBERNATE_USER} \
     --stringparam  HIBERNATE_PASS ${HIBERNATE_PASS} \
     --stringparam QUARTZ_URL ${QUARTZ_URL} \
-    --stringparam  QUARTZ_PASS ${QUARTZ_PASS} \
+    --stringparam QUARTZ_USER ${QUARTZ_USER} \
+    --stringparam  QUARTZ_PASS ${QUARTZ_PASS} \    
     -o ${contentXML} $contentSetXSLT ${contentXML}
 
   contentXML="$PENTAHO_HOME/pentaho-server/pentaho-solutions/system/hibernate/hibernate-settings.xml"
@@ -70,6 +73,7 @@ setup_database() {
   contentSetXSLT="$PENTAHO_HOME/configs/hibernate_set.xslt"
   xsltproc  --novalid  \
     --stringparam  HIBERNATE_URL ${HIBERNATE_URL} \
+    --stringparam HIBERNATE_USER ${HIBERNATE_USER} \
     --stringparam HIBERNATE_PASS ${HIBERNATE_PASS} \
     -o $contentXML $contentSetXSLT $contentXML
 
@@ -78,7 +82,7 @@ setup_database() {
 
   echo "jdbc.driver=${Driver}
 jdbc.url=jdbc:${UriType}://${DB_HOST}:/${DB_PORT}/${HIBERNATE_DB_NAME}
-jdbc.username=hibuser
+jdbc.username=${HIBERNATE_USER}
 jdbc.password=${HIBERNATE_PASS}
 hibernate.dialect=org.hibernate.dialect.${Dialect}
 " > $PENTAHO_HOME/pentaho-server/pentaho-solutions/system/applicationContext-spring-security-hibernate.properties
@@ -87,12 +91,12 @@ hibernate.dialect=org.hibernate.dialect.${Dialect}
 Hibernate/type=javax.sql.DataSource
 Hibernate/driver=${Driver}
 Hibernate/url=jdbc:${UriType}://${DB_HOST}:${DB_PORT}/${HIBERNATE_DB_NAME}
-Hibernate/user=hibuser
+Hibernate/user=${HIBERNATE_USER}
 Hibernate/password=${HIBERNATE_PASS}
 Quartz/type=javax.sql.DataSource
 Quartz/driver=${Driver}
 Quartz/url=jdbc:${UriType}://${DB_HOST}:${DB_PORT}/${QUARTZ_DB_NAME}
-Quartz/user=pentaho_user
+Quartz/user=${QUARTZ_USER}
 Quartz/password=${QUARTZ_PASS}
 " >  $PENTAHO_HOME/pentaho-server/pentaho-solutions/system/simple-jndi/jdbc.properties
 
