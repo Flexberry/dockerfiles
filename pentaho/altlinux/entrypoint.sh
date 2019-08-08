@@ -193,16 +193,21 @@ if [ "$1" = 'run' ]; then
   xmlfile=$PENTAHO_HOME/pentaho-server/pentaho-solutions/system/applicationContext-spring-security-memory.xml
   xsltproc --novalid  -o $xmlfile $PENTAHO_HOME/configs/applicationContext_set.xslt $xmlfile
 
-  if [ -n "$USERS" -o -n "$ADMINPASSWORD" ]
+  if [ -n "$USERS" -o -n "$ADMINPASSWORD" -o -n "$DELETE_DEFAULT_USERS" ]
   then
     (
-      xmlfile=$PENTAHO_HOME/pentaho-server/pentaho-solutions/system/defaultUser.spring.xml
-      xsltproc --novalid  -o $xmlfile $PENTAHO_HOME/configs/defaultUser_set.xslt $xmlfile      
-      sleep 10;
-      export XMLFILE="/tmp/body.xml"
-      until wget -O - --header='Authorization: Basic YWRtaW46cGFzc3dvcmQ=' --method PUT  'http://127.0.0.1:8080/pentaho/api/userroledao/deleteUsers?userNames=suzi%09pat%09tiffany'; do sleep 1; done
-      if [ -n "$USERS" ]
+      until wget -O - 'http://127.0.0.1:8080/pentaho/Login'; do sleep 1; done
+
+      if [ -n "$DELETE_DEFAULT_USERS" ]
       then
+        xmlfile=$PENTAHO_HOME/pentaho-server/pentaho-solutions/system/defaultUser.spring.xml
+        xsltproc --novalid  -o $xmlfile $PENTAHO_HOME/configs/defaultUser_set.xslt $xmlfile        
+        until wget -O - --header='Authorization: Basic YWRtaW46cGFzc3dvcmQ=' --method PUT  'http://127.0.0.1:8080/pentaho/api/userroledao/deleteUsers?userNames=suzi%09pat%09tiffany'; do sleep 1; done
+      fi
+
+      export XMLFILE="/tmp/body.xml"
+      if [ -n "$USERS" ]
+      then        
         echo -ne "$USERS\n" |
         while read str
         do
@@ -225,15 +230,18 @@ if [ "$1" = 'run' ]; then
           until wget -O - --header='Authorization: Basic YWRtaW46cGFzc3dvcmQ=' --method=PUT $URL; do sleep 1; done
         done
       fi
+
       if [ -n "$ADMINPASSWORD" ]
       then
         URL="http://127.0.0.1:8080/pentaho/api/userroledao/user"
         echo "<ChangePasswordUser><userName>admin</userName><newPassword>$ADMINPASSWORD</newPassword><oldPassword>password</oldPassword></ChangePasswordUser>" > $XMLFILE
         until wget -O - --header='Authorization: Basic YWRtaW46cGFzc3dvcmQ=' --header='Content-type: application/xml' --method=PUT --body-file=$XMLFILE $URL; do sleep 1; done
       fi
+
       rm -f $XMLFILE
     )&
   fi
+
   echo "-----> starting pentaho"
   if [ -n "$BI_JAVA_OPTS" ]
   then

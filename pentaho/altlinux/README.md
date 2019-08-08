@@ -78,8 +78,13 @@ Connection parameters to `PostgreSQL` are set by the environment variables:
 ### Set up authorization and authentication
 
 When launching an image, you can:
+- delete default users;
 - specify the list of `pentaho` users , their passwords and roles;
 - replace the user password admin `admin`.
+
+#### Deleting default users
+
+If the variable `DELETE_DEFAULT_USERS` has any value, then default users are being deleted from `pentaho`.
 
 #### Defining user list
 
@@ -199,6 +204,7 @@ services:
     environment:
       BI_JAVA_OPTS: '${BI_JAVA_OPTS}'
       USERS: '${USERS}'
+      DELETE_DEFAULT_USERS: ${DELEFE_DEFAULT_USERS}
       ADMINPASSWORD: ${ADMINPASSWORD}
       DB_ADMIN: ${DB_ADMIN}
       DB_HOST: ${DB_HOST}
