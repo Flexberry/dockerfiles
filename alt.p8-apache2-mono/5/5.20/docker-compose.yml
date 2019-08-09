@@ -1,0 +1,9 @@
+version: '3.2'
+
+services:
+  web:
+    image: flexberry/alt.p8-apache2:2.4.38
+    ports:
+      - "${SERVER_HTTP_PORT}:80"
+    environment:
+      MODULES: "${MODULES}"
