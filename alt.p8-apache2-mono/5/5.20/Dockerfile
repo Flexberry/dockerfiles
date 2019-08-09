@@ -15,6 +15,7 @@ RUN  \
   apt-repo add http://ftp.altlinux.org/pub/distributions/archive/p8/date/$REPODATA x86_64-i586 classic; \
   apt-repo add http://ftp.altlinux.org/pub/distributions/archive/p8/date/$REPODATA x86_64 classic; \
   apt-repo add http://ftp.altlinux.org/pub/distributions/archive/p8/date/$REPODATA noarch classic; \
+  apt-get update; \
   apt-get install -y apache2-mod_mono mono-full mono-web; apt-get remove -y mono-monodoc;\
   cd /etc/httpd2/conf/sites-available/; \
   mv vhosts.conf /conf; \
