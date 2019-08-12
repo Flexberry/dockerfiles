@@ -3,9 +3,9 @@
 set -x
 export PGPASSWORD=$DB_ADMIN_PASS
 echo -ne "Wait connection to database  $DB_ADMIN $DB_HOST:$DB_PORT..."
-until psql -U $DB_ADMIN_USER -h $DB_HOST -p $DB_PORT </dev/null ; do sleep 1; done
+until psql -U $DB_ADMIN_USER -h $DB_HOST -p $DB_PORT -d postgres </dev/null ; do sleep 1; done
 echo
-list=`psql -lqt -U $DB_ADMIN_USER -h $DB_HOST -p $DB_PORT`
+list=`psql -lqt -U $DB_ADMIN_USER -h $DB_HOST -p $DB_PORT -d postgres`
 ret=''
 for db
 do

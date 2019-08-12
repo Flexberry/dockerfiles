@@ -8,6 +8,13 @@
     </xsl:copy>
   </xsl:template>
 
+  <xsl:template match="//@username[parent::node()[@name='jdbc/Hibernate']]">
+    <xsl:attribute name="{name()}"><xsl:value-of select='$HIBERNATE_USER'/></xsl:attribute>
+  </xsl:template>
+  <xsl:template match="//@username[parent::node()[@name='jdbc/Quartz']]">
+    <xsl:attribute name="{name()}"><xsl:value-of select='$QUARTZ_USER'/></xsl:attribute>
+  </xsl:template>
+
   <xsl:template match="//@password[parent::node()[@name='jdbc/Hibernate']]">
     <xsl:attribute name="{name()}"><xsl:value-of select='$HIBERNATE_PASS'/></xsl:attribute>
   </xsl:template>

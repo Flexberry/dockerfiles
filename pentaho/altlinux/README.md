@@ -64,19 +64,27 @@ Connection parameters to `PostgreSQL` are set by the environment variables:
 - `DB_ADMIN_USER` is the database user name with administrator rights (the default is` postgres`);
 - `DB_ADMIN_PASS` - DB user password with administrator rights (the default is` p @ ssw0rd`);
 - `JCR_DB_NAME` is the database name of the Jackrabbit repository (the default is` jackrabbit`);
-- `JCR_PASS` - password for the user` jcr_user` for access to the database of the Jackrabbit repository (the default is `password`);
+- `JCR_USER` - name of DB user for access to the database of the Jackrabbit repository (the default is `jcr_user`);
+- `JCR_PASS` - password for the user` $JCR_USER` for access to the database of the Jackrabbit repository (the default is `password`);
 - `HIBERNATE_DB_NAME` is the name of the Hibernate database (the default is` hibernate`);
-- `HIBERNATE_PASS` - password for the` hibuser` user to access the `Hibernate` database (default is` password`);
+- `HIBERNATE_USER` - name of DB user for access to the database of the `Hibernate` database (the default is `hibuser`);
+- `HIBERNATE_PASS` - password for the` $HIBERNATE_USER` user to access the `Hibernate` database (default is` password`);
 - `QUARTZ_DB_NAME` - Quartz database name (default` quartz`);
-- `QUARTZ_PASS` - password for the` pentaho_user` user for access to the Quartz database (default `password`).
+- `QUARTZ_USER` - name of DB user for access to the database of the Quartz database (the default is `pentaho_user`);
+- `QUARTZ_PASS` - password for the` $QUARTZ_USER` user for access to the Quartz database (default `password`).
 
-*It is recommended to delete the databases and users listed above from the database before launching them*
+*It is recommended to delete the databases and users listed above from the database server before launching them*
 
 ### Set up authorization and authentication
 
 When launching an image, you can:
+- delete default users;
 - specify the list of `pentaho` users , their passwords and roles;
 - replace the user password admin `admin`.
+
+#### Deleting default users
+
+If the variable `DELETE_DEFAULT_USERS` has any value, then default users are being deleted from `pentaho`.
 
 #### Defining user list
 
@@ -141,10 +149,13 @@ BI_JAVA_OPTS =
 # DB_ADMIN_USER=postgres
 # DB_ADMIN_PASS=p@ssw0rd
 # JCR_DB_NAME=jackrabbit
+# JCR_USER=jcr_user
 # JCR_PASS=password
 # HIBERNATE_DB_NAME=hibernate
+# HIBERNATE_USER=hibuser
 # HIBERNATE_PASS=password
 # QUARTZ_DB_NAME=quartz
+# QUARTZ_USER=pentaho_user
 # QUARTZ_PASS=password
 
 DB_ADMIN =
@@ -153,10 +164,13 @@ DB_PORT =
 DB_ADMIN_USER =
 DB_ADMIN_PASS =
 JCR_DB_NAME =
+JCR_USER = 
 JCR_PASS =
 HIBERNATE_DB_NAME =
+HIBERNATE_USER = 
 HIBERNATE_PASS =
 QUARTZ_DB_NAME =
+QUARTZ_USER = 
 QUARTZ_PASS =
 
 SERVER_HTTP_PORT=8080
@@ -190,6 +204,7 @@ services:
     environment:
       BI_JAVA_OPTS: '${BI_JAVA_OPTS}'
       USERS: '${USERS}'
+      DELETE_DEFAULT_USERS: ${DELEFE_DEFAULT_USERS}
       ADMINPASSWORD: ${ADMINPASSWORD}
       DB_ADMIN: ${DB_ADMIN}
       DB_HOST: ${DB_HOST}
@@ -197,10 +212,13 @@ services:
       DB_ADMIN_USER: ${DB_ADMIN_USER}
       DB_ADMIN_PASS: ${DB_ADMIN_PASS}
       JCR_DB_NAME: ${JCR_DB_NAME}
+      JCR_USER: ${JCR_USER}
       JCR_PASS: ${JCR_PASS}
       HIBERNATE_DB_NAME: ${HIBERNATE_DB_NAME}
+      HIBERNATE_USER: ${HIBERNATE_USER}
       HIBERNATE_PASS: ${HIBERNATE_PASS}
       QUARTZ_DB_NAME: ${QUARTZ_DB_NAME}
+      QUARTZ_USER: ${QUARTZ_USER}
       QUARTZ_PASS: ${QUARTZ_PASS}
 
 volumes:

@@ -6,10 +6,13 @@ export DB_ADMIN=${DB_ADMIN:-hsql}
 export DB_ADMIN_USER=${DB_ADMIN_USER:-postgres}
 export DB_ADMIN_PASS=${DB_ADMIN_PASS:-p@ssw0rd}
 export JCR_DB_NAME=${JCR_DB_NAME:-jackrabbit}
+export JCR_USER=${JCR_USER:-jcr_user}
 export JCR_PASS=${JCR_PASS:-password}
 export HIBERNATE_DB_NAME=${HIBERNATE_DB_NAME:-hibernate}
+export HIBERNATE_USER=${HIBERNATE_USER:-hibuser}
 export HIBERNATE_PASS=${HIBERNATE_PASS:-password}
 export QUARTZ_DB_NAME=${QUARTZ_DB_NAME:-quartz}
+export QUARTZ_USER=${QUARTZ_USER:-pentaho_user}
 export QUARTZ_PASS=${QUARTZ_PASS:-password}
 export DB_HOST=${DB_HOST:-postgres}
 export DB_PORT=${DB_PORT:-5432}
@@ -21,10 +24,13 @@ setup_database() {
   echo "DB_ADMIN_USER: ${DB_ADMIN_USER}"
   echo "DB_ADMIN_PASS: ${DB_ADMIN_PASS}"
   echo "JCR_DB_NAME: ${JCR_DB_NAME}"
+  echo "JCR_USER: ${JCR_USER}"
   echo "JCR_PASS: ${JCR_PASS}"
   echo "HIBERNATE_DB_NAME: ${HIBERNATE_DB_NAME}"
+  echo "HIBERNATE_USER: ${HIBERNATE_USER}"
   echo "HIBERNATE_PASS: ${HIBERNATE_PASS}"
   echo "QUARTZ_DB_NAME: ${QUARTZ_DB_NAME}"
+  echo "QUARTZ_USER: ${QUARTZ_USER}"
   echo "QUARTZ_PASS: ${QUARTZ_PASS}"
   echo "DB_HOST: ${DB_HOST}"
   echo "DB_PORT: ${DB_PORT}"
@@ -41,6 +47,7 @@ setup_database() {
   xsltproc  --novalid --param file "document('$templateXML')" -o ${contentXML} $contentCopyXSLT ${contentXML}
   xsltproc  --novalid \
     --stringparam  JCR_URL ${JCR_URL} \
+    --stringparam  JCR_USER ${JCR_USER} \
     --stringparam  JCR_PASS ${JCR_PASS} \
     -o ${contentXML} $contentSetXSLT ${contentXML}
 
@@ -51,8 +58,10 @@ setup_database() {
   xsltproc  --novalid --param file "document('$templateXML')" -o ${contentXML} $contentCopyXSLT ${contentXML}
   xsltproc  --novalid \
     --stringparam  HIBERNATE_URL ${HIBERNATE_URL} \
+    --stringparam HIBERNATE_USER ${HIBERNATE_USER} \
     --stringparam  HIBERNATE_PASS ${HIBERNATE_PASS} \
     --stringparam QUARTZ_URL ${QUARTZ_URL} \
+    --stringparam QUARTZ_USER ${QUARTZ_USER} \
     --stringparam  QUARTZ_PASS ${QUARTZ_PASS} \
     -o ${contentXML} $contentSetXSLT ${contentXML}
 
@@ -64,6 +73,7 @@ setup_database() {
   contentSetXSLT="$PENTAHO_HOME/configs/hibernate_set.xslt"
   xsltproc  --novalid  \
     --stringparam  HIBERNATE_URL ${HIBERNATE_URL} \
+    --stringparam HIBERNATE_USER ${HIBERNATE_USER} \
     --stringparam HIBERNATE_PASS ${HIBERNATE_PASS} \
     -o $contentXML $contentSetXSLT $contentXML
 
@@ -72,7 +82,7 @@ setup_database() {
 
   echo "jdbc.driver=${Driver}
 jdbc.url=jdbc:${UriType}://${DB_HOST}:/${DB_PORT}/${HIBERNATE_DB_NAME}
-jdbc.username=hibuser
+jdbc.username=${HIBERNATE_USER}
 jdbc.password=${HIBERNATE_PASS}
 hibernate.dialect=org.hibernate.dialect.${Dialect}
 " > $PENTAHO_HOME/pentaho-server/pentaho-solutions/system/applicationContext-spring-security-hibernate.properties
@@ -81,12 +91,12 @@ hibernate.dialect=org.hibernate.dialect.${Dialect}
 Hibernate/type=javax.sql.DataSource
 Hibernate/driver=${Driver}
 Hibernate/url=jdbc:${UriType}://${DB_HOST}:${DB_PORT}/${HIBERNATE_DB_NAME}
-Hibernate/user=hibuser
+Hibernate/user=${HIBERNATE_USER}
 Hibernate/password=${HIBERNATE_PASS}
 Quartz/type=javax.sql.DataSource
 Quartz/driver=${Driver}
 Quartz/url=jdbc:${UriType}://${DB_HOST}:${DB_PORT}/${QUARTZ_DB_NAME}
-Quartz/user=pentaho_user
+Quartz/user=${QUARTZ_USER}
 Quartz/password=${QUARTZ_PASS}
 " >  $PENTAHO_HOME/pentaho-server/pentaho-solutions/system/simple-jndi/jdbc.properties
 
@@ -103,6 +113,7 @@ Quartz/password=${QUARTZ_PASS}
         scriptj=$PENTAHO_HOME/pentaho-server/data/$CREATE_JCR_DB
         echo "-----> altering script ${scriptj}"
         sed -i "s/jackrabbit/${JCR_DB_NAME}/g" ${scriptj}
+        sed -i "s/jcr_user/${JCR_USER}/g" ${scriptj}
         sed -i "s/'password'/'${JCR_PASS}'/g" ${scriptj}
         echo "-----> executing script ${scriptj}"
         $doSQL ${scriptj}
@@ -113,6 +124,7 @@ Quartz/password=${QUARTZ_PASS}
         scripth=$PENTAHO_HOME/pentaho-server/data/$CREATE_REPOSITORY_DB
         echo "-----> altering script ${scripth}"
         sed -i "s/hibernate/${HIBERNATE_DB_NAME}/g" ${scripth}
+        sed -i "s/hibuser/${HIBERNATE_USER}/g" ${scripth}
         sed -i "s/'password'/'${HIBERNATE_PASS}'/g" ${scripth}
         echo "-----> executing script ${scripth}"
         $doSQL ${scripth}
@@ -123,10 +135,12 @@ Quartz/password=${QUARTZ_PASS}
         scriptq=$PENTAHO_HOME/pentaho-server/data/postgresql/create_quartz_postgresql.sql
         echo "-----> altering script ${scriptq}"
         sed -i "s/quartz/${QUARTZ_DB_NAME}/g" ${scriptq}
+        sed -i "s/pentaho_user/${QUARTZ_USER}/g" ${scriptq}
         sed -i "s/'password'/'${QUARTZ_PASS}'/g" ${scriptq}
-        sed -i "s/connect ${QUARTZ_DB_NAME} pentaho_user/connect ${QUARTZ_DB_NAME}/g" ${scriptq}
+        sed -i "s/connect ${QUARTZ_DB_NAME} ${QUARTZ_USER}/connect ${QUARTZ_DB_NAME}/g" ${scriptq}
         echo "-----> executing script ${scriptq}"
-        echo $CREATE_QUARTZ_SQL >> ${scriptq};
+        echo "
+        $CREATE_QUARTZ_SQL" >> ${scriptq};
         $doSQL ${scriptq}
         ;;
       esac
@@ -183,18 +197,21 @@ if [ "$1" = 'run' ]; then
   xmlfile=$PENTAHO_HOME/pentaho-server/pentaho-solutions/system/applicationContext-spring-security-memory.xml
   xsltproc --novalid  -o $xmlfile $PENTAHO_HOME/configs/applicationContext_set.xslt $xmlfile
 
-  if [ -n "$USERS" -o -n "$ADMINPASSWORD" ]
+  if [ -n "$USERS" -o -n "$ADMINPASSWORD" -o -n "$DELETE_DEFAULT_USERS" ]
   then
     (
-      xmlfile=$PENTAHO_HOME/pentaho-server/pentaho-solutions/system/defaultUser.spring.xml
-      xsltproc --novalid  -o $xmlfile $PENTAHO_HOME/configs/defaultUser_set.xslt $xmlfile
-      xmlfile=$PENTAHO_HOME/pentaho-server/pentaho-solutions/system/defaultUser.spring.xml
-      xsltproc --novalid  -o $xmlfile $PENTAHO_HOME/configs/defaultUser_set.xslt $xmlfile
-      sleep 10;
-      export XMLFILE="/tmp/body.xml"
-      until wget -O - --header='Authorization: Basic YWRtaW46cGFzc3dvcmQ=' --method PUT  'http://127.0.0.1:8080/pentaho/api/userroledao/deleteUsers?userNames=suzi%09pat%09tiffany'; do sleep 1; done
-      if [ -n "$USERS" ]
+      until wget -O - 'http://127.0.0.1:8080/pentaho/Login'; do sleep 1; done
+
+      if [ -n "$DELETE_DEFAULT_USERS" ]
       then
+        xmlfile=$PENTAHO_HOME/pentaho-server/pentaho-solutions/system/defaultUser.spring.xml
+        xsltproc --novalid  -o $xmlfile $PENTAHO_HOME/configs/defaultUser_set.xslt $xmlfile        
+        until wget -O - --header='Authorization: Basic YWRtaW46cGFzc3dvcmQ=' --method PUT  'http://127.0.0.1:8080/pentaho/api/userroledao/deleteUsers?userNames=suzi%09pat%09tiffany'; do sleep 1; done
+      fi
+
+      export XMLFILE="/tmp/body.xml"
+      if [ -n "$USERS" ]
+      then        
         echo -ne "$USERS\n" |
         while read str
         do
@@ -217,15 +234,18 @@ if [ "$1" = 'run' ]; then
           until wget -O - --header='Authorization: Basic YWRtaW46cGFzc3dvcmQ=' --method=PUT $URL; do sleep 1; done
         done
       fi
+
       if [ -n "$ADMINPASSWORD" ]
       then
         URL="http://127.0.0.1:8080/pentaho/api/userroledao/user"
         echo "<ChangePasswordUser><userName>admin</userName><newPassword>$ADMINPASSWORD</newPassword><oldPassword>password</oldPassword></ChangePasswordUser>" > $XMLFILE
         until wget -O - --header='Authorization: Basic YWRtaW46cGFzc3dvcmQ=' --header='Content-type: application/xml' --method=PUT --body-file=$XMLFILE $URL; do sleep 1; done
       fi
+
       rm -f $XMLFILE
     )&
   fi
+
   echo "-----> starting pentaho"
   if [ -n "$BI_JAVA_OPTS" ]
   then
