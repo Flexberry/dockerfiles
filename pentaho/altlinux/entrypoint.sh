@@ -197,21 +197,28 @@ if [ "$1" = 'run' ]; then
   xmlfile=$PENTAHO_HOME/pentaho-server/pentaho-solutions/system/applicationContext-spring-security-memory.xml
   xsltproc --novalid  -o $xmlfile $PENTAHO_HOME/configs/applicationContext_set.xslt $xmlfile
 
-  if [ -n "$USERS" -o -n "$ADMINPASSWORD" -o -n "$DELETE_DEFAULT_USERS" ]
+  if [ ! -f $PENTAHO_HOME/pentaho-server/pentaho-solutions/system/jackrabbit/repository/.passwordChanged -a \( -n "$USERS" -o -n "$ADMINPASSWORD" -o -n "$DELETE_DEFAULT_USERS" \) ]
   then
     (
       until wget -O - 'http://127.0.0.1:8080/pentaho/Login'; do sleep 1; done
 
+      if ! wget  'http://127.0.0.1:8080/pentaho/Login' --header='Authorization: Basic YWRtaW46cGFzc3dvcmQ=' -S 2>&1  | grep 'HTTP/1.1 200' >/dev/null
+      then
+        unset USERS ADMINPASSWORD DELETE_DEFAULT_USERS
+        echo "INCORRECT DEFAULT ADMIN PASSWORD!!!"
+      fi
+
       if [ -n "$DELETE_DEFAULT_USERS" ]
       then
+        nTry=
         xmlfile=$PENTAHO_HOME/pentaho-server/pentaho-solutions/system/defaultUser.spring.xml
-        xsltproc --novalid  -o $xmlfile $PENTAHO_HOME/configs/defaultUser_set.xslt $xmlfile        
-        until wget -O - --header='Authorization: Basic YWRtaW46cGFzc3dvcmQ=' --method PUT  'http://127.0.0.1:8080/pentaho/api/userroledao/deleteUsers?userNames=suzi%09pat%09tiffany'; do sleep 1; done
+        xsltproc --novalid  -o $xmlfile $PENTAHO_HOME/configs/defaultUser_set.xslt $xmlfile
+        wget -O - --header='Authorization: Basic YWRtaW46cGFzc3dvcmQ=' --method PUT  'http://127.0.0.1:8080/pentaho/api/userroledao/deleteUsers?userNames=suzi%09pat%09tiffany';
       fi
 
       export XMLFILE="/tmp/body.xml"
       if [ -n "$USERS" ]
-      then        
+      then
         echo -ne "$USERS\n" |
         while read str
         do
@@ -228,10 +235,10 @@ if [ "$1" = 'run' ]; then
           IFS=$ifs
           echo "<user><userName>$user</userName><password>$password</password></user>" > $XMLFILE
           URL="http://127.0.0.1:8080/pentaho/api/userroledao/createUser"
-          until wget -O - --header='Authorization: Basic YWRtaW46cGFzc3dvcmQ=' --header='Content-type: application/xml' --method=PUT --body-file=$XMLFILE $URL; do sleep 1; done
+          wget -O - --header='Authorization: Basic YWRtaW46cGFzc3dvcmQ=' --header='Content-type: application/xml' --method=PUT --body-file=$XMLFILE $URL;
           Roles=`urlencode "$roles"`
           URL="http://127.0.0.1:8080/pentaho/api/userroledao/assignRoleToUser?userName=$user&roleNames=$Roles"
-          until wget -O - --header='Authorization: Basic YWRtaW46cGFzc3dvcmQ=' --method=PUT $URL; do sleep 1; done
+          wget -O - --header='Authorization: Basic YWRtaW46cGFzc3dvcmQ=' --method=PUT $URL;
         done
       fi
 
@@ -239,10 +246,12 @@ if [ "$1" = 'run' ]; then
       then
         URL="http://127.0.0.1:8080/pentaho/api/userroledao/user"
         echo "<ChangePasswordUser><userName>admin</userName><newPassword>$ADMINPASSWORD</newPassword><oldPassword>password</oldPassword></ChangePasswordUser>" > $XMLFILE
-        until wget -O - --header='Authorization: Basic YWRtaW46cGFzc3dvcmQ=' --header='Content-type: application/xml' --method=PUT --body-file=$XMLFILE $URL; do sleep 1; done
+        wget -O - --header='Authorization: Basic YWRtaW46cGFzc3dvcmQ=' --header='Content-type: application/xml' --method=PUT --body-file=$XMLFILE $URL;
       fi
 
       rm -f $XMLFILE
+      echo > $PENTAHO_HOME/pentaho-server/pentaho-solutions/system/jackrabbit/repository/.passwordChanged
+
     )&
   fi
 

@@ -6,14 +6,11 @@ services:
     ports:
       - "${SERVER_HTTP_PORT}:8080"
     volumes:
-      - hsqldb:/biserver-ce/data/hsqldb/
-      - repository:/biserver-ce/pentaho-solutions/system/jackrabbit/repository
-      - logs:/biserver-ce/tomcat/logs
-      - hidden:/biserver-ce/.pentaho/
-      - tmp:/biserver-ce/tmp
-
-    #extra_hosts:
-      #- "postgres:10.130.2.87"
+      - hsqldb:/opt/pentaho/pentaho-server/data/hsqldb/
+      - repository:/opt/pentaho/pentaho-server/pentaho-solutions/system/jackrabbit/repository
+      - logs:/opt/pentaho/pentaho-server/tomcat/logs
+      - hidden:/opt/pentaho/pentaho-server/.pentaho/
+      - tmp:/opt/pentaho/pentaho-server/tmp
 
     environment:
       BI_JAVA_OPTS: '${BI_JAVA_OPTS}'
