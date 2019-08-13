@@ -63,10 +63,13 @@
 - `DB_ADMIN_USER` - имя пользователя БД с правами администратора (по умолчанию `postgres`);
 - `DB_ADMIN_PASS` - пароль пользователя БД с правами администратора (по умолчанию `p@ssw0rd`);
 - `JCR_DB_NAME` - имя БД Jackrabbit-репозитория (по умолчанию `jackrabbit`);
+- `JCR_USER` - имя пользователя БД для подключения к БД Jackrabbit-репозитория (по умолчанию `jcr_user`);
 - `JCR_PASS` - пароль для пользователя `jcr_user` для доступа к БД Jackrabbit-репозитория (по умолчанию `password`);
 - `HIBERNATE_DB_NAME` - имя БД Hibernate (по умолчанию `hibernate`);
+- `HIBERNATE_USER` - имя пользователя БД для подключения к БД `Hibernate` (по умолчанию `hibuser`);
 - `HIBERNATE_PASS` - пароль для пользователя `hibuser` для доступа к БД `Hibernate` (по умолчанию `password`);
 - `QUARTZ_DB_NAME` - имя БД Quartz (по умолчанию `quartz`);
+- `QUARTZ_USER` - name of DB user for access to the database of the Quartz database (the default is `pentaho_user`);
 - `QUARTZ_PASS` - пароль для пользователя `pentaho_user` для доступа к БД Quartz (по умолчанию `password`).
 
 *Рекомендуется перед запуском удалить из базы данных удалить перечисленные выше базы и пользователей*
