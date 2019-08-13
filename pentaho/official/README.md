@@ -64,10 +64,13 @@ Connection parameters to `PostgreSQL` are set by the environment variables:
 - `DB_ADMIN_USER` is the database user name with administrator rights (the default is` postgres`);
 - `DB_ADMIN_PASS` - DB user password with administrator rights (the default is` p @ ssw0rd`);
 - `JCR_DB_NAME` is the database name of the Jackrabbit repository (the default is` jackrabbit`);
+- `JCR_USER` - name of DB user for access to the database of the Jackrabbit repository (the default is `jcr_user`);
 - `JCR_PASS` - password for the user` jcr_user` for access to the database of the Jackrabbit repository (the default is `password`);
 - `HIBERNATE_DB_NAME` is the name of the Hibernate database (the default is` hibernate`);
 - `HIBERNATE_PASS` - password for the` hibuser` user to access the `Hibernate` database (default is` password`);
+- `HIBERNATE_USER` - name of DB user for access to the database of the `Hibernate` database (the default is `hibuser`);
 - `QUARTZ_DB_NAME` - Quartz database name (default` quartz`);
+- `QUARTZ_USER` - name of DB user for access to the database of the Quartz database (the default is `pentaho_user`);
 - `QUARTZ_PASS` - password for the` pentaho_user` user for access to the Quartz database (default `password`).
 
 *It is recommended to delete the databases and users listed above from the database before launching them*
