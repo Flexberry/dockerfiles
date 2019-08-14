@@ -32,6 +32,8 @@
 
         private bool isMono5Runtime = true;
 
+        SynchronizationContext synchronizationContext;
+
         /// <summary>
         /// Initializes a new instance of the NewPlatform.Flexberry.ORM.ODataService.Batch.DataObjectODataBatchHandler class.
         /// </summary>
@@ -53,6 +55,11 @@
 
             // Mono 5 has problems with async-await calls and correct save HttpContext.Current instance throught tasks threads. This hack need to disable multithreading in batch requests for mono 5.*.
             isMono5Runtime = IsMono5Runtime();
+
+            if (isMono5Runtime)
+            {
+                synchronizationContext = new SynchronizationContext();
+            }
         }
 
         private bool IsMono5Runtime()
@@ -83,7 +90,7 @@
             string newsc = "";
             if (isMono5Runtime && SynchronizationContext.Current == null)
             {
-                SynchronizationContext synchronizationContext = new SynchronizationContext();
+                synchronizationContext = new SynchronizationContext();
                 SynchronizationContext.SetSynchronizationContext(synchronizationContext);
                 newsc = "*";
             }
@@ -107,19 +114,25 @@
 
             if (isMono5Runtime)
             {
-                subRequests = await ParseBatchRequestsAsync(request, cancellationToken).ConfigureAwait(false);
+                subRequests = ParseBatchRequestsAsync(request, cancellationToken).Result;
             }
             else
             {
                 subRequests = await ParseBatchRequestsAsync(request, cancellationToken);
             }
 
+            if (isMono5Runtime && SynchronizationContext.Current == null)
+            {
+                SynchronizationContext.SetSynchronizationContext(synchronizationContext);
+                newsc = "*";
+            }
+
             try
             {
                 if (isMono5Runtime)
                 {
-                    IList<ODataBatchResponseItem> responses = await ExecuteRequestMessagesAsync(subRequests, cancellationToken).ConfigureAwait(false);
-                    return await CreateResponseMessageAsync(responses, request, cancellationToken).ConfigureAwait(false);
+                    IList<ODataBatchResponseItem> responses = ExecuteRequestMessagesAsync(subRequests, cancellationToken).Result;
+                    return CreateResponseMessageAsync(responses, request, cancellationToken).Result;
                 }
                 else
                 {
@@ -140,12 +153,11 @@
         public override async Task<IList<ODataBatchRequestItem>> ParseBatchRequestsAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             string newsc = "";
-            //if (isMonoRuntime && SynchronizationContext.Current == null)
-            //{
-            //    SynchronizationContext synchronizationContext = new SynchronizationContext();
-            //    SynchronizationContext.SetSynchronizationContext(synchronizationContext);
-            //    newsc = "*";
-            //}
+            if (isMono5Runtime && SynchronizationContext.Current == null)
+            {
+                SynchronizationContext.SetSynchronizationContext(synchronizationContext);
+                newsc = "*";
+            }
 
             string str = "ParseBatchRequestsAsync->" + SynchronizationContext.Current + newsc + "|" + TaskScheduler.Current + "|" + Thread.CurrentThread.ManagedThreadId + "|" + HttpContext.Current;
             LogService.LogError(str);
@@ -166,11 +178,17 @@
 
             if (isMono5Runtime)
             {
-                reader = await request.Content.GetODataMessageReaderAsync(oDataReaderSettings, cancellationToken).ConfigureAwait(false);
+                reader = request.Content.GetODataMessageReaderAsync(oDataReaderSettings, cancellationToken).Result;
             }
             else
             {
                 reader = await request.Content.GetODataMessageReaderAsync(oDataReaderSettings, cancellationToken);
+            }
+
+            if (isMono5Runtime && SynchronizationContext.Current == null)
+            {
+                SynchronizationContext.SetSynchronizationContext(synchronizationContext);
+                newsc = "*";
             }
 
             request.RegisterForDispose(reader);
@@ -186,7 +204,14 @@
 
                     if (isMono5Runtime)
                     {
-                        changeSetRequests = await batchReader.ReadChangeSetRequestAsync(batchId, cancellationToken).ConfigureAwait(false);
+                        changeSetRequests = batchReader.ReadChangeSetRequestAsync(batchId, cancellationToken).Result;
+
+                        if (isMono5Runtime && SynchronizationContext.Current == null)
+                        {
+                            SynchronizationContext.SetSynchronizationContext(synchronizationContext);
+                            newsc = "*";
+                        }
+
                     }
                     else
                     {
@@ -205,7 +230,14 @@
 
                     if (isMono5Runtime)
                     {
-                        operationRequest = await batchReader.ReadOperationRequestAsync(batchId, bufferContentStream: true, cancellationToken: cancellationToken).ConfigureAwait(false);
+                        operationRequest = batchReader.ReadOperationRequestAsync(batchId, bufferContentStream: true, cancellationToken: cancellationToken).Result;
+
+                        if (isMono5Runtime && SynchronizationContext.Current == null)
+                        {
+                            SynchronizationContext.SetSynchronizationContext(synchronizationContext);
+                            newsc = "*";
+                        }
+
                     }
                     else
                     {
@@ -227,12 +259,11 @@
         {
             string newsc = "";
 
-            //if (isMonoRuntime && SynchronizationContext.Current == null)
-            //{
-            //    SynchronizationContext synchronizationContext = new SynchronizationContext();
-            //    SynchronizationContext.SetSynchronizationContext(synchronizationContext);
-            //    newsc = "*";
-            //}
+            if (isMono5Runtime && SynchronizationContext.Current == null)
+            {
+                SynchronizationContext.SetSynchronizationContext(synchronizationContext);
+                newsc = "*";
+            }
 
             string str = "ExecuteRequestMessagesAsync->" + SynchronizationContext.Current + newsc + "|" + TaskScheduler.Current + "|" + Thread.CurrentThread.ManagedThreadId + "|" + HttpContext.Current;
             LogService.LogError(str);
@@ -257,7 +288,12 @@
                         ODataBatchResponseItem response;
                         if (isMono5Runtime)
                         {
-                            response = await request.SendRequestAsync(Invoker, cancellation).ConfigureAwait(false);
+                            response = request.SendRequestAsync(Invoker, cancellation).Result;
+                            if (isMono5Runtime && SynchronizationContext.Current == null)
+                            {
+                                SynchronizationContext.SetSynchronizationContext(synchronizationContext);
+                                newsc = "*";
+                            }
                         }
                         else
                         {
@@ -270,7 +306,13 @@
                     {
                         if (isMono5Runtime)
                         {
-                            await ExecuteChangeSet((ChangeSetRequestItem)request, responses, cancellation).ConfigureAwait(false);
+                            ExecuteChangeSet((ChangeSetRequestItem)request, responses, cancellation);
+                            if (isMono5Runtime && SynchronizationContext.Current == null)
+                            {
+                                SynchronizationContext.SetSynchronizationContext(synchronizationContext);
+                                newsc = "*";
+                            }
+
                         }
                         else
                         {
@@ -306,12 +348,11 @@
         {
             string newsc = "";
 
-            //if (isMonoRuntime && SynchronizationContext.Current == null)
-            //{
-            //    SynchronizationContext synchronizationContext = new SynchronizationContext();
-            //    SynchronizationContext.SetSynchronizationContext(synchronizationContext);
-            //    newsc = "*";
-            //}
+            if (isMono5Runtime && SynchronizationContext.Current == null)
+            {
+                SynchronizationContext.SetSynchronizationContext(synchronizationContext);
+                newsc = "*";
+            }
 
             string str = "ExecuteChangeSet->" + SynchronizationContext.Current + newsc + "|" + TaskScheduler.Current + "|" + Thread.CurrentThread.ManagedThreadId + "|" + HttpContext.Current;
             LogService.LogError(str);
@@ -334,7 +375,12 @@
             ChangeSetResponseItem changeSetResponse;
             if (isMono5Runtime)
             {
-                changeSetResponse = (ChangeSetResponseItem)await changeSet.SendRequestAsync(Invoker, cancellation).ConfigureAwait(false);
+                changeSetResponse = (ChangeSetResponseItem)changeSet.SendRequestAsync(Invoker, cancellation).Result;
+                if (isMono5Runtime && SynchronizationContext.Current == null)
+                {
+                    SynchronizationContext.SetSynchronizationContext(synchronizationContext);
+                    newsc = "*";
+                }
             }
             else
             {
