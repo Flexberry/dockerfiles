@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
-    using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Web.Http;
@@ -30,19 +29,19 @@
         public const string DataObjectsToUpdatePropertyKey = "DataObjectsToUpdate";
 
         /// <summary>
-        /// Flag, indicates that runtime is mono 5.*.
+        /// Flag, indicates that runtime is mono.
         /// </summary>
-        private static bool? isMono5Runtime;
+        private static bool? isMonoRuntime;
 
         /// <summary>
-        /// Static constructor for hack with mono 5.
+        /// Static constructor for hack with mono.
         /// </summary>
         static DataObjectODataBatchHandler()
         {
-            // Mono 5 has problems with async-await calls and correct save HttpContext.Current instance throught tasks threads. This hack need to disable multithreading in batch requests for mono 5.*.
-            if (isMono5Runtime == null)
+            // Mono has problems with async-await calls and correct save HttpContext.Current instance throught tasks threads. This hack need to disable multithreading in batch requests for mono.
+            if (isMonoRuntime == null)
             {
-                isMono5Runtime = IsMono5Runtime();
+                isMonoRuntime = Type.GetType("Mono.Runtime") != null;
             }
         }
 
@@ -57,32 +56,6 @@
             this.dataService = dataService;
         }
 
-        /// <summary>
-        /// Is mono 5.* Runtime.
-        /// </summary>
-        /// <returns></returns>
-        private static bool IsMono5Runtime()
-        {
-            Type monoRuntimeType = Type.GetType("Mono.Runtime");
-
-            if (monoRuntimeType != null)
-            {
-                MethodInfo displayName = monoRuntimeType.GetMethod("GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static);
-
-                if (displayName != null)
-                {
-                    string monoVersion = displayName.Invoke(null, null).ToString();
-
-                    if (monoVersion.StartsWith("5."))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
         /// <inheritdoc />
         public override async Task<HttpResponseMessage> ProcessBatchAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
@@ -95,7 +68,7 @@
 
             IList<ODataBatchRequestItem> subRequests;
 
-            if (isMono5Runtime == true)
+            if (isMonoRuntime == true)
             {
                 subRequests = ParseBatchRequestsAsync(request, cancellationToken).Result;
             }
@@ -106,7 +79,7 @@
 
             try
             {
-                if (isMono5Runtime == true)
+                if (isMonoRuntime == true)
                 {
                     IList<ODataBatchResponseItem> responses = ExecuteRequestMessagesAsync(subRequests, cancellationToken).Result;
                     return CreateResponseMessageAsync(responses, request, cancellationToken).Result;
@@ -144,7 +117,7 @@
 
             ODataMessageReader reader;
 
-            if (isMono5Runtime == true)
+            if (isMonoRuntime == true)
             {
                 reader = request.Content.GetODataMessageReaderAsync(oDataReaderSettings, cancellationToken).Result;
             }
@@ -164,7 +137,7 @@
                 {
                     IList<HttpRequestMessage> changeSetRequests;
 
-                    if (isMono5Runtime == true)
+                    if (isMonoRuntime == true)
                     {
                         changeSetRequests = batchReader.ReadChangeSetRequestAsync(batchId, cancellationToken).Result;
                     }
@@ -184,7 +157,7 @@
                 {
                     HttpRequestMessage operationRequest;
 
-                    if (isMono5Runtime == true)
+                    if (isMonoRuntime == true)
                     {
                         operationRequest = batchReader.ReadOperationRequestAsync(batchId, bufferContentStream: true, cancellationToken: cancellationToken).Result;
                     }
@@ -220,7 +193,7 @@
                     if (operation != null)
                     {
                         ODataBatchResponseItem response;
-                        if (isMono5Runtime == true)
+                        if (isMonoRuntime == true)
                         {
                             response = request.SendRequestAsync(Invoker, cancellation).Result;
                         }
@@ -233,7 +206,7 @@
                     }
                     else
                     {
-                        if (isMono5Runtime == true)
+                        if (isMonoRuntime == true)
                         {
                             ExecuteChangeSet((ChangeSetRequestItem)request, responses, cancellation);
                         }
@@ -285,7 +258,7 @@
             }
 
             ChangeSetResponseItem changeSetResponse;
-            if (isMono5Runtime == true)
+            if (isMonoRuntime == true)
             {
                 changeSetResponse = (ChangeSetResponseItem)changeSet.SendRequestAsync(Invoker, cancellation).Result;
             }
