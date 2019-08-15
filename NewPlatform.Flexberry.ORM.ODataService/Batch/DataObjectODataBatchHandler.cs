@@ -35,15 +35,10 @@
         private static bool? isMono5Runtime;
 
         /// <summary>
-        /// Initializes a new instance of the NewPlatform.Flexberry.ORM.ODataService.Batch.DataObjectODataBatchHandler class.
+        /// Static constructor for hack with mono 5.
         /// </summary>
-        /// <param name="dataService">DataService instance for execute queries.</param>
-        /// <param name="httpServer">The System.Web.Http.HttpServer for handling the individual batch requests.</param>
-        public DataObjectODataBatchHandler(IDataService dataService, HttpServer httpServer)
-            : base(httpServer)
+        static DataObjectODataBatchHandler()
         {
-            this.dataService = dataService;
-
             // Mono 5 has problems with async-await calls and correct save HttpContext.Current instance throught tasks threads. This hack need to disable multithreading in batch requests for mono 5.*.
             if (isMono5Runtime == null)
             {
@@ -52,10 +47,21 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the NewPlatform.Flexberry.ORM.ODataService.Batch.DataObjectODataBatchHandler class.
+        /// </summary>
+        /// <param name="dataService">DataService instance for execute queries.</param>
+        /// <param name="httpServer">The System.Web.Http.HttpServer for handling the individual batch requests.</param>
+        public DataObjectODataBatchHandler(IDataService dataService, HttpServer httpServer)
+            : base(httpServer)
+        {
+            this.dataService = dataService;
+        }
+
+        /// <summary>
         /// Is mono 5.* Runtime.
         /// </summary>
         /// <returns></returns>
-        private bool IsMono5Runtime()
+        private static bool IsMono5Runtime()
         {
             Type monoRuntimeType = Type.GetType("Mono.Runtime");
 
@@ -171,6 +177,7 @@
                     {
                         changeSetRequest.CopyBatchRequestProperties(request);
                     }
+
                     requests.Add(new ChangeSetRequestItem(changeSetRequests));
                 }
                 else if (batchReader.State == ODataBatchReaderState.Operation)
