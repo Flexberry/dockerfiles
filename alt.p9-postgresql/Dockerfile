@@ -1,4 +1,4 @@
-FROM flexberry/alt.p9-dev 
+FROM flexberry/alt.p9-dev
 #as dev
 RUN \
   cd root/; \
@@ -22,15 +22,15 @@ RUN \
     /usr/lib64/libsybdb.so.5.1.0; \
     mkdir /dockerLayer; cd /dockerLayer; \
     tar xvzf /tmp/tds_fdw.tgz
-    
+
 RUN \
   cd /root/; \
   git clone git://github.com/Percona-Lab/clickhousedb_fdw.git;
-  
+
 RUN \
   apt-get install -y postgresql11-devel libunixODBC-devel libltdl3-devel libunixODBC-devel libpoco-devel  libstdc++-devel-static
-  
-  
+
+
 RUN \
   cd /root; \
   git clone --recursive https://github.com/yandex/clickhouse-odbc; \
@@ -43,7 +43,10 @@ RUN \
   cp /usr/local/lib64/odbc/libclickhouseodbc.so /usr/lib64/clickhouse-1.0.so ; \
   cd /root/clickhousedb_fdw; \
   make -f lib/Makefile; \
-  make USE_PGXS=1 install
+  make USE_PGXS=1 install;
+
+# RUN \
+#   tar cvzf /tmp/clickhouse_fdw.tgz \
 
 #FROM flexberry/alt.p9
 #ENV LANG ru_RU.UTF-8

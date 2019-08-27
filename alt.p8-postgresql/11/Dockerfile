@@ -31,7 +31,6 @@ RUN \
     mkdir /dockerLayer; cd /dockerLayer; \
     tar xvzf /tmp/tds_fdw.tgz
 
-
 RUN \
   cd /root/; \
   git clone git://github.com/Percona-Lab/clickhousedb_fdw.git;
@@ -54,9 +53,18 @@ RUN \
   make -f lib/Makefile; \
   make USE_PGXS=1 install
 
+RUN \
+  tar cvzf /tmp/clickhouse_fdw.tgz \
+    /usr/lib64/libclickhouse-1.0.so \
+    /usr/lib64/pgsql/clickhousedb_fdw.so \
+    /usr/share/pgsql/extension/clickhousedb_fdw.control \
+    /usr/share/pgsql/extension/clickhousedb_fdw--1.0.sql;
+
+RUN cd /dockerLayer; \
+    tar xvzf /tmp/clickhouse_fdw.tgz
 
 
-# FROM flexberry/alt.p8
+FROM flexberry/alt.p8
 ENV LANG ru_RU.UTF-8
 
 MAINTAINER mail@flexberry.ru
@@ -72,7 +80,7 @@ RUN  /etc/init.d/postgresql initdb;
 
 COPY data/postgresql.conf data/pg_hba.conf /var/lib/pgsql/data/
 COPY /docker-cmd.sh /
-# COPY --from=dev /dockerLayer /
+COPY --from=dev /dockerLayer /
 
 RUN  chmod +x /docker-cmd.sh; \
   chown postgres:postgres /var/lib/pgsql/data/postgresql.conf /var/lib/pgsql/data/pg_hba.conf; \
