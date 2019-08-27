@@ -1,4 +1,4 @@
-FROM yandex/clickhouse-server:19.8
+FROM yandex/clickhouse-server:19.13
 
 ENV LANG ru_RU.UTF-8
 
