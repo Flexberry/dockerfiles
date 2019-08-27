@@ -56,6 +56,10 @@ RUN \
 RUN \
   tar cvzf /tmp/clickhouse_fdw.tgz \
     /usr/lib64/libclickhouse-1.0.so \
+     /usr/lib64/libodbc.so.2.0.0 \
+     /usr/lib64/libodbc.so.2 \
+     /usr/lib64/libodbc.so \
+     /usr/lib64/libltdl.so.7* \
     /usr/lib64/pgsql/clickhousedb_fdw.so \
     /usr/share/pgsql/extension/clickhousedb_fdw.control \
     /usr/share/pgsql/extension/clickhousedb_fdw--1.0.sql;
@@ -87,7 +91,7 @@ RUN  chmod +x /docker-cmd.sh; \
   /etc/init.d/postgresql start; \
   sleep 5; \
   until echo  "\l" |  psql -U postgres; do sleep 5; done ; \
-  echo  -ne "ALTER ROLE postgres WITH PASSWORD 'p@ssw0rd';\nCREATE EXTENSION tds_fdw;\n" |  psql -U postgres; \
+  echo  -ne "ALTER ROLE postgres WITH PASSWORD 'p@ssw0rd';\nCREATE EXTENSION tds_fdw;\nCREATE EXTENSION clickhousedb_fdw;\n" |  psql -U postgres; \
   /etc/init.d/postgresql stop; \
   sleep 5; \
   while [ -f /var/lib/pgsql/data/postmaster.pid ]; do sleep 5; done; \
