@@ -1,11 +1,20 @@
 FROM flexberry/alt.p8-dev as dev
+
+ENV REPODATA=2019/05/17
+
 RUN \
+  bzip2 -d /var/lib/rpm/*.bz2; \
+  apt-get update; \
+  apt-get install -y apt-repo; \
+  apt-repo rm all;  \
+  apt-repo add http://ftp.altlinux.org/pub/distributions/archive/p8/date/$REPODATA x86_64-i586 classic; \
+  apt-repo add http://ftp.altlinux.org/pub/distributions/archive/p8/date/$REPODATA x86_64 classic; \
+  apt-repo add http://ftp.altlinux.org/pub/distributions/archive/p8/date/$REPODATA noarch classic; \
+  apt-get update; \
+  apt-get install -y postgresql9.6-devel libfreetds-devel libfreetds; \
   cd root/; \
   git clone https://github.com/tds-fdw/tds_fdw.git; \
   cd tds_fdw/; \
-  bzip2 -d /var/lib/rpm/*; \
-  apt-get update; \
-  apt-get install -y postgresql9.6-devel libfreetds-devel libfreetds; \
   make USE_PGXS=1; \
   make USE_PGXS=1 install; \
   tar cvzf /tmp/tds_fdw.tgz \
