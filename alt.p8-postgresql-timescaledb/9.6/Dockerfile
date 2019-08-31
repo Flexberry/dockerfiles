@@ -86,17 +86,17 @@ COPY data/postgresql.conf data/pg_hba.conf /var/lib/pgsql/data/
 COPY /docker-cmd.sh /
 COPY --from=dev /dockerLayer /
 
-#RUN  chmod +x /docker-cmd.sh; \
-#  chown postgres:postgres /var/lib/pgsql/data/postgresql.conf /var/lib/pgsql/data/pg_hba.conf; \
-#  /etc/init.d/postgresql start; \
-#  sleep 5; \
-#  until echo  "\l" |  psql -U postgres; do sleep 5; done ; \
-#  echo  -ne "ALTER ROLE postgres WITH PASSWORD 'p@ssw0rd';\nCREATE EXTENSION tds_fdw;\n" |  psql -U postgres; \
-#  /etc/init.d/postgresql stop; \
-#  sleep 5; \
-#  while [ -f /var/lib/pgsql/data/postmaster.pid ]; do sleep 5; done; \
-#  killall postgres; \
-#  while [ -f /tmp/.s.PGSQL.5432.lock ]; do sleep 5; done;
+RUN  chmod +x /docker-cmd.sh; \
+  chown postgres:postgres /var/lib/pgsql/data/postgresql.conf /var/lib/pgsql/data/pg_hba.conf; \
+  /etc/init.d/postgresql start; \
+  sleep 5; \
+  until echo  "\l" |  psql -U postgres; do sleep 5; done ; \
+  echo  -ne "ALTER ROLE postgres WITH PASSWORD 'p@ssw0rd';\nCREATE EXTENSION timescaledb;\n" |  psql -U postgres; \
+  /etc/init.d/postgresql stop; \
+  sleep 5; \
+  while [ -f /var/lib/pgsql/data/postmaster.pid ]; do sleep 5; done; \
+  killall postgres; \
+  while [ -f /tmp/.s.PGSQL.5432.lock ]; do sleep 5; done;
 
 
 EXPOSE 5432
