@@ -1,0 +1,3 @@
+#!/bin/sh
+. ../../hookFunctions.sh
+setAliases latest
