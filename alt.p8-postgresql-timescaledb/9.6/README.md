@@ -1,5 +1,5 @@
 # Описание
-[Образ flexberry/alt.p8-postgresql](https://hub.docker.com/r/flexberry/alt.p8-postgresql/) поддерживает функционал базы данных Postgres.
+[Образ flexberry/alt.p8-postgresql-timescaledb](https://hub.docker.com/r/flexberry/alt.p8-postgresql-timescaledb/) поддерживает функционал базы данных Postgres.
 
 Характерные особенности образа:
 - в качестве базового образа используется  [образ дистрибутив ALTLinux P8](https://hub.docker.com/r/fotengauer/altlinux-p8/). входяшего  в [Единый реестр российских программ для электронных вычислительных машин и баз данных](https://reestr.minsvyaz.ru/);
