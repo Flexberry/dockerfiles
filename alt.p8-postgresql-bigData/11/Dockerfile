@@ -10,33 +10,33 @@ RUN   bzip2 -d /var/lib/rpm/*.bz2; \
   apt-repo add http://ftp.altlinux.org/pub/distributions/archive/p8/date/$REPODATA x86_64 classic; \
   apt-repo add http://ftp.altlinux.org/pub/distributions/archive/p8/date/$REPODATA noarch classic; \
   apt-get update; \
-  apt-get install -y postgresql11-devel ; 
+  apt-get install -y postgresql11-devel ;
 
-  
+
 RUN  cd /root/; \
   git clone https://github.com/postgrespro/pg_pathman; \
   apt-get install -y postgresql11-devel; \
   cd /root/pg_pathman; \
-  make install USE_PGXS=1; \
-  
+  make install USE_PGXS=1;
+
 RUN  cd /; tar cvzf /tmp/pg_pathman.tgz \
     /usr/lib64/pgsql/pg_pathman.so \
     /usr/share/pgsql/extension/pg_pathman.control \
     /usr/share/pgsql/extension/pg_pathman--*sql; \
   mkdir /dockerLayer; cd /dockerLayer; \
-  tar xvzf /tmp/pg_pathman.tgz  
-  
-  
+  tar xvzf /tmp/pg_pathman.tgz
+
+
 RUN  cd /root/; \
-  git clone https://github.com/timescale/timescaledb; 
-  
+  git clone https://github.com/timescale/timescaledb;
+
 RUN  cd /root/timescaledb; \
   apt-get install -y postgresql11-devel; \
   git checkout 1.4.1; \
   ./bootstrap; \
   cd build; make; \
-  make install; 
-  
+  make install;
+
 RUN  \
   cd /; tar cvzf /tmp/timescaledb.tgz \
   /usr/share/pgsql/extension/timescaledb.control \
@@ -81,8 +81,8 @@ RUN  \
   /usr/lib64/pgsql/timescaledb-tsl-1.4.1.so; \
   mkdir /dockerLayer; cd /dockerLayer; \
   tar xvzf /tmp/timescaledb.tgz
-  
-RUN \  
+
+RUN \
   apt-get install -y postgresql11-devel libfreetds-devel libfreetds; \
   cd root/; \
   git clone https://github.com/tds-fdw/tds_fdw.git; \
