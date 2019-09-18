@@ -1,0 +1,5 @@
+/home/al/projects/test/test/obj/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/al/projects/test/test/bin/test.dll.mdb
+/home/al/projects/test/test/bin/test.dll
+/home/al/projects/test/test/obj/Debug/test.dll
+/home/al/projects/test/test/obj/Debug/test.dll.mdb

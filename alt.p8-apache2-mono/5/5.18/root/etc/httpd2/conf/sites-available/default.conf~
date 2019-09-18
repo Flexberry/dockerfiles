@@ -1,0 +1,25 @@
+<VirtualHost *>
+  ServerName mono
+  ServerAdmin mono@ics.perm.ru
+  MonoServerPath mono "/usr/bin/mod-mono-server.sh"
+  MonoDebug mono true
+  MonoSetEnv mono MONO_IOMAP=all
+  MonoApplications mono "/:/var/www/html/"
+
+  <Location "/">
+    Allow from all
+    Order allow,deny
+    MonoSetServerAlias mono
+    SetHandler mono
+    #SetOutputFilter DEFLATE
+  </Location>
+  <IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/javascript
+  </IfModule>
+
+        ErrorLog /var/log/httpd2/error_log
+        LogLevel debug
+        <IfModule log_config_module>
+                CustomLog /var/log/httpd2/access_log common
+        </IfModule>
+</VirtualHost>
