@@ -50,6 +50,10 @@ writeAttr() {
   IFS="$ifs"
   type0=$1
   attrDesc=
+  if [ "$attr" = "primarykey" ]
+  then
+    primarykey='primaryKey'
+  fi
   case "$type0" in
   'timestamp')
     attrDesc="\t\t\t\t<type>DateTime</type>\n"
@@ -109,7 +113,7 @@ dictXML() {
   keys=$2
   if [ -z "$keys" ]
   then
-    keys='primarykey'
+    keys='primaryKey'
   fi
   refresh=$3
   echo "\t<dictionary>"

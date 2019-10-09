@@ -4,8 +4,8 @@ services:
   clickhouse:
     image: flexberry/clickhouse-official
     ports:
-      - 8123:8123
-      - 9000:9000
+      - 18123:8123
+      - 19000:9000
     volumes:
       - clickhousedb:/var/lib/clickhouse
       

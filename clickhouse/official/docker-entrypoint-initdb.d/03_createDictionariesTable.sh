@@ -29,6 +29,10 @@ createTable() {
     set -- $type
     type0=$1
     attrType=
+    if [ "$attr" = "primarykey" ]
+    then
+      primarykey='primaryKey'
+    fi
     case $type0 in
     'timestamp')
       attrType="DateTime"
