@@ -1,13 +1,13 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Web.OData;
     using System.Web.OData.Formatter.Serialization;
+
+    using ICSSoft.STORMNET;
+
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -43,6 +43,12 @@
                 serializer = _feedSerializer;
             }
 
+            if (serializer == null)
+            {
+                EdmTypeKind edmKind = edmType.TypeKind();
+                LogService.LogDebug($"'{edmType.ToTraceString()}' ({nameof(EdmTypeKind)}='{edmKind.ToString()}') cannot be serialized using the '{nameof(CustomODataSerializerProvider)}'");
+            }
+
             return serializer;
         }
 
@@ -61,7 +67,14 @@
                 return _feedSerializer;
             }
 
-            return base.GetODataPayloadSerializer(model, type, request);
+            ODataSerializer serializer = base.GetODataPayloadSerializer(model, type, request);
+
+            if (serializer == null)
+            {
+                LogService.LogDebug($"'{type.Name}' ({nameof(IEdmModel)} type='{model.GetType().Name}') cannot be serialized using the '{nameof(CustomODataSerializerProvider)}'");
+            }
+
+            return serializer;
         }
     }
 }
