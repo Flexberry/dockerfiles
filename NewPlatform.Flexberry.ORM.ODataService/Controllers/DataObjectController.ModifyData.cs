@@ -195,8 +195,7 @@
 
                 Init();
 
-                var obj = (DataObject)Activator.CreateInstance(type);
-                obj.SetExistObjectPrimaryKey(key);
+                var obj = _dataObjectCache.CreateDataObject(type, key);
 
                 // Раз объект данных удаляется, то и все ассоциированные с ним файлы должны быть удалены.
                 // Запоминаем метаданные всех ассоциированных файлов, кроме файлов соответствующих файловым свойствам типа File
@@ -484,36 +483,60 @@
         /// <summary>
         /// Получить объект данных по ключу: если объект есть в хранилище, то возвращается загруженным по представлению по умолчанию, иначе - создаётся новый.
         /// </summary>
-        /// <param name="objType"> Тип объекта.</param>
-        /// <param name="keyValue"> Значение ключа.</param>>
-        /// <returns> Объект данных.</returns>
+        /// <param name="objType">Тип объекта, не может быть <c>null</c>.</param>
+        /// <param name="keyValue">Значение ключа.</param>>
+        /// <returns>Объект данных.</returns>
         private DataObject ReturnDataObject(Type objType, object keyValue)
         {
-            var view = _model.GetDataObjectDefaultView(objType);
-
-            // Проверим существование объекта в базе.
-            var ldef = SQLWhereLanguageDef.LanguageDef;
-            LoadingCustomizationStruct lcs = LoadingCustomizationStruct.GetSimpleStruct(objType, view);
-            lcs.LimitFunction = ldef.GetFunction(ldef.funcEQ, new VariableDef(ldef.GuidType, SQLWhereLanguageDef.StormMainObjectKey), keyValue);
-            DataObject[] dobjs = _dataService.LoadObjects(lcs);
-            if (dobjs.Length == 1)
+            if (objType == null)
             {
-                _newDataObjects.Add(dobjs[0], false);
-                return dobjs[0];
+                throw new ArgumentNullException(nameof(objType));
+            }
+
+            if (keyValue != null)
+            {
+                DataObject dataObjectFromCache = _dataObjectCache.GetLivingDataObject(objType, keyValue);
+
+                if (dataObjectFromCache != null)
+                {
+                    if (!_newDataObjects.ContainsKey(dataObjectFromCache))
+                    {
+                        _newDataObjects.Add(dataObjectFromCache, false);
+                    }
+
+                    return dataObjectFromCache;
+                }
+
+                var view = _model.GetDataObjectDefaultView(objType);
+
+                // Проверим существование объекта в базе.
+                var ldef = SQLWhereLanguageDef.LanguageDef;
+                LoadingCustomizationStruct lcs = LoadingCustomizationStruct.GetSimpleStruct(objType, view);
+                lcs.LimitFunction = ldef.GetFunction(ldef.funcEQ, new VariableDef(ldef.GuidType, SQLWhereLanguageDef.StormMainObjectKey), keyValue);
+                DataObject[] dobjs = _dataService.LoadObjects(lcs, _dataObjectCache);
+                if (dobjs.Length == 1)
+                {
+                    DataObject dataObject = dobjs[0];
+                    _newDataObjects.Add(dataObject, false);
+                    return dataObject;
+                }
+            }
+
+            // Значение ключа автоматически создаётся.
+            DataObject obj;
+
+            if (keyValue != null)
+            {
+                obj = _dataObjectCache.CreateDataObject(objType, keyValue);
             }
             else
             {
-                // Значение ключа автоматически создаётся.
-                var obj = (DataObject)Activator.CreateInstance(objType);
-
-                if (keyValue != null)
-                {
-                    obj.__PrimaryKey = keyValue;
-                }
-
-                _newDataObjects.Add(obj, true);
-                return obj;
+                obj = (DataObject)Activator.CreateInstance(objType);
+                _dataObjectCache.AddDataObject(obj);
             }
+
+            _newDataObjects.Add(obj, true);
+            return obj;
         }
 
         /// <summary>

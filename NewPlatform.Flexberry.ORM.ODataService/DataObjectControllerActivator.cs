@@ -6,11 +6,12 @@
     using System.Web.Http.Dependencies;
     using System.Web.Http.Dispatcher;
     using System.Web.Http.Routing;
-
+    using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
-
+    using NewPlatform.Flexberry.ORM.ODataService.Batch;
     using NewPlatform.Flexberry.ORM.ODataService.Controllers;
     using NewPlatform.Flexberry.ORM.ODataService.Extensions;
+    using NewPlatform.Flexberry.ORM.ODataService.Handlers;
     using NewPlatform.Flexberry.ORM.ODataService.Offline;
 
     /// <summary>
@@ -56,7 +57,14 @@
                 }
 
                 ManagementToken token = request.GetODataServiceToken();
-                DataObjectController controller = new DataObjectController(dataService, token.Model, token.Events, token.Functions);
+
+                DataObjectCache dataObjectCache = null;
+                if (request.Properties.ContainsKey(PostPatchHandler.PropertyKeyBatchRequest) && request.Properties.ContainsKey(DataObjectODataBatchHandler.DataObjectCachePropertyKey))
+                {
+                    dataObjectCache = request.Properties[DataObjectODataBatchHandler.DataObjectCachePropertyKey] as DataObjectCache;
+                }
+
+                DataObjectController controller = new DataObjectController(dataService, dataObjectCache, token.Model, token.Events, token.Functions);
                 BaseOfflineManager offlineManager = (BaseOfflineManager)dependencyResolver.GetService(typeof(BaseOfflineManager));
 
                 if (offlineManager != null)

@@ -68,7 +68,7 @@
 
                 // ------------------ Только создания объектов ------------------
                 // Подготовка тестовых данных в формате OData.
-                var controller = new Controllers.DataObjectController(args.DataService, args.Token.Model, args.Token.Events, args.Token.Functions);
+                var controller = new Controllers.DataObjectController(args.DataService, null, args.Token.Model, args.Token.Events, args.Token.Functions);
                 System.Web.OData.EdmEntityObject edmObj = controller.GetEdmObject(args.Token.Model.GetEdmEntityType(typeof(Наследник)), наследник, 1, null);
                 var edm_master = controller.GetEdmObject(args.Token.Model.GetEdmEntityType(typeof(Master)), master, 1, null);
                 var edm_мастер = controller.GetEdmObject(args.Token.Model.GetEdmEntityType(typeof(Мастер)), мастер, 1, null);

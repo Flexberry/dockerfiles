@@ -19,19 +19,24 @@
     internal class DataObjectODataBatchHandler : DefaultODataBatchHandler
     {
         /// <summary>
-        /// DataService instance for execute queries.
-        /// </summary>
-        private IDataService dataService;
-
-        /// <summary>
         /// Request Properties collection key for DataObjectsToUpdate list.
         /// </summary>
         public const string DataObjectsToUpdatePropertyKey = "DataObjectsToUpdate";
 
         /// <summary>
+        /// Request Properties collection key for DataObjectCache instance.
+        /// </summary>
+        public const string DataObjectCachePropertyKey = "DataObjectCache";
+
+        /// <summary>
         /// Flag, indicates that runtime is mono.
         /// </summary>
         private static bool? isMonoRuntime;
+
+        /// <summary>
+        /// DataService instance for execute queries.
+        /// </summary>
+        private IDataService dataService;
 
         /// <summary>
         /// Static constructor for hack with mono.
@@ -248,12 +253,19 @@
             }
 
             List<DataObject> dataObjectsToUpdate = new List<DataObject>();
+            DataObjectCache dataObjectCache = new DataObjectCache();
+            dataObjectCache.StartCaching(false);
 
             foreach (HttpRequestMessage request in changeSet.Requests)
             {
                 if (!request.Properties.ContainsKey(DataObjectsToUpdatePropertyKey))
                 {
                     request.Properties.Add(DataObjectsToUpdatePropertyKey, dataObjectsToUpdate);
+                }
+
+                if (!request.Properties.ContainsKey(DataObjectCachePropertyKey))
+                {
+                    request.Properties.Add(DataObjectCachePropertyKey, dataObjectCache);
                 }
             }
 
