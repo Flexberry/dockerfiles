@@ -182,9 +182,9 @@ version: '3.2'
 
 services:
   pentaho:
-    image: flexberry / pentaho-official $ BI_IMAGE_TAG
+    image: flexberry/pentaho-official$BI_IMAGE_TAG
     ports:
-      - "${SERVER_HTTP_PORT}: 8080"
+      - "${SERVER_HTTP_PORT}:8080"
     volumes:
       - hsqldb: /biserver-ce/data/hsqldb/
       - repository: /biserver-ce/pentaho-solutions/system/jackrabbit/repository
