@@ -138,10 +138,10 @@ An example of the description file for the variables `.env` and the configuratio
 
 Example variable description file `.env`:
 ```
-BI_IMAGE_TAG =: 8.2
+BI_IMAGE_TAG=:8.2
 
 #BI_JAVA_OPTS="-Xms4096m -Xmx6144m -XX: MaxMetaspaceSize=256m -Djava.security.egd=file: / dev /./ urandom -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.c.client.gcInterval=3600000 -Dsun.rmi.dgc.cli.cmi.dgc.client.gcInterval=3,600,000 gcInterval=3,600,000 -Dfile.encoding=utf8 -DDI_HOME=\"$ DI_HOME\""
-BI_JAVA_OPTS =
+BI_JAVA_OPTS=
 
 # DB_ADMIN=postgresql
 # DB_HOST=postgres
@@ -155,25 +155,25 @@ BI_JAVA_OPTS =
 # QUARTZ_DB_NAME=quartz
 # QUARTZ_PASS=password
 
-DB_ADMIN =
-DB_HOST =
-DB_PORT =
-DB_ADMIN_USER =
-DB_ADMIN_PASS =
-JCR_DB_NAME =
-JCR_PASS =
-HIBERNATE_DB_NAME =
-HIBERNATE_PASS =
-QUARTZ_DB_NAME =
-QUARTZ_PASS =
+DB_ADMIN=
+DB_HOST=
+DB_PORT=
+DB_ADMIN_USER=
+DB_ADMIN_PASS=
+JCR_DB_NAME=
+JCR_PASS=
+HIBERNATE_DB_NAME=
+HIBERNATE_PASS=
+QUARTZ_DB_NAME=
+QUARTZ_PASS=
 
 SERVER_HTTP_PORT=8080
 
 # USERS=power:password/Power User\nreporter:qwerty/Business Analyst,Report Author\nuser:12345/Anonymous
-USERS =
+USERS=
 
 # ADMINPASSWORD=qwerty
-ADMINPASSWORD =
+ADMINPASSWORD=
 ```
 
 Example configuration file `docker-compose.yml`:
@@ -186,11 +186,11 @@ services:
     ports:
       - "${SERVER_HTTP_PORT}: 8080"
     volumes:
-      - hsqldb: / biserver-ce / data / hsqldb /
-      - repository: / biserver-ce / pentaho-solutions / system / jackrabbit / repository
-      - logs: / biserver-ce / tomcat / logs
+      - hsqldb: /biserver-ce/data/hsqldb/
+      - repository: /biserver-ce/pentaho-solutions/system/jackrabbit/repository
+      - logs: /biserver-ce/tomcat/logs
       - hidden: /biserver-ce/.pentaho/
-      - tmp: / biserver-ce / tmp
+      - tmp: /biserver-ce/tmp
 
     #extra_hosts:
       # - "postgres: 10.130.2.87"
