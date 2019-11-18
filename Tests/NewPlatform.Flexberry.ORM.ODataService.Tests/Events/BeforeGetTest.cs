@@ -12,7 +12,6 @@
     /// <summary>
     /// Класс тестов для тестирования логики после операций модификации данных OData-сервисом (вставка, обновление, удаление).
     /// </summary>
-    
     public class BeforeGetTest : BaseODataServiceIntegratedTest
     {
         private LoadingCustomizationStruct lcs { get; set; }
@@ -58,7 +57,7 @@
                 var objs = new DataObject[] { класс, медв, медв2, берлога2, берлога1, берлога3, лес1, лес2 };
                 args.DataService.UpdateObjects(ref objs);
                 this.lcs = null;
-                var requestUrl = "http://localhost/odata/Медведьs";
+                var requestUrl = string.Format("http://localhost/odata/{0}", args.Token.Model.GetEdmEntitySet(typeof(Медведь)).Name);
 
                 // Обращаемся к OData-сервису и обрабатываем ответ.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)

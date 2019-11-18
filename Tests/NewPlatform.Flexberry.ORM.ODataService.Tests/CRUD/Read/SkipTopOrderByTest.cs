@@ -88,9 +88,12 @@
                 objs = new DataObject[] { медвежонок1, медвежонок2, медвежонок3, медвежонок4 };
                 args.DataService.UpdateObjects(ref objs);
 
-                string requestUrl;
                 // Проверка использования в фильтрации перечислений.
-                requestUrl = "http://localhost/odata/Медведьs?$filter=Папа ne null&$expand=Папа,Мама&$orderby=Мама/Вес desc,Папа/Вес desc";
+                string requestUrl = string.Format(
+                    "http://localhost/odata/{0}?$filter={1}&$expand={2}",
+                    args.Token.Model.GetEdmEntitySet(typeof(Медведь)).Name,
+                    "Папа ne null",
+                    "Папа,Мама&$orderby=Мама/Вес desc,Папа/Вес desc");
 
                 // Обращаемся к OData-сервису и обрабатываем ответ.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
@@ -164,10 +167,11 @@
                 var objs = new DataObject[] { лес1, лес2, лес3, лес4 };
                 args.DataService.UpdateObjects(ref objs);
 
-                string requestUrl;
-
                 // Проверка использования в фильтрации перечислений.
-                requestUrl = "http://localhost/odata/Лесs?$orderby=ДатаПоследнегоОсмотра desc";
+                string requestUrl = string.Format(
+                    "http://localhost/odata/{0}?$orderby={1}",
+                    args.Token.Model.GetEdmEntitySet(typeof(Лес)).Name,
+                    "ДатаПоследнегоОсмотра desc");
 
                 // Обращаемся к OData-сервису и обрабатываем ответ.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
@@ -219,10 +223,12 @@
                 var objs = new DataObject[] { медведь1, медведь2, медведь3, медведь4 };
                 args.DataService.UpdateObjects(ref objs);
 
-                string requestUrl;
-
                 // Проверка использования в фильтрации перечислений.
-                requestUrl = "http://localhost/odata/Медведьs?$expand=ЛесОбитания($select=ДатаПоследнегоОсмотра)&$orderby=ЛесОбитания/ДатаПоследнегоОсмотра desc";
+                string requestUrl = string.Format(
+                    "http://localhost/odata/{0}?$expand={1}&$orderby={2}",
+                    args.Token.Model.GetEdmEntitySet(typeof(Медведь)).Name,
+                    "ЛесОбитания($select=ДатаПоследнегоОсмотра)",
+                    "ЛесОбитания/ДатаПоследнегоОсмотра desc");
 
                 // Обращаемся к OData-сервису и обрабатываем ответ.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)

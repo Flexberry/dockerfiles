@@ -30,8 +30,11 @@
                 Медведь медв = new Медведь { Вес = 48, Пол = tПол.Мужской };
                 var objs = new DataObject[] { класс, медв };
                 args.DataService.UpdateObjects(ref objs);
-                string requestUrl;
-                requestUrl = $"http://localhost/odata/КлассСоСтроковымКлючомs?$filter=__PrimaryKey eq '{класс.__PrimaryKey}'";
+
+                string requestUrl = string.Format(
+                    "http://localhost/odata/{0}?$filter={1}",
+                    args.Token.Model.GetEdmEntitySet(typeof(КлассСоСтроковымКлючом)).Name,
+                    $"__PrimaryKey eq '{класс.__PrimaryKey}'");
 
                 // Обращаемся к OData-сервису и обрабатываем ответ.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
@@ -115,8 +118,12 @@
                     Assert.Equal(1, ((ArrayList)receivedDict["value"]).Count);
                 }
                 */
+
                 // Проверка использования фильтрации для типа ICSSoft.STORMNET.UserDataTypes.NullableInt.
-                requestUrl = $"http://localhost/odata/КлассСМножествомТиповs?$filter=PropertyStormnetNullableInt eq {i.Value.ToString()}";
+                requestUrl = string.Format(
+                    "http://localhost/odata/{0}?$filter={1}",
+                    args.Token.Model.GetEdmEntitySet(typeof(КлассСМножествомТипов)).Name,
+                    $"PropertyStormnetNullableInt eq {i.Value.ToString()}");
 
                 // Обращаемся к OData-сервису и обрабатываем ответ.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
@@ -148,10 +155,12 @@
                 КлассСМножествомТипов класс = new КлассСМножествомТипов() { PropertySystemNullableDateTime = date, PropertyDateTime = date.Value };
                 var objs = new DataObject[] { класс };
                 args.DataService.UpdateObjects(ref objs);
-                string requestUrl;
 
                 // Проверка использования фильтрации для типа System.DateTime?.
-                requestUrl = $"http://localhost/odata/КлассСМножествомТиповs?$filter=day(PropertySystemNullableDateTime) eq {date.Value.Day}";
+                string requestUrl = string.Format(
+                    "http://localhost/odata/{0}?$filter={1}",
+                    args.Token.Model.GetEdmEntitySet(typeof(КлассСМножествомТипов)).Name,
+                    $"day(PropertySystemNullableDateTime) eq {date.Value.Day}");
 
                 // Обращаемся к OData-сервису и обрабатываем ответ.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
@@ -201,10 +210,12 @@
                 медв2.Берлога.Add(берлога3);
                 var objs = new DataObject[] { класс, медв, медв2, берлога2, берлога1, берлога3, лес1, лес2 };
                 args.DataService.UpdateObjects(ref objs);
-                string requestUrl;
 
                 // Проверка использования в фильтрации перечислений.
-                requestUrl = "http://localhost/odata/Медведьs?$filter=Пол eq NewPlatform.Flexberry.ORM.ODataService.Tests.tПол'Мужской'";
+                string requestUrl = string.Format(
+                    "http://localhost/odata/{0}?$filter={1}",
+                    args.Token.Model.GetEdmEntitySet(typeof(Медведь)).Name,
+                    "Пол eq NewPlatform.Flexberry.ORM.ODataService.Tests.tПол'Мужской'");
 
                 // Обращаемся к OData-сервису и обрабатываем ответ.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
@@ -274,8 +285,11 @@
             {
                 DataObject класс = new КлассСМножествомТипов() { PropertyInt = 15, PropertyDateTime = DateTime.Now };
                 args.DataService.UpdateObject(ref класс);
-                string requestUrl;
-                requestUrl = $"http://localhost/odata/КлассСМножествомТиповs?$filter=NotStoredProperty eq 15";
+
+                string requestUrl = string.Format(
+                    "http://localhost/odata/{0}?$filter={1}",
+                    args.Token.Model.GetEdmEntitySet(typeof(КлассСМножествомТипов)).Name,
+                    "NotStoredProperty eq 15");
 
                 // Обращаемся к OData-сервису и обрабатываем ответ.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)

@@ -6,7 +6,6 @@
     using System.Net;
     using System.Net.Http;
     using ICSSoft.STORMNET;
-    using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Windows.Forms;
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
 
@@ -54,7 +53,11 @@
                 string requestUrl;
 
                 // Проверка использования в фильтрации функции any.
-                requestUrl = "http://localhost/odata/Медведьs?$expand=Берлога&$filter=Берлога/any(f:f/Наименование eq 'Для хорошего настроения')";
+                requestUrl = string.Format(
+                    "http://localhost/odata/{0}?$expand={1}&$filter={2}",
+                    args.Token.Model.GetEdmEntitySet(typeof(Медведь)).Name,
+                    "Берлога",
+                    "Берлога/any(f:f/Наименование eq 'Для хорошего настроения')");
 
                 // Обращаемся к OData-сервису и обрабатываем ответ.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
@@ -72,7 +75,10 @@
                 }
 
                 // Проверка использования в фильтрации функции all.
-                requestUrl = $"http://localhost/odata/Медведьs?$filter=Берлога/all(f:f/Наименование eq 'Для хорошего настроения')";
+                requestUrl = string.Format(
+                    "http://localhost/odata/{0}?$filter={1}",
+                    args.Token.Model.GetEdmEntitySet(typeof(Медведь)).Name,
+                    "Берлога/all(f:f/Наименование eq 'Для хорошего настроения')");
 
                 // Обращаемся к OData-сервису и обрабатываем ответ.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
@@ -120,7 +126,10 @@
                 string requestUrl;
 
                 // Проверка запроса без опций
-                requestUrl = "http://localhost/odata/Медведьs(3f5cc1ca-6b2c-4c38-ba02-4b3fd5f1726c)";
+                requestUrl = string.Format(
+                    "http://localhost/odata/{0}({1})",
+                    args.Token.Model.GetEdmEntitySet(typeof(Медведь)).Name,
+                    "3f5cc1ca-6b2c-4c38-ba02-4b3fd5f1726c");
 
                 // Обращаемся к OData-сервису и обрабатываем ответ.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
@@ -141,7 +150,11 @@
                 }
 
                 // Проверка запроса с $select
-                requestUrl = "http://localhost/odata/Медведьs(3f5cc1ca-6b2c-4c38-ba02-4b3fd5f1726c)?$select=Вес,Пол";
+                requestUrl = string.Format(
+                    "http://localhost/odata/{0}({1})?$select={2}",
+                    args.Token.Model.GetEdmEntitySet(typeof(Медведь)).Name,
+                    "3f5cc1ca-6b2c-4c38-ba02-4b3fd5f1726c",
+                    "Вес,Пол");
 
                 // Обращаемся к OData-сервису и обрабатываем ответ.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
@@ -163,7 +176,11 @@
                 }
 
                 // Проверка запроса с $expand
-                requestUrl = "http://localhost/odata/Медведьs(3f5cc1ca-6b2c-4c38-ba02-4b3fd5f1726c)?$expand=Берлога";
+                requestUrl = string.Format(
+                    "http://localhost/odata/{0}({1})?$expand={2}",
+                    args.Token.Model.GetEdmEntitySet(typeof(Медведь)).Name,
+                    "3f5cc1ca-6b2c-4c38-ba02-4b3fd5f1726c",
+                    "Берлога");
 
                 // Обращаемся к OData-сервису и обрабатываем ответ.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
@@ -186,7 +203,11 @@
                 }
 
                 // Проверка запроса с $expand и $select
-                requestUrl = "http://localhost/odata/Медведьs(3f5cc1ca-6b2c-4c38-ba02-4b3fd5f1726c)?$expand=Берлога($select=Наименование)";
+                requestUrl = string.Format(
+                    "http://localhost/odata/{0}({1})?$expand={2}",
+                    args.Token.Model.GetEdmEntitySet(typeof(Медведь)).Name,
+                    "3f5cc1ca-6b2c-4c38-ba02-4b3fd5f1726c",
+                    "Берлога($select=Наименование)");
 
                 // Обращаемся к OData-сервису и обрабатываем ответ.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
@@ -243,7 +264,10 @@
                 string requestUrl;
 
                 // Использование $filter с функцией isof. Должны вернуться сущности всех типов, родительские и дочерние.
-                requestUrl = $"http://localhost/odata/КлассСМножествомТиповs?$filter=isof('NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов') or isof('NewPlatform.Flexberry.ORM.ODataService.Tests.ДочернийКласс')";
+                requestUrl = string.Format(
+                    "http://localhost/odata/{0}?$filter={1}",
+                    args.Token.Model.GetEdmEntitySet(typeof(КлассСМножествомТипов)).Name,
+                    "isof('NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов') or isof('NewPlatform.Flexberry.ORM.ODataService.Tests.ДочернийКласс')");
 
                 // Обращаемся к OData-сервису и обрабатываем ответ.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
@@ -261,7 +285,10 @@
                 }
 
                 // Использование $filter с функцией isof. Должны вернуться сущности только дочернего типа.
-                requestUrl = $"http://localhost/odata/КлассСМножествомТиповs?$filter=isof('NewPlatform.Flexberry.ORM.ODataService.Tests.ДочернийКласс')";
+                requestUrl = string.Format(
+                    "http://localhost/odata/{0}?$filter={1}",
+                    args.Token.Model.GetEdmEntitySet(typeof(КлассСМножествомТипов)).Name,
+                    "isof('NewPlatform.Flexberry.ORM.ODataService.Tests.ДочернийКласс')");
 
                 // Обращаемся к OData-сервису и обрабатываем ответ.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
@@ -279,7 +306,9 @@
                 }
 
                 // Без использования $filter. Должны вернуться также сущности, имеющие дочерний тип.
-                requestUrl = $"http://localhost/odata/КлассСМножествомТиповs";
+                requestUrl = string.Format(
+                    "http://localhost/odata/{0}",
+                    args.Token.Model.GetEdmEntitySet(typeof(КлассСМножествомТипов)).Name);
 
                 // Обращаемся к OData-сервису и обрабатываем ответ.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
@@ -314,7 +343,10 @@
                 args.DataService.UpdateObjects(ref objs);
                 string requestUrl;
 
-                requestUrl = "http://localhost/odata/КлассСМножествомТиповs?$filter=PropertyDateTime ge now()";
+                requestUrl = string.Format(
+                    "http://localhost/odata/{0}?$filter={1}",
+                    args.Token.Model.GetEdmEntitySet(typeof(КлассСМножествомТипов)).Name,
+                    "PropertyDateTime ge now()");
 
                 // Обращаемся к OData-сервису и обрабатываем ответ.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
@@ -331,7 +363,10 @@
                     Assert.Equal(0, ((JArray)receivedDict["value"]).Count);
                 }
 
-                requestUrl = $"http://localhost/odata/КлассСМножествомТиповs?$filter=PropertyDateTime le now()";
+                requestUrl = string.Format(
+                    "http://localhost/odata/{0}?$filter={1}",
+                    args.Token.Model.GetEdmEntitySet(typeof(КлассСМножествомТипов)).Name,
+                    "PropertyDateTime le now()");
 
                 // Обращаемся к OData-сервису и обрабатываем ответ.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
@@ -348,7 +383,10 @@
                     Assert.Equal(1, ((JArray)receivedDict["value"]).Count);
                 }
 
-                requestUrl = $"http://localhost/odata/КлассСМножествомТиповs?$filter=PropertyDateTime eq now()";
+                requestUrl = string.Format(
+                    "http://localhost/odata/{0}?$filter={1}",
+                    args.Token.Model.GetEdmEntitySet(typeof(КлассСМножествомТипов)).Name,
+                    "PropertyDateTime eq now()");
 
                 // Обращаемся к OData-сервису и обрабатываем ответ.
                 using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)

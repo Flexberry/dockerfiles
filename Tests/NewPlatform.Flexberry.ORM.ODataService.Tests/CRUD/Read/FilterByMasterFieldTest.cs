@@ -43,7 +43,11 @@
                 };
                 args.DataService.UpdateObjects(ref objs);
 
-                string requestUrl = "http://localhost/odata/Cars?$filter=Driver/Name eq 'Driver2'";
+                string requestUrl = string.Format(
+                    "http://localhost/odata/{0}?$filter={1}",
+                    args.Token.Model.GetEdmEntitySet(typeof(Car)).Name,
+                    "Driver/Name eq 'Driver2'");
+
                 using (var response = args.HttpClient.GetAsync(requestUrl).Result)
                 {
                     Assert.Equal(HttpStatusCode.OK, response.StatusCode);
