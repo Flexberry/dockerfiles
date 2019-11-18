@@ -57,60 +57,62 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Model
             resolvingViews = null;
 
             List<View> agregatorsViews = null;
-            IEnumerable<MethodCallExpression> agregatorsExpressions = GetCastCallInExpression(expr).OfType<MethodCallExpression>();
-
-            foreach (MethodCallExpression callExpression in agregatorsExpressions)
+            IEnumerable<MethodCallExpression> agregatorsExpressions = GetCastCallInExpression(expr)?.OfType<MethodCallExpression>();
+            if (agregatorsExpressions != null)
             {
-                if (callExpression.Arguments.Count != 2 || !(callExpression.Arguments[0] is MethodCallExpression))
+                foreach (MethodCallExpression callExpression in agregatorsExpressions)
                 {
-                    throw new Exception("Linq expression parsing error");
+                    if (callExpression.Arguments.Count != 2 || !(callExpression.Arguments[0] is MethodCallExpression))
+                    {
+                        throw new Exception("Linq expression parsing error");
+                    }
+
+                    MethodCallExpression firstArgument = callExpression.Arguments[0] as MethodCallExpression;
+
+                    if (firstArgument == null || firstArgument.Arguments.Count < 1 || !(firstArgument.Arguments[0] is MemberExpression))
+                    {
+                        throw new Exception("Linq expression parsing error");
+                    }
+
+                    MemberExpression expression = firstArgument.Arguments[0] as MemberExpression;
+
+                    Type agregatorType = expression.Expression.Type;
+
+                    if (agregatorType == view.DefineClassType)
+                    {
+                        // Если это собственный детейл класса, для которого строится ограничение, то никакой дополнительной логики не надо.
+                        continue;
+                    }
+
+                    // Если выражение содержит упоминание любого детейла, к которому применяется any, то надо вычислить представление агрегатора для метода LinqToLcs.GetLcs(...).
+                    View agregatorView = new View() { DefineClassType = agregatorType, Name = "DynamicFromODataServiceForAgregator" };
+
+                    if (!(callExpression.Arguments[1] is LambdaExpression) || (callExpression.Arguments[1] as LambdaExpression).Parameters.Count < 1)
+                    {
+                        throw new Exception("Linq expression parsing error");
+                    }
+
+                    // Добавим свойства в представление - выбрать все свойства из лямбды.
+                    LambdaExpression lambdaExpression = callExpression.Arguments[1] as LambdaExpression;
+                    List<string> properties = GetMembersFromLambdaExpression(lambdaExpression);
+
+                    View detailView = new View() { DefineClassType = lambdaExpression.Parameters[0].Type, Name = "DynamicFormOdataServiceForDetail" };
+
+                    foreach (string propName in properties)
+                    {
+                        detailView.AddProperty(propName);
+                    }
+
+                    string detailname = expression.Member.Name;
+                    agregatorView.AddDetailInView(detailname, detailView, true);
+
+                    if (agregatorsViews == null)
+                    {
+                        agregatorsViews = new List<View>();
+                    }
+
+                    agregatorsViews.Add(agregatorView);
                 }
-
-                MethodCallExpression firstArgument = callExpression.Arguments[0] as MethodCallExpression;
-
-                if (firstArgument == null || firstArgument.Arguments.Count < 1 || !(firstArgument.Arguments[0] is MemberExpression))
-                {
-                    throw new Exception("Linq expression parsing error");
-                }
-
-                MemberExpression expression = firstArgument.Arguments[0] as MemberExpression;
-
-                Type agregatorType = expression.Expression.Type;
-
-                if (agregatorType == view.DefineClassType)
-                {
-                    // Если это собственный детейл класса, для которого строится ограничение, то никакой дополнительной логики не надо.
-                    continue;
-                }
-
-                // Если выражение содержит упоминание любого детейла, к которому применяется any, то надо вычислить представление агрегатора для метода LinqToLcs.GetLcs(...).
-                View agregatorView = new View() { DefineClassType = agregatorType, Name = "DynamicFromODataServiceForAgregator" };
-
-                if (!(callExpression.Arguments[1] is LambdaExpression) || (callExpression.Arguments[1] as LambdaExpression).Parameters.Count < 1)
-                {
-                    throw new Exception("Linq expression parsing error");
-                }
-
-                // Добавим свойства в представление - выбрать все свойства из лямбды.
-                LambdaExpression lambdaExpression = callExpression.Arguments[1] as LambdaExpression;
-                List<string> properties = GetMembersFromLambdaExpression(lambdaExpression);
-
-                View detailView = new View() { DefineClassType = lambdaExpression.Parameters[0].Type, Name = "DynamicFormOdataServiceForDetail" };
-
-                foreach (string propName in properties)
-                {
-                    detailView.AddProperty(propName);
-                }
-
-                string detailname = expression.Member.Name;
-                agregatorView.AddDetailInView(detailname, detailView, true);
-
-                if (agregatorsViews == null)
-                {
-                    agregatorsViews = new List<View>();
-                }
-
-                agregatorsViews.Add(agregatorView);
             }
 
             LoadingCustomizationStruct lcs;
