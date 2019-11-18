@@ -50,10 +50,79 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Model
         /// <param name="dataObjectType">Тип</param>
         /// <param name="view">Начальное представление</param>
         /// <param name="dataService">Сервис данных</param>
+        /// <param name="resolvingViews">Представления для разрешения сложных выражений, например, детейлов мастера.</param>
         /// <returns>Представление</returns>
-        public static View GetViewWithPropertiesUsedInExpression(Expression expr, Type dataObjectType, View view, IDataService dataService)
+        public static View GetViewWithPropertiesUsedInExpression(Expression expr, Type dataObjectType, View view, IDataService dataService, out IEnumerable<View> resolvingViews)
         {
-            var lcs = LinqToLcs.GetLcs(expr, dataObjectType);
+            resolvingViews = null;
+
+            List<View> agregatorsViews = null;
+            IEnumerable<MethodCallExpression> agregatorsExpressions = GetCastCallInExpression(expr).OfType<MethodCallExpression>();
+
+            foreach (MethodCallExpression callExpression in agregatorsExpressions)
+            {
+                if (callExpression.Arguments.Count != 2 || !(callExpression.Arguments[0] is MethodCallExpression))
+                {
+                    throw new Exception("Linq expression parsing error");
+                }
+
+                MethodCallExpression firstArgument = callExpression.Arguments[0] as MethodCallExpression;
+
+                if (firstArgument == null || firstArgument.Arguments.Count < 1 || !(firstArgument.Arguments[0] is MemberExpression))
+                {
+                    throw new Exception("Linq expression parsing error");
+                }
+
+                MemberExpression expression = firstArgument.Arguments[0] as MemberExpression;
+
+                Type agregatorType = expression.Expression.Type;
+
+                if (agregatorType == view.DefineClassType)
+                {
+                    // Если это собственный детейл класса, для которого строится ограничение, то никакой дополнительной логики не надо.
+                    continue;
+                }
+
+                // Если выражение содержит упоминание любого детейла, к которому применяется any, то надо вычислить представление агрегатора для метода LinqToLcs.GetLcs(...).
+                View agregatorView = new View() { DefineClassType = agregatorType, Name = "DynamicFromODataServiceForAgregator" };
+
+                if (!(callExpression.Arguments[1] is LambdaExpression) || (callExpression.Arguments[1] as LambdaExpression).Parameters.Count < 1)
+                {
+                    throw new Exception("Linq expression parsing error");
+                }
+
+                // Добавим свойства в представление - выбрать все свойства из лямбды.
+                LambdaExpression lambdaExpression = callExpression.Arguments[1] as LambdaExpression;
+                List<string> properties = GetMembersFromLambdaExpression(lambdaExpression);
+
+                View detailView = new View() { DefineClassType = lambdaExpression.Parameters[0].Type, Name = "DynamicFormOdataServiceForDetail" };
+
+                foreach (string propName in properties)
+                {
+                    detailView.AddProperty(propName);
+                }
+
+                string detailname = expression.Member.Name;
+                agregatorView.AddDetailInView(detailname, detailView, true);
+
+                if (agregatorsViews == null)
+                {
+                    agregatorsViews = new List<View>();
+                }
+
+                agregatorsViews.Add(agregatorView);
+            }
+
+            LoadingCustomizationStruct lcs;
+            if (agregatorsViews == null)
+            {
+                lcs = LinqToLcs.GetLcs(expr, dataObjectType);
+            }
+            else
+            {
+                lcs = LinqToLcs.GetLcs(expr, view, agregatorsViews);
+                resolvingViews = agregatorsViews;
+            }
 
             if (lcs.ColumnsSort != null)
             {
@@ -64,8 +133,179 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Model
             }
 
             if (lcs.LimitFunction == null)
+            {
                 return view;
+            }
+
             return ViewPropertyAppender.GetViewWithPropertiesUsedInFunction(view, lcs.LimitFunction, dataService);
+        }
+
+        /// <summary>
+        /// Рекурсивный поиск названий свойств, участвующих в выражении.
+        /// </summary>
+        /// <param name="expression">Выражение, по которому ищем.</param>
+        /// <returns>Список найденных свойств.</returns>
+        private static List<string> GetMembersFromLambdaExpression(Expression expression)
+        {
+            if (expression == null)
+            {
+                throw new ArgumentNullException(nameof(expression));
+            }
+
+            if (expression is UnaryExpression)
+            {
+                UnaryExpression expr = expression as UnaryExpression;
+                return GetMembersFromLambdaExpression(expr.Operand);
+            }
+
+            if (expression.NodeType == ExpressionType.Lambda && expression is LambdaExpression)
+            {
+                LambdaExpression expr = expression as LambdaExpression;
+                return GetMembersFromLambdaExpression(expr.Body);
+            }
+
+            if (expression.NodeType == ExpressionType.MemberAccess && expression is MemberExpression)
+            {
+                MemberExpression expr = expression as MemberExpression;
+                if (expr.Expression.NodeType == ExpressionType.Constant)
+                {
+                    return null;
+                }
+
+                // Вычислить длинные цепочки вида Медведь.ЛесОбитания.Наименование.
+                string propName = null;
+                Expression currentEpression = expr;
+                while (currentEpression is MemberExpression)
+                {
+                    MemberExpression memberExpression = currentEpression as MemberExpression;
+                    if (propName == null)
+                    {
+                        propName = memberExpression.Member.Name;
+                    }
+                    else
+                    {
+                        propName = $"{memberExpression.Member.Name}.{propName}";
+                    }
+
+                    currentEpression = memberExpression.Expression;
+                }
+
+                return new List<string> { propName };
+            }
+
+            if (expression is BinaryExpression)
+            {
+                Expression left = (expression as BinaryExpression).Left;
+                Expression right = (expression as BinaryExpression).Right;
+
+                List<string> leftMembers = GetMembersFromLambdaExpression(left);
+                List<string> rightMembers = GetMembersFromLambdaExpression(right);
+
+                List<string> retList = null;
+
+                if (leftMembers != null)
+                {
+                    retList = leftMembers;
+                }
+
+                if (rightMembers != null)
+                {
+                    if (retList != null)
+                    {
+                        retList.AddRange(rightMembers);
+                    }
+                    else
+                    {
+                        retList = rightMembers;
+                    }
+                }
+
+                return retList;
+            }
+
+            if (expression.NodeType == ExpressionType.Call && expression is MethodCallExpression)
+            {
+                MethodCallExpression expr = expression as MethodCallExpression;
+
+                List<string> retList = null;
+                foreach (Expression argumentExpression in expr.Arguments)
+                {
+                    List<string> argumentExpressionList = GetMembersFromLambdaExpression(argumentExpression);
+                    if (argumentExpressionList != null)
+                    {
+                        if (retList != null)
+                        {
+                            retList.AddRange(argumentExpressionList);
+                        }
+                        else
+                        {
+                            retList = argumentExpressionList;
+                        }
+                    }
+                }
+
+                return retList;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Получить список выражений с вызовом метода Cast.
+        /// </summary>
+        /// <param name="expression">Выражение, по которому пробегаемся.</param>
+        /// <returns>Список выражений, указывающих на Cast.</returns>
+        private static IEnumerable<Expression> GetCastCallInExpression(Expression expression)
+        {
+            if (expression == null)
+            {
+                throw new ArgumentNullException(nameof(expression));
+            }
+
+            if (expression.NodeType == ExpressionType.Quote && expression is UnaryExpression)
+            {
+                UnaryExpression expr = expression as UnaryExpression;
+                return GetCastCallInExpression(expr.Operand);
+            }
+
+            if (expression.NodeType == ExpressionType.Lambda && expression is LambdaExpression)
+            {
+                LambdaExpression expr = expression as LambdaExpression;
+                return GetCastCallInExpression(expr.Body);
+            }
+
+            if (expression.NodeType == ExpressionType.Call && expression is MethodCallExpression)
+            {
+                MethodCallExpression expr = expression as MethodCallExpression;
+
+                if (expr.Arguments.Count == 2 && expr.Arguments[0] is MethodCallExpression && (expr.Arguments[0] as MethodCallExpression).Method.Name == "Cast")
+                {
+                    return new List<Expression>() { expr };
+                }
+                else
+                {
+                    List<Expression> retList = null;
+                    foreach (Expression argumentExpression in expr.Arguments)
+                    {
+                        IEnumerable<Expression> argumentExpressionList = GetCastCallInExpression(argumentExpression);
+                        if (argumentExpressionList != null)
+                        {
+                            if (retList != null)
+                            {
+                                retList.AddRange(argumentExpressionList);
+                            }
+                            else
+                            {
+                                retList = argumentExpressionList as List<Expression>;
+                            }
+                        }
+                    }
+
+                    return retList;
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -240,7 +480,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Model
                     }
 
                     p = pp - 1;
-                    var itemType = propTypes[0].GetProperty("Item", new [] { typeof(int) }).PropertyType;
+                    var itemType = propTypes[0].GetProperty("Item", new[] { typeof(int) }).PropertyType;
                     propList.AddRange(GetProperties(itemType));
                     view.AddDetailInView(detailSegment, Create(itemType, propList, cache).View, true, "", true, "", null);
                 }

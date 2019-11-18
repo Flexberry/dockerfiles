@@ -974,7 +974,8 @@
             View view = _model.GetDataObjectDefaultView(type);
             if (_dynamicView != null)
                 view = _dynamicView.View;
-            view = DynamicView.GetViewWithPropertiesUsedInExpression(expr, type, view, _dataService);
+            IEnumerable<View> resolvingViews;
+            view = DynamicView.GetViewWithPropertiesUsedInExpression(expr, type, view, _dataService, out resolvingViews);
             if (_lcsLoadingTypes.Count == 0)
                 _lcsLoadingTypes = _model.GetDerivedTypes(type).ToList();
 
@@ -990,7 +991,7 @@
             LoadingCustomizationStruct lcs = new LoadingCustomizationStruct(null);
             if (expr != null)
             {
-                lcs = LinqToLcs.GetLcs(expr, view);
+                lcs = LinqToLcs.GetLcs(expr, view, resolvingViews);
             }
 
             lcs.View = view;

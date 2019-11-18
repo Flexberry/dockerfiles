@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>NewPlatform.Flexberry.ORM.ODataService</id>
-    <version>5.1.0-alpha04</version>
+    <version>5.1.0-alpha05</version>
     <title>Flexberry ORM ODataService</title>
     <authors>New Platform Ltd.</authors>
     <owners>New Platform Ltd.</owners>
@@ -15,6 +15,7 @@
       Added
       1. Handle httpResponseException with OdataError wrapped in targetInvocationException.
       2. Support $batch request for transactional update data objects.
+      3. Support for limits on master details.
 
       Changed
       1. JavaScriptSerializer replaced with Newtonsoft.Json.JsonConvert for better performance.
