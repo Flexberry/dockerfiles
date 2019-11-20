@@ -12,9 +12,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
 {
     using System;
     using System.Xml;
-    
-    
+
+
     // *** Start programmer edit section *** (Using statements)
+    using ICSSoft.STORMNET;
 
     // *** End programmer edit section *** (Using statements)
 
@@ -40,12 +41,19 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
         public virtual ICSSoft.STORMNET.DataObject[] OnUpdateБерлога(NewPlatform.Flexberry.ORM.ODataService.Tests.Берлога UpdatedObject)
         {
             // *** Start programmer edit section *** (OnUpdateБерлога)
-            if (UpdatedObject.GetStatus() == ICSSoft.STORMNET.ObjectStatus.Created)
+            if (UpdatedObject.GetStatus() == ObjectStatus.Created)
             {
                 UpdatedObject.ПолеБС = "Object created.";
-
             }
-            return new ICSSoft.STORMNET.DataObject[0];
+            else if (UpdatedObject.GetStatus() == ObjectStatus.Altered)
+            {
+                if (UpdatedObject.IsAlteredProperty(x => x.ЛесРасположения) && UpdatedObject.ЛесРасположения != null)
+                {
+                    UpdatedObject.ПолеБС = $"Берлога расположена в {UpdatedObject.ЛесРасположения.Название}";
+                }
+            }
+
+            return new DataObject[0];
             // *** End programmer edit section *** (OnUpdateБерлога)
         }
     }

@@ -11,7 +11,6 @@
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Reflection;
-    using System.Web;
     using System.Web.Http;
     using System.Web.Http.Dispatcher;
     using System.Web.Http.Results;
@@ -19,14 +18,14 @@
     using System.Web.OData.Extensions;
     using System.Web.OData.Query;
     using System.Web.OData.Routing;
-    using Handlers;
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Business.LINQProvider;
     using ICSSoft.STORMNET.FunctionalLanguage;
-    using ICSSoft.STORMNET.FunctionalLanguage.SQLWhere;
     using ICSSoft.STORMNET.KeyGen;
+    using ICSSoft.STORMNET.Security;
     using ICSSoft.STORMNET.UserDataTypes;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
@@ -34,14 +33,11 @@
     using NewPlatform.Flexberry.ORM.ODataService.Expressions;
     using NewPlatform.Flexberry.ORM.ODataService.Formatter;
     using NewPlatform.Flexberry.ORM.ODataService.Functions;
+    using NewPlatform.Flexberry.ORM.ODataService.Handlers;
     using NewPlatform.Flexberry.ORM.ODataService.Model;
     using NewPlatform.Flexberry.ORM.ODataService.Offline;
     using ODataPath = System.Web.OData.Routing.ODataPath;
     using OrderByQueryOption = NewPlatform.Flexberry.ORM.ODataService.Expressions.OrderByQueryOption;
-    using Microsoft.Practices.Unity;
-    using Microsoft.Practices.Unity.Configuration;
-    using ICSSoft.STORMNET.Security;
-    using Microsoft.OData.Core;
 
     /// <summary>
     /// Определяет класс контроллера OData, который поддерживает запись и чтение данных с использованием OData формата.
@@ -197,7 +193,6 @@
                 return InternalServerErrorMessage(ex);
             }
         }
-
 
         /// <summary>
         /// Обрабатывает запросы GET, которые предпринимают попытку получить отдельную сущность с помощью ключа из набора сущностей.
@@ -1032,7 +1027,6 @@
             return LoadObject(type, view, key);
         }
 
-
         /// <summary>
         /// Возвращает объект DataObject для данного ключа.
         /// </summary>
@@ -1059,9 +1053,8 @@
         /// <returns> Объект данных.</returns>
         private DataObject LoadObject(Type objType, View view, object keyValue)
         {
-            var ldef = SQLWhereLanguageDef.LanguageDef;
             LoadingCustomizationStruct lcs = LoadingCustomizationStruct.GetSimpleStruct(objType, _dynamicView.View);
-            lcs.LimitFunction = ldef.GetFunction(ldef.funcEQ, new VariableDef(ldef.GuidType, SQLWhereLanguageDef.StormMainObjectKey), keyValue);
+            lcs.LimitFunction = FunctionBuilder.BuildEquals(keyValue);
             int count = -1;
             DataObject[] dobjs = LoadObjects(lcs, out count);
             if (dobjs.Length > 0)
