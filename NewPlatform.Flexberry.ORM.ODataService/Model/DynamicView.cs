@@ -100,7 +100,22 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Model
 
                     foreach (string propName in properties)
                     {
-                        detailView.AddProperty(propName);
+                        string addProp;
+
+                        // Если добавляется первичный ключ мастера, то добавляем просто мастера, поскольку так работает LinqToLcs.
+                        if (propName.EndsWith(nameof(DataObject.__PrimaryKey)))
+                        {
+                            addProp = propName.Substring(0, propName.LastIndexOf(nameof(DataObject.__PrimaryKey)) - 1);
+                        }
+                        else
+                        {
+                            addProp = propName;
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(addProp) && !detailView.CheckPropname(addProp))
+                        {
+                            detailView.AddProperty(addProp);
+                        }
                     }
 
                     string detailname = expression.Member.Name;
