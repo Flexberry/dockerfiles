@@ -4,7 +4,7 @@ MAINTAINER mail@flexberry.ru
 
 RUN apt-get update ; \
     apt-get install -y mc htop mono-4.0-service git sudo ; \
-	curl -sL http://deb.nodesource.com/setup_6.x -o nodesource_setup.sh ; \
+	curl -sL http://deb.nodesource.com/setup_8.x -o nodesource_setup.sh ; \
 	bash nodesource_setup.sh ; \
 	apt-get -y install nodejs ; \
     curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -  ; \
