@@ -22,5 +22,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added 
 - .autobuils with version 1.0.0
 - hooks for set version tree
-- **in builded image ember MISSING. Should rebuild image**
 
