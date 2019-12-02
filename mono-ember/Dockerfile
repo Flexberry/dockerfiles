@@ -1,4 +1,4 @@
-FROM mono:5.10
+FROM mono:5.10.0.160
 
 MAINTAINER mail@flexberry.ru
 
