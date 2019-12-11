@@ -22,10 +22,8 @@ read CI_SERVER_TOKEN < /run/secrets/gitlab_registry_token
 
 (
 set -x
-sleep 5
+sleep 2
 
-tries = 12
-n=0
 until gitlab-runner register -n \
   --url $CI_SERVER_URL \
   --clone-url $CI_SERVER_URL \
@@ -36,10 +34,6 @@ until gitlab-runner register -n \
   --docker-image "docker:19.03.5" \
   --docker-volumes /var/run/docker.sock:/var/run/docker.sock
 do
-  if [ $n -ge $tries ]
-  then
-    killall gitlab-runner
-  fi
   sleep 5
 done
 ) &
