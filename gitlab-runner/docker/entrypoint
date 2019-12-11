@@ -27,7 +27,7 @@ sleep 5
 tries = 12
 n=0
 until gitlab-runner register -n \
-  --url http://nevod.ru:10080/ \
+  --url $CI_SERVER_URL \
   --clone-url $CI_SERVER_URL \
   --registration-token $CI_SERVER_TOKEN \
   --executor docker \
