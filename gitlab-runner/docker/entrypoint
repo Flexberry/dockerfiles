@@ -18,7 +18,12 @@ if [ -f "${CA_CERTIFICATES_PATH}" ]; then
   cmp --silent "${CA_CERTIFICATES_PATH}" "${LOCAL_CA_PATH}" || update_ca
 fi
 
-read CI_SERVER_TOKEN < /run/secrets/gitlab_registry_token
+if [ -z "$CI_SERVER_TOKEN_NAME" ]
+then
+  CI_SERVER_TOKEN_NAME=gitlab_registry_token
+fi
+
+read CI_SERVER_TOKEN < /run/secrets/$CI_SERVER_TOKEN_NAME
 
 (
 set -x
