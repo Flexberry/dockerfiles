@@ -18,6 +18,16 @@ if [ -f "${CA_CERTIFICATES_PATH}" ]; then
   cmp --silent "${CA_CERTIFICATES_PATH}" "${LOCAL_CA_PATH}" || update_ca
 fi
 
+if [ -z "$CI_SERVER_DOCKER_IMAGE" ]
+then
+  CI_SERVER_DOCKER_IMAGE="docker:19.03.5"
+fi
+
+if [ -z "$CI_SERVER_DOCKER_HELPER_IMAGE" ]
+then
+  CI_SERVER_DOCKER_HELPER_IMAGE="gitlab/gitlab-runner-helper:x86_64-577f813d"
+fi
+
 if [ -z "$CI_SERVER_TOKEN_NAME" ]
 then
   CI_SERVER_TOKEN_NAME=gitlab_registry_token
@@ -36,7 +46,8 @@ until gitlab-runner register -n \
   --executor docker \
   --description "Shared GitLab Runner with Docker Executor" \
   --tag-list "docker-executor" \
-  --docker-image "docker:19.03.5" \
+  --docker-image $CI_SERVER_DOCKER_IMAGE \
+  --docker-helper-image $CI_SERVER_DOCKER_HELPER_IMAGE \
   --docker-volumes /var/run/docker.sock:/var/run/docker.sock
 do
   sleep 5
