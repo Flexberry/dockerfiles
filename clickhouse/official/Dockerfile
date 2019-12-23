@@ -6,7 +6,8 @@ MAINTAINER mail@flexberry.ru
 
 RUN \
     apt-get update; \
-    apt-get install -y less vim psmisc telnet postgresql-client unixodbc odbcinst odbc-postgresql xsltproc libxml2-utils
+    apt-get install -y less vim psmisc telnet postgresql-client unixodbc odbcinst odbc-postgresql xsltproc libxml2-utils python3-pip; \
+    pip3 install clickhouse-driver psycopg2-binary
 
 COPY /docker-entrypoint-initdb.d /docker-entrypoint-initdb.d
 
