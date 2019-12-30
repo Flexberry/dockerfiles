@@ -266,6 +266,7 @@
     <Compile Include="CRUD\Read\Excel\ExportExcel.cs" />
     <Compile Include="CRUD\Read\Excel\SpreadsheetCustomizer.cs" />
     <Compile Include="CRUD\Read\FilterByMasterDetailFieldTest.cs" />
+    <Compile Include="CRUD\Read\FilterByPseudoDetailFieldTest.cs" />
     <Compile Include="CRUD\Read\ReferenceToMasterTest.cs" />
     <Compile Include="CRUD\Read\UtfRequestsTest.cs" />
     <Compile Include="CRUD\Update\BusinessServersTest.cs" />

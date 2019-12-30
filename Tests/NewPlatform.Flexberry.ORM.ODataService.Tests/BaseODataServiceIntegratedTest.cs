@@ -1,13 +1,14 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.Net.Http;
     using System.Reflection;
     using System.Web.Http;
     using System.Web.Http.Cors;
-
+    using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
-
+    using ICSSoft.STORMNET.Business.LINQProvider;
     using NewPlatform.Flexberry.ORM.ODataService.Extensions;
     using NewPlatform.Flexberry.ORM.ODataService.Model;
 
@@ -44,7 +45,9 @@
 
         public BaseODataServiceIntegratedTest(
             string stageCasePath = @"РТЦ Тестирование и документирование\Модели для юнит-тестов\Flexberry ORM\NewPlatform.Flexberry.ORM.ODataService.Tests\",
-            bool useNamespaceInEntitySetName = false, bool useGisDataService = false)
+            bool useNamespaceInEntitySetName = false,
+            bool useGisDataService = false,
+            PseudoDetailDefinitions pseudoDetailDefinitions = null)
             : base("ODataDB", useGisDataService)
         {
             DataObjectsAssembliesNames = new[]
@@ -53,9 +56,8 @@
                 //typeof(Agent).Assembly
             };
             UseNamespaceInEntitySetName = useNamespaceInEntitySetName;
-            var builder = new DefaultDataObjectEdmModelBuilder(DataObjectsAssembliesNames, UseNamespaceInEntitySetName);
-            //builder.PropertyFilter = PropertyFilter;
-            _builder = builder;
+
+            _builder = new DefaultDataObjectEdmModelBuilder(DataObjectsAssembliesNames, UseNamespaceInEntitySetName, pseudoDetailDefinitions);
         }
 
         /// <summary>

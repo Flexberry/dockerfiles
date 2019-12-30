@@ -1,6 +1,5 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Model
 {
-    using Microsoft.Spatial;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -8,16 +7,16 @@
     using System.Reflection;
     using System.Web.OData;
 
+    using ICSSoft.Services;
     using ICSSoft.STORMNET;
-
-    using NewPlatform.Flexberry.ORM.ODataService.Functions;
 
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Library.Expressions;
     using Microsoft.OData.Edm.Library.Values;
+    using Microsoft.Spatial;
 
-    using ICSSoft.Services;
+    using NewPlatform.Flexberry.ORM.ODataService.Functions;
 
     using Unity;
 
@@ -121,6 +120,7 @@
             BuildEntitySets();
             RegisterMasters();
             RegisterDetails();
+            RegisterPseudoDetails();
             RegisterGeoIntersectsFunction();
             RegisterGeomIntersectsFunction();
         }
@@ -328,6 +328,50 @@
                             GetEdmEntitySet(derivedDataObjectType).AddNavigationTarget(unidirectionalNavigation, targetEdmEntitySet);
                         }
                     }
+                }
+            }
+        }
+
+        private void RegisterPseudoDetails()
+        {
+            foreach (Type dataObjectType in _metadata.Types)
+            {
+                DataObjectEdmTypeSettings typeSettings = _metadata[dataObjectType];
+                EdmEntityType edmEntityType = _registeredEdmEntityTypes[dataObjectType];
+
+                foreach (var detailProperty in typeSettings.PseudoDetailProperties)
+                {
+                    if (!_registeredEdmEntityTypes.ContainsKey(detailProperty.Value.DetailType))
+                    {
+                        throw new Exception($"Тип псевдодетейла {detailProperty.Value.DetailType.FullName} не найден для типа {dataObjectType.FullName}.");
+                    }
+
+                    EdmEntityType edmTargetEntityType = _registeredEdmEntityTypes[detailProperty.Value.DetailType];
+
+                    string name = (detailProperty.Key as PseudoDetailPropertyInfo).Name;
+
+                    var nameBuilder = EdmModelBuilder.EntityPropertyNameBuilder;
+                    PropertyInfo pi = dataObjectType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy)
+                        .Where(x => nameBuilder(x) == name)
+                        .FirstOrDefault();
+                    if (pi != null)
+                    {
+                        throw new Exception($"Недопустимое переопределение существующего свойства {pi.Name} c типом {pi.PropertyType} " +
+                            $"одноименным псевдосвойством с типом {detailProperty.Value.DetailType.FullName} для типа {dataObjectType.FullName}.");
+                    }
+
+                    var navigationProperty = new EdmNavigationPropertyInfo
+                    {
+                        Name = name,
+                        Target = edmTargetEntityType,
+                        TargetMultiplicity = EdmMultiplicity.Many
+                    };
+
+                    EdmNavigationProperty unidirectionalNavigation = edmEntityType.AddUnidirectionalNavigation(navigationProperty);
+
+                    EdmEntitySet thisEdmEntitySet = _registeredEntitySets[dataObjectType];
+                    EdmEntitySet targetEdmEntitySet = _registeredEntitySets[detailProperty.Value.DetailType];
+                    thisEdmEntitySet.AddNavigationTarget(unidirectionalNavigation, targetEdmEntitySet);
                 }
             }
         }

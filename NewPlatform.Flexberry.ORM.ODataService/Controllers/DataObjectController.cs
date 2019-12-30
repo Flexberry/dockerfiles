@@ -440,9 +440,27 @@
                 }
             }
 
+            Type masterType = EdmLibHelpers.GetClrType(entityType.ToEdmTypeReference(true), _model);
+            IDataObjectEdmModelBuilder builder = (_model as DataObjectEdmModel).EdmModelBuilder;
+
             foreach (var prop in entityType.Properties())
             {
-                string dataObjectPropName = _model.GetDataObjectProperty(entityType.FullTypeName(), prop.Name).Name;
+                string dataObjectPropName = null;
+                try
+                {
+                    dataObjectPropName = _model.GetDataObjectProperty(entityType.FullTypeName(), prop.Name).Name;
+                }
+                catch (KeyNotFoundException)
+                {
+                    // Check if prop value is the link from master to pseudodetail (pseudoproperty).
+                    if (builder.GetPseudoDetail(masterType, prop.Name) != null)
+                    {
+                        continue;
+                    }
+                    
+                    throw;
+                }
+
                 if (prop is EdmNavigationProperty)
                 {
                     if (expandedProperties.ContainsKey(prop.Name))

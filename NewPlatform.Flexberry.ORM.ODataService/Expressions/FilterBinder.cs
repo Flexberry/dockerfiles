@@ -4,7 +4,6 @@
 
 namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 {
-    using Microsoft.Spatial;
     using System;
     using System.Collections.Generic;
     using System.Data.Linq;
@@ -14,17 +13,17 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Runtime.CompilerServices;
-    using System.Web.Http;
     using System.Web.Http.Dispatcher;
-    using System.Web.OData.Formatter;
-    using System.Web.OData.Properties;
     using System.Web.OData.Query;
     using System.Xml.Linq;
+    using ICSSoft.STORMNET.Business.LINQProvider;
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
+    using Microsoft.Spatial;
+    using NewPlatform.Flexberry.ORM.ODataService.Model;
 
     /// <summary>
     /// Translates an OData $filter parse tree represented by <see cref="FilterClause"/> to
@@ -234,7 +233,21 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
             }
         }
 
-        private static Expression Any(Expression source, Expression filter)
+        private void GetAllAnyElementType(Expression source, out Type elementType, out IPseudoDetailDefinition pseudoDetailDefinition)
+        {
+            IDataObjectEdmModelBuilder builder = (_model as DataObjectEdmModel).EdmModelBuilder;
+            pseudoDetailDefinition = builder.GetPseudoDetailDefinition((source as ConstantExpression)?.Value);
+            if (pseudoDetailDefinition != null)
+            {
+                pseudoDetailDefinition.PseudoPropertyType.IsCollection(out elementType);
+            }
+            else
+            {
+                source.Type.IsCollection(out elementType);
+            }
+        }
+
+        private Expression Any(Expression source, Expression filter)
         {
             if (source == null)
             {
@@ -242,7 +255,9 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
             }
 
             Type elementType;
-            source.Type.IsCollection(out elementType);
+            IPseudoDetailDefinition pdd;
+            GetAllAnyElementType(source, out elementType, out pdd);
+
             if (elementType == null)
             {
                 throw new ArgumentException("Contract assertion not met: elementType != null", "value");
@@ -250,6 +265,11 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
             if (filter == null)
             {
+                if (pdd != null)
+                {
+                    return Expression.Call(source, pdd.EmptyAnyMethod, new Expression[0]);
+                }
+
                 if (IsIQueryable(source.Type))
                 {
                     return Expression.Call(null, ExpressionHelperMethods.QueryableEmptyAnyGeneric.MakeGenericMethod(elementType), source);
@@ -261,6 +281,11 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
             }
             else
             {
+                if (pdd != null)
+                {
+                    return Expression.Call(source, pdd.NonEmptyAnyMethod, filter);
+                }
+
                 if (IsIQueryable(source.Type))
                 {
                     return Expression.Call(null, ExpressionHelperMethods.QueryableNonEmptyAnyGeneric.MakeGenericMethod(elementType), source, filter);
@@ -272,7 +297,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
             }
         }
 
-        private static Expression All(Expression source, Expression filter)
+        private Expression All(Expression source, Expression filter)
         {
             if (source == null)
             {
@@ -285,10 +310,17 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
             }
 
             Type elementType;
-            source.Type.IsCollection(out elementType);
+            IPseudoDetailDefinition pdd;
+            GetAllAnyElementType(source, out elementType, out pdd);
+
             if (elementType == null)
             {
                 throw new ArgumentException("Contract assertion not met: elementType != null", "value");
+            }
+
+            if (pdd != null)
+            {
+                return Expression.Call(source, pdd.AllMethod, filter);
             }
 
             if (IsIQueryable(source.Type))
@@ -1042,6 +1074,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
                     Type targetClrType = typeof(Nullable<>).MakeGenericType(typeof(Guid));
                     ret = Expression.Convert(ret, targetClrType);
                 }
+
                 if (propertyAccessNode.Property.Type.Definition.FullTypeName() == "Edm.String")
                 {
                     Type targetClrType = typeof(string);
@@ -1052,9 +1085,18 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
             return ret;
         }
 
+        private Expression CreatePseudoDetailConstantExpression(Type sourceType, string propertyName)
+        {
+            object pd = (_model as DataObjectEdmModel).EdmModelBuilder.GetPseudoDetail(sourceType, propertyName);
+            return Expression.Constant(pd);
+        }
+
         private Expression CreatePropertyAccessExpression(Expression source, IEdmProperty property)
         {
             string propertyName = EdmLibHelpers.GetClrPropertyName(property, _model);
+
+            // The result of <source != _lambdaParameters[ODataItParameterName]> expression in the condition
+            // is always false for Detail properties and Links from master to pseudodetails (pseudoproperties).
             if (_querySettings.HandleNullPropagation == HandleNullPropagationOption.True && IsNullable(source.Type) && source != _lambdaParameters[ODataItParameterName])
             {
                 Expression propertyAccessExpression;
@@ -1082,12 +1124,36 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
                 if (System.Type.GetType("Mono.Runtime") != null)
                 {
                     PropertyInfo pi = source.Type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+                    if (pi == null)
+                    {
+                        return CreatePseudoDetailConstantExpression(source.Type, propertyName);
+                    }
+
                     var exp = Expression.Property(source, pi);
                     return ConvertNonStandardPrimitives(exp);
                 }
                 else
                 {
-                    return ConvertNonStandardPrimitives(Expression.Property(source, propertyName));
+                    MemberExpression exp;
+                    try
+                    {
+                        exp = Expression.Property(source, propertyName);
+                    }
+                    catch (ArgumentException e)
+                    {
+                        if (e.ParamName == null)
+                        {
+                            PropertyInfo pi = source.Type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+                            if (pi == null)
+                            {
+                                return CreatePseudoDetailConstantExpression(source.Type, propertyName);
+                            }
+                        }
+
+                        throw;
+                    }
+
+                    return ConvertNonStandardPrimitives(exp);
                 }
             }
         }
@@ -2017,6 +2083,16 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
             var firstNode = anyNode.Source as CollectionNavigationNode;
             if (firstNode != null)
             {
+                // Check if firstNode.NavigationProperty value is the link from master to pseudodetail (pseudoproperty).
+                {
+                    Type masterType = EdmLibHelpers.GetClrType(firstNode.NavigationProperty.DeclaringType.ToEdmTypeReference(true), _model);
+                    IDataObjectEdmModelBuilder builder = (_model as DataObjectEdmModel).EdmModelBuilder;
+                    if (builder.GetPseudoDetail(masterType, firstNode.NavigationProperty.Name) != null)
+                    {
+                        return;
+                    }
+                }
+
                 var it = firstNode.Source as EntityRangeVariableReferenceNode;
                 if (it != null && it.Name == "$it")
                 {

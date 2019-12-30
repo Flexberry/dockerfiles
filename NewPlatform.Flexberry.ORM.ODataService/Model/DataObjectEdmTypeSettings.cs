@@ -45,5 +45,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Model
         /// The list of exposed properties.
         /// </summary>
         public IList<PropertyInfo> OwnProperties { get; } = new List<PropertyInfo>();
+
+        /// <summary>
+        /// The list of exposed links from master to pseudodetail (pseudoproperties) as properties.
+        /// </summary>
+        public IDictionary<PropertyInfo, DataObjectEdmDetailSettings> PseudoDetailProperties { get; } = new Dictionary<PropertyInfo, DataObjectEdmDetailSettings>();
     }
 }

@@ -33,5 +33,20 @@
         /// Delegate for building names for EDM entity properties.
         /// </summary>
         Func<PropertyInfo, string> EntityPropertyNameBuilder { get; set; }
+
+        /// <summary>
+        /// Returns <see cref="ICSSoft.STORMNET.Business.LINQProvider.PseudoDetail{T, TP}"/> as object.
+        /// </summary>
+        /// <param name="masterType">The type of master.</param>
+        /// <param name="masterToDetailPseudoProperty">The name of the link from master to pseudodetail (pseudoproperty).</param>
+        /// <returns>An <see cref="ICSSoft.STORMNET.Business.LINQProvider.PseudoDetail{T, TP}"/> instance as object.</returns>
+        object GetPseudoDetail(Type masterType, string masterToDetailPseudoProperty);
+
+        /// <summary>
+        /// Returns <see cref="IPseudoDetailDefinition" /> instance.
+        /// </summary>
+        /// <param name="pseudoDetail"><see cref="ICSSoft.STORMNET.Business.LINQProvider.PseudoDetail{T, TP}"/> instance as object.</param>
+        /// <returns>An <see cref="IPseudoDetailDefinition" /> instance.</returns>
+        IPseudoDetailDefinition GetPseudoDetailDefinition(object pseudoDetail);
     }
 }

@@ -28,6 +28,8 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
     // *** End programmer edit section *** (Блоха CustomAttributes)
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.none)]
+    [View("PseudoDetailView", new string[] {
+            "Кличка"})]
     public class Блоха : ICSSoft.STORMNET.DataObject
     {
         
@@ -102,6 +104,24 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
                 // *** Start programmer edit section *** (Блоха.МедведьОбитания Set end)
 
                 // *** End programmer edit section *** (Блоха.МедведьОбитания Set end)
+            }
+        }
+        
+        /// <summary>
+        /// Class views container.
+        /// </summary>
+        public class Views
+        {
+            
+            /// <summary>
+            /// Представление для работы тестов на фильтрацию с использованием псевдодетейла.
+            /// </summary>
+            public static ICSSoft.STORMNET.View PseudoDetailView
+            {
+                get
+                {
+                    return ICSSoft.STORMNET.Information.GetView("PseudoDetailView", typeof(NewPlatform.Flexberry.ORM.ODataService.Tests.Блоха));
+                }
             }
         }
     }

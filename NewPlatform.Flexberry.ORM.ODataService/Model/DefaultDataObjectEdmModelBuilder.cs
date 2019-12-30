@@ -7,6 +7,7 @@
 
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.KeyGen;
+
     /// <summary>
     /// Default implementation of <see cref="IDataObjectEdmModelBuilder"/>.
     /// Builds EDM-model by list of assemblies.
@@ -23,6 +24,11 @@
         /// Is need to add the whole type namespace for EDM entity set.
         /// </summary>
         private readonly bool _useNamespaceInEntitySetName;
+
+        /// <summary>
+        /// The list of links from master to pseudodetail (pseudoproperty) definitions.
+        /// </summary>
+        private readonly PseudoDetailDefinitions _pseudoDetailDefinitions;
 
         /// <summary>
         /// Delegate for additional filtering exposed types.
@@ -63,10 +69,11 @@
         /// </summary>
         /// <param name="searchAssemblies">The list of assemblies for searching types to expose.</param>
         /// <param name="useNamespaceInEntitySetName">Is need to add the whole type namespace for EDM entity set.</param>
-        public DefaultDataObjectEdmModelBuilder(IEnumerable<Assembly> searchAssemblies, bool useNamespaceInEntitySetName = true)
+        public DefaultDataObjectEdmModelBuilder(IEnumerable<Assembly> searchAssemblies, bool useNamespaceInEntitySetName = true, PseudoDetailDefinitions pseudoDetailDefinitions = null)
         {
             _searchAssemblies = searchAssemblies ?? throw new ArgumentNullException(nameof(searchAssemblies), "Contract assertion not met: searchAssemblies != null");
             _useNamespaceInEntitySetName = useNamespaceInEntitySetName;
+            _pseudoDetailDefinitions = pseudoDetailDefinitions ?? new PseudoDetailDefinitions();
 
             EntitySetNameBuilder = BuildEntitySetName;
             EntityPropertyNameBuilder = BuildEntityPropertyName;
@@ -125,6 +132,33 @@
         }
 
         /// <summary>
+        /// Returns <see cref="ICSSoft.STORMNET.Business.LINQProvider.PseudoDetail{T, TP}"/> as object.
+        /// </summary>
+        /// <param name="masterType">The type of master.</param>
+        /// <param name="masterToDetailPseudoProperty">The name of the link from master to pseudodetail (pseudoproperty).</param>
+        /// <returns>An <see cref="ICSSoft.STORMNET.Business.LINQProvider.PseudoDetail{T, TP}"/> instance as object.</returns>
+        public object GetPseudoDetail(Type masterType, string masterToDetailPseudoProperty)
+        {
+            return _pseudoDetailDefinitions
+                .Where(x => x.MasterType == masterType)
+                .Where(x => x.MasterToDetailPseudoProperty == masterToDetailPseudoProperty)
+                .FirstOrDefault()
+                ?.PseudoDetail;
+        }
+
+        /// <summary>
+        /// Returns <see cref="IPseudoDetailDefinition" /> instance.
+        /// </summary>
+        /// <param name="pseudoDetail"><see cref="ICSSoft.STORMNET.Business.LINQProvider.PseudoDetail{T, TP}"/> instance as object.</param>
+        /// <returns>An <see cref="IPseudoDetailDefinition" /> instance.</returns>
+        public IPseudoDetailDefinition GetPseudoDetailDefinition(object pseudoDetail)
+        {
+            return _pseudoDetailDefinitions
+                .Where(x => x.PseudoDetail == pseudoDetail)
+                .FirstOrDefault();
+        }
+
+        /// <summary>
         /// Adds the property for exposing.
         /// </summary>
         /// <param name="typeSettings">The type settings.</param>
@@ -148,6 +182,14 @@
             {
                 var detailType = dataObjectProperty.PropertyType.GetProperty("Item", new[] { typeof(int) }).PropertyType;
                 typeSettings.DetailProperties.Add(dataObjectProperty, new DataObjectEdmDetailSettings(detailType));
+                return;
+            }
+
+            // Link from master to pseudodetail (pseudoproperty).
+            if (dataObjectProperty is PseudoDetailPropertyInfo)
+            {
+                var detailType = dataObjectProperty.PropertyType.GenericTypeArguments[0];
+                typeSettings.PseudoDetailProperties.Add(dataObjectProperty, new DataObjectEdmDetailSettings(detailType));
                 return;
             }
 
@@ -241,6 +283,13 @@
                 if (overridden && property.Name != _keyProperty.Name)
                     continue;
                 AddProperty(typeSettings, property);
+            }
+
+            // Add the defined links from master to pseudodetail (pseudoproperties) as properties for exposing.
+            foreach (var definition in _pseudoDetailDefinitions.Where(x => x.MasterType == dataObjectType))
+            {
+                var pi = new PseudoDetailPropertyInfo(definition.MasterToDetailPseudoProperty, definition.PseudoPropertyType, definition.MasterType);
+                AddProperty(typeSettings, pi);
             }
         }
 

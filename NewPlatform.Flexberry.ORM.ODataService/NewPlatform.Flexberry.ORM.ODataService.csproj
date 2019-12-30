@@ -211,6 +211,10 @@
     <Compile Include="Model\DataObjectEdmMetadata.cs" />
     <Compile Include="Model\DataObjectEdmTypeSettings.cs" />
     <Compile Include="Model\DefaultDataObjectEdmModelBuilder.cs" />
+    <Compile Include="Model\IPseudoDetailDefinition.cs" />
+    <Compile Include="Model\DefaultPseudoDetailDefinition.cs" />
+    <Compile Include="Model\PseudoDetailDefinitions.cs" />
+    <Compile Include="Model\PseudoDetailPropertyInfo.cs" />
     <Compile Include="Offline\BaseOfflineManager.cs" />
     <Compile Include="Offline\DummyOfflineManager.cs" />
     <Compile Include="Offline\OfflineAuditService.cs" />
