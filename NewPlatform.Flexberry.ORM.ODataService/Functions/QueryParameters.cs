@@ -1,11 +1,16 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Functions
 {
-    using Controllers;
-    using ICSSoft.STORMNET.Business;
-    using Model;
     using System;
     using System.Net.Http;
-    using System.Web.OData.Query;
+
+    using ICSSoft.STORMNET.Business;
+
+    using Microsoft.OData.Core;
+
+    using NewPlatform.Flexberry.ORM.ODataService.Controllers;
+    using NewPlatform.Flexberry.ORM.ODataService.Model;
+
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Класс для хранения параметров запроса OData.
@@ -80,14 +85,21 @@
                 return;
             }
 
-            if (controller.QueryOptions.Skip != null)
+            try
             {
-                Skip = controller.QueryOptions.Skip.Value;
-            }
+                if (controller.QueryOptions.Skip != null)
+                {
+                    Skip = controller.QueryOptions.Skip.Value;
+                }
 
-            if (controller.QueryOptions.Top != null)
+                if (controller.QueryOptions.Top != null)
+                {
+                    Top = controller.QueryOptions.Top.Value;
+                }
+            }
+            catch (Exception ex)
             {
-                Top = controller.QueryOptions.Top.Value;
+                throw new ODataException($"Failed to initialize {nameof(QueryParameters)}: {JsonConvert.SerializeObject(controller.QueryOptions.RawValues)}", ex);
             }
         }
     }
