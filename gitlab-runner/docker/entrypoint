@@ -33,7 +33,12 @@ then
   CI_SERVER_TOKEN_NAME=gitlab_registry_token
 fi
 
-read CI_SERVER_TOKEN < /run/secrets/$CI_SERVER_TOKEN_NAME
+# read CI_SERVER_TOKEN < /run/secrets/$CI_SERVER_TOKEN_NAME
+CI_SERVER_TOKEN=`tr -d '\r\n' </tmp/secrets`
+
+echo -ne "CI_SERVER_TOKEN="; echo -ne "$CI_SERVER_TOKEN" | od -c;
+echo ""
+
 
 (
 set -x
