@@ -34,10 +34,10 @@ then
 fi
 
 # read CI_SERVER_TOKEN < /run/secrets/$CI_SERVER_TOKEN_NAME
-CI_SERVER_TOKEN=`tr -d '\r\n' </tmp/secrets`
+CI_SERVER_TOKEN=`tr -d '\r\n' /run/secrets/$CI_SERVER_TOKEN_NAME`
 
-echo -ne "CI_SERVER_TOKEN="; echo -ne "$CI_SERVER_TOKEN" | od -c;
-echo ""
+echo -ne "CI_SERVER_TOKEN=" >&2; echo -ne "$CI_SERVER_TOKEN" | od -c  >&2;
+echo ""  >&2
 
 
 (
