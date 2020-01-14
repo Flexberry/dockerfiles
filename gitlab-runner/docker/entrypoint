@@ -13,6 +13,11 @@ update_ca() {
   update-ca-certificates --fresh >/dev/null
 }
 
+if [ -n "$CI_SERVER_DEBUG" ]
+then
+  set -x
+fi
+
 if [ -f "${CA_CERTIFICATES_PATH}" ]; then
   # update the ca if the custom ca is different than the current
   cmp --silent "${CA_CERTIFICATES_PATH}" "${LOCAL_CA_PATH}" || update_ca
@@ -33,15 +38,20 @@ then
   CI_SERVER_TOKEN_NAME=gitlab_registry_token
 fi
 
-# read CI_SERVER_TOKEN < /run/secrets/$CI_SERVER_TOKEN_NAME
 CI_SERVER_TOKEN=`tr -d '\r\n' < /run/secrets/$CI_SERVER_TOKEN_NAME`
 
-echo -ne "CI_SERVER_TOKEN=" >&2; echo -ne "$CI_SERVER_TOKEN" | od -c  >&2;
-echo ""  >&2
-
+if [ -n "$CI_SERVER_DEBUG" ]
+then
+  echo -ne "CI_SERVER_TOKEN=" >&2; echo -ne "$CI_SERVER_TOKEN" | od -c  >&2;
+  echo ""  >&2
+fi
 
 (
-set -x
+if [ -n "$CI_SERVER_DEBUG" ]
+then
+  set -x
+fi
+
 sleep 2
 
 until gitlab-runner register -n \
