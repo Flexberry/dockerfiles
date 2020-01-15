@@ -1,0 +1,10 @@
+---
+
+- hosts: servers
+  become: yes
+  roles:
+    { role: base }
+  
+    #  tasks:
+    #- name: install basic packages
+    #  raw: apt-get install python python-modules python-module-simplejson python-module-pip

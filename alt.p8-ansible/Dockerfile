@@ -11,7 +11,7 @@ RUN export http_proxy=$http_proxy;\
   adduser ansible; \
   ssh-keygen -q -t rsa -N '' -f /root/.ssh/id_rsa;\
   echo "    StrictHostKeyChecking no" >> /etc/openssh/ssh_config ; \
-  wget -c https://raw.githubusercontent.com/appuio/ansible-ini2yaml/master/ini2yaml >/bin/ini2yaml; \
+  cd /bin; wget -c https://raw.githubusercontent.com/appuio/ansible-ini2yaml/master/ini2yaml; \
   chmod a+x /bin/ini2yaml
 
 COPY /root /
