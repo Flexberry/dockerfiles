@@ -118,7 +118,10 @@ getBuildFromGitTag() {
 
   IFS=-
   set -- $gitTag
-  shift
+  if [ $# -gt 1 ]
+  then
+    shift
+  fi
   IFS=$ifs
   echo $*
 }

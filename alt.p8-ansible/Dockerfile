@@ -8,8 +8,10 @@ RUN export http_proxy=$http_proxy;\
   bzip -d /var/lib/rpm/*.bz2; \
   apt-get update; \
   apt-get install -y ansible python-module-pip openssh-clients; \
-  ssh-keygen -q -t rsa -N '' -f /root/.ssh/id_rsa; 
-  
+  adduser ansible; \
+  ssh-keygen -q -t rsa -N '' -f /root/.ssh/id_rsa;\
+  echo "StrictHostKeyChecking no" >> /etc/openssh/ssh_config 
+
 COPY /root /
 
 

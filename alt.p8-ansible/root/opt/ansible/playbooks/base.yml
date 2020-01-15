@@ -1,8 +1,0 @@
----
-
-- hosts: servers
-  become: yes
-  tasks:
-
-    - name: install basic packages
-      raw: apt-get install python python-modules python-module-simplejson python-module-pip
