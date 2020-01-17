@@ -1,0 +1,40 @@
+- name: Установливаются пакеты docker и необходимые модули python
+  hosts: servers
+  become: yes
+  tasks:
+    - name: Уствновка пакетов docker
+      apt_rpm: pkg=docker-ce
+    - name: Обновление пакетв setuptools
+      command: pip install -U setuptools
+    - name: Установка модуля python - docker
+      pip:
+        name: docker.py
+
+- name: Инициализировать кластер
+  hosts: servers
+  become: yes
+  tasks:
+    - name: Запускается сервис docker
+      service:
+        name: docker
+        state: started
+
+    - name: Инициализируется основная нода кластера
+      docker_swarm:
+        state: present
+      register: swarm_facts
+      when: hostname == 'node1'
+
+    - debug: var=hostvars['node1']['swarm_facts']['swarm_facts']['JoinTokens']['Worker']
+
+    - name: Добавление остальных нод
+      docker_swarm:
+        state: join
+        join_token: "{{ hostvars.node1.swarm_facts.swarm_facts.JoinTokens.Worker }}"
+        #join_token: SWMTKN-1-1lz6jwgiwz9cftjvvgm2ahqcdw8hqcwlxn6j7mp1ltgi2dp18s-3tuwo6y1hhsv3v0n2u29a1w3y
+        advertise_addr:  10.150.7.96
+        remote_addrs: [ '10.150.7.89:2377' ]
+      when: hostname != 'node1'
+
+    #- debug: var=ansible_host
+    #- debug: var=hostname
