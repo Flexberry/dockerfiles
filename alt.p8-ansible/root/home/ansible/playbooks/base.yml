@@ -1,5 +1,5 @@
 
-- name: base
+- name: Инициализация хоста {{hostname}}
   hosts: servers
   become: yes
   tasks:

@@ -2,7 +2,7 @@
   hosts: servers
   become: yes
   tasks:
-    - name: Уствновка пакетов docker
+    - name: Установка пакетов docker
       apt_rpm: pkg=docker-ce
     - name: Обновление пакетв setuptools
       command: pip install -U setuptools
@@ -25,15 +25,17 @@
       register: swarm_facts
       when: hostname == 'node1'
 
-    - debug: var=hostvars['node1']['swarm_facts']['swarm_facts']['JoinTokens']['Worker']
+    #- debug: var=hostvars.node1.ansible_default_ipv4
+
+    #- debug: var=ansible_facts.default_ipv4.address
 
     - name: Добавление остальных нод
       docker_swarm:
         state: join
         join_token: "{{ hostvars.node1.swarm_facts.swarm_facts.JoinTokens.Worker }}"
         #join_token: SWMTKN-1-1lz6jwgiwz9cftjvvgm2ahqcdw8hqcwlxn6j7mp1ltgi2dp18s-3tuwo6y1hhsv3v0n2u29a1w3y
-        advertise_addr:  10.150.7.96
-        remote_addrs: [ '10.150.7.89:2377' ]
+        advertise_addr:  { ansible_facts.default_ipv4.address }
+        remote_addrs: [ '{{hostvars.node1.ansible_default_ipv4.address}}:2377' ]
       when: hostname != 'node1'
 
     #- debug: var=ansible_host
