@@ -1,8 +1,25 @@
 #! /usr/bin/env python
-import yaml, os, sys
+import yaml, os, sys, json
 
 inventory = yaml.safe_load(sys.stdin)
-#print(inventory)
+print'inventory', json.dumps(inventory, indent=2)
+
+hostList = {}
+groupList = {}
+for child in inventory['all']['children']:
+  if 'children' in inventory['all']['children'][child]:
+    groupList[child] = {}
+    for group in inventory['all']['children'][child]['children']:
+       groupList[child][group] = {}
+  else:
+    hostList[child] = {}
+    for host in inventory['all']['children'][child]['hosts']:
+      hostList[child][host] = inventory['all']['children'][child]['hosts'][host]
+
+print 'hostList=', json.dumps(hostList, indent=4)
+print 'groupList=', json.dumps(groupList, indent=4)
+
+sys.exit()
 
 hosts = {}
 for child in inventory['all']['children']:

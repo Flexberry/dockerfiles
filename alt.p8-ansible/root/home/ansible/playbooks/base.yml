@@ -1,10 +1,20 @@
----
 
-- hosts: servers
+- name: base
+  hosts: servers
   become: yes
-  roles:
-    { role: base }
-  
-    #  tasks:
-    #- name: install basic packages
-    #  raw: apt-get install python python-modules python-module-simplejson python-module-pip
+  tasks:
+    - name: Установка имени узла {{hostname}} в системном файле
+      replace:
+        path: /etc/sysconfig/network
+        regexp: 'HOSTNAME=.*'
+        replace: 'HOSTNAME={{hostname}}'
+      when: ansible_facts['distribution'] == 'Altlinux'
+
+    - name: Установка имени узла {{hostname}}
+      command: hostname  {{hostname}}
+
+    - name: Установка базовых модулей python
+      raw: apt-get install python python-modules python-module-simplejson python-module-pip
+      when: ansible_facts['distribution'] == 'Altlinux'
+
+    #- debug: var=ansible_facts
