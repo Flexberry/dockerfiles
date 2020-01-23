@@ -1,4 +1,4 @@
 #!/bin/sh
 pwd
-. ../../hookFunctions.sh
+. /hooks/hookFunctions.sh
 setAliases latest
