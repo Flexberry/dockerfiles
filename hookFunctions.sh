@@ -65,11 +65,11 @@ setListImageAliases() {
   set -- $IMAGE_NAME
   IFS=$ifs
   IMAGE="$2/$3"
-  if isPreRelease $4
-  then
-    ALIASES_NAMES=
-    return
-  fi
+#   if isPreRelease $4
+#   then
+#     ALIASES_NAMES=
+#     return
+#   fi
   IFS=+
   set -- $4
   IFS=$ifs
