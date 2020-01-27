@@ -5,8 +5,9 @@ MAINTAINER mail@flexberry.ru
 
 RUN export http_proxy=$http_proxy;\
   bzip2 -d /var/lib/rpm/*.bz2; \
+  echo "rpm http://repo.postgrespro.ru/pg_probackup/rpm/latest/altlinux-p8 x86_64 vanilla" > /etc/apt/sources.list.d/pg_probackup.list; \
   apt-get update && \
-  apt-get install -y postgresql12-server postgresql12-contrib && \
+  apt-get install -y postgresql12-server postgresql12-contrib pg_probackup-12 && \
   rm -f /var/cache/apt/archives/*.rpm /var/cache/apt/*.bin /var/lib/apt/lists/*.*; \
   bzip2 -9 /var/lib/rpm/*
 
@@ -26,6 +27,7 @@ RUN  chmod +x /docker-cmd.sh; \
   while [ -f /var/lib/pgsql/data/postmaster.pid ]; do sleep 5; done; \
   killall postgres; \
   while [ -f /tmp/.s.PGSQL.5432.lock ]; do sleep 5; done;
+
 
 
 EXPOSE 5432
