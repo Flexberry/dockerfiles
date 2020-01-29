@@ -1,3 +1,12 @@
+FROM flexberry/alt.p8-dev
+
+RUN \
+   bzip2 -d /var/lib/rpm/*bz2; apt-get update; apt-get install liblzo2-devel-static; \
+  cd /opt; git clone https://github.com/wal-g/wal-g; \
+  cd wal-g/; \
+  make install && make deps && make pg_build
+
+
 FROM flexberry/alt.p8
 ENV LANG ru_RU.UTF-8
 

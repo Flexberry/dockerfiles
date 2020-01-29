@@ -36,6 +36,10 @@ RUN \
   if [ -f /var/lib/rpm/Packages.bz2 ]; then bzip2 -d /var/lib/rpm/*bz2; apt-get update; fi ;\
   apt-get install -y  java-1.8.0-openjdk-devel maven;
 
+# GO
+RUN \
+  if [ -f /var/lib/rpm/Packages.bz2 ]; then bzip2 -d /var/lib/rpm/*bz2; apt-get update; fi ;\
+  apt-get install -y  golang
 
 RUN \
   rm -f /var/cache/apt/archives/*.rpm /var/cache/apt/*.bin /var/lib/apt/lists/*.*; \
