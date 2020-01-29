@@ -1,7 +1,7 @@
-FROM flexberry/alt.p8-dev
+FROM flexberry/alt.p8-dev AS dev
 
 RUN \
-   bzip2 -d /var/lib/rpm/*bz2; apt-get update; apt-get install liblzo2-devel-static; \
+   bzip2 -d /var/lib/rpm/*bz2; apt-get update; apt-get install -y liblzo2-devel-static; \
   cd /opt; git clone https://github.com/wal-g/wal-g; \
   cd wal-g/; \
   make install && make deps && make pg_build
@@ -37,7 +37,7 @@ RUN  chmod +x /docker-cmd.sh; \
   killall postgres; \
   while [ -f /tmp/.s.PGSQL.5432.lock ]; do sleep 5; done;
 
-
+COPY --from=dev /opt/wal-g/main/pg/wal-g /bin/
 
 EXPOSE 5432
 
