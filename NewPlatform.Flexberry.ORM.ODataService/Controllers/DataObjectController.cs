@@ -301,11 +301,11 @@
             for (int i = 0; i < view.Details.Length; i++)
             {
                 DetailInView detail = view.Details[i];
-                detail.View.Name = $"ViewDetail{i}";
+                detail.View.Name = string.IsNullOrEmpty(detail.Name) ? $"ViewDetail{i}" : detail.Name;
                 var column = par.HeaderCaptions.FirstOrDefault(col => col.PropertyName == detail.Name);
                 if (column != null)
                 {
-                    column.MasterName = "View";
+                    column.MasterName = string.IsNullOrEmpty(view.Name) ? "View" : view.Name;
                     column.DetailName = detail.View.Name;
                 }
 
