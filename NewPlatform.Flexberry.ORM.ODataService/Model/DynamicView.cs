@@ -169,32 +169,28 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Model
                 throw new ArgumentNullException(nameof(expression));
             }
 
-            if (expression is UnaryExpression)
+            if (expression is UnaryExpression unaryExpression)
             {
-                UnaryExpression expr = expression as UnaryExpression;
-                return GetMembersFromLambdaExpression(expr.Operand);
+                return GetMembersFromLambdaExpression(unaryExpression.Operand);
             }
 
-            if (expression.NodeType == ExpressionType.Lambda && expression is LambdaExpression)
+            if (expression.NodeType == ExpressionType.Lambda && expression is LambdaExpression lambdaExpression)
             {
-                LambdaExpression expr = expression as LambdaExpression;
-                return GetMembersFromLambdaExpression(expr.Body);
+                return GetMembersFromLambdaExpression(lambdaExpression.Body);
             }
 
-            if (expression.NodeType == ExpressionType.MemberAccess && expression is MemberExpression)
+            if (expression.NodeType == ExpressionType.MemberAccess && expression is MemberExpression memberAccessExpression)
             {
-                MemberExpression expr = expression as MemberExpression;
-                if (expr.Expression.NodeType == ExpressionType.Constant)
+                if (memberAccessExpression.Expression.NodeType == ExpressionType.Constant)
                 {
                     return null;
                 }
 
                 // Вычислить длинные цепочки вида Медведь.ЛесОбитания.Наименование.
                 string propName = null;
-                Expression currentEpression = expr;
-                while (currentEpression is MemberExpression)
+                Expression currentEpression = memberAccessExpression;
+                while (currentEpression is MemberExpression memberExpression)
                 {
-                    MemberExpression memberExpression = currentEpression as MemberExpression;
                     if (propName == null)
                     {
                         propName = memberExpression.Member.Name;
@@ -210,13 +206,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Model
                 return new List<string> { propName };
             }
 
-            if (expression is BinaryExpression)
+            if (expression is BinaryExpression binaryExpression)
             {
-                Expression left = (expression as BinaryExpression).Left;
-                Expression right = (expression as BinaryExpression).Right;
-
-                List<string> leftMembers = GetMembersFromLambdaExpression(left);
-                List<string> rightMembers = GetMembersFromLambdaExpression(right);
+                List<string> leftMembers = GetMembersFromLambdaExpression(binaryExpression.Left);
+                List<string> rightMembers = GetMembersFromLambdaExpression(binaryExpression.Right);
 
                 List<string> retList = null;
 
@@ -240,12 +233,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Model
                 return retList;
             }
 
-            if (expression.NodeType == ExpressionType.Call && expression is MethodCallExpression)
+            if (expression.NodeType == ExpressionType.Call && expression is MethodCallExpression methodCallExpression)
             {
-                MethodCallExpression expr = expression as MethodCallExpression;
-
                 List<string> retList = null;
-                foreach (Expression argumentExpression in expr.Arguments)
+                foreach (Expression argumentExpression in methodCallExpression.Arguments)
                 {
                     List<string> argumentExpressionList = GetMembersFromLambdaExpression(argumentExpression);
                     if (argumentExpressionList != null)
@@ -279,30 +270,53 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Model
                 throw new ArgumentNullException(nameof(expression));
             }
 
-            if (expression.NodeType == ExpressionType.Quote && expression is UnaryExpression)
+            if (expression.NodeType == ExpressionType.Quote && expression is UnaryExpression unaryExpression)
             {
-                UnaryExpression expr = expression as UnaryExpression;
-                return GetCastCallInExpression(expr.Operand);
+                return GetCastCallInExpression(unaryExpression.Operand);
             }
 
-            if (expression.NodeType == ExpressionType.Lambda && expression is LambdaExpression)
+            if (expression.NodeType == ExpressionType.Lambda && expression is LambdaExpression lambdaExpression)
             {
-                LambdaExpression expr = expression as LambdaExpression;
-                return GetCastCallInExpression(expr.Body);
+                return GetCastCallInExpression(lambdaExpression.Body);
             }
 
-            if (expression.NodeType == ExpressionType.Call && expression is MethodCallExpression)
+            if (expression is BinaryExpression binaryExpression)
             {
-                MethodCallExpression expr = expression as MethodCallExpression;
+                IEnumerable<Expression> expressionListLeft = GetCastCallInExpression(binaryExpression.Left);
+                IEnumerable<Expression> expressionListRight = GetCastCallInExpression(binaryExpression.Right);
 
-                if (expr.Arguments.Count == 2 && expr.Arguments[0] is MethodCallExpression && (expr.Arguments[0] as MethodCallExpression).Method.Name == "Cast")
+                List<Expression> retList = null;
+
+                if (expressionListLeft != null)
                 {
-                    return new List<Expression>() { expr };
+                    retList = expressionListLeft as List<Expression>;
+                }
+
+                if (expressionListRight != null)
+                {
+                    if (retList != null)
+                    {
+                        retList.AddRange(expressionListRight);
+                    }
+                    else
+                    {
+                        retList = expressionListRight as List<Expression>;
+                    }
+                }
+
+                return retList;
+            }
+
+            if (expression.NodeType == ExpressionType.Call && expression is MethodCallExpression methodCallExpression)
+            {
+                if (methodCallExpression.Arguments.Count == 2 && methodCallExpression.Arguments[0] is MethodCallExpression && (methodCallExpression.Arguments[0] as MethodCallExpression).Method.Name == "Cast")
+                {
+                    return new List<Expression>() { methodCallExpression };
                 }
                 else
                 {
                     List<Expression> retList = null;
-                    foreach (Expression argumentExpression in expr.Arguments)
+                    foreach (Expression argumentExpression in methodCallExpression.Arguments)
                     {
                         IEnumerable<Expression> argumentExpressionList = GetCastCallInExpression(argumentExpression);
                         if (argumentExpressionList != null)
