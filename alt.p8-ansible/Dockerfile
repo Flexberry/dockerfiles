@@ -7,7 +7,9 @@ MAINTAINER mail@flexberry.ru
 RUN export http_proxy=$http_proxy;\
   bzip -d /var/lib/rpm/*.bz2; \
   apt-get update; \
-  apt-get install -y ansible python-module-pip openssh-clients; \
+  apt-get install -y python3 python3-module-pip openssh-clients; \
+  pip3 install --upgrade pip; \
+  pip3  install  ansible paramiko; \  
   adduser ansible;  \
   ssh-keygen -q -t rsa -N '' -f /root/.ssh/id_rsa;\
   echo "    StrictHostKeyChecking no" >> /etc/openssh/ssh_config ;
