@@ -9,7 +9,7 @@ RUN export http_proxy=$http_proxy;\
   apt-get update; \
   apt-get install -y python3 python3-module-pip openssh-clients; \
   pip3 install --upgrade pip; \
-  pip3  install  ansible paramiko; \  
+  pip3  install  ansible paramiko jmespath; \
   adduser ansible;  \
   ssh-keygen -q -t rsa -N '' -f /root/.ssh/id_rsa;\
   echo "    StrictHostKeyChecking no" >> /etc/openssh/ssh_config ;
