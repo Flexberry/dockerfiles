@@ -32,13 +32,15 @@
         /// <param name="httpServer">HttpServer instance (GlobalConfiguration.DefaultServer).</param>
         /// <param name="routeName">The name of the route (<see cref="DataObjectRoutingConventions.DefaultRouteName"/> be default).</param>
         /// <param name="routePrefix">The route prefix (<see cref="DataObjectRoutingConventions.DefaultRoutePrefix"/> be default).</param>
+        /// <param name="isSyncBatchUpdate">Use synchronous mode for call subrequests in batch query.</param>
         /// <returns>OData service registration token.</returns>
         public static ManagementToken MapODataServiceDataObjectRoute(
             this HttpConfiguration config,
             IDataObjectEdmModelBuilder builder,
             HttpServer httpServer,
             string routeName = DataObjectRoutingConventions.DefaultRouteName,
-            string routePrefix = DataObjectRoutingConventions.DefaultRoutePrefix)
+            string routePrefix = DataObjectRoutingConventions.DefaultRoutePrefix,
+            bool? isSyncBatchUpdate = null)
         {
             if (config == null)
             {
@@ -81,7 +83,7 @@
                 throw new InvalidOperationException("IDataService is not registered in the dependency scope.");
             }
 
-            ODataBatchHandler batchHandler = new DataObjectODataBatchHandler(dataService, httpServer);
+            ODataBatchHandler batchHandler = new DataObjectODataBatchHandler(dataService, httpServer, isSyncBatchUpdate);
             batchHandler.ODataRouteName = routeName;
             config.Routes.MapHttpBatchRoute(routeName + "Batch", routePrefix + "/$batch", batchHandler);
 

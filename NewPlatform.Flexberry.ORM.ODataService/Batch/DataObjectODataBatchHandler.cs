@@ -31,7 +31,7 @@
         /// <summary>
         /// Flag, indicates that runtime is mono.
         /// </summary>
-        private static bool? isMonoRuntime;
+        private bool? isSyncMode;
 
         /// <summary>
         /// DataService instance for execute queries.
@@ -39,26 +39,24 @@
         private IDataService dataService;
 
         /// <summary>
-        /// Static constructor for hack with mono.
-        /// </summary>
-        static DataObjectODataBatchHandler()
-        {
-            // Mono has problems with async-await calls and correct save HttpContext.Current instance throught tasks threads. This hack need to disable multithreading in batch requests for mono.
-            if (isMonoRuntime == null)
-            {
-                isMonoRuntime = Type.GetType("Mono.Runtime") != null;
-            }
-        }
-
-        /// <summary>
         /// Initializes a new instance of the NewPlatform.Flexberry.ORM.ODataService.Batch.DataObjectODataBatchHandler class.
         /// </summary>
         /// <param name="dataService">DataService instance for execute queries.</param>
         /// <param name="httpServer">The System.Web.Http.HttpServer for handling the individual batch requests.</param>
-        public DataObjectODataBatchHandler(IDataService dataService, HttpServer httpServer)
+        /// <param name="isSyncMode">Use synchronous mode for call subrequests.</param>
+        public DataObjectODataBatchHandler(IDataService dataService, HttpServer httpServer, bool? isSyncMode = null)
             : base(httpServer)
         {
             this.dataService = dataService;
+
+            if (isSyncMode == null)
+            {
+                this.isSyncMode = Type.GetType("Mono.Runtime") != null;
+            }
+            else
+            {
+                this.isSyncMode = isSyncMode;
+            }
         }
 
         /// <inheritdoc />
@@ -73,7 +71,7 @@
 
             IList<ODataBatchRequestItem> subRequests;
 
-            if (isMonoRuntime == true)
+            if (isSyncMode == true)
             {
                 subRequests = ParseBatchRequestsAsync(request, cancellationToken).Result;
             }
@@ -84,7 +82,7 @@
 
             try
             {
-                if (isMonoRuntime == true)
+                if (isSyncMode == true)
                 {
                     IList<ODataBatchResponseItem> responses = ExecuteRequestMessagesAsync(subRequests, cancellationToken).Result;
                     return CreateResponseMessageAsync(responses, request, cancellationToken).Result;
@@ -122,7 +120,7 @@
 
             ODataMessageReader reader;
 
-            if (isMonoRuntime == true)
+            if (isSyncMode == true)
             {
                 reader = request.Content.GetODataMessageReaderAsync(oDataReaderSettings, cancellationToken).Result;
             }
@@ -142,7 +140,7 @@
                 {
                     IList<HttpRequestMessage> changeSetRequests;
 
-                    if (isMonoRuntime == true)
+                    if (isSyncMode == true)
                     {
                         changeSetRequests = batchReader.ReadChangeSetRequestAsync(batchId, cancellationToken).Result;
                     }
@@ -162,7 +160,7 @@
                 {
                     HttpRequestMessage operationRequest;
 
-                    if (isMonoRuntime == true)
+                    if (isSyncMode == true)
                     {
                         operationRequest = batchReader.ReadOperationRequestAsync(batchId, bufferContentStream: true, cancellationToken: cancellationToken).Result;
                     }
@@ -198,7 +196,7 @@
                     if (operation != null)
                     {
                         ODataBatchResponseItem response;
-                        if (isMonoRuntime == true)
+                        if (isSyncMode == true)
                         {
                             response = request.SendRequestAsync(Invoker, cancellation).Result;
                         }
@@ -211,7 +209,7 @@
                     }
                     else
                     {
-                        if (isMonoRuntime == true)
+                        if (isSyncMode == true)
                         {
                             ExecuteChangeSet((ChangeSetRequestItem)request, responses, cancellation);
                         }
@@ -270,7 +268,7 @@
             }
 
             ChangeSetResponseItem changeSetResponse;
-            if (isMonoRuntime == true)
+            if (isSyncMode == true)
             {
                 changeSetResponse = (ChangeSetResponseItem)changeSet.SendRequestAsync(Invoker, cancellation).Result;
             }

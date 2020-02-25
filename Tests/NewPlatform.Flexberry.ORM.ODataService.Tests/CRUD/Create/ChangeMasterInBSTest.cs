@@ -21,7 +21,7 @@
         /// Тест на проверку сохранения изменений мастера,
         /// которые были внесены в BS детейла при его(детейла) создании.
         /// </summary>
-        [Fact]
+        [Fact(Skip = "Skip until fix https://github.com/Flexberry/NewPlatform.Flexberry.ORM/issues/65")]
         public void ChangeMasterTest()
         {
             ActODataService(args =>

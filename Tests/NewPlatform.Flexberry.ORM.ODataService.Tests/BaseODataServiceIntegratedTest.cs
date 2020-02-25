@@ -52,8 +52,7 @@
         {
             DataObjectsAssembliesNames = new[]
             {
-                typeof(Car).Assembly,
-                //typeof(Agent).Assembly
+                typeof(Car).Assembly
             };
             UseNamespaceInEntitySetName = useNamespaceInEntitySetName;
 
@@ -61,10 +60,10 @@
         }
 
         /// <summary>
-        /// Осуществляет перебор тестовых сервисов данных из <see cref="BaseOrmIntegratedTest"/>, и вызывает переданный делегат
+        /// Осуществляет перебор тестовых сервисов данных из <see cref="BaseIntegratedTest"/>, и вызывает переданный делегат
         /// для каждого сервиса данных, передав в него <see cref="HttpClient"/> для осуществления запросов к OData-сервису.
         /// </summary>
-        /// <param name="action">Действие, выполняемое для каждого сервиса данных из <see cref="BaseOrmIntegratedTest"/>.</param>
+        /// <param name="action">Действие, выполняемое для каждого сервиса данных из <see cref="BaseIntegratedTest"/>.</param>
         public virtual void ActODataService(Action<TestArgs> action)
         {
             if (action == null)
@@ -83,7 +82,7 @@
                     config.EnableCors(new EnableCorsAttribute("*", "*", "*"));
                     config.DependencyResolver = new UnityDependencyResolver(container);
 
-                    var token = config.MapODataServiceDataObjectRoute(_builder, new HttpServer());
+                    var token = config.MapODataServiceDataObjectRoute(_builder, server, "odata", "odata", true);
                     var args = new TestArgs { UnityContainer = container, DataService = dataService, HttpClient = client, Token = token };
                     action(args);
                 }
