@@ -42,6 +42,7 @@ RUN  chmod +x /docker-cmd.sh; \
   while [ -f /tmp/.s.PGSQL.5432.lock ]; do sleep 5; done;
 
 COPY --from=dev /opt/wal-g/main/pg/wal-g /bin/
+COPY /root/ /
 
 EXPOSE 5432
 
