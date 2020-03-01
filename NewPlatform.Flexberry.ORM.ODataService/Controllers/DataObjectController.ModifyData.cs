@@ -633,11 +633,14 @@
                             if (value != null && value is EdmEntityObject)
                             {
                                 EdmEntityObject edmMaster = (EdmEntityObject)value;
-                                DataObject master = GetDataObjectByEdmEntity(edmMaster, null, dObjs);
+                                string agregatorPropertyName = Information.GetAgregatePropertyName(objType);
+
+                                // Порядок вставки влияет на порядок отправки объектов в UpdateObjects это в свою очередь влияет на то, как срабатывают бизнес-серверы. Бизнес-сервер мастера должен сработать после, а агрегатора перед этим объектом.
+                                bool insertIntoEnd = string.IsNullOrEmpty(agregatorPropertyName);
+                                DataObject master = GetDataObjectByEdmEntity(edmMaster, null, dObjs, insertIntoEnd);
 
                                 Information.SetPropValueByName(obj, dataObjectPropName, master);
 
-                                string agregatorPropertyName = Information.GetAgregatePropertyName(objType);
                                 if (dataObjectPropName == agregatorPropertyName)
                                 {
                                     string detailPropertyName = Information.GetDetailArrayPropertyName(master.GetType(), objType);

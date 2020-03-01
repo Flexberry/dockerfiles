@@ -47,6 +47,13 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
             if (UpdatedObject.GetStatus() == ObjectStatus.Created)
             {
                 UpdatedObject.ПолеБС = "Object created.";
+
+                string testMethodName = "ChangeMasterTest";
+                if (UpdatedObject.ЦветГлаз == testMethodName)
+                {
+                    UpdatedObject.ЛесОбитания.Название = testMethodName;
+                    updatedObjects.Add(UpdatedObject.ЛесОбитания);
+                }
             }
             else if (UpdatedObject.GetStatus() == ObjectStatus.Altered)
             {

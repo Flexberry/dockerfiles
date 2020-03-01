@@ -150,6 +150,7 @@
     <Compile Include="БерлогаБС.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ЛесБС.cs" />
     <Compile Include="МедведьБС.cs">
       <SubType>Code</SubType>
     </Compile>
