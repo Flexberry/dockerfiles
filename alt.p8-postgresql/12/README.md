@@ -182,3 +182,4 @@ docker-compose config | docker stack deploy -c - postgres
 
 Если Вы планируете использовать те же именовые тома, которые были созданы в режиме `docker-compose` 
 укажите в качестве имени стека сервисов имя проекта `docker-compose` (в данном примере `postgres`).
+
