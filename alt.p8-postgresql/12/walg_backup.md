@@ -8,6 +8,25 @@
 
 При некорректных значениях переменной `WAL_G` бекап не производится.
 
+## Параметы бекапа
+Переменные определяющие общие параметы бекапа хранятся в файле конфигурации
+`/etc/wal-g.d/server.conf`.
+
+Имя переменной | Описание |Значение по умолчанию
+-------------|----------|------------------
+TOTAL_BG_UPLOADED_LIMIT |   | 1024
+WALG_SENTINEL_USER_DATA |   | '' - пустая строка
+WALG_PREVENT_WAL_OVERWRITE |   | 1
+WALG_DELTA_ORIGIN |   | LATEST
+WALG_TAR_SIZE_THRESHOLD |   | 109051904
+OPLOG_ARCHIVE_TIMEOUT |   | 60
+OPLOG_ARCHIVE_AFTER_SIZE |   | 33554432
+WALG_UPLOAD_CONCURRENCY |   | 16
+WALG_DOWNLOAD_CONCURRENCY |   | 10
+WALG_UPLOAD_DISK_CONCURRENCY |   | 1
+WALG_DELTA_MAX_STEPS |   | 7
+WALG_COMPRESSION_METHOD |   | brotli
+
 ### Бекап файловой системы по протоколу S3
 
 Переменные определяющие параметы бекапа по протоколу S3 хранятся в файле конфигурации
@@ -32,7 +51,7 @@ AWS_ENDPOINT | `URL` `S3`(`minio`) сервера | http://ip-s3:9000
 
 Имя переменной | Описание |Значение по умолчанию
 -------------|----------|------------------
-WALG_FILE_PREFIX | Тропа до каталога бекапа | /var/lib/pgsql/data/sar/storage
+WALG_FILE_PREFIX | Тропа до каталога бекапа | /var/lib/pgsql/data/sar/
 
 Имейте в виду - переменная `WALG_FILE_PREFIX` должна указывать на каталог, который находится вне контейера.
 Иначе при удалеии контейнеры данные бекапа будут утеряны.
