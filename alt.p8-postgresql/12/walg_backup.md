@@ -14,18 +14,20 @@
 
 Имя переменной | Описание |Значение по умолчанию
 -------------|----------|------------------
-TOTAL_BG_UPLOADED_LIMIT |   | 1024
-WALG_SENTINEL_USER_DATA |   | '' - пустая строка
-WALG_PREVENT_WAL_OVERWRITE |   | 1
-WALG_DELTA_ORIGIN |   | LATEST
-WALG_TAR_SIZE_THRESHOLD |   | 109051904
+TOTAL_BG_UPLOADED_LIMIT | Количество WAL-файлов для загрузки во время одного сканирования  | 1024
+WALG_SENTINEL_USER_DATA | his setting allows backup automation tools to add extra information to JSON sentinel file during backup-push. This setting can be used e.g. to give user-defined names to backups.  | '' - пустая строка
+WALG_PREVENT_WAL_OVERWRITE | If this setting is specified, during wal-push WAL-G will check the existence of WAL before uploading it. If the different file is already archived under the same name, WAL-G will return the non-zero exit code to prevent PostgreSQL from removing WAL.  | 1
+WALG_DELTA_ORIGIN | To configure base for next delta backup (only if WALG_DELTA_MAX_STEPS is not exceeded). WALG_DELTA_ORIGIN can be LATEST (chaining increments), LATEST_FULL (for bases where volatile part is compact and chaining has no meaning - deltas overwrite each other). Defaults to LATEST.  | LATEST
+WALG_DELTA_MAX_STEPS | Delta-backup is the difference between previously taken backup and present state. WALG_DELTA_MAX_STEPS determines how many delta backups can be between full backups. Defaults to 0. Restoration process will automatically fetch all necessary deltas and base backup and compose valid restored backup (you still need WALs after start of last backup to restore consistent cluster). Delta computation is based on ModTime of file system and LSN number of pages in datafiles.  | 7
+WALG_TAR_SIZE_THRESHOLD |  To configure the size of one backup bundle (in bytes). Smaller size causes granularity and more optimal, faster recovering. It also increases the number of storage requests, so it can costs you much money. Default size is 1 GB (1 << 30 - 1 bytes). | 109051904
+WALG_UPLOAD_CONCURRENCY |  To configure how many concurrency streams to use during backup uploading, use WALG_UPLOAD_CONCURRENCY. By default, WAL-G uses 16 streams. | 16
+WALG_DOWNLOAD_CONCURRENCY | o configure how many goroutines to use during backup-fetch and wal-fetch, use WALG_DOWNLOAD_CONCURRENCY. By default, WAL-G uses the minimum of the number of files to extract and 10.  | 10
+WALG_UPLOAD_DISK_CONCURRENCY | To configure how many concurrency streams are reading disk during backup-push. By default, WAL-G uses 1 stream.  | 1
+WALG_COMPRESSION_METHOD |   | brotli
 OPLOG_ARCHIVE_TIMEOUT |   | 60
 OPLOG_ARCHIVE_AFTER_SIZE |   | 33554432
-WALG_UPLOAD_CONCURRENCY |   | 16
-WALG_DOWNLOAD_CONCURRENCY |   | 10
-WALG_UPLOAD_DISK_CONCURRENCY |   | 1
-WALG_DELTA_MAX_STEPS |   | 7
-WALG_COMPRESSION_METHOD |   | brotli
+
+Подробое описание полей см. на странице [WAL-G for PostgreSQL](https://github.com/wal-g/wal-g/blob/master/PostgreSQL.md)
 
 ### Бекап файловой системы по протоколу S3
 
