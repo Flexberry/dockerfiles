@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>NewPlatform.Flexberry.ORM.ODataService</id>
-    <version>5.1.0-beta06</version>
+    <version>5.1.0-beta07</version>
     <title>Flexberry ORM ODataService</title>
     <authors>New Platform Ltd.</authors>
     <owners>New Platform Ltd.</owners>
@@ -24,6 +24,7 @@
       3. At creation of dynamic views of the master in them are added with primary keys.
       4. Use common DataObjectCache for all sql queries per http request.
       5. [BREAKINGCHANGE] Details BS not apply changes in agregator. Use BS for agregator when details changed.
+      6. Refactor `DataObjectControllerActivator` to simplify overriding DOC initialization.
 
       Fixed
       1. Fix error with POST request and header "Prefer".

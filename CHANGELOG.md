@@ -7,15 +7,26 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 1. Handle httpResponseException with OdataError wrapped in targetInvocationException.
+2. Support $batch request for transactional update data objects.
+3. Support for limits on master details.
+4. Support for limits on pseudodetails.
 
 ### Changed
 
 1. JavaScriptSerializer replaced with Newtonsoft.Json.JsonConvert for better performance.
+2. [BREAKINGCHANGE] Method MapODataServiceDataObjectRoute now requires HttpServer as parameter.
+3. At creation of dynamic views of the master in them are added with primary keys.
+4. Use common DataObjectCache for all sql queries per http request.
+5. [BREAKINGCHANGE] Details BS not apply changes in agregator. Use BS for agregator when details changed.
+6. Refactor `DataObjectControllerActivator` to simplify overriding DOC initialization.
 
 ### Fixed
 
 1. Fix error with POST request and header "Prefer".
 2. Getting objects by primary key with using `$select` and `$expand` query options.
+3. Loading masters with common DataObjectCache.
+4. Naming of details when exporting data to Excel.
+5. Call BS for agregator when details changed in batch requests.
 
 ## [5.0.0] - 2018.12.14
 

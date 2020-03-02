@@ -34,48 +34,89 @@
             _fallbackActivator = fallbackActivator ?? throw new ArgumentNullException(nameof(fallbackActivator), "Contract assertion not met: fallbackActivator != null");
         }
 
+        /// <remarks>Creates <see cref="DataObjectController"/> using current <see cref="IDependencyScope"/> and <see cref="IHttpRoute"/>.</remarks>
+        /// <inheritdoc />
+        public IHttpController Create(HttpRequestMessage request, HttpControllerDescriptor controllerDescriptor, Type controllerType)
+        {
+            return controllerDescriptor.ControllerType == typeof(DataObjectController)
+                ? CreateDataObjectController(request, controllerDescriptor, controllerType)
+                : _fallbackActivator.Create(request, controllerDescriptor, controllerType);
+        }
+
         /// <summary>
-        /// Creates an <see cref="T:System.Web.Http.Controllers.IHttpController" /> object.
         /// Creates <see cref="DataObjectController"/> using current <see cref="IDependencyScope"/> and <see cref="IHttpRoute"/>.
         /// </summary>
         /// <param name="request">The message request.</param>
         /// <param name="controllerDescriptor">The HTTP controller descriptor.</param>
         /// <param name="controllerType">The type of the controller.</param>
-        /// <returns>
-        /// An <see cref="T:System.Web.Http.Controllers.IHttpController" /> object for specified arguments.
-        /// </returns>
-        public IHttpController Create(HttpRequestMessage request, HttpControllerDescriptor controllerDescriptor, Type controllerType)
+        /// <returns>An <see cref="DataObjectController" /> object for specified arguments.</returns>
+        protected virtual DataObjectController CreateDataObjectController(HttpRequestMessage request, HttpControllerDescriptor controllerDescriptor, Type controllerType)
         {
-            if (controllerDescriptor.ControllerName == "DataObject")
+            IDataService dataService = GetDataService(request, controllerDescriptor, controllerType);
+
+            DataObjectCache dataObjectCache = GetDataObjectCache(request, controllerDescriptor, controllerType);
+
+            ManagementToken token = request.GetODataServiceToken();
+
+            DataObjectController controller = new DataObjectController(dataService, dataObjectCache, token.Model, token.Events, token.Functions);
+            controller.OfflineManager = GetOfflineManager(request, controllerDescriptor, controllerType) ?? controller.OfflineManager;
+
+            return controller;
+        }
+
+        /// <summary>
+        /// Gets the instance of <see cref="IDataService" /> using current <see cref="IDependencyScope"/> and <see cref="IHttpRoute"/>.
+        /// </summary>
+        /// <param name="request">The message request.</param>
+        /// <param name="controllerDescriptor">The HTTP controller descriptor.</param>
+        /// <param name="controllerType">The type of the controller.</param>
+        /// <returns>Gets the instance of <see cref="IDataService" /> for specified arguments.</returns>
+        /// <remarks>Extracts object from configurated <see cref="IDependencyResolver" />.</remarks>
+        protected virtual IDataService GetDataService(HttpRequestMessage request, HttpControllerDescriptor controllerDescriptor, Type controllerType)
+        {
+            IDependencyResolver dependencyResolver = request.GetConfiguration().DependencyResolver;
+            IDataService dataService = (IDataService)dependencyResolver.GetService(typeof(IDataService));
+
+            if (dataService == null)
             {
-                IDependencyResolver dependencyResolver = request.GetConfiguration().DependencyResolver;
-                IDataService dataService = (IDataService)dependencyResolver.GetService(typeof(IDataService));
-
-                if (dataService == null)
-                {
-                    throw new InvalidOperationException("IDataService is not registered in the dependency scope.");
-                }
-
-                ManagementToken token = request.GetODataServiceToken();
-
-                DataObjectCache dataObjectCache = null;
-                if (request.Properties.ContainsKey(PostPatchHandler.PropertyKeyBatchRequest) && request.Properties.ContainsKey(DataObjectODataBatchHandler.DataObjectCachePropertyKey))
-                {
-                    dataObjectCache = request.Properties[DataObjectODataBatchHandler.DataObjectCachePropertyKey] as DataObjectCache;
-                }
-
-                DataObjectController controller = new DataObjectController(dataService, dataObjectCache, token.Model, token.Events, token.Functions);
-                BaseOfflineManager offlineManager = (BaseOfflineManager)dependencyResolver.GetService(typeof(BaseOfflineManager));
-
-                if (offlineManager != null)
-                {
-                    controller.OfflineManager = offlineManager;
-                }
-
-                return controller;
+                throw new InvalidOperationException("IDataService is not registered in the dependency scope.");
             }
 
-            return _fallbackActivator.Create(request, controllerDescriptor, controllerType);
+            return dataService;
+        }
+
+        /// <summary>
+        /// Gets the instance of <see cref="DataObjectCache" /> using current <see cref="IDependencyScope"/> and <see cref="IHttpRoute"/>.
+        /// </summary>
+        /// <param name="request">The message request.</param>
+        /// <param name="controllerDescriptor">The HTTP controller descriptor.</param>
+        /// <param name="controllerType">The type of the controller.</param>
+        /// <returns>Gets the instance of <see cref="DataObjectCache" /> for specified arguments.</returns>
+        /// <remarks>Extracts object from request properties for batch requests.</remarks>
+        protected virtual DataObjectCache GetDataObjectCache(HttpRequestMessage request, HttpControllerDescriptor controllerDescriptor, Type controllerType)
+        {
+            DataObjectCache dataObjectCache = null;
+            if (request.Properties.ContainsKey(PostPatchHandler.PropertyKeyBatchRequest) && request.Properties.ContainsKey(DataObjectODataBatchHandler.DataObjectCachePropertyKey))
+            {
+                dataObjectCache = request.Properties[DataObjectODataBatchHandler.DataObjectCachePropertyKey] as DataObjectCache;
+            }
+
+            return dataObjectCache;
+        }
+
+        /// <summary>
+        /// Gets the instance of <see cref="BaseOfflineManager" /> using current <see cref="IDependencyScope"/> and <see cref="IHttpRoute"/>.
+        /// </summary>
+        /// <param name="request">The message request.</param>
+        /// <param name="controllerDescriptor">The HTTP controller descriptor.</param>
+        /// <param name="controllerType">The type of the controller.</param>
+        /// <returns>Gets the instance of <see cref="BaseOfflineManager" /> for specified arguments.</returns>
+        /// <remarks>Extracts object from configurated <see cref="IDependencyResolver" />.</remarks>
+        protected virtual BaseOfflineManager GetOfflineManager(HttpRequestMessage request, HttpControllerDescriptor controllerDescriptor, Type controllerType)
+        {
+            IDependencyResolver dependencyResolver = request.GetConfiguration().DependencyResolver;
+            BaseOfflineManager offlineManager = (BaseOfflineManager)dependencyResolver.GetService(typeof(BaseOfflineManager));
+            return offlineManager;
         }
     }
 }
