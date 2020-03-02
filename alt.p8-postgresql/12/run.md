@@ -9,7 +9,7 @@
 version: "3.2"
 services:
   postgres:
-    image: flexberry/alt.p8-postgresql:latest
+    image: flexberry/alt.p8-postgresql:12
     ports:
      - 5432:5432
     volumes:
@@ -87,7 +87,7 @@ docker-compose down
 version: "3.2"
 services:
   postgres:
-    image: flexberry/alt.p8-postgresql:latest
+    image: flexberry/alt.p8-postgresql:12
     ports:
      - 5432:5432
     volumes:
