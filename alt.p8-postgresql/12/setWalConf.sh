@@ -1,5 +1,5 @@
-. ./root/etc/wal-g.d/server.conf
-. ./root/etc/wal-g.d/server-s3.conf
+# . ./root/etc/wal-g.d/server.conf
+# . ./root/etc/wal-g.d/server-file.conf
 
 # echo "$WALG_VARS";
 
