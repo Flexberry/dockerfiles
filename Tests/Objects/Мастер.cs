@@ -13,8 +13,8 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
     using System;
     using System.Xml;
     using ICSSoft.STORMNET;
-
-
+    
+    
     // *** Start programmer edit section *** (Using statements)
 
     // *** End programmer edit section *** (Using statements)
@@ -34,12 +34,12 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
         private string fprop;
         
         private NewPlatform.Flexberry.ORM.ODataService.Tests.Мастер2 fМастер2;
-
+        
         // *** Start programmer edit section *** (Мастер CustomMembers)
 
         // *** End programmer edit section *** (Мастер CustomMembers)
 
-
+        
         /// <summary>
         /// prop.
         /// </summary>
@@ -71,7 +71,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
                 // *** End programmer edit section *** (Мастер.prop Set end)
             }
         }
-
+        
         /// <summary>
         /// Мастер.
         /// </summary>

@@ -1,4 +1,8 @@
-﻿CREATE TABLE [Driver] (
+﻿
+
+
+
+CREATE TABLE [Driver] (
 
 	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
 
@@ -338,6 +342,10 @@ CREATE TABLE [Берлога] (
 
 	 [Заброшена] BIT  NULL,
 
+	 [Сертификат] NVARCHAR(MAX)  NULL,
+
+	 [CertString] VARCHAR(255)  NULL,
+
 	 [ЛесРасположения] UNIQUEIDENTIFIER  NULL,
 
 	 [Медведь] UNIQUEIDENTIFIER  NOT NULL,
@@ -610,6 +618,8 @@ CREATE TABLE [STORMAG] (
 
 	 [Email] varchar(80)  NULL,
 
+	 [Comment] varchar(MAX)  NULL,
+
 	 [CreateTime] datetime  NULL,
 
 	 [Creator] varchar(255)  NULL,
@@ -771,3 +781,4 @@ CREATE INDEX Журнал_IБиблиотека2 on [Журнал] ([Библи�
  ALTER TABLE [STORMAuField] ADD CONSTRAINT [STORMAuField_FSTORMAuField_0] FOREIGN KEY ([MainChange_m0]) REFERENCES [STORMAuField]
 
  ALTER TABLE [STORMAuField] ADD CONSTRAINT [STORMAuField_FSTORMAuEntity_0] FOREIGN KEY ([AuditEntity_m0]) REFERENCES [STORMAuEntity]
+

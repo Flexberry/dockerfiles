@@ -73,7 +73,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
                 // *** End programmer edit section *** (БазовыйКласс.Свойство1 Set end)
             }
         }
-
+        
         /// <summary>
         /// Свойство2.
         /// </summary>
@@ -104,7 +104,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
                 // *** End programmer edit section *** (БазовыйКласс.Свойство2 Set end)
             }
         }
-
+        
         /// <summary>
         /// БазовыйКласс.
         /// </summary>

@@ -115,11 +115,11 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
         
         private NewPlatform.Flexberry.ORM.ODataService.Tests.Страна fСтранаРождения;
         
-        private NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь fПапа;
-        
         private NewPlatform.Flexberry.ORM.ODataService.Tests.Лес fЛесОбитания;
         
         private NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь fМама;
+        
+        private NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь fПапа;
         
         private NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfБерлога fБерлога;
         
@@ -530,40 +530,6 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
         /// Медведь
         ///Аудит включен для тестирования оффлайн-сервиса аудита в OData.
         /// </summary>
-        // *** Start programmer edit section *** (Медведь.Папа CustomAttributes)
-
-        // *** End programmer edit section *** (Медведь.Папа CustomAttributes)
-        [PropertyStorage(new string[] {
-                "Папа"})]
-        public virtual NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь Папа
-        {
-            get
-            {
-                // *** Start programmer edit section *** (Медведь.Папа Get start)
-
-                // *** End programmer edit section *** (Медведь.Папа Get start)
-                NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь result = this.fПапа;
-                // *** Start programmer edit section *** (Медведь.Папа Get end)
-
-                // *** End programmer edit section *** (Медведь.Папа Get end)
-                return result;
-            }
-            set
-            {
-                // *** Start programmer edit section *** (Медведь.Папа Set start)
-
-                // *** End programmer edit section *** (Медведь.Папа Set start)
-                this.fПапа = value;
-                // *** Start programmer edit section *** (Медведь.Папа Set end)
-
-                // *** End programmer edit section *** (Медведь.Папа Set end)
-            }
-        }
-        
-        /// <summary>
-        /// Медведь
-        ///Аудит включен для тестирования оффлайн-сервиса аудита в OData.
-        /// </summary>
         // *** Start programmer edit section *** (Медведь.ЛесОбитания CustomAttributes)
 
         // *** End programmer edit section *** (Медведь.ЛесОбитания CustomAttributes)
@@ -625,6 +591,40 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
                 // *** Start programmer edit section *** (Медведь.Мама Set end)
 
                 // *** End programmer edit section *** (Медведь.Мама Set end)
+            }
+        }
+        
+        /// <summary>
+        /// Медведь
+        ///Аудит включен для тестирования оффлайн-сервиса аудита в OData.
+        /// </summary>
+        // *** Start programmer edit section *** (Медведь.Папа CustomAttributes)
+
+        // *** End programmer edit section *** (Медведь.Папа CustomAttributes)
+        [PropertyStorage(new string[] {
+                "Папа"})]
+        public virtual NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь Папа
+        {
+            get
+            {
+                // *** Start programmer edit section *** (Медведь.Папа Get start)
+
+                // *** End programmer edit section *** (Медведь.Папа Get start)
+                NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь result = this.fПапа;
+                // *** Start programmer edit section *** (Медведь.Папа Get end)
+
+                // *** End programmer edit section *** (Медведь.Папа Get end)
+                return result;
+            }
+            set
+            {
+                // *** Start programmer edit section *** (Медведь.Папа Set start)
+
+                // *** End programmer edit section *** (Медведь.Папа Set start)
+                this.fПапа = value;
+                // *** Start programmer edit section *** (Медведь.Папа Set end)
+
+                // *** End programmer edit section *** (Медведь.Папа Set end)
             }
         }
         

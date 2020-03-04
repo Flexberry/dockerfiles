@@ -167,7 +167,7 @@
 
             // Выполняем дочитку объекта данных, если в переданном объекте на загружено искомое файловое свойство.
             DataObject srcDataObject = dataObject;
-            if (!dataObject.CheckLoadedProperty(dataObjectFilePropertyName))
+            if (dataObject.GetStatus() != ObjectStatus.Created && !dataObject.CheckLoadedProperty(dataObjectFilePropertyName))
             {
                 var view = new View { DefineClassType = dataObjectType, Name = "FilePropertyView" };
                 view.AddProperty(dataObjectFilePropertyName);

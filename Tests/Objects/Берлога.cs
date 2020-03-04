@@ -40,9 +40,13 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
             "ЛесРасположения as \'Лес расположения\'",
             "ЛесРасположения.Название as \'Название\'",
             "Медведь as \'Медведь\'",
-            "ПолеБС"}, Hidden=new string[] {
+            "ПолеБС",
+            "Сертификат",
+            "СертификатСтрока"}, Hidden=new string[] {
             "ЛесРасположения.Название",
-            "Медведь"})]
+            "Медведь",
+            "Сертификат",
+            "СертификатСтрока"})]
     [MasterViewDefineAttribute("БерлогаE", "ЛесРасположения", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "Название")]
     public class Берлога : ICSSoft.STORMNET.DataObject
     {
@@ -54,6 +58,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
         private int fКомфортность;
         
         private bool fЗаброшена;
+        
+        private ICSSoft.STORMNET.UserDataTypes.WebFile fСертификат;
+        
+        private string fСертификатСтрока;
         
         private NewPlatform.Flexberry.ORM.ODataService.Tests.Лес fЛесРасположения;
         
@@ -187,6 +195,70 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
                 // *** Start programmer edit section *** (Берлога.Заброшена Set end)
 
                 // *** End programmer edit section *** (Берлога.Заброшена Set end)
+            }
+        }
+        
+        /// <summary>
+        /// Сертификат.
+        /// </summary>
+        // *** Start programmer edit section *** (Берлога.Сертификат CustomAttributes)
+
+        // *** End programmer edit section *** (Берлога.Сертификат CustomAttributes)
+        public virtual ICSSoft.STORMNET.UserDataTypes.WebFile Сертификат
+        {
+            get
+            {
+                // *** Start programmer edit section *** (Берлога.Сертификат Get start)
+
+                // *** End programmer edit section *** (Берлога.Сертификат Get start)
+                ICSSoft.STORMNET.UserDataTypes.WebFile result = this.fСертификат;
+                // *** Start programmer edit section *** (Берлога.Сертификат Get end)
+
+                // *** End programmer edit section *** (Берлога.Сертификат Get end)
+                return result;
+            }
+            set
+            {
+                // *** Start programmer edit section *** (Берлога.Сертификат Set start)
+
+                // *** End programmer edit section *** (Берлога.Сертификат Set start)
+                this.fСертификат = value;
+                // *** Start programmer edit section *** (Берлога.Сертификат Set end)
+
+                // *** End programmer edit section *** (Берлога.Сертификат Set end)
+            }
+        }
+        
+        /// <summary>
+        /// СертификатСтрока.
+        /// </summary>
+        // *** Start programmer edit section *** (Берлога.СертификатСтрока CustomAttributes)
+
+        // *** End programmer edit section *** (Берлога.СертификатСтрока CustomAttributes)
+        [PropertyStorage("CertString")]
+        [StrLen(255)]
+        public virtual string СертификатСтрока
+        {
+            get
+            {
+                // *** Start programmer edit section *** (Берлога.СертификатСтрока Get start)
+
+                // *** End programmer edit section *** (Берлога.СертификатСтрока Get start)
+                string result = this.fСертификатСтрока;
+                // *** Start programmer edit section *** (Берлога.СертификатСтрока Get end)
+
+                // *** End programmer edit section *** (Берлога.СертификатСтрока Get end)
+                return result;
+            }
+            set
+            {
+                // *** Start programmer edit section *** (Берлога.СертификатСтрока Set start)
+
+                // *** End programmer edit section *** (Берлога.СертификатСтрока Set start)
+                this.fСертификатСтрока = value;
+                // *** Start programmer edit section *** (Берлога.СертификатСтрока Set end)
+
+                // *** End programmer edit section *** (Берлога.СертификатСтрока Set end)
             }
         }
         

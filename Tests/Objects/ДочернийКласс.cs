@@ -13,8 +13,8 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
     using System;
     using System.Xml;
     using ICSSoft.STORMNET;
-
-
+    
+    
     // *** Start programmer edit section *** (Using statements)
 
     // *** End programmer edit section *** (Using statements)

@@ -890,7 +890,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
                 // *** End programmer edit section *** (КлассСМножествомТипов.PropertyStormnetFile Set end)
             }
         }
-
+        
         /// <summary>
         /// NotStoredProperty.
         /// </summary>
@@ -903,7 +903,6 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
             get
             {
                 // *** Start programmer edit section *** (КлассСМножествомТипов.NotStoredProperty Get)
-
                 return PropertyInt;
                 // *** End programmer edit section *** (КлассСМножествомТипов.NotStoredProperty Get)
             }
@@ -914,7 +913,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
                 // *** End programmer edit section *** (КлассСМножествомТипов.NotStoredProperty Set)
             }
         }
-
+        
         /// <summary>
         /// Class views container.
         /// </summary>

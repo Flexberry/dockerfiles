@@ -32,12 +32,12 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
     {
         
         private int fсвойство2;
-
+        
         // *** Start programmer edit section *** (Мастер2 CustomMembers)
 
         // *** End programmer edit section *** (Мастер2 CustomMembers)
 
-
+        
         /// <summary>
         /// свойство2.
         /// </summary>

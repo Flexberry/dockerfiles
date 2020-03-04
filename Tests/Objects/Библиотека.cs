@@ -39,9 +39,9 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
         
         private string fАдрес;
         
-        private NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfКнига fКнига;
-        
         private NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfЖурнал fЖурнал;
+        
+        private NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfКнига fКнига;
         
         // *** Start programmer edit section *** (Библиотека CustomMembers)
 
@@ -83,41 +83,6 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
         /// <summary>
         /// Библиотека.
         /// </summary>
-        // *** Start programmer edit section *** (Библиотека.Книга CustomAttributes)
-
-        // *** End programmer edit section *** (Библиотека.Книга CustomAttributes)
-        public virtual NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfКнига Книга
-        {
-            get
-            {
-                // *** Start programmer edit section *** (Библиотека.Книга Get start)
-
-                // *** End programmer edit section *** (Библиотека.Книга Get start)
-                if ((this.fКнига == null))
-                {
-                    this.fКнига = new NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfКнига(this);
-                }
-                NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfКнига result = this.fКнига;
-                // *** Start programmer edit section *** (Библиотека.Книга Get end)
-
-                // *** End programmer edit section *** (Библиотека.Книга Get end)
-                return result;
-            }
-            set
-            {
-                // *** Start programmer edit section *** (Библиотека.Книга Set start)
-
-                // *** End programmer edit section *** (Библиотека.Книга Set start)
-                this.fКнига = value;
-                // *** Start programmer edit section *** (Библиотека.Книга Set end)
-
-                // *** End programmer edit section *** (Библиотека.Книга Set end)
-            }
-        }
-        
-        /// <summary>
-        /// Библиотека.
-        /// </summary>
         // *** Start programmer edit section *** (Библиотека.Журнал CustomAttributes)
 
         // *** End programmer edit section *** (Библиотека.Журнал CustomAttributes)
@@ -147,6 +112,41 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
                 // *** Start programmer edit section *** (Библиотека.Журнал Set end)
 
                 // *** End programmer edit section *** (Библиотека.Журнал Set end)
+            }
+        }
+        
+        /// <summary>
+        /// Библиотека.
+        /// </summary>
+        // *** Start programmer edit section *** (Библиотека.Книга CustomAttributes)
+
+        // *** End programmer edit section *** (Библиотека.Книга CustomAttributes)
+        public virtual NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfКнига Книга
+        {
+            get
+            {
+                // *** Start programmer edit section *** (Библиотека.Книга Get start)
+
+                // *** End programmer edit section *** (Библиотека.Книга Get start)
+                if ((this.fКнига == null))
+                {
+                    this.fКнига = new NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfКнига(this);
+                }
+                NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfКнига result = this.fКнига;
+                // *** Start programmer edit section *** (Библиотека.Книга Get end)
+
+                // *** End programmer edit section *** (Библиотека.Книга Get end)
+                return result;
+            }
+            set
+            {
+                // *** Start programmer edit section *** (Библиотека.Книга Set start)
+
+                // *** End programmer edit section *** (Библиотека.Книга Set start)
+                this.fКнига = value;
+                // *** Start programmer edit section *** (Библиотека.Книга Set end)
+
+                // *** End programmer edit section *** (Библиотека.Книга Set end)
             }
         }
         

@@ -2,65 +2,38 @@
 
 
 
-
-
-CREATE TABLE "TestDetailWithCicle" (
-
- "primaryKey" RAW(16) NOT NULL,
-
- "TestDetailName" NVARCHAR2(255) NULL,
-
- "Parent" RAW(16) NULL,
-
- "TestMaster" RAW(16) NOT NULL,
-
- PRIMARY KEY ("primaryKey")
-
- );
-
-CREATE TABLE "TestMaster"
-(
-
-	 "primaryKey" RAW(16) NOT NULL,
-
-	 "TestMasterName" NVARCHAR2(255) NULL,
-
-	 PRIMARY KEY ("primaryKey")
-
- );
-
-CREATE TABLE "Детейл2"
+CREATE TABLE "Driver"
 (
 
 	"primaryKey" RAW(16) NOT NULL,
 
-	"prop2" NVARCHAR2(255) NULL,
+	"Name" NVARCHAR2(255) NULL,
 
-	"Детейл" RAW(16) NOT NULL,
+	"CarCount" NUMBER(10) NULL,
+
+	"Documents" NUMBER(1) NULL,
 
 	 PRIMARY KEY ("primaryKey")
 ) ;
 
 
-CREATE TABLE "Мастер"
+CREATE TABLE "Страна"
 (
 
 	"primaryKey" RAW(16) NOT NULL,
 
-	"prop" NVARCHAR2(255) NULL,
-
-	"Мастер2" RAW(16) NULL,
+	"Название" NVARCHAR2(255) NULL,
 
 	 PRIMARY KEY ("primaryKey")
 ) ;
 
 
-CREATE TABLE "Библиотека"
+CREATE TABLE "Master"
 (
 
 	"primaryKey" RAW(16) NOT NULL,
 
-	"Адрес" NVARCHAR2(255) NULL,
+	"property" NVARCHAR2(255) NULL,
 
 	 PRIMARY KEY ("primaryKey")
 ) ;
@@ -85,29 +58,16 @@ CREATE TABLE "Лес"
 ) ;
 
 
-CREATE TABLE "ПоставщикКниг"
+CREATE TABLE "TestDetailWithCicle"
 (
 
 	"primaryKey" RAW(16) NOT NULL,
 
-	"Ссылка" RAW(16) NULL,
+	"TestDetailName" NVARCHAR2(255) NULL,
 
-	 PRIMARY KEY ("primaryKey")
-) ;
+	"Parent" RAW(16) NULL,
 
-
-CREATE TABLE "Журнал"
-(
-
-	"primaryKey" RAW(16) NOT NULL,
-
-	"Название" NVARCHAR2(255) NULL,
-
-	"Номер" NUMBER(10) NULL,
-
-	"Автор2" RAW(16) NOT NULL,
-
-	"Библиотека2" RAW(16) NOT NULL,
+	"TestMaster" RAW(16) NOT NULL,
 
 	 PRIMARY KEY ("primaryKey")
 ) ;
@@ -117,6 +77,8 @@ CREATE TABLE "КлассСМножТипов"
 (
 
 	"primaryKey" RAW(16) NOT NULL,
+
+	"PropertyGeography" CLOB NULL,
 
 	"PropertyEnum" NVARCHAR2(6) NULL,
 
@@ -165,28 +127,6 @@ CREATE TABLE "КлассСМножТипов"
 	"PropertyStormnetWebFile" CLOB NULL,
 
 	"PropertyStormnetFile" CLOB NULL,
-
-	 PRIMARY KEY ("primaryKey")
-) ;
-
-
-CREATE TABLE "КлассСоСтрокКл"
-(
-
-	"StoragePrimaryKey" NVARCHAR2(255) NOT NULL,
-
-	 PRIMARY KEY ("StoragePrimaryKey")
-) ;
-
-
-CREATE TABLE "КлассStoredDerived"
-(
-
-	"primaryKey" RAW(16) NOT NULL,
-
-	"StrAttr2" NVARCHAR2(255) NULL,
-
-	"StrAttr" NVARCHAR2(255) NULL,
 
 	 PRIMARY KEY ("primaryKey")
 ) ;
@@ -219,105 +159,26 @@ CREATE TABLE "Медведь"
 
 	"Страна" RAW(16) NULL,
 
-	"Папа" RAW(16) NULL,
-
 	"ЛесОбитания" RAW(16) NULL,
 
 	"Мама" RAW(16) NULL,
 
-	 PRIMARY KEY ("primaryKey")
-) ;
-
-
-CREATE TABLE "Наследник"
-(
-
-	"primaryKey" RAW(16) NOT NULL,
-
-	"Свойство" FLOAT(126) NULL,
-
-	"Свойство1" NVARCHAR2(255) NULL,
-
-	"Свойство2" NUMBER(10) NULL,
-
-	"Master" RAW(16) NULL,
-
-	"Мастер" RAW(16) NULL,
+	"Папа" RAW(16) NULL,
 
 	 PRIMARY KEY ("primaryKey")
 ) ;
 
 
-CREATE TABLE "Car"
+CREATE TABLE "Детейл"
 (
 
 	"primaryKey" RAW(16) NOT NULL,
 
-	"Number" NVARCHAR2(255) NULL,
+	"prop1" NUMBER(10) NULL,
 
-	"Model" NVARCHAR2(255) NULL,
+	"БазовыйКласс_m0" RAW(16) NULL,
 
-	"TipCar" NVARCHAR2(9) NULL,
-
-	"driver" RAW(16) NOT NULL,
-
-	 PRIMARY KEY ("primaryKey")
-) ;
-
-
-CREATE TABLE "Автор"
-(
-
-	"primaryKey" RAW(16) NOT NULL,
-
-	"Имя" NVARCHAR2(255) NULL,
-
-	 PRIMARY KEY ("primaryKey")
-) ;
-
-
-CREATE TABLE "Страна"
-(
-
-	"primaryKey" RAW(16) NOT NULL,
-
-	"Название" NVARCHAR2(255) NULL,
-
-	 PRIMARY KEY ("primaryKey")
-) ;
-
-
-CREATE TABLE "Берлога"
-(
-
-	"primaryKey" RAW(16) NOT NULL,
-
-	"ПолеБС" NVARCHAR2(255) NULL,
-
-	"Наименование" NVARCHAR2(255) NULL,
-
-	"Комфортность" NUMBER(10) NULL,
-
-	"Заброшена" NUMBER(1) NULL,
-
-	"ЛесРасположения" RAW(16) NULL,
-
-	"Медведь" RAW(16) NOT NULL,
-
-	 PRIMARY KEY ("primaryKey")
-) ;
-
-
-CREATE TABLE "Книга"
-(
-
-	"primaryKey" RAW(16) NOT NULL,
-
-	"Название" NVARCHAR2(255) NULL,
-
-	"Автор1" RAW(16) NOT NULL,
-
-	"Библиотека1" RAW(16) NOT NULL,
+	"БазовыйКласс_m1" RAW(16) NULL,
 
 	 PRIMARY KEY ("primaryKey")
 ) ;
@@ -329,6 +190,8 @@ CREATE TABLE "ДочернийКласс"
 	"primaryKey" RAW(16) NOT NULL,
 
 	"ChildProperty" NVARCHAR2(255) NULL,
+
+	"PropertyGeography" CLOB NULL,
 
 	"PropertyEnum" NVARCHAR2(6) NULL,
 
@@ -382,6 +245,21 @@ CREATE TABLE "ДочернийКласс"
 ) ;
 
 
+CREATE TABLE "Книга"
+(
+
+	"primaryKey" RAW(16) NOT NULL,
+
+	"Название" NVARCHAR2(255) NULL,
+
+	"Автор1" RAW(16) NOT NULL,
+
+	"Библиотека1" RAW(16) NOT NULL,
+
+	 PRIMARY KEY ("primaryKey")
+) ;
+
+
 CREATE TABLE "БазовыйКласс"
 (
 
@@ -395,42 +273,12 @@ CREATE TABLE "БазовыйКласс"
 ) ;
 
 
-CREATE TABLE "Master"
+CREATE TABLE "ПоставщикКниг"
 (
 
 	"primaryKey" RAW(16) NOT NULL,
 
-	"property" NVARCHAR2(255) NULL,
-
-	 PRIMARY KEY ("primaryKey")
-) ;
-
-
-CREATE TABLE "Детейл"
-(
-
-	"primaryKey" RAW(16) NOT NULL,
-
-	"prop1" NUMBER(10) NULL,
-
-	"БазовыйКласс_m0" RAW(16) NULL,
-
-	"БазовыйКласс_m1" RAW(16) NULL,
-
-	 PRIMARY KEY ("primaryKey")
-) ;
-
-
-CREATE TABLE "Driver"
-(
-
-	"primaryKey" RAW(16) NOT NULL,
-
-	"Name" NVARCHAR2(255) NULL,
-
-	"CarCount" NUMBER(10) NULL,
-
-	"Documents" NUMBER(1) NULL,
+	"Ссылка" RAW(16) NULL,
 
 	 PRIMARY KEY ("primaryKey")
 ) ;
@@ -447,6 +295,55 @@ CREATE TABLE "Мастер2"
 ) ;
 
 
+CREATE TABLE "Наследник"
+(
+
+	"primaryKey" RAW(16) NOT NULL,
+
+	"Свойство" FLOAT(126) NULL,
+
+	"Свойство1" NVARCHAR2(255) NULL,
+
+	"Свойство2" NUMBER(10) NULL,
+
+	"Мастер" RAW(16) NULL,
+
+	"Master" RAW(16) NULL,
+
+	 PRIMARY KEY ("primaryKey")
+) ;
+
+
+CREATE TABLE "Car"
+(
+
+	"primaryKey" RAW(16) NOT NULL,
+
+	"Number" NVARCHAR2(255) NULL,
+
+	"Model" NVARCHAR2(255) NULL,
+
+	"TipCar" NVARCHAR2(9) NULL,
+
+	"driver" RAW(16) NOT NULL,
+
+	 PRIMARY KEY ("primaryKey")
+) ;
+
+
+CREATE TABLE "Мастер"
+(
+
+	"primaryKey" RAW(16) NOT NULL,
+
+	"prop" NVARCHAR2(255) NULL,
+
+	"Мастер2" RAW(16) NULL,
+
+	 PRIMARY KEY ("primaryKey")
+) ;
+
+
 CREATE TABLE "Блоха"
 (
 
@@ -455,6 +352,116 @@ CREATE TABLE "Блоха"
 	"Кличка" NVARCHAR2(255) NULL,
 
 	"МедведьОбитания" RAW(16) NULL,
+
+	 PRIMARY KEY ("primaryKey")
+) ;
+
+
+CREATE TABLE "КлассСоСтрокКл"
+(
+
+	"StoragePrimaryKey" NVARCHAR2(255) NOT NULL,
+
+	 PRIMARY KEY ("StoragePrimaryKey")
+) ;
+
+
+CREATE TABLE "Берлога"
+(
+
+	"primaryKey" RAW(16) NOT NULL,
+
+	"ПолеБС" NVARCHAR2(255) NULL,
+
+	"Наименование" NVARCHAR2(255) NULL,
+
+	"Комфортность" NUMBER(10) NULL,
+
+	"Заброшена" NUMBER(1) NULL,
+
+	"Сертификат" CLOB NULL,
+
+	"CertString" NVARCHAR2(255) NULL,
+
+	"ЛесРасположения" RAW(16) NULL,
+
+	"Медведь" RAW(16) NOT NULL,
+
+	 PRIMARY KEY ("primaryKey")
+) ;
+
+
+CREATE TABLE "Автор"
+(
+
+	"primaryKey" RAW(16) NOT NULL,
+
+	"Имя" NVARCHAR2(255) NULL,
+
+	 PRIMARY KEY ("primaryKey")
+) ;
+
+
+CREATE TABLE "TestMaster"
+(
+
+	"primaryKey" RAW(16) NOT NULL,
+
+	"TestMasterName" NVARCHAR2(255) NULL,
+
+	 PRIMARY KEY ("primaryKey")
+) ;
+
+
+CREATE TABLE "Библиотека"
+(
+
+	"primaryKey" RAW(16) NOT NULL,
+
+	"Адрес" NVARCHAR2(255) NULL,
+
+	 PRIMARY KEY ("primaryKey")
+) ;
+
+
+CREATE TABLE "Детейл2"
+(
+
+	"primaryKey" RAW(16) NOT NULL,
+
+	"prop2" NVARCHAR2(255) NULL,
+
+	"Детейл" RAW(16) NOT NULL,
+
+	 PRIMARY KEY ("primaryKey")
+) ;
+
+
+CREATE TABLE "Журнал"
+(
+
+	"primaryKey" RAW(16) NOT NULL,
+
+	"Название" NVARCHAR2(255) NULL,
+
+	"Номер" NUMBER(10) NULL,
+
+	"Автор2" RAW(16) NOT NULL,
+
+	"Библиотека2" RAW(16) NOT NULL,
+
+	 PRIMARY KEY ("primaryKey")
+) ;
+
+
+CREATE TABLE "КлассStoredDerived"
+(
+
+	"primaryKey" RAW(16) NOT NULL,
+
+	"StrAttr2" NVARCHAR2(255) NULL,
+
+	"StrAttr" NVARCHAR2(255) NULL,
 
 	 PRIMARY KEY ("primaryKey")
 ) ;
@@ -680,6 +687,8 @@ CREATE TABLE "STORMAG"
 
 	"Email" nvarchar2(80) NULL,
 
+	"Comment" CLOB NULL,
+
 	"CreateTime" DATE NULL,
 
 	"Creator" nvarchar2(255) NULL,
@@ -768,257 +777,21 @@ CREATE TABLE "STORMAuField"
 ) ;
 
 
-CREATE TABLE "STORMI"
-(
-
-	"primaryKey" RAW(16) NOT NULL,
-
-	"User_m0" RAW(16) NOT NULL,
-
-	"Agent_m0" RAW(16) NOT NULL,
-
-	"CreateTime" DATE NULL,
-
-	"Creator" nvarchar2(255) NULL,
-
-	"EditTime" DATE NULL,
-
-	"Editor" nvarchar2(255) NULL,
-
-	 PRIMARY KEY ("primaryKey")
-) ;
-
-
-CREATE TABLE "Session"
-(
-
-	"primaryKey" RAW(16) NOT NULL,
-
-	"UserKey" RAW(16) NULL,
-
-	"StartedAt" DATE NULL,
-
-	"LastAccess" DATE NULL,
-
-	"Closed" NUMBER(1) NULL,
-
-	 PRIMARY KEY ("primaryKey")
-) ;
-
-
-CREATE TABLE "STORMS"
-(
-
-	"primaryKey" RAW(16) NOT NULL,
-
-	"Name" nvarchar2(100) NOT NULL,
-
-	"Type" nvarchar2(100) NULL,
-
-	"IsAttribute" NUMBER(1) NOT NULL,
-
-	"IsOperation" NUMBER(1) NOT NULL,
-
-	"IsView" NUMBER(1) NOT NULL,
-
-	"IsClass" NUMBER(1) NOT NULL,
-
-	"SharedOper" NUMBER(1) NULL,
-
-	"CreateTime" DATE NULL,
-
-	"Creator" nvarchar2(255) NULL,
-
-	"EditTime" DATE NULL,
-
-	"Editor" nvarchar2(255) NULL,
-
-	 PRIMARY KEY ("primaryKey")
-) ;
-
-
-CREATE TABLE "STORMP"
-(
-
-	"primaryKey" RAW(16) NOT NULL,
-
-	"Subject_m0" RAW(16) NOT NULL,
-
-	"Agent_m0" RAW(16) NOT NULL,
-
-	"CreateTime" DATE NULL,
-
-	"Creator" nvarchar2(255) NULL,
-
-	"EditTime" DATE NULL,
-
-	"Editor" nvarchar2(255) NULL,
-
-	 PRIMARY KEY ("primaryKey")
-) ;
-
-
-CREATE TABLE "STORMF"
-(
-
-	"primaryKey" RAW(16) NOT NULL,
-
-	"FilterText" CLOB NULL,
-
-	"Name" nvarchar2(255) NULL,
-
-	"FilterTypeNView" nvarchar2(255) NULL,
-
-	"Subject_m0" RAW(16) NULL,
-
-	"CreateTime" DATE NULL,
-
-	"Creator" nvarchar2(255) NULL,
-
-	"EditTime" DATE NULL,
-
-	"Editor" nvarchar2(255) NULL,
-
-	 PRIMARY KEY ("primaryKey")
-) ;
-
-
-CREATE TABLE "STORMAC"
-(
-
-	"primaryKey" RAW(16) NOT NULL,
-
-	"TypeAccess" nvarchar2(7) NULL,
-
-	"Filter_m0" RAW(16) NULL,
-
-	"Permition_m0" RAW(16) NOT NULL,
-
-	"CreateTime" DATE NULL,
-
-	"Creator" nvarchar2(255) NULL,
-
-	"EditTime" DATE NULL,
-
-	"Editor" nvarchar2(255) NULL,
-
-	 PRIMARY KEY ("primaryKey")
-) ;
-
-
-CREATE TABLE "STORMLO"
-(
-
-	"primaryKey" RAW(16) NOT NULL,
-
-	"Class_m0" RAW(16) NOT NULL,
-
-	"Operation_m0" RAW(16) NOT NULL,
-
-	"CreateTime" DATE NULL,
-
-	"Creator" nvarchar2(255) NULL,
-
-	"EditTime" DATE NULL,
-
-	"Editor" nvarchar2(255) NULL,
-
-	 PRIMARY KEY ("primaryKey")
-) ;
-
-
-CREATE TABLE "STORMLA"
-(
-
-	"primaryKey" RAW(16) NOT NULL,
-
-	"View_m0" RAW(16) NOT NULL,
-
-	"Attribute_m0" RAW(16) NOT NULL,
-
-	"CreateTime" DATE NULL,
-
-	"Creator" nvarchar2(255) NULL,
-
-	"EditTime" DATE NULL,
-
-	"Editor" nvarchar2(255) NULL,
-
-	 PRIMARY KEY ("primaryKey")
-) ;
-
-
-CREATE TABLE "STORMLV"
-(
-
-	"primaryKey" RAW(16) NOT NULL,
-
-	"Class_m0" RAW(16) NOT NULL,
-
-	"View_m0" RAW(16) NOT NULL,
-
-	"CreateTime" DATE NULL,
-
-	"Creator" nvarchar2(255) NULL,
-
-	"EditTime" DATE NULL,
-
-	"Editor" nvarchar2(255) NULL,
-
-	 PRIMARY KEY ("primaryKey")
-) ;
-
-
-CREATE TABLE "STORMLR"
-(
-
-	"primaryKey" RAW(16) NOT NULL,
-
-	"StartDate" DATE NULL,
-
-	"EndDate" DATE NULL,
-
-	"Agent_m0" RAW(16) NOT NULL,
-
-	"Role_m0" RAW(16) NOT NULL,
-
-	"CreateTime" DATE NULL,
-
-	"Creator" nvarchar2(255) NULL,
-
-	"EditTime" DATE NULL,
-
-	"Editor" nvarchar2(255) NULL,
-
-	 PRIMARY KEY ("primaryKey")
-) ;
-
-
-
-ALTER TABLE "Детейл2"
-	ADD CONSTRAINT "Детейл2_FДетейл_0" FOREIGN KEY ("Детейл") REFERENCES "Детейл" ("primaryKey");
-
-CREATE INDEX "Детейл2_IДетейл" on "Детейл2" ("Детейл");
-
-ALTER TABLE "Мастер"
-	ADD CONSTRAINT "Мастер_FМастер2_0" FOREIGN KEY ("Мастер2") REFERENCES "Мастер2" ("primaryKey");
-
-CREATE INDEX "Мастер_IМастер2" on "Мастер" ("Мастер2");
 
 ALTER TABLE "Лес"
 	ADD CONSTRAINT "Лес_FСтрана_0" FOREIGN KEY ("Страна") REFERENCES "Страна" ("primaryKey");
 
 CREATE INDEX "Лес_IСтрана" on "Лес" ("Страна");
 
-ALTER TABLE "Журнал"
-	ADD CONSTRAINT "Журнал_FАвтор_0" FOREIGN KEY ("Автор2") REFERENCES "Автор" ("primaryKey");
+ALTER TABLE "TestDetailWithCicle"
+	ADD CONSTRAINT "TestDetailWithCicle_FTest_5294" FOREIGN KEY ("Parent") REFERENCES "TestDetailWithCicle" ("primaryKey");
 
-CREATE INDEX "Журнал_IАвтор2" on "Журнал" ("Автор2");
+CREATE INDEX "TestDetailWithCicle_IParent" on "TestDetailWithCicle" ("Parent");
 
-ALTER TABLE "Журнал"
-	ADD CONSTRAINT "Журнал_FБибли_9226" FOREIGN KEY ("Библиотека2") REFERENCES "Библиотека" ("primaryKey");
+ALTER TABLE "TestDetailWithCicle"
+	ADD CONSTRAINT "TestDetailWithCicle_FTest_5002" FOREIGN KEY ("TestMaster") REFERENCES "TestMaster" ("primaryKey");
 
-CREATE INDEX "Журнал_IБибли_1176" on "Журнал" ("Библиотека2");
+CREATE INDEX "TestDetailWithCicle_ITest_3425" on "TestDetailWithCicle" ("TestMaster");
 
 ALTER TABLE "Медведь"
 	ADD CONSTRAINT "Медведь_FСтрана_0" FOREIGN KEY ("Страна") REFERENCES "Страна" ("primaryKey");
@@ -1026,54 +799,19 @@ ALTER TABLE "Медведь"
 CREATE INDEX "Медведь_IСтрана" on "Медведь" ("Страна");
 
 ALTER TABLE "Медведь"
-	ADD CONSTRAINT "Медведь_FМедв_4334" FOREIGN KEY ("Папа") REFERENCES "Медведь" ("primaryKey");
-
-CREATE INDEX "Медведь_IПапа" on "Медведь" ("Папа");
-
-ALTER TABLE "Медведь"
 	ADD CONSTRAINT "Медведь_FЛес_0" FOREIGN KEY ("ЛесОбитания") REFERENCES "Лес" ("primaryKey");
 
 CREATE INDEX "Медведь_IЛесО_5757" on "Медведь" ("ЛесОбитания");
 
 ALTER TABLE "Медведь"
-	ADD CONSTRAINT "Медведь_FМедв_4335" FOREIGN KEY ("Мама") REFERENCES "Медведь" ("primaryKey");
+	ADD CONSTRAINT "Медведь_FМедв_4334" FOREIGN KEY ("Мама") REFERENCES "Медведь" ("primaryKey");
 
 CREATE INDEX "Медведь_IМама" on "Медведь" ("Мама");
 
-ALTER TABLE "Наследник"
-	ADD CONSTRAINT "Наследник_FMaster_0" FOREIGN KEY ("Master") REFERENCES "Master" ("primaryKey");
+ALTER TABLE "Медведь"
+	ADD CONSTRAINT "Медведь_FМедв_4335" FOREIGN KEY ("Папа") REFERENCES "Медведь" ("primaryKey");
 
-CREATE INDEX "Наследник_IMaster" on "Наследник" ("Master");
-
-ALTER TABLE "Наследник"
-	ADD CONSTRAINT "Наследник_FМас_278" FOREIGN KEY ("Мастер") REFERENCES "Мастер" ("primaryKey");
-
-CREATE INDEX "Наследник_IМа_7239" on "Наследник" ("Мастер");
-
-ALTER TABLE "Car"
-	ADD CONSTRAINT "Car_FDriver_0" FOREIGN KEY ("driver") REFERENCES "Driver" ("primaryKey");
-
-CREATE INDEX "Car_Idriver" on "Car" ("driver");
-
-ALTER TABLE "Берлога"
-	ADD CONSTRAINT "Берлога_FЛес_0" FOREIGN KEY ("ЛесРасположения") REFERENCES "Лес" ("primaryKey");
-
-CREATE INDEX "Берлога_IЛесР_1411" on "Берлога" ("ЛесРасположения");
-
-ALTER TABLE "Берлога"
-	ADD CONSTRAINT "Берлога_FМедв_5600" FOREIGN KEY ("Медведь") REFERENCES "Медведь" ("primaryKey");
-
-CREATE INDEX "Берлога_IМедведь" on "Берлога" ("Медведь");
-
-ALTER TABLE "Книга"
-	ADD CONSTRAINT "Книга_FАвтор_0" FOREIGN KEY ("Автор1") REFERENCES "Автор" ("primaryKey");
-
-CREATE INDEX "Книга_IАвтор1" on "Книга" ("Автор1");
-
-ALTER TABLE "Книга"
-	ADD CONSTRAINT "Книга_FБиблио_6449" FOREIGN KEY ("Библиотека1") REFERENCES "Библиотека" ("primaryKey");
-
-CREATE INDEX "Книга_IБиблио_4875" on "Книга" ("Библиотека1");
+CREATE INDEX "Медведь_IПапа" on "Медведь" ("Папа");
 
 ALTER TABLE "Детейл"
 	ADD CONSTRAINT "Детейл_FБазов_7676" FOREIGN KEY ("БазовыйКласс_m0") REFERENCES "БазовыйКласс" ("primaryKey");
@@ -1085,10 +823,65 @@ ALTER TABLE "Детейл"
 
 CREATE INDEX "Детейл_IБазов_4617" on "Детейл" ("БазовыйКласс_m1");
 
+ALTER TABLE "Книга"
+	ADD CONSTRAINT "Книга_FАвтор_0" FOREIGN KEY ("Автор1") REFERENCES "Автор" ("primaryKey");
+
+CREATE INDEX "Книга_IАвтор1" on "Книга" ("Автор1");
+
+ALTER TABLE "Книга"
+	ADD CONSTRAINT "Книга_FБиблио_6449" FOREIGN KEY ("Библиотека1") REFERENCES "Библиотека" ("primaryKey");
+
+CREATE INDEX "Книга_IБиблио_4875" on "Книга" ("Библиотека1");
+
+ALTER TABLE "Наследник"
+	ADD CONSTRAINT "Наследник_FМас_278" FOREIGN KEY ("Мастер") REFERENCES "Мастер" ("primaryKey");
+
+CREATE INDEX "Наследник_IМа_7239" on "Наследник" ("Мастер");
+
+ALTER TABLE "Наследник"
+	ADD CONSTRAINT "Наследник_FMaster_0" FOREIGN KEY ("Master") REFERENCES "Master" ("primaryKey");
+
+CREATE INDEX "Наследник_IMaster" on "Наследник" ("Master");
+
+ALTER TABLE "Car"
+	ADD CONSTRAINT "Car_FDriver_0" FOREIGN KEY ("driver") REFERENCES "Driver" ("primaryKey");
+
+CREATE INDEX "Car_Idriver" on "Car" ("driver");
+
+ALTER TABLE "Мастер"
+	ADD CONSTRAINT "Мастер_FМастер2_0" FOREIGN KEY ("Мастер2") REFERENCES "Мастер2" ("primaryKey");
+
+CREATE INDEX "Мастер_IМастер2" on "Мастер" ("Мастер2");
+
 ALTER TABLE "Блоха"
 	ADD CONSTRAINT "Блоха_FМедведь_0" FOREIGN KEY ("МедведьОбитания") REFERENCES "Медведь" ("primaryKey");
 
 CREATE INDEX "Блоха_IМедвед_6073" on "Блоха" ("МедведьОбитания");
+
+ALTER TABLE "Берлога"
+	ADD CONSTRAINT "Берлога_FЛес_0" FOREIGN KEY ("ЛесРасположения") REFERENCES "Лес" ("primaryKey");
+
+CREATE INDEX "Берлога_IЛесР_1411" on "Берлога" ("ЛесРасположения");
+
+ALTER TABLE "Берлога"
+	ADD CONSTRAINT "Берлога_FМедв_5600" FOREIGN KEY ("Медведь") REFERENCES "Медведь" ("primaryKey");
+
+CREATE INDEX "Берлога_IМедведь" on "Берлога" ("Медведь");
+
+ALTER TABLE "Детейл2"
+	ADD CONSTRAINT "Детейл2_FДетейл_0" FOREIGN KEY ("Детейл") REFERENCES "Детейл" ("primaryKey");
+
+CREATE INDEX "Детейл2_IДетейл" on "Детейл2" ("Детейл");
+
+ALTER TABLE "Журнал"
+	ADD CONSTRAINT "Журнал_FАвтор_0" FOREIGN KEY ("Автор2") REFERENCES "Автор" ("primaryKey");
+
+CREATE INDEX "Журнал_IАвтор2" on "Журнал" ("Автор2");
+
+ALTER TABLE "Журнал"
+	ADD CONSTRAINT "Журнал_FБибли_9226" FOREIGN KEY ("Библиотека2") REFERENCES "Библиотека" ("primaryKey");
+
+CREATE INDEX "Журнал_IБибли_1176" on "Журнал" ("Библиотека2");
 
 ALTER TABLE "STORMWEBSEARCH"
 	ADD CONSTRAINT "STORMWEBSEARCH_FSTORMFILT_6521" FOREIGN KEY ("FilterSetting_m0") REFERENCES "STORMFILTERSETTING" ("primaryKey");
@@ -1117,48 +910,4 @@ ALTER TABLE "STORMAuField"
 ALTER TABLE "STORMAuField"
 	ADD CONSTRAINT "STORMAuField_FSTORMAuEntity_0" FOREIGN KEY ("AuditEntity_m0") REFERENCES "STORMAuEntity" ("primaryKey");
 
-ALTER TABLE "STORMI"
-	ADD CONSTRAINT "STORMI_FSTORMAG_0" FOREIGN KEY ("User_m0") REFERENCES "STORMAG" ("primaryKey");
-
-ALTER TABLE "STORMI"
-	ADD CONSTRAINT "STORMI_FSTORMAG_1" FOREIGN KEY ("Agent_m0") REFERENCES "STORMAG" ("primaryKey");
-
-ALTER TABLE "STORMP"
-	ADD CONSTRAINT "STORMP_FSTORMS_0" FOREIGN KEY ("Subject_m0") REFERENCES "STORMS" ("primaryKey");
-
-ALTER TABLE "STORMP"
-	ADD CONSTRAINT "STORMP_FSTORMAG_0" FOREIGN KEY ("Agent_m0") REFERENCES "STORMAG" ("primaryKey");
-
-ALTER TABLE "STORMF"
-	ADD CONSTRAINT "STORMF_FSTORMS_0" FOREIGN KEY ("Subject_m0") REFERENCES "STORMS" ("primaryKey");
-
-ALTER TABLE "STORMAC"
-	ADD CONSTRAINT "STORMAC_FSTORMF_0" FOREIGN KEY ("Filter_m0") REFERENCES "STORMF" ("primaryKey");
-
-ALTER TABLE "STORMAC"
-	ADD CONSTRAINT "STORMAC_FSTORMP_0" FOREIGN KEY ("Permition_m0") REFERENCES "STORMP" ("primaryKey");
-
-ALTER TABLE "STORMLO"
-	ADD CONSTRAINT "STORMLO_FSTORMS_0" FOREIGN KEY ("Class_m0") REFERENCES "STORMS" ("primaryKey");
-
-ALTER TABLE "STORMLO"
-	ADD CONSTRAINT "STORMLO_FSTORMS_1" FOREIGN KEY ("Operation_m0") REFERENCES "STORMS" ("primaryKey");
-
-ALTER TABLE "STORMLA"
-	ADD CONSTRAINT "STORMLA_FSTORMS_0" FOREIGN KEY ("View_m0") REFERENCES "STORMS" ("primaryKey");
-
-ALTER TABLE "STORMLA"
-	ADD CONSTRAINT "STORMLA_FSTORMS_1" FOREIGN KEY ("Attribute_m0") REFERENCES "STORMS" ("primaryKey");
-
-ALTER TABLE "STORMLV"
-	ADD CONSTRAINT "STORMLV_FSTORMS_0" FOREIGN KEY ("Class_m0") REFERENCES "STORMS" ("primaryKey");
-
-ALTER TABLE "STORMLV"
-	ADD CONSTRAINT "STORMLV_FSTORMS_1" FOREIGN KEY ("View_m0") REFERENCES "STORMS" ("primaryKey");
-
-ALTER TABLE "STORMLR"
-	ADD CONSTRAINT "STORMLR_FSTORMAG_0" FOREIGN KEY ("Agent_m0") REFERENCES "STORMAG" ("primaryKey");
-
-ALTER TABLE "STORMLR"
-	ADD CONSTRAINT "STORMLR_FSTORMAG_1" FOREIGN KEY ("Role_m0") REFERENCES "STORMAG" ("primaryKey");
 
