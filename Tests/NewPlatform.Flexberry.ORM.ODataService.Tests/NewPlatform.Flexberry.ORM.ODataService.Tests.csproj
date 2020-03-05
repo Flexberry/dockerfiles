@@ -261,6 +261,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseIntegratedTest.cs" />
+    <Compile Include="CRUD\Create\CreateWithPseudoDetailDefinedTest.cs" />
     <Compile Include="CRUD\GisCRUDTest.cs" />
     <Compile Include="CRUD\Read\Excel\ExcelExportTest.cs" />
     <Compile Include="CRUD\Read\Excel\ExportExcel.cs" />

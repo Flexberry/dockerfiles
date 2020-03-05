@@ -168,7 +168,6 @@
 
             CheckNavigableProperty(webAPIPath, model);
             return webAPIPath;
-
         }
 
         private static void CheckNavigableProperty(ODataPath path, IEdmModel model)

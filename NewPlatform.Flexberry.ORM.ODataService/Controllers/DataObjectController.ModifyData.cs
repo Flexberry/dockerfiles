@@ -615,7 +615,22 @@
             // Все свойства объекта данных означим из пришедшей сущности, если они были там установлены(изменены).
             foreach (var prop in entityType.Properties())
             {
-                string dataObjectPropName = _model.GetDataObjectProperty(entityType.FullTypeName(), prop.Name).Name;
+                string dataObjectPropName = null;
+                try
+                {
+                    dataObjectPropName = _model.GetDataObjectProperty(entityType.FullTypeName(), prop.Name).Name;
+                }
+                catch (KeyNotFoundException)
+                {
+                    // Check if prop value is the link from master to pseudodetail (pseudoproperty).
+                    if (HasPseudoproperty(entityType, prop.Name))
+                    {
+                        continue;
+                    }
+
+                    throw;
+                }
+
                 if (edmEntity.GetChangedPropertyNames().Contains(prop.Name))
                 {
                     // Обработка мастеров и детейлов.

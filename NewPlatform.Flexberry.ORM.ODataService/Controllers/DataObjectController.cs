@@ -440,9 +440,6 @@
                 }
             }
 
-            Type masterType = EdmLibHelpers.GetClrType(entityType.ToEdmTypeReference(true), _model);
-            IDataObjectEdmModelBuilder builder = (_model as DataObjectEdmModel).EdmModelBuilder;
-
             foreach (var prop in entityType.Properties())
             {
                 string dataObjectPropName = null;
@@ -453,11 +450,11 @@
                 catch (KeyNotFoundException)
                 {
                     // Check if prop value is the link from master to pseudodetail (pseudoproperty).
-                    if (builder.GetPseudoDetail(masterType, prop.Name) != null)
+                    if (HasPseudoproperty(entityType, prop.Name))
                     {
                         continue;
                     }
-                    
+
                     throw;
                 }
 
@@ -1271,6 +1268,14 @@
             if (parentName == null)
                 return itemName;
             return $"{parentName}.{itemName}";
+        }
+
+        private bool HasPseudoproperty(IEdmEntityType entityType, string propertyName)
+        {
+            Type masterType = EdmLibHelpers.GetClrType(entityType.ToEdmTypeReference(true), _model);
+            IDataObjectEdmModelBuilder builder = (_model as DataObjectEdmModel).EdmModelBuilder;
+
+            return builder.GetPseudoDetail(masterType, propertyName) != null;
         }
     }
 }

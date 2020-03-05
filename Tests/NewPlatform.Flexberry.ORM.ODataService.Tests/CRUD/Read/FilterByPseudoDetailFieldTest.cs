@@ -29,12 +29,7 @@
             return pseudoDetailDefinitions;
         }
 
-        public FilterByPseudoDetailFieldTest()
-            : base(
-                  @"РТЦ Тестирование и документирование\Модели для юнит-тестов\Flexberry ORM\NewPlatform.Flexberry.ORM.ODataService.Tests\",
-                  false,
-                  false,
-                  GetPseudoDetailDefinitions())
+        public FilterByPseudoDetailFieldTest() : base(pseudoDetailDefinitions: GetPseudoDetailDefinitions())
         {
         }
 
