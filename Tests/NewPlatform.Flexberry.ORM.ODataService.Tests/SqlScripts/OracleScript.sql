@@ -381,7 +381,7 @@ CREATE TABLE "Берлога"
 
 	"Сертификат" CLOB NULL,
 
-	"CertString" NVARCHAR2(255) NULL,
+	"CertString" CLOB NULL,
 
 	"ЛесРасположения" RAW(16) NULL,
 

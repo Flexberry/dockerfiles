@@ -344,7 +344,7 @@ CREATE TABLE Берлога (
 
  Сертификат TEXT NULL,
 
- CertString VARCHAR(255) NULL,
+ CertString TEXT NULL,
 
  ЛесРасположения UUID NULL,
 

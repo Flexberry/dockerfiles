@@ -344,7 +344,7 @@ CREATE TABLE [Берлога] (
 
 	 [Сертификат] NVARCHAR(MAX)  NULL,
 
-	 [CertString] VARCHAR(255)  NULL,
+	 [CertString] NVARCHAR(MAX)  NULL,
 
 	 [ЛесРасположения] UNIQUEIDENTIFIER  NULL,
 

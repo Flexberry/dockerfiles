@@ -236,7 +236,6 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
 
         // *** End programmer edit section *** (Берлога.СертификатСтрока CustomAttributes)
         [PropertyStorage("CertString")]
-        [StrLen(255)]
         public virtual string СертификатСтрока
         {
             get

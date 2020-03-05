@@ -93,6 +93,10 @@
                     return await CreateResponseMessageAsync(responses, request, cancellationToken);
                 }
             }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
             finally
             {
                 foreach (ODataBatchRequestItem subRequest in subRequests)
@@ -211,7 +215,12 @@
                     {
                         if (isSyncMode == true)
                         {
-                            ExecuteChangeSet((ChangeSetRequestItem)request, responses, cancellation);
+                            Task task = ExecuteChangeSet((ChangeSetRequestItem)request, responses, cancellation);
+
+                            if (task.Exception != null)
+                            {
+                                throw task.Exception;
+                            }
                         }
                         else
                         {
@@ -281,8 +290,15 @@
 
             if (changeSetResponse.Responses.All(r => r.IsSuccessStatusCode))
             {
-                DataObject[] dataObjects = dataObjectsToUpdate.ToArray();
-                dataService.UpdateObjects(ref dataObjects);
+                try
+                {
+                    DataObject[] dataObjects = dataObjectsToUpdate.ToArray();
+                    dataService.UpdateObjects(ref dataObjects);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
     }
