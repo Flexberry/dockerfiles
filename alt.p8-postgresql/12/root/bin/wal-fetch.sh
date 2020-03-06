@@ -1,7 +1,10 @@
 #!/bin/bash
 set -e
-
-confFile= /etc/wal-g.d/server-"$walStorageMode".conf
+set -x
+exec >>/tmp/wall-fetch.log 2>&1
+echo -ne "\n\n\--------------------------------"
+date
+confFile=/etc/wal-g.d/server-"$WALG".conf
 
 if [ ! -f $confFile ]
 then
@@ -9,6 +12,7 @@ then
   exit 1
 fi
 
-source $confFile
+. /etc/wal-g.d/server.conf
+. $confFile
 
 /bin/wal-g wal-fetch $1 $2

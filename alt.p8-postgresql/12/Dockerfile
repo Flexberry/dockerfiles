@@ -34,7 +34,7 @@ RUN  chmod +x /docker-cmd.sh; \
   /etc/init.d/postgresql start; \
   sleep 5; \
   until echo  "\l" |  psql -U postgres; do sleep 5; done ; \
-  echo  -ne "ALTER ROLE postgres WITH PASSWORD 'p@ssw0rd';\nCREATE EXTENSION tds_fdw;\nCREATE EXTENSION clickhousedb_fdw;\n" |  psql -U postgres; \
+  echo  -ne "ALTER ROLE postgres WITH PASSWORD 'p@ssw0rd';" |  psql -U postgres; \
   /etc/init.d/postgresql stop; \
   sleep 5; \
   while [ -f /var/lib/pgsql/data/postmaster.pid ]; do sleep 5; done; \
@@ -42,6 +42,7 @@ RUN  chmod +x /docker-cmd.sh; \
   while [ -f /tmp/.s.PGSQL.5432.lock ]; do sleep 5; done;
 
 COPY --from=dev /opt/wal-g/main/pg/wal-g /bin/
+# COPY opt/wal-g/main/pg/wal-g /bin/
 COPY /root/ /
 
 EXPOSE 5432

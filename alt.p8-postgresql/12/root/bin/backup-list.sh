@@ -1,6 +1,6 @@
 #!/bin/bash
 
-confFile= /etc/wal-g.d/server-"$walStorageMode".conf
+confFile=/etc/wal-g.d/server-"$WALG".conf
 
 if [ ! -f $confFile ]
 then
@@ -8,6 +8,7 @@ then
   exit 1
 fi
 
-source $confFile
+. /etc/wal-g.d/server.conf
+. $confFile
 
 /bin/wal-g backup-list

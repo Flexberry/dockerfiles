@@ -1,17 +1,15 @@
 version: "3.2"
 services:
   postgres:
-    image: flexberry/alt.p8-postgresql:latest
+    image: flexberry/alt.p8-postgresql:12
     ports:
-     - 5432:5432
+     - 15432:5432
     volumes:
      - db:/var/lib/pgsql/data/
+     - backups:/var/lib/pgsql/backups  
     environment:
-      - POSTGRES_max_connections=${POSTGRES_max_connections}
-    deploy:
-      placement:
-        constraints:
-          - 'node.role==manager'
-
+      WALG: file
 volumes:
   db:
+  backups:
+

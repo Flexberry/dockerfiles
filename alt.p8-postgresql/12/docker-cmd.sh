@@ -1,4 +1,32 @@
 #!/bin/sh
+
+function walg_conf_json() {
+ifs=$IFS
+json='{'
+n=0
+for name in $WALG_VARS
+do
+  if [ $n -gt 0 ]
+  then
+    sep=",\n\t"
+  else
+    sep="\n\t"
+  fi
+  eval value=\${$name}
+#   re='^[0-9]+$'
+#   if  [[ $value =~ $re ]] ; then
+#     #echo "$value is number"
+#     json="$json$sep\"$name\":$value"
+#   else
+    json="$json$sep\"$name\":\"$value\""
+#   fi
+#   echo $var=$value
+  let n=$n+1
+done
+json="$json\n}\n"
+echo  $json
+}
+
 set -x
 
 if [ -z "$POSTGRES_logging_collector" ]; then POSTGRES_logging_collector=on; fi
@@ -7,7 +35,7 @@ if [ -z "$POSTGRES_log_filename" ]; then POSTGRES_log_filename=\'postgresql-%u_%
 if [ -z "$POSTGRES_log_rotation_age" ]; then POSTGRES_log_rotation_age=1h ;fi
 if [ -z "$POSTGRES_log_rotation_size" ]; then POSTGRES_log_rotation_size=0; fi
 
-for confVar in `echo ${!POSTGRES*}` 
+for confVar in `echo ${!POSTGRES*}`
 do
   confValue=${!confVar}
   key=${confVar:9}
@@ -29,6 +57,27 @@ else
   mv $TmpConfFile $ConfFile
 fi
 
-exec su -c '/usr/bin/postgres -D /var/lib/pgsql/data' -s /bin/sh postgres
+POSTGRES_PARAMS=''
+if [ -n "$WALG" -a -f "/etc/wal-g.d/server-$WALG.conf" ] # Включить режим архивирования WAL-G
+then
+
+  WALG_CONFFILE=~postgres/.walg.json
+  . /etc/wal-g.d/server.conf
+  . /etc/wal-g.d/server-$WALG.conf
+    conf=`walg_conf_json`
+    echo -ne $conf  > $WALG_CONFFILE
+    chown postgres:postges /bin/wal-g
+    if [ -n "$WALG_FILE_PREFIX" ]
+    then
+      mkdir -p $WALG_FILE_PREFIX
+      chown postgres:postges $WALG_FILE_PREFIX
+      chmod 777 $WALG_FILE_PREFIX
+      ls -ld $WALG_FILE_PREFIX
+    fi
+    POSTGRES_PARAMS="-c archive_mode=on -c wal_level=replica -c archive_timeout=60 -c archive_command='/bin/wal-push.sh %p' -c restore_command='/bin/wal-fetch.sh %f %p' -c recovery_target_timeline=LATEST"
+#     POSTGRES_PARAMS="-c archive_mode=on -c wal_level=replica -c archive_timeout=60 -c archive_command='/bin/wal-push.sh %p'"
+fi
+
+exec su -c "/usr/bin/postgres -D /var/lib/pgsql/data $POSTGRES_PARAMS"  -s /bin/sh postgres
 
 
