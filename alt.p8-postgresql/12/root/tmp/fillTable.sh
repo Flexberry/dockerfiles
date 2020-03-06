@@ -1,5 +1,4 @@
 #!/bin/sh
-
 echo "create database test1;
 \c test1
 CREATE TABLE indexing_table(created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW());
