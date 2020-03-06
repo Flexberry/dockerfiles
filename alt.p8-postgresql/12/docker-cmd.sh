@@ -60,7 +60,6 @@ fi
 POSTGRES_PARAMS=''
 if [ -n "$WALG" -a -f "/etc/wal-g.d/server-$WALG.conf" ] # Включить режим архивирования WAL-G
 then
-
   WALG_CONFFILE=~postgres/.walg.json
   . /etc/wal-g.d/server.conf
   . /etc/wal-g.d/server-$WALG.conf
