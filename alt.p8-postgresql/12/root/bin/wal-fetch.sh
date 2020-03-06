@@ -16,3 +16,5 @@ fi
 . $confFile
 
 /bin/wal-g wal-fetch $1 $2
+echo ret=$?
+exit 0

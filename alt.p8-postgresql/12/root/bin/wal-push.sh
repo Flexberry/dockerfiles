@@ -15,4 +15,5 @@ fi
 . $confFile
 
 /bin/wal-g wal-push $1
+echo ret=$?
 exit 0
