@@ -30,3 +30,6 @@ pg_dumpall -h ... -p ... -U ... --clean --if-exists | psql -U postgres
 ```
 
 ## Переменные режима WALG
+
+Переменные режима `WALG` описаны в разделе
+[Бекапирования системой wal-g](walg_backup.md). 
