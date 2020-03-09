@@ -57,6 +57,42 @@ else
   mv $TmpConfFile $ConfFile
 fi
 
+if [ -n "$BACKUP_RESTORE" ]
+then
+  BACKUP_RESTORE_FILE="/var/lib/pgsql/data/BACKUP_RESTORE"
+  OLD_BACKUP_RESTORE=
+  if [ -f  $BACKUP_RESTORE_FILE ]
+  then
+    read OLD_BACKUP_RESTORE < $BACKUP_RESTORE_FILE
+  fi
+  if [ -n "$RESTORE_HOST" -a -n "$RESTORE_PASSWORD" -a "$BACKUP_RESTORE" != "$OLD_BACKUP_RESTORE" ] 
+  then  
+    if [ -z "$RESTORE_PORT" ]
+    then
+      RESTORE_PORT=5432
+    fi
+    if [ -z "$RESTORE_USER" ]
+    then
+      RESTORE_USER='postgres'
+    fi
+    export PGPASSWORD="$RESTORE_PASSWORD"
+    pg_dumpall -h $RESTORE_HOST -p $RESTORE_PORT -U $RESTORE_USER --clean --if-exists | psql -U postgres
+  else 
+    if [ "$BACKUP_RESTORE" == "$OLD_BACKUP_RESTORE" ]
+    then
+      echo "Режим бекапа DUMP/RESTORE. Повторный запуск сервиса с идентификатором $BACKUP_RESTORE. Бекап не производится"
+    fi
+    if [ -z "$RESTORE_HOST" ]
+    then
+      echo "Режим бекапа DUMP/RESTORE. Переменная RESTORE_HOST не определена. Бекап не производится"
+    fi
+    if [ -z "$RESTORE_PASSWORD" ]
+    then
+      echo "Режим бекапа DUMP/RESTORE. Переменная RESTORE_PASSWORD не определена. Бекап не производится"
+    fi
+  fi
+fi
+
 POSTGRES_PARAMS=''
 if [ -n "$WALG" -a -f "/etc/wal-g.d/server-$WALG.conf" ] # Включить режим архивирования WAL-G
 then
