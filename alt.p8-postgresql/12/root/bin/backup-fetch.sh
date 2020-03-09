@@ -13,3 +13,4 @@ fi
 . $confFile
 
 /bin/wal-g backup-fetch $PGDATA LATEST
+exit $?

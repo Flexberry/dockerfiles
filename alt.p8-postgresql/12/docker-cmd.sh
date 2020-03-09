@@ -80,16 +80,45 @@ then
   else 
     if [ "$BACKUP_RESTORE" == "$OLD_BACKUP_RESTORE" ]
     then
-      echo "Режим бекапа DUMP/RESTORE. Повторный запуск сервиса с идентификатором $BACKUP_RESTORE. Бекап не производится"
+      echo "Режим бекапа BACKUP_RESTORE Повторный запуск сервиса с идентификатором $BACKUP_RESTORE. Бекап не производится"
     fi
     if [ -z "$RESTORE_HOST" ]
     then
-      echo "Режим бекапа DUMP/RESTORE. Переменная RESTORE_HOST не определена. Бекап не производится"
+      echo "Режим бекапа BACKUP_RESTORE Переменная RESTORE_HOST не определена. Бекап не производится"
     fi
     if [ -z "$RESTORE_PASSWORD" ]
     then
-      echo "Режим бекапа DUMP/RESTORE. Переменная RESTORE_PASSWORD не определена. Бекап не производится"
+      echo "Режим бекапа BACKUP_RESTORE Переменная RESTORE_PASSWORD не определена. Бекап не производится"
     fi
+  fi
+fi
+
+if [ -n "$BACKUP_WALG" ]
+then
+  if [ -n "$WALG" -a -f "/etc/wal-g.d/server-$WALG.conf" ]
+  then
+    BACKUP_WALG_FILE="/var/lib/pgsql/data/BACKUP_WALG"
+    OLD_BACKUP_WALG=
+    if [ -f  $BACKUP_WALG_FILE ]
+    then
+      read OLD_BACKUP_WALG < $BACKUP_WALG_FILE
+    fi
+    if [ "$BACKUP_WALG" != "$OLD_BACKUP_WALG" ] 
+    then
+      . /etc/wal-g.d/server.conf
+      . /etc/wal-g.d/server-$WALG.conf
+      if baskup-list.sh >/dev/null
+      then
+        cd /var/lib/pgsql/data
+        rm -rf *
+        su -c backup-fetch.sh -s /bin/sh postgres
+        su -c 'touch /var/lib/pgsql/data/recovery.signal' -s /bin/sh postgres
+      fi
+    else
+        echo "Режим бекапа BACKUP_WALG Повторный запуск сервиса с идентификатором $BACKUP_WALG. Бекап не производится"      
+    fi
+  else
+    echo "Режим WALG=$WALG не поддержмивается"
   fi
 fi
 

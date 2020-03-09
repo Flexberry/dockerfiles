@@ -12,3 +12,4 @@ fi
 . $confFile
 
 /bin/wal-g backup-list
+exit $?
