@@ -65,19 +65,18 @@ then
   then
     read OLD_BACKUP_RESTORE < $BACKUP_RESTORE_FILE
   fi
-  if [ -n "$RESTORE_HOST" -a -n "$RESTORE_PASSWORD" -a "$BACKUP_RESTORE" != "$OLD_BACKUP_RESTORE" ] 
-  then  
+  if [ -n "$RESTORE_HOST" -a -n "$RESTORE_PASSWORD" -a "$BACKUP_RESTORE" != "$OLD_BACKUP_RESTORE" ]
+  then
     if [ -z "$RESTORE_PORT" ]
     then
-      RESTORE_PORT=5432
+      export RESTORE_PORT=5432
     fi
     if [ -z "$RESTORE_USER" ]
     then
-      RESTORE_USER='postgres'
+      export  RESTORE_USER='postgres'
     fi
-    export PGPASSWORD="$RESTORE_PASSWORD"
-    pg_dumpall -h $RESTORE_HOST -p $RESTORE_PORT -U $RESTORE_USER --clean --if-exists | psql -U postgres
-  else 
+    /bin/dumpRestoreAll.sh
+  else
     if [ "$BACKUP_RESTORE" == "$OLD_BACKUP_RESTORE" ]
     then
       echo "Режим бекапа BACKUP_RESTORE Повторный запуск сервиса с идентификатором $BACKUP_RESTORE. Бекап не производится"
@@ -103,7 +102,7 @@ then
     then
       read OLD_BACKUP_WALG < $BACKUP_WALG_FILE
     fi
-    if [ "$BACKUP_WALG" != "$OLD_BACKUP_WALG" ] 
+    if [ "$BACKUP_WALG" != "$OLD_BACKUP_WALG" ]
     then
       . /etc/wal-g.d/server.conf
       . /etc/wal-g.d/server-$WALG.conf
@@ -115,7 +114,7 @@ then
         su -c 'touch /var/lib/pgsql/data/recovery.signal' -s /bin/sh postgres
       fi
     else
-        echo "Режим бекапа BACKUP_WALG Повторный запуск сервиса с идентификатором $BACKUP_WALG. Бекап не производится"      
+        echo "Режим бекапа BACKUP_WALG Повторный запуск сервиса с идентификатором $BACKUP_WALG. Бекап не производится"
     fi
   else
     echo "Режим WALG=$WALG не поддержмивается"
