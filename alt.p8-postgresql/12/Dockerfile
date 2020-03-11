@@ -28,13 +28,18 @@ RUN  /etc/init.d/postgresql initdb;
 
 COPY data/postgresql.conf data/pg_hba.conf /var/lib/pgsql/data/
 COPY /docker-cmd.sh /
+COPY /docker-initdb.d/ /docker-initdb.d/
 
 RUN  chmod +x /docker-cmd.sh; \
   chown postgres:postgres /var/lib/pgsql/data/postgresql.conf /var/lib/pgsql/data/pg_hba.conf; \
   /etc/init.d/postgresql start; \
   sleep 5; \
   until echo  "\l" |  psql -U postgres; do sleep 5; done ; \
-  echo  -ne "ALTER ROLE postgres WITH PASSWORD 'p@ssw0rd';" |  psql -U postgres; \
+  for sqlFile in /docker-initdb.d/*.sql; \
+  do \
+    echo "Process $sqlFile"; \
+    psql -U postgres < $sqlFile; \
+  done ; \
   /etc/init.d/postgresql stop; \
   sleep 5; \
   while [ -f /var/lib/pgsql/data/postmaster.pid ]; do sleep 5; done; \
