@@ -57,6 +57,7 @@ else
   mv $TmpConfFile $ConfFile
 fi
 
+POSTGRES_PARAMS=''
 if [ -n "$BACKUP_RESTORE" ]
 then
   BACKUP_RESTORE_FILE="/var/lib/pgsql/data/BACKUP_RESTORE"
@@ -77,6 +78,7 @@ then
     fi
     /bin/dumpRestoreAll.sh
     echo $BACKUP_RESTORE > $BACKUP_RESTORE_FILE
+    POSTGRES_PARAMS="-c restore_command='/bin/wal-fetch.sh %f %p' -c recovery_target_timeline=LATEST"
   else
     if [ "$BACKUP_RESTORE" == "$OLD_BACKUP_RESTORE" ]
     then
@@ -122,7 +124,6 @@ then
   fi
 fi
 
-POSTGRES_PARAMS=''
 if [ -n "$WALG" -a -f "/etc/wal-g.d/server-$WALG.conf" ] # Включить режим архивирования WAL-G
 then
   WALG_CONFFILE=~postgres/.walg.json
@@ -130,15 +131,15 @@ then
   . /etc/wal-g.d/server-$WALG.conf
     conf=`walg_conf_json`
     echo -ne $conf  > $WALG_CONFFILE
-    chown postgres:postges /bin/wal-g
+    chown postgres:postgres /bin/wal-g
     if [ -n "$WALG_FILE_PREFIX" ]
     then
       mkdir -p $WALG_FILE_PREFIX
-      chown postgres:postges $WALG_FILE_PREFIX
+      chown postgres:postgres $WALG_FILE_PREFIX
       chmod 777 $WALG_FILE_PREFIX
       ls -ld $WALG_FILE_PREFIX
     fi
-    POSTGRES_PARAMS="-c archive_mode=on -c wal_level=replica -c archive_timeout=60 -c archive_command='/bin/wal-push.sh %p' -c restore_command='/bin/wal-fetch.sh %f %p' -c recovery_target_timeline=LATEST"
+    POSTGRES_PARAMS="$POSTGRES_PARAMS -c archive_mode=on -c wal_level=replica -c archive_timeout=60 -c archive_command='/bin/wal-push.sh %p'"
 #     POSTGRES_PARAMS="-c archive_mode=on -c wal_level=replica -c archive_timeout=60 -c archive_command='/bin/wal-push.sh %p'"
 fi
 
