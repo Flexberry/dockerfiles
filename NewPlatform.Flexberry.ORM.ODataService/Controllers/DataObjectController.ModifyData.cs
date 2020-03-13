@@ -662,22 +662,29 @@
                                     string detailPropertyName = Information.GetDetailArrayPropertyName(agregatorType, objType);
 
                                     Type parentType = objType.BaseType;
-                                    while (detailPropertyName == null && parentType != typeof(DataObject))
+                                    while (detailPropertyName == null && parentType != typeof(DataObject) && parentType != typeof(object) && parentType != null)
                                     {
-                                        detailPropertyName = Information.GetDetailArrayPropertyName(master.GetType(), parentType);
-                                        parentType = objType.BaseType;
+                                        detailPropertyName = Information.GetDetailArrayPropertyName(agregatorType, parentType);
+                                        parentType = parentType.BaseType;
                                     }
 
-                                    DetailArray details = (DetailArray)Information.GetPropValueByName(master, detailPropertyName);
-
-                                    if (details != null)
+                                    if (detailPropertyName != null)
                                     {
-                                        DataObject existDetail = details.GetByKey(obj.__PrimaryKey);
+                                        DetailArray details = (DetailArray)Information.GetPropValueByName(master, detailPropertyName);
 
-                                        if (existDetail == null)
+                                        if (details != null)
                                         {
-                                            details.AddObject(obj);
+                                            DataObject existDetail = details.GetByKey(obj.__PrimaryKey);
+
+                                            if (existDetail == null)
+                                            {
+                                                details.AddObject(obj);
+                                            }
                                         }
+                                    }
+                                    else
+                                    {
+                                        LogService.LogWarn($"Не найден детейл {objType.AssemblyQualifiedName} в агрегаторе {agregatorType.AssemblyQualifiedName}.");
                                     }
                                 }
                             }
