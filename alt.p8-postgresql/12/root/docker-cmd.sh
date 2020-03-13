@@ -76,6 +76,7 @@ then
       export  RESTORE_USER='postgres'
     fi
     /bin/dumpRestoreAll.sh
+    echo $BACKUP_RESTORE > $BACKUP_RESTORE_FILE
   else
     if [ "$BACKUP_RESTORE" == "$OLD_BACKUP_RESTORE" ]
     then
