@@ -78,7 +78,6 @@ then
     fi
     /bin/dumpRestoreAll.sh
     echo $BACKUP_RESTORE > $BACKUP_RESTORE_FILE
-    POSTGRES_PARAMS="-c restore_command='/bin/wal-fetch.sh %f %p' -c recovery_target_timeline=LATEST"
   else
     if [ "$BACKUP_RESTORE" == "$OLD_BACKUP_RESTORE" ]
     then
@@ -90,37 +89,32 @@ then
     fi
     if [ -z "$RESTORE_PASSWORD" ]
     then
-      echo "Режим бекапа BACKUP_RESTORE Переменная RESTORE_PASSWORD не определена. Бекап не производится"
+      echo "Режим бекапа BACKUP_RESTORE: Переменная RESTORE_PASSWORD не определена. Бекап не производится"
     fi
   fi
 fi
 
 if [ -n "$BACKUP_WALG" ]
 then
-  if [ -n "$WALG" -a -f "/etc/wal-g.d/server-$WALG.conf" ]
+  BACKUP_WALG_FILE="/var/lib/pgsql/data/BACKUP_WALG"
+  OLD_BACKUP_WALG=
+  if [ -f  $BACKUP_WALG_FILE ]
   then
-    BACKUP_WALG_FILE="/var/lib/pgsql/data/BACKUP_WALG"
-    OLD_BACKUP_WALG=
-    if [ -f  $BACKUP_WALG_FILE ]
+    read OLD_BACKUP_WALG < $BACKUP_WALG_FILE
+  fi
+  if [ "$BACKUP_WALG" != "$OLD_BACKUP_WALG" ]
+  then
+    if [ -n "$WALG" -a -f "/etc/wal-g.d/server-$WALG.conf" ]
     then
-      read OLD_BACKUP_WALG < $BACKUP_WALG_FILE
-    fi
-    if [ "$BACKUP_WALG" != "$OLD_BACKUP_WALG" ]
-    then
-      . /etc/wal-g.d/server.conf
-      . /etc/wal-g.d/server-$WALG.conf
-      if baskup-list.sh >/dev/null
-      then
-        cd /var/lib/pgsql/data
-        rm -rf *
-        su -c backup-fetch.sh -s /bin/sh postgres
-        su -c 'touch /var/lib/pgsql/data/recovery.signal' -s /bin/sh postgres
-      fi
+      /bin/walgRestoreAll.sh
     else
-        echo "Режим бекапа BACKUP_WALG Повторный запуск сервиса с идентификатором $BACKUP_WALG. Бекап не производится"
+      echo "Режим WALG=$WALG не поддержмивается"
     fi
   else
-    echo "Режим WALG=$WALG не поддержмивается"
+    if [ "$BACKUP_WALG" == "$OLD_BACKUP_WALG" ]
+    then
+      echo "Режим бекапа BACKUP_WALG. Повторный запуск сервиса с идентификатором $BACKUP_WALG. Бекап не производится"
+    fi
   fi
 fi
 
@@ -149,7 +143,7 @@ then
       sleep $WALG_PUSH_TIMEOUT
     done &
 
-    POSTGRES_PARAMS="$POSTGRES_PARAMS -c archive_mode=on -c wal_level=replica -c archive_timeout=60 -c archive_command='/bin/wal-push.sh %p'"
+    POSTGRES_PARAMS="-c archive_mode=on -c wal_level=replica -c archive_timeout=60 -c archive_command='/bin/wal-push.sh %p'"
 #     POSTGRES_PARAMS="-c archive_mode=on -c wal_level=replica -c archive_timeout=60 -c archive_command='/bin/wal-push.sh %p'"
 fi
 
