@@ -1,4 +1,4 @@
-ARG MONO_VERSION=latest
+ARG MONO_VERSION=6.6
 
 FROM flexberry/mono:${MONO_VERSION}
 
