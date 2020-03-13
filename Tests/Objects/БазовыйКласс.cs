@@ -28,6 +28,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
     // *** End programmer edit section *** (БазовыйКласс CustomAttributes)
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.none)]
+    [View("БазовыйКлассE", new string[] {
+            "Свойство1"})]
+    [AssociatedDetailViewAttribute("БазовыйКлассE", "Детейл", "ДетейлE", true, "", "", true, new string[] {
+            ""})]
     public class БазовыйКласс : ICSSoft.STORMNET.DataObject
     {
         
@@ -111,6 +115,9 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
         // *** Start programmer edit section *** (БазовыйКласс.Детейл CustomAttributes)
         [PublishName("DetailAlias")]
         // *** End programmer edit section *** (БазовыйКласс.Детейл CustomAttributes)
+        [TypeUsage(new System.Type[] {
+                typeof(NewPlatform.Flexberry.ORM.ODataService.Tests.Детейл),
+                typeof(NewPlatform.Flexberry.ORM.ODataService.Tests.ДетейлНаследник)})]
         public virtual NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfДетейл Детейл
         {
             get
@@ -137,6 +144,24 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
                 // *** Start programmer edit section *** (БазовыйКласс.Детейл Set end)
 
                 // *** End programmer edit section *** (БазовыйКласс.Детейл Set end)
+            }
+        }
+        
+        /// <summary>
+        /// Class views container.
+        /// </summary>
+        public class Views
+        {
+            
+            /// <summary>
+            /// "БазовыйКлассE" view.
+            /// </summary>
+            public static ICSSoft.STORMNET.View БазовыйКлассE
+            {
+                get
+                {
+                    return ICSSoft.STORMNET.Information.GetView("БазовыйКлассE", typeof(NewPlatform.Flexberry.ORM.ODataService.Tests.БазовыйКласс));
+                }
             }
         }
     }

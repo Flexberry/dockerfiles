@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
     using System.Net.Http;
 
@@ -889,6 +890,54 @@
 
                         Assert.Equal(testDetailWithCicleArray[i].TestDetailName, updatedTestDetailWithCicle.TestDetailName);
                     }
+                }
+            });
+        }
+
+        /// <summary>
+        /// Test save details with inheritance.
+        /// </summary>
+        [Fact]
+        public void SaveDetailWithInheritanceTest()
+        {
+            ActODataService(async (args) =>
+            {
+                var базовыйКласс = new БазовыйКласс() { Свойство1 = "sv1" };
+                var детейл = new ДетейлНаследник() { prop1 = 1};
+                базовыйКласс.Детейл.Add(детейл);
+
+                args.DataService.UpdateObject(базовыйКласс);
+                int newValue = 2;
+                детейл.prop1 = newValue;
+
+                const string baseUrl = "http://localhost/odata";
+
+                string detJson = детейл.ToJson(ДетейлНаследник.Views.ДетейлНаследникE, args.Token.Model);
+                detJson = detJson.Replace(nameof(ДетейлНаследник.БазовыйКласс), $"{nameof(ДетейлНаследник.БазовыйКласс)}@odata.bind");
+                detJson = detJson.Replace("{\"__PrimaryKey\":\"", $"\"{args.Token.Model.GetEdmEntitySet(typeof(БазовыйКласс)).Name}(");
+                detJson = detJson.Replace("\"}", ")\"");
+                string[] changesets = new[]
+                {
+                    CreateChangeset(
+                        $"{baseUrl}/{args.Token.Model.GetEdmEntitySet(typeof(БазовыйКласс)).Name}",
+                        "{}",
+                        базовыйКласс),
+                    CreateChangeset(
+                        $"{baseUrl}/{args.Token.Model.GetEdmEntitySet(typeof(ДетейлНаследник)).Name}",
+                        detJson,
+                        детейл),
+                };
+                HttpRequestMessage batchRequest = CreateBatchRequest(baseUrl, changesets);
+                using (HttpResponseMessage response = await args.HttpClient.SendAsync(batchRequest))
+                {
+                    CheckODataBatchResponseStatusCode(response, new HttpStatusCode[] { HttpStatusCode.OK, HttpStatusCode.OK });
+
+                    args.DataService.LoadObject(БазовыйКласс.Views.БазовыйКлассE, базовыйКласс);
+
+                    var детейлы = базовыйКласс.Детейл.Cast<ДетейлНаследник>();
+
+                    Assert.Equal(1, детейлы.Count());
+                    Assert.Equal(newValue, детейлы.First().prop1);
                 }
             });
         }

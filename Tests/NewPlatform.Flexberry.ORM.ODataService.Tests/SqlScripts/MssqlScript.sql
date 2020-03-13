@@ -386,7 +386,9 @@ CREATE TABLE [Детейл2] (
 
 	 [prop2] VARCHAR(255)  NULL,
 
-	 [Детейл] UNIQUEIDENTIFIER  NOT NULL,
+	 [Детейл_m0] UNIQUEIDENTIFIER  NULL,
+
+	 [Детейл_m1] UNIQUEIDENTIFIER  NULL,
 
 	 PRIMARY KEY ([primaryKey]))
 
@@ -413,6 +415,21 @@ CREATE TABLE [КлассStoredDerived] (
 	 [StrAttr2] VARCHAR(255)  NULL,
 
 	 [StrAttr] VARCHAR(255)  NULL,
+
+	 PRIMARY KEY ([primaryKey]))
+
+
+CREATE TABLE [ДетейлНаследник] (
+
+	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
+
+	 [prop3] VARCHAR(255)  NULL,
+
+	 [prop1] INT  NULL,
+
+	 [БазовыйКласс_m0] UNIQUEIDENTIFIER  NULL,
+
+	 [БазовыйКласс_m1] UNIQUEIDENTIFIER  NULL,
 
 	 PRIMARY KEY ([primaryKey]))
 
@@ -755,14 +772,23 @@ CREATE INDEX Берлога_IЛесРасположения on [Берлога] 
  ALTER TABLE [Берлога] ADD CONSTRAINT [Берлога_FМедведь_0] FOREIGN KEY ([Медведь]) REFERENCES [Медведь]
 CREATE INDEX Берлога_IМедведь on [Берлога] ([Медведь])
 
- ALTER TABLE [Детейл2] ADD CONSTRAINT [Детейл2_FДетейл_0] FOREIGN KEY ([Детейл]) REFERENCES [Детейл]
-CREATE INDEX Детейл2_IДетейл on [Детейл2] ([Детейл])
+ ALTER TABLE [Детейл2] ADD CONSTRAINT [Детейл2_FДетейл_0] FOREIGN KEY ([Детейл_m0]) REFERENCES [Детейл]
+CREATE INDEX Детейл2_IДетейл_m0 on [Детейл2] ([Детейл_m0])
+
+ ALTER TABLE [Детейл2] ADD CONSTRAINT [Детейл2_FДетейлНаследник_0] FOREIGN KEY ([Детейл_m1]) REFERENCES [ДетейлНаследник]
+CREATE INDEX Детейл2_IДетейл_m1 on [Детейл2] ([Детейл_m1])
 
  ALTER TABLE [Журнал] ADD CONSTRAINT [Журнал_FАвтор_0] FOREIGN KEY ([Автор2]) REFERENCES [Автор]
 CREATE INDEX Журнал_IАвтор2 on [Журнал] ([Автор2])
 
  ALTER TABLE [Журнал] ADD CONSTRAINT [Журнал_FБиблиотека_0] FOREIGN KEY ([Библиотека2]) REFERENCES [Библиотека]
 CREATE INDEX Журнал_IБиблиотека2 on [Журнал] ([Библиотека2])
+
+ ALTER TABLE [ДетейлНаследник] ADD CONSTRAINT [ДетейлНаследник_FБазовыйКласс_0] FOREIGN KEY ([БазовыйКласс_m0]) REFERENCES [БазовыйКласс]
+CREATE INDEX ДетейлНаследник_IБазовыйКласс_m0 on [ДетейлНаследник] ([БазовыйКласс_m0])
+
+ ALTER TABLE [ДетейлНаследник] ADD CONSTRAINT [ДетейлНаследник_FНаследник_0] FOREIGN KEY ([БазовыйКласс_m1]) REFERENCES [Наследник]
+CREATE INDEX ДетейлНаследник_IБазовыйКласс_m1 on [ДетейлНаследник] ([БазовыйКласс_m1])
 
  ALTER TABLE [STORMWEBSEARCH] ADD CONSTRAINT [STORMWEBSEARCH_FSTORMFILTERSETTING_0] FOREIGN KEY ([FilterSetting_m0]) REFERENCES [STORMFILTERSETTING]
 

@@ -172,6 +172,7 @@
     <Compile Include="Блоха.cs" />
     <Compile Include="Детейл.cs" />
     <Compile Include="Детейл2.cs" />
+    <Compile Include="ДетейлНаследник.cs" />
     <Compile Include="ДочернийКласс.cs" />
     <Compile Include="Журнал.cs" />
     <Compile Include="КлассNotStored.cs" />

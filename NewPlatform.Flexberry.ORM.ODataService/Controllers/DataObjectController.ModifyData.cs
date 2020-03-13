@@ -658,7 +658,16 @@
 
                                 if (dataObjectPropName == agregatorPropertyName)
                                 {
-                                    string detailPropertyName = Information.GetDetailArrayPropertyName(master.GetType(), objType);
+                                    Type agregatorType = master.GetType();
+                                    string detailPropertyName = Information.GetDetailArrayPropertyName(agregatorType, objType);
+
+                                    Type parentType = objType.BaseType;
+                                    while (detailPropertyName == null && parentType != typeof(DataObject))
+                                    {
+                                        detailPropertyName = Information.GetDetailArrayPropertyName(master.GetType(), parentType);
+                                        parentType = objType.BaseType;
+                                    }
+
                                     DetailArray details = (DetailArray)Information.GetPropValueByName(master, detailPropertyName);
 
                                     if (details != null)

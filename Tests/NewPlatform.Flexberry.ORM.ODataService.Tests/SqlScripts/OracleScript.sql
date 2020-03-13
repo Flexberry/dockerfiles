@@ -431,7 +431,9 @@ CREATE TABLE "Детейл2"
 
 	"prop2" NVARCHAR2(255) NULL,
 
-	"Детейл" RAW(16) NOT NULL,
+	"Детейл_m0" RAW(16) NULL,
+
+	"Детейл_m1" RAW(16) NULL,
 
 	 PRIMARY KEY ("primaryKey")
 ) ;
@@ -462,6 +464,23 @@ CREATE TABLE "КлассStoredDerived"
 	"StrAttr2" NVARCHAR2(255) NULL,
 
 	"StrAttr" NVARCHAR2(255) NULL,
+
+	 PRIMARY KEY ("primaryKey")
+) ;
+
+
+CREATE TABLE "ДетейлНаследник"
+(
+
+	"primaryKey" RAW(16) NOT NULL,
+
+	"prop3" NVARCHAR2(255) NULL,
+
+	"prop1" NUMBER(10) NULL,
+
+	"БазовыйКласс_m0" RAW(16) NULL,
+
+	"БазовыйКласс_m1" RAW(16) NULL,
 
 	 PRIMARY KEY ("primaryKey")
 ) ;
@@ -869,9 +888,14 @@ ALTER TABLE "Берлога"
 CREATE INDEX "Берлога_IМедведь" on "Берлога" ("Медведь");
 
 ALTER TABLE "Детейл2"
-	ADD CONSTRAINT "Детейл2_FДетейл_0" FOREIGN KEY ("Детейл") REFERENCES "Детейл" ("primaryKey");
+	ADD CONSTRAINT "Детейл2_FДетейл_0" FOREIGN KEY ("Детейл_m0") REFERENCES "Детейл" ("primaryKey");
 
-CREATE INDEX "Детейл2_IДетейл" on "Детейл2" ("Детейл");
+CREATE INDEX "Детейл2_IДетейл_m0" on "Детейл2" ("Детейл_m0");
+
+ALTER TABLE "Детейл2"
+	ADD CONSTRAINT "Детейл2_FДетей_2385" FOREIGN KEY ("Детейл_m1") REFERENCES "ДетейлНаследник" ("primaryKey");
+
+CREATE INDEX "Детейл2_IДетейл_m1" on "Детейл2" ("Детейл_m1");
 
 ALTER TABLE "Журнал"
 	ADD CONSTRAINT "Журнал_FАвтор_0" FOREIGN KEY ("Автор2") REFERENCES "Автор" ("primaryKey");
@@ -882,6 +906,16 @@ ALTER TABLE "Журнал"
 	ADD CONSTRAINT "Журнал_FБибли_9226" FOREIGN KEY ("Библиотека2") REFERENCES "Библиотека" ("primaryKey");
 
 CREATE INDEX "Журнал_IБибли_1176" on "Журнал" ("Библиотека2");
+
+ALTER TABLE "ДетейлНаследник"
+	ADD CONSTRAINT "ДетейлНаслед_2684" FOREIGN KEY ("БазовыйКласс_m0") REFERENCES "БазовыйКласс" ("primaryKey");
+
+CREATE INDEX "ДетейлНаслед_9953" on "ДетейлНаследник" ("БазовыйКласс_m0");
+
+ALTER TABLE "ДетейлНаследник"
+	ADD CONSTRAINT "ДетейлНаслед_4497" FOREIGN KEY ("БазовыйКласс_m1") REFERENCES "Наследник" ("primaryKey");
+
+CREATE INDEX "ДетейлНаслед_9954" on "ДетейлНаследник" ("БазовыйКласс_m1");
 
 ALTER TABLE "STORMWEBSEARCH"
 	ADD CONSTRAINT "STORMWEBSEARCH_FSTORMFILT_6521" FOREIGN KEY ("FilterSetting_m0") REFERENCES "STORMFILTERSETTING" ("primaryKey");

@@ -28,6 +28,8 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
     // *** End programmer edit section *** (Детейл CustomAttributes)
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.none)]
+    [View("ДетейлE", new string[] {
+            "prop1"})]
     public class Детейл : ICSSoft.STORMNET.DataObject
     {
         
@@ -142,6 +144,24 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
                 // *** Start programmer edit section *** (Детейл.БазовыйКласс Set end)
 
                 // *** End programmer edit section *** (Детейл.БазовыйКласс Set end)
+            }
+        }
+        
+        /// <summary>
+        /// Class views container.
+        /// </summary>
+        public class Views
+        {
+            
+            /// <summary>
+            /// "ДетейлE" view.
+            /// </summary>
+            public static ICSSoft.STORMNET.View ДетейлE
+            {
+                get
+                {
+                    return ICSSoft.STORMNET.Information.GetView("ДетейлE", typeof(NewPlatform.Flexberry.ORM.ODataService.Tests.Детейл));
+                }
             }
         }
     }
