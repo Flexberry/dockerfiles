@@ -139,6 +139,16 @@ then
       chmod 777 $WALG_FILE_PREFIX
       ls -ld $WALG_FILE_PREFIX
     fi
+    if [ -z "$WALG_PUSH_TIMEOUT" ]
+    then
+      WALG_PUSH_TIMEOUT=300
+    fi
+    while :;
+    do
+      su -s /bin/backup-push.sh postgres
+      sleep $WALG_PUSH_TIMEOUT
+    done &
+
     POSTGRES_PARAMS="$POSTGRES_PARAMS -c archive_mode=on -c wal_level=replica -c archive_timeout=60 -c archive_command='/bin/wal-push.sh %p'"
 #     POSTGRES_PARAMS="-c archive_mode=on -c wal_level=replica -c archive_timeout=60 -c archive_command='/bin/wal-push.sh %p'"
 fi
