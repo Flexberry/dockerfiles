@@ -27,6 +27,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 3. Loading masters with common DataObjectCache.
 4. Naming of details when exporting data to Excel.
 5. Call BS for agregator when details changed in batch requests.
+6. WebFile type support in batch requests.
+7. Fix error on creation DataObject with pseudodetail field defined.
+8. Loading masters with not stored property in batch requests.
 
 ## [5.0.0] - 2018.12.14
 
