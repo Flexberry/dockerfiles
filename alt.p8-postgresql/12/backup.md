@@ -42,6 +42,17 @@ pg_dumpall -h ... -p ... -U ... --clean --if-exists | psql -U postgres
 
 #### Запуск восстановления базы данных с удаленного сервера в режиме сервиса (docker-compose, swarm)
 
+```
+docker service update --force \
+  --env-add BACKUP_RESTORE=`date +%Y%m%dT%H%M%S` \
+  --env-add RESTORE_HOST={{ip}} \
+  --env-add RESTORE_PORT={{port}} \
+  --env-add RESTORE_USER={{login}} \
+  --env-add RESTORE_PASSWORD={{password}} 
+  {{name}}
+
+```
+
 ## Переменные режима восстановления базы данных по протоколу WALG
 
 Переменные режима `WALG` описаны в разделе
@@ -59,4 +70,6 @@ pg_dumpall -h ... -p ... -U ... --clean --if-exists | psql -U postgres
 #### Запуск восстановления базы данных  по протоколу s3 в режиме коннтейнера
 
 #### Запуск восстановления базы данных  по протоколу s3 в режиме сервиса (docker-compose, swarm)
+
+
 
