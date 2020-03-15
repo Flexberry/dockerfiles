@@ -105,7 +105,6 @@ volumes:
 Как и в случае с контейнером подкаталог `backups` бекапа располагается вне каталога базы данных в каталоге `/var/lib/pgsql/`.
 Запуск сервиса(ов) производится командами:
 - `docker-compose up -d` при запуске в режиме `docker-compose`
-или
 - `docker-compose config | docker stack -c - <имя_стека>` при запуске в режиме `docker swarm`
 
 
@@ -152,5 +151,4 @@ volumes:
 
 Запуск сервиса(ов) производится командами:
 - `docker-compose up -d` при запуске в режиме `docker-compose`
-или
 - `docker-compose config | docker stack -c - <имя_стека>` при запуске в режиме `docker swarm`
