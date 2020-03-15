@@ -61,11 +61,6 @@ WALG_FILE_PREFIX | Тропа до каталога бекапа | /var/lib/pgsq
 WALE_S3_PREFIX | `URL` каталога обласного сервиса `S3` для бекапа  | s3://pg-backups
 AWS_ENDPOINT | `URL` `S3`(`minio`) сервера | http://ip-s3:9000
 
-
-
-
-.
-
 ## Варианты запуска по протоколу file
 
 ### Запуск по протоколу file в режиме контейнера
@@ -108,12 +103,17 @@ volumes:
   PostgresBackup:
 ```
 Как и в случае с контейнером подкаталог `backups` бекапа располагается вне каталога базы данных в каталоге `/var/lib/pgsql/`.
+Запуск сервиса(ов) производится командами:
+- `docker-compose up -d` при запуске в режиме `docker-compose`
+или
+- `docker-compose config | docker stack -c - <имя_стека>` при запуске в режиме `docker swarm`
 
 
 ## Варианты запуска по протоколу s3
 
 ### Запуск  по протоколу s3 в режиме контейнера
 
+Скрипт runS3Mode.sh:
 ```
 #!/bin/sh
 docker run -d \
@@ -150,3 +150,7 @@ volumes:
   PostgresBackup:
 ```
 
+Запуск сервиса(ов) производится командами:
+- `docker-compose up -d` при запуске в режиме `docker-compose`
+или
+- `docker-compose config | docker stack -c - <имя_стека>` при запуске в режиме `docker swarm`
