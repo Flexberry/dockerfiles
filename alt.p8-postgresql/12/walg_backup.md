@@ -70,7 +70,45 @@ AWS_ENDPOINT | `URL` `S3`(`minio`) сервера | http://ip-s3:9000
 
 ### Запуск по протоколу file в режиме коннтейнера
 
+Скрипт runFileMode.sh:
+```
+#!/bin/sh
+docker run -d \
+     ...
+     -v PostgresDB:/var/lib/pgsql/data/ \
+     -v PostgresBackup:/var/lib/pgsql/backups \
+     -e WALG=file \
+     -e WALG_FILE_PREFIX=/var/lib/pgsql/backups \
+     flexberry/alt.p8-postgresql:12 
+```
+Обратите внимание. Так как перед восстановлении данных из архива `WAL-G` каталог базы данных
+`/var/lib/pgsql/data/` полностью очищается каталог бакапа `WAL-G` должен располагаться вне этого каталога. 
+В данном случае подкаталог `backups` бекапа располагается в каталоге `/var/lib/pgsql/`.
+
+Если есть вероятность, что база данных может быть испорчена в результате нерабоспособности диска,
+то есть смысл примонтировать подкаталог бекапа на другой диск или разделяемый диск типа `NFS`, `GFS`, ...
+
 ### Запуск по протоколу file в режиме сервиса (docker-compose, swarm)
+
+Файл `docker-compose.yml` запуска сервиса:
+```
+services:
+  AdapterDb:
+    image: "dh.ics.perm.ru/esb/adapter-postgres"
+    volumes:
+      - PostgresDB:/var/lib/pgsql/data/
+      - PostgresBackup:/var/lib/pgsql/backups
+    ports:
+     - "${DATABASE_PORT}:5432"
+    environment:
+      - WALG=file
+      - WALG_FILE_PREFIX=/var/lib/pgsql/backups
+volumes:
+  PostgresDB:
+  PostgresBackup:
+```
+Как и в случае с контейнером подкаталог `backups` бекапа располагается вне каталога базы данных в каталоге `/var/lib/pgsql/`.
+
 
 ## Варианты запуска по протоколу s3
 
@@ -79,32 +117,16 @@ AWS_ENDPOINT | `URL` `S3`(`minio`) сервера | http://ip-s3:9000
 ```
 #!/bin/sh
 docker run -d \
-     -v 12_db:/var/lib/pgsql/data/ \
-     -v 12_backups:/var/lib/pgsql/backups \
+     -v db:/var/lib/pgsql/data/ \
      -e WALG=s3 \
      -e WALE_S3_PREFIX=s3://pg-backups \
-     -e AWS_ENDPOINT=http://192.168.100.6:29000 \
-     -e AWS_ACCESS_KEY_ID=minio \
-     -e AWS_SECRET_ACCESS_KEY=minio123 \
+     -e AWS_ENDPOINT=http://xxx.xxx.xxx.xxx:ppp \
+     -e AWS_ACCESS_KEY_ID=xxx... \
+     -e AWS_SECRET_ACCESS_KEY=xxx... \
      flexberry/alt.p8-postgresql:12 
 ```
 
 ### Запуск  по протоколу s3 в режиме сервиса (docker-compose, swarm)
 
-```
-services:
-  AdapterDb:
-    image: "dh.ics.perm.ru/esb/adapter-postgres"
-    volumes:
-      - PostgresDB:/var/lib/pgsql/data/
-      - PostgresBackup:/var/lib/pgsql/backups
-      - ${PWD}/set_monitor_time.sql:/docker-initdb.d/set_monitor_time.sql
-    ports:
-     - "${DATABASE_PORT}:5432"
-    environment:
-      - WALG=file
-      - WALG_FILE_PREFIX=/var/lib/pgsql/backups
-
-```
 
 
