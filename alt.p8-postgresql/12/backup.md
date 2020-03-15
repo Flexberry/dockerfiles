@@ -69,13 +69,13 @@ docker service update --force \
 
 При запуске по протоколу `file`  см. [Запуск по протоколу file в режиме контейнера](walg_backup.md#запуск-по-протоколу-file-в-режиме-контейнера):
 ```
-export BACKUP_WALG=`date +%Y%m%d %H%M%S`
+export BACKUP_WALG=`date "+%Y-%m-%d %H:%M:%S"`
 runFileMode.sh
 ```
 
 При запуске по протоколу `S3`см. [Запуск по протоколу s3 в режиме контейнера](walg_backup.md#запуск--по-протоколу-s3-в-режиме-контейнера):
 ```
-export BACKUP_WALG=`date +%Y%m%d %H%M%S`
+export BACKUP_WALG=`date "+%Y-%m-%d %H:%M:%S"`
 runS3Mode.sh
 ```
 
@@ -96,13 +96,13 @@ runS3Mode.sh
 
 При запуске в режиме `dockere-compose`:
 ```
-export BACKUP_WALG=`date +%Y%m%d %H%M%S`
+export BACKUP_WALG=`date "+%Y-%m-%d %H:%M:%S"`
 docker-compose up -d
 ```
 
 При запуске в режиме `docker swarm`:
 ```
-docker service update --force  --env-add BACKUP_WALG=`date +%Y%m%d %H%M%S` <имя_сервиса>
+docker service update --force  --env-add BACKUP_WALG=`date "+%Y-%m-%d %H:%M:%S"` <имя_сервиса>
 ```
 
 После восстановления базы данных на время, указанное в переменной `BACKUP_WALG` 
