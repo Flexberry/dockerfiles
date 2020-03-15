@@ -29,7 +29,7 @@ docker run -d \
 ```
 
 
-## Режим сервиса (docker-compose, docher swarm)
+## Режим сервиса (docker-compose, docker swarm)
 
 ## Запуск режима архивирования 
 
