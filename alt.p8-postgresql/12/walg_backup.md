@@ -68,7 +68,7 @@ AWS_ENDPOINT | `URL` `S3`(`minio`) сервера | http://ip-s3:9000
 
 ## Варианты запуска по протоколу file
 
-### Запуск по протоколу file в режиме коннтейнера
+### Запуск по протоколу file в режиме контейнера
 
 Скрипт runFileMode.sh:
 ```
@@ -94,7 +94,7 @@ docker run -d \
 ```
 services:
   AdapterDb:
-    image: "dh.ics.perm.ru/esb/adapter-postgres"
+    image: "flexberry/alt.p8-postgresql:12"
     volumes:
       - PostgresDB:/var/lib/pgsql/data/
       - PostgresBackup:/var/lib/pgsql/backups
@@ -112,11 +112,12 @@ volumes:
 
 ## Варианты запуска по протоколу s3
 
-### Запуск  по протоколу s3 в режиме коннтейнера
+### Запуск  по протоколу s3 в режиме контейнера
 
 ```
 #!/bin/sh
 docker run -d \
+     ... \
      -v db:/var/lib/pgsql/data/ \
      -e WALG=s3 \
      -e WALE_S3_PREFIX=s3://pg-backups \
@@ -128,5 +129,24 @@ docker run -d \
 
 ### Запуск  по протоколу s3 в режиме сервиса (docker-compose, swarm)
 
-
+Файл `docker-compose.yml` запуска сервиса:
+```
+services:
+  AdapterDb:
+    image: "flexberry/alt.p8-postgresql:12"
+    volumes:
+      - PostgresDB:/var/lib/pgsql/data/
+      - PostgresBackup:/var/lib/pgsql/backups
+    ports:
+     - "${DATABASE_PORT}:5432"
+    environment:
+      - WALG=s3
+      - WALE_S3_PREFIX=s3://pg-backups \
+      - AWS_ENDPOINT=http://xxx.xxx.xxx.xxx:ppp \
+      - AWS_ACCESS_KEY_ID=xxx... \
+      - AWS_SECRET_ACCESS_KEY=xxx... \
+volumes:
+  PostgresDB:
+  PostgresBackup:
+```
 
