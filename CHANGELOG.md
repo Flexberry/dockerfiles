@@ -30,6 +30,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 6. WebFile type support in batch requests.
 7. Fix error on creation DataObject with pseudodetail field defined.
 8. Loading masters with not stored property in batch requests.
+9. Using ObjectStatus instead of private collection to determine if object is created.
 
 ## [5.0.0] - 2018.12.14
 

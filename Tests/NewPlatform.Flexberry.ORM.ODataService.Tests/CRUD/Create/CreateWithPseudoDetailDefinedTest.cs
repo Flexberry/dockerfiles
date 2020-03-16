@@ -79,7 +79,42 @@
                 using (HttpResponseMessage response = await args.HttpClient.SendAsync(batchRequest))
                 {
                     // Убедимся, что запрос завершился успешно.
-                    CheckODataBatchResponseStatusCode(response, new HttpStatusCode[] { HttpStatusCode.Created });
+                    CheckODataBatchResponseStatusCode(response, new[] { HttpStatusCode.Created });
+                }
+            });
+        }
+
+        /// <summary>
+        /// Tests the batch creation of entity instance with pseudodetail field defined.
+        /// </summary>
+        [Fact]
+        public void TestBatchCreateWithDetails()
+        {
+            ActODataService(async (args) =>
+            {
+                // Arrange.
+                Медведь медведь = new Медведь() { ПорядковыйНомер = 1 };
+                var берлога1 = new Берлога { Наименование = "Для хорошего настроения", Медведь = медведь };
+
+                const string baseUrl = "http://localhost/odata";
+
+                string[] changesets = new[]
+                {
+                    CreateChangeset(
+                        $"{baseUrl}/{args.Token.Model.GetEdmEntitySet(typeof(Медведь)).Name}",
+                        медведь.ToJson(Медведь.Views.МедведьE, args.Token.Model),
+                        медведь),
+                    CreateChangeset(
+                        $"{baseUrl}/{args.Token.Model.GetEdmEntitySet(typeof(Берлога)).Name}",
+                        берлога1.ToJson(Берлога.Views.БерлогаE, args.Token.Model),
+                        берлога1),
+                };
+                HttpRequestMessage batchRequest = CreateBatchRequest(baseUrl, changesets);
+
+                using (HttpResponseMessage response = await args.HttpClient.SendAsync(batchRequest))
+                {
+                    // Убедимся, что запрос завершился успешно.
+                    CheckODataBatchResponseStatusCode(response, new[] { HttpStatusCode.Created, HttpStatusCode.Created });
                 }
             });
         }

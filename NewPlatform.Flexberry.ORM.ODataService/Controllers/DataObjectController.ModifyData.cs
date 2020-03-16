@@ -40,14 +40,6 @@
         private List<FileDescription> _removingFileDescriptions = new List<FileDescription>();
 
         /// <summary>
-        /// Метаданные файлов удаленных из объектов данных.
-        /// Файлы будут удалены из файловой системы в случае успешного сохранения объектов данных.
-        /// </summary>
-        private List<object> _removingFileProperties = new List<object>();
-
-        private Dictionary<DataObject, bool> _newDataObjects = new Dictionary<DataObject, bool>();
-
-        /// <summary>
         /// Создание сущности и всех связанных. При существовании в БД произойдёт обновление.
         /// </summary>
         /// <param name="edmEntity"> Создаваемая сущность. </param>
@@ -446,7 +438,8 @@
 
                 for (int i = 0; i < objs.Count; i++)
                 {
-                    if (_newDataObjects[objs[i]])
+                    ObjectStatus status = objs[i].GetStatus(false);
+                    if (status == ObjectStatus.Created)
                     {
                         if (!ExecuteCallbackBeforeCreate(objs[i]))
                         {
@@ -515,13 +508,8 @@
 
                 if (dataObjectFromCache != null)
                 {
-                    if (!_newDataObjects.ContainsKey(dataObjectFromCache))
-                    {
-                        _newDataObjects.Add(dataObjectFromCache, false);
-                    }
-
                     // Если объект не новый и не загружен целиком (начиная с ORM@5.1.0-beta15).
-                    if (!_newDataObjects[dataObjectFromCache]
+                    if (dataObjectFromCache.GetStatus(false) != ObjectStatus.Created
                         && dataObjectFromCache.GetLoadingState() != LoadingState.Loaded)
                     {
                         // Для обратной совместимости сравним перечень загруженных свойств и свойств в представлении.
@@ -545,7 +533,6 @@
                 if (dobjs.Length == 1)
                 {
                     DataObject dataObject = dobjs[0];
-                    _newDataObjects.Add(dataObject, false);
                     return dataObject;
                 }
             }
@@ -563,7 +550,6 @@
                 _dataObjectCache.AddDataObject(obj);
             }
 
-            _newDataObjects.Add(obj, true);
             return obj;
         }
 
@@ -605,7 +591,7 @@
             DataObject obj = ReturnDataObject(objType, value);
 
             // Добавляем объект в список для обновления, если там ещё нет объекта с таким ключом.
-            var objInList = dObjs.FirstOrDefault(o => PKHelper.EQDataObject(o, obj, true));
+            var objInList = dObjs.FirstOrDefault(o => PKHelper.EQDataObject(o, obj, false));
             if (objInList == null)
             {
                 if (!endObject)
@@ -805,7 +791,7 @@
 
                 if (agregator != null)
                 {
-                    DataObject existObject = dObjs.FirstOrDefault(o => PKHelper.EQDataObject(o, agregator, true));
+                    DataObject existObject = dObjs.FirstOrDefault(o => PKHelper.EQDataObject(o, agregator, false));
                     if (existObject == null)
                     {
                         if (!endObject)
@@ -817,11 +803,6 @@
                         {
                             // Добавляем в конец списка.
                             dObjs.Add(agregator);
-                        }
-
-                        if (!_newDataObjects.ContainsKey(agregator))
-                        {
-                            _newDataObjects.Add(agregator, false);
                         }
                     }
                 }
