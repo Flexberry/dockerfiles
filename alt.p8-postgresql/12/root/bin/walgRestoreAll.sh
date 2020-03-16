@@ -12,7 +12,8 @@ then
   su -c backup-fetch.sh -s /bin/sh postgres
   su -c 'touch /var/lib/pgsql/data/recovery.signal' -s /bin/sh postgres
 
-  POSTGRES_PARAMS="-c restore_command='/bin/wal-fetch.sh %f %p' -c recovery_target_timeline=latest recovery_target_time='$BACKUP_WALG'" 
+  #POSTGRES_PARAMS="-c restore_command='/bin/wal-fetch.sh %f %p' -c recovery_target_timeline=latest recovery_target_time='$BACKUP_WALG'" 
+  POSTGRES_PARAMS="-c restore_command='/bin/wal-fetch.sh %f %p' -c recovery_target_timeline=latest" 
   su -c "/usr/bin/postgres -D /var/lib/pgsql/data $POSTGRES_PARAMS"  -s /bin/sh postgres &
 
   sleep 5; \
