@@ -2,12 +2,20 @@ language: csharp
 solution: NewPlatform.Flexberry.ORM.ODataService.sln
 install:
   - nuget restore NewPlatform.Flexberry.ORM.ODataService.sln
+  - nuget install xunit.runner.console -Version 2.1.0 -OutputDirectory testrunner
 addons:
+  postgresql: 9.6
   apt:
     packages:
       - doxygen
+      - postgresql-9.6-postgis-2.4
+services:
+  - postgresql
+before_script:
+  - psql -U postgres -c "create extension postgis"
 script:
   - msbuild /p:Configuration=Debug NewPlatform.Flexberry.ORM.ODataService.sln
+  - mono ./testrunner/xunit.runner.console.2.1.0/tools/xunit.console.exe ./Tests/NewPlatform.Flexberry.ORM.ODataService.Tests/bin/Debug/NewPlatform.Flexberry.ORM.ODataService.Tests.dll
 after_success:
   - test $TRAVIS_PULL_REQUEST == "false"
     && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_BRANCH == "develop")
