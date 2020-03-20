@@ -139,7 +139,8 @@ then
     fi
     while :;
     do
-      su -s /bin/backup-push.sh postgres
+      su -s /bin/backup-push.sh postgres;
+      su -s /bin/backup-delete.sh postgres;
       sleep $WALG_PUSH_TIMEOUT
     done &
 
