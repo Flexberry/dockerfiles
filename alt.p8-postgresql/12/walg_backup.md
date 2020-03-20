@@ -27,8 +27,9 @@ WALG_DOWNLOAD_CONCURRENCY | o configure how many goroutines to use during backup
 WALG_UPLOAD_DISK_CONCURRENCY | To configure how many concurrency streams are reading disk during backup-push. By default, WAL-G uses 1 stream.  | 1
 WALG_COMPRESSION_METHOD |   | brotli
 OPLOG_ARCHIVE_TIMEOUT |   | 60
-WALG_PUSH_TIMEOUT | Интервал архивации данных | 300 
 OPLOG_ARCHIVE_AFTER_SIZE |   | 33554432
+WALG_PUSH_TIMEOUT | Интервал архивации данных | 300 
+WALG_FULL_RETAIN | Число оставляемых полных бекапов после архивации | 2
 
 Подробое описание полей см. на странице [WAL-G for PostgreSQL](https://github.com/wal-g/wal-g/blob/master/PostgreSQL.md)
 
