@@ -19,6 +19,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 4. Use common DataObjectCache for all sql queries per http request.
 5. [BREAKINGCHANGE] Details BS not apply changes in agregator. Use BS for agregator when details changed.
 6. Refactor `DataObjectControllerActivator` to simplify overriding DOC initialization.
+7. Mapping only selected properties on getting objects.
 
 ### Fixed
 

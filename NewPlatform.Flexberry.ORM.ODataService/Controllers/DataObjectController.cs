@@ -399,17 +399,16 @@
         /// <returns>Сущность.</returns>
         internal EdmEntityObject GetEdmObject(IEdmEntityType entityType, object obj, int level, ExpandedNavigationSelectItem expandedNavigationSelectItem, DynamicView dynamicView)
         {
-            if (level == 0 || obj == null || (obj is DataObject && ((DataObject)obj).__PrimaryKey == null))
+            if (level == 0 || obj == null || (obj is DataObject dataObject && dataObject.__PrimaryKey == null))
                 return null;
             EdmEntityObject entity = new EdmEntityObject(entityType);
 
-            Dictionary<string, ExpandedNavigationSelectItem> expandedProperties = new Dictionary<string, ExpandedNavigationSelectItem>();
-            Dictionary<string, SelectItem> selectedProperties = new Dictionary<string, SelectItem>();
+            var expandedProperties = new Dictionary<string, ExpandedNavigationSelectItem>();
+            var selectedProperties = new Dictionary<string, SelectItem>();
             IEnumerable<SelectItem> selectedItems = null;
-            EdmEntityObject edmObj = null;
             if (expandedNavigationSelectItem == null)
             {
-                if (QueryOptions != null && QueryOptions.SelectExpand != null)
+                if (QueryOptions?.SelectExpand != null)
                     selectedItems = QueryOptions.SelectExpand.SelectExpandClause.SelectedItems;
             }
             else
@@ -424,12 +423,12 @@
                     var expandedItem = CastExpandedNavigationSelectItem(item);
                     if (expandedItem == null)
                     {
-                        if (item is PathSelectItem && (item as PathSelectItem).SelectedPath.FirstSegment is PropertySegment)
+                        if (item is PathSelectItem pathSelectItem && pathSelectItem.SelectedPath.FirstSegment is PropertySegment propertySegment)
                         {
-                            string key = ((item as PathSelectItem).SelectedPath.FirstSegment as PropertySegment).Property.Name;
+                            string key = propertySegment.Property.Name;
                             if (!selectedProperties.ContainsKey(key))
                             {
-                                selectedProperties.Add(key, item);
+                                selectedProperties.Add(key, pathSelectItem);
                             }
                         }
                     }
@@ -442,7 +441,7 @@
 
             foreach (var prop in entityType.Properties())
             {
-                string dataObjectPropName = null;
+                string dataObjectPropName;
                 try
                 {
                     dataObjectPropName = _model.GetDataObjectProperty(entityType.FullTypeName(), prop.Name).Name;
@@ -458,33 +457,35 @@
                     throw;
                 }
 
-                if (prop is EdmNavigationProperty)
+                Type objectType = obj.GetType();
+                PropertyInfo propertyInfo = objectType.GetProperty(dataObjectPropName);
+                if (prop is EdmNavigationProperty navProp)
                 {
-                    if (expandedProperties.ContainsKey(prop.Name))
+                    if (expandedProperties.ContainsKey(navProp.Name))
                     {
-                        var expandedItem = expandedProperties[prop.Name];
-                        var propPath = _properties.ContainsKey(expandedItem) ? _properties[expandedItem] : null;
-                        EdmNavigationProperty navProp = (EdmNavigationProperty)prop;
-                        if (navProp.TargetMultiplicity() == EdmMultiplicity.One || navProp.TargetMultiplicity() == EdmMultiplicity.ZeroOrOne)
+                        var expandedItem = expandedProperties[navProp.Name];
+                        string propPath = _properties.ContainsKey(expandedItem) ? _properties[expandedItem] : null;
+                        EdmMultiplicity targetMultiplicity = navProp.TargetMultiplicity();
+                        if (targetMultiplicity == EdmMultiplicity.One || targetMultiplicity == EdmMultiplicity.ZeroOrOne)
                         {
-                            object master = obj.GetType().GetProperty(dataObjectPropName).GetValue(obj, null);
-                            edmObj = null;
+                            DataObject master = propertyInfo.GetValue(obj, null) as DataObject;
+                            EdmEntityObject edmObj = null;
                             if (dynamicView == null)
                             {
                                 View view;
                                 if (master == null)
                                 {
-                                    view = _model.GetDataObjectDefaultView(obj.GetType());
+                                    view = _model.GetDataObjectDefaultView(objectType);
                                     obj = LoadObject(view, (DataObject)obj);
                                 }
 
-                                master = obj.GetType().GetProperty(dataObjectPropName).GetValue(obj, null);
+                                master = propertyInfo.GetValue(obj, null) as DataObject;
                                 if (master != null)
                                 {
                                     view = _model.GetDataObjectDefaultView(master.GetType());
                                     if (view != null)
                                     {
-                                        master = LoadObject(view, (DataObject)master);
+                                        master = LoadObject(view, master);
                                         edmObj = GetEdmObject(_model.GetEdmEntityType(master.GetType()), master, level, expandedItem);
                                     }
                                 }
@@ -495,26 +496,25 @@
                                 {
                                     if (!DynamicView.ContainsPoperty(dynamicView.View, propPath))
                                     {
-                                        _dataService.LoadObject(dynamicView.View, (DataObject)master, false, true, _dataObjectCache);
+                                        _dataService.LoadObject(dynamicView.View, master, false, true, _dataObjectCache);
                                     }
 
                                     edmObj = GetEdmObject(_model.GetEdmEntityType(master.GetType()), master, level, expandedItem, dynamicView);
                                 }
                             }
 
-                            entity.TrySetPropertyValue(prop.Name, edmObj);
+                            entity.TrySetPropertyValue(navProp.Name, edmObj);
                         }
 
-                        if (navProp.TargetMultiplicity() == EdmMultiplicity.Many)
+                        if (targetMultiplicity == EdmMultiplicity.Many)
                         {
-                            DetailArray detail = null;
-                            View view = _model.GetDataObjectDefaultView(obj.GetType());
+                            View view = _model.GetDataObjectDefaultView(objectType);
                             if (dynamicView == null || !DynamicView.ContainsPoperty(dynamicView.View, propPath))
                             {
                                 obj = LoadObject(view, (DataObject)obj);
                             }
 
-                            detail = (DetailArray)obj.GetType().GetProperty(dataObjectPropName).GetValue(obj, null);
+                            var detail = (DetailArray)propertyInfo.GetValue(obj, null);
                             IEnumerable<DataObject> objs = detail.GetAllObjects();
                             if (expandedItem.SkipOption != null)
                                 objs = objs.Skip((int)expandedItem.SkipOption);
@@ -523,7 +523,7 @@
                             var coll = GetEdmCollection(objs, detail.ItemType, 1, expandedItem, dynamicView);
                             if (coll != null && coll.Count > 0)
                             {
-                                entity.TrySetPropertyValue(prop.Name, coll);
+                                entity.TrySetPropertyValue(navProp.Name, coll);
                             }
                         }
                     }
@@ -532,10 +532,10 @@
                 {
                     if (prop.Name == _model.KeyPropertyName)
                     {
-                        object key = obj.GetType().GetProperty(dataObjectPropName).GetValue(obj, null);
-                        if (key is KeyGuid)
+                        object key = propertyInfo.GetValue(obj, null);
+                        if (key is KeyGuid keyGuid)
                         {
-                            entity.TrySetPropertyValue(prop.Name, ((KeyGuid)key).Guid);
+                            entity.TrySetPropertyValue(prop.Name, keyGuid.Guid);
                         }
                         else
                         {
@@ -546,22 +546,25 @@
                         //KeyGuid keyGuid = (KeyGuid)obj.GetType().GetProperty(prop.Name).GetValue(obj, null);
                         //entity.TrySetPropertyValue(prop.Name, keyGuid.Guid);
                     }
-                    else
+
+                    // Обрабатывать свойство, если $select пуст, включен в $select или пустое значение недопустимо (например, Enum).
+                    else if (!selectedProperties.Any()
+                             || selectedProperties.ContainsKey(prop.Name)
+                             || !prop.Type.IsNullable)
                     {
                         object value;
-                        PropertyInfo propInfo = obj.GetType().GetProperty(dataObjectPropName);
-                        if (propInfo == null)
+                        if (propertyInfo == null)
                         {
-                            propInfo = obj.GetType().GetProperty(dataObjectPropName, BindingFlags.Public | BindingFlags.FlattenHierarchy);
-                            if (propInfo == null)
+                            propertyInfo = objectType.GetProperty(dataObjectPropName, BindingFlags.Public | BindingFlags.FlattenHierarchy);
+                            if (propertyInfo == null)
                                 continue;
-                            value = propInfo.GetValue(null);
+                            value = propertyInfo.GetValue(null);
                         }
                         else
                         {
                             try
                             {
-                                value = propInfo.GetValue(obj, null);
+                                value = propertyInfo.GetValue(obj, null);
                             }
                             catch (System.Exception)
                             {
@@ -569,7 +572,7 @@
                             }
                         }
 
-                        Type propType = propInfo.PropertyType;
+                        Type propType = propertyInfo.PropertyType;
                         if (propType == typeof(DataObject))
                             continue;
 
@@ -579,7 +582,7 @@
                         {
                             // Обработка файловых свойств объектов данных.
                             // ODataService будет возвращать строку с сериализованными метаданными файлового свойства.
-                            if (selectedProperties.Count() == 0 || (selectedProperties.Count() > 0 && selectedProperties.ContainsKey(dataObjectPropName)))
+                            if (!selectedProperties.Any() || (selectedProperties.Any() && selectedProperties.ContainsKey(dataObjectPropName)))
                             {
                                 value = FileController.GetDataObjectFileProvider(propType)
                                     .GetFileDescription((DataObject)obj, dataObjectPropName)
