@@ -12,7 +12,6 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* /tmp/*
   
 COPY /start_xsp.sh /bin
-RUN chmod +x /bin/start_xsp.sh
 
 # Ensure XMLTEMPLATES and BOOTUP_CHECK_URL environment variables are set for best experience.
 CMD /bin/configTransform.sh \

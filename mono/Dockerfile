@@ -4,6 +4,8 @@ FROM mono:${MONO_VERSION}
 
 LABEL MAINTAINER=mail@flexberry.ru
 
+ENV LANG ru_RU.UTF-8
+
 RUN apt-get update \
   && apt-get install -y xsltproc \
   && apt-get autoremove -y \
@@ -11,7 +13,6 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* /tmp/*
   
 COPY /configTransform.sh /bin
-RUN chmod +x /bin/configTransform.sh
 
 # Ensure XMLTEMPLATES environment variable is set for best experience.
 CMD /bin/configTransform.sh
