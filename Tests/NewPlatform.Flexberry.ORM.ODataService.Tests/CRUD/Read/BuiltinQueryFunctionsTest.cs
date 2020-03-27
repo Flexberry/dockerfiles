@@ -5,8 +5,11 @@
     using System.Linq;
     using System.Net;
     using System.Net.Http;
+
     using ICSSoft.STORMNET;
+    using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Windows.Forms;
+
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
 
     using Newtonsoft.Json;
@@ -337,13 +340,17 @@
             {
                 ExternalLangDef.LanguageDef.DataService = args.DataService;
 
-                DateTime date = DateTime.UtcNow;
+                string sqlToday = args.DataService.FunctionToSql(null, ExternalLangDef.LanguageDef.GetFunction("TODAY"), null, null);
+                var state = new object();
+                string sqlStatement = $"SELECT {sqlToday}{(args.DataService is OracleDataService ? " FROM DUAL" : string.Empty)}";
+                var date = (DateTime)(args.DataService as SQLDataService).ReadFirst(sqlStatement, ref state, 0)[0][0];
+                date = date.ToUniversalTime();
+
                 КлассСМножествомТипов класс = new КлассСМножествомТипов() { PropertyEnum = Цифра.Семь, PropertyDateTime = date };
                 var objs = new DataObject[] { класс };
                 args.DataService.UpdateObjects(ref objs);
-                string requestUrl;
 
-                requestUrl = string.Format(
+                var requestUrl = string.Format(
                     "http://localhost/odata/{0}?$filter={1}",
                     args.Token.Model.GetEdmEntitySet(typeof(КлассСМножествомТипов)).Name,
                     "PropertyDateTime ge now()");

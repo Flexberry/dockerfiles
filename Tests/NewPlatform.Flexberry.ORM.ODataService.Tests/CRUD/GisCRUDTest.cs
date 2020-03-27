@@ -37,6 +37,11 @@
         {
             ActODataService(args =>
             {
+                if (!GisIsAvailable(args.DataService))
+                {
+                    return;
+                }
+
                 ExternalLangDef.LanguageDef.DataService = args.DataService;
 
                 DateTime date = new DateTimeOffset(DateTime.Now).UtcDateTime;
@@ -74,6 +79,11 @@
         {
             ActODataService(args =>
             {
+                if (!GisIsAvailable(args.DataService))
+                {
+                    return;
+                }
+
                 // Создаем объект данных.
                 КлассСМножествомТипов класс = new КлассСМножествомТипов()
                 {
@@ -109,11 +119,7 @@
                     // Убедимся, что запрос завершился успешно.
                     Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
                 }
-
             });
         }
-
-
-
     }
 }
