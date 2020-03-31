@@ -29,14 +29,14 @@
         public const string DataObjectCachePropertyKey = "DataObjectCache";
 
         /// <summary>
-        /// Flag, indicates that runtime is mono.
+        /// if set to true then use synchronous mode for call subrequests.
         /// </summary>
-        private bool? isSyncMode;
+        private readonly bool isSyncMode;
 
         /// <summary>
         /// DataService instance for execute queries.
         /// </summary>
-        private IDataService dataService;
+        private readonly IDataService dataService;
 
         /// <summary>
         /// Initializes a new instance of the NewPlatform.Flexberry.ORM.ODataService.Batch.DataObjectODataBatchHandler class.
@@ -49,14 +49,7 @@
         {
             this.dataService = dataService;
 
-            if (isSyncMode == null)
-            {
-                this.isSyncMode = Type.GetType("Mono.Runtime") != null;
-            }
-            else
-            {
-                this.isSyncMode = isSyncMode;
-            }
+            this.isSyncMode = isSyncMode ?? Type.GetType("Mono.Runtime") != null;
         }
 
         /// <inheritdoc />
@@ -69,20 +62,13 @@
 
             ValidateRequest(request);
 
-            IList<ODataBatchRequestItem> subRequests;
-
-            if (isSyncMode == true)
-            {
-                subRequests = ParseBatchRequestsAsync(request, cancellationToken).Result;
-            }
-            else
-            {
-                subRequests = await ParseBatchRequestsAsync(request, cancellationToken);
-            }
+            IList<ODataBatchRequestItem> subRequests = isSyncMode
+                ? ParseBatchRequestsAsync(request, cancellationToken).Result
+                : await ParseBatchRequestsAsync(request, cancellationToken);
 
             try
             {
-                if (isSyncMode == true)
+                if (isSyncMode)
                 {
                     IList<ODataBatchResponseItem> responses = ExecuteRequestMessagesAsync(subRequests, cancellationToken).Result;
                     return CreateResponseMessageAsync(responses, request, cancellationToken).Result;
@@ -122,16 +108,9 @@
                 BaseUri = GetBaseUri(request)
             };
 
-            ODataMessageReader reader;
-
-            if (isSyncMode == true)
-            {
-                reader = request.Content.GetODataMessageReaderAsync(oDataReaderSettings, cancellationToken).Result;
-            }
-            else
-            {
-                reader = await request.Content.GetODataMessageReaderAsync(oDataReaderSettings, cancellationToken);
-            }
+            ODataMessageReader reader = isSyncMode
+                ? request.Content.GetODataMessageReaderAsync(oDataReaderSettings, cancellationToken).Result
+                : await request.Content.GetODataMessageReaderAsync(oDataReaderSettings, cancellationToken);
 
             request.RegisterForDispose(reader);
 
@@ -140,41 +119,28 @@
             Guid batchId = Guid.NewGuid();
             while (batchReader.Read())
             {
-                if (batchReader.State == ODataBatchReaderState.ChangesetStart)
+                switch (batchReader.State)
                 {
-                    IList<HttpRequestMessage> changeSetRequests;
+                    case ODataBatchReaderState.ChangesetStart:
+                        IList<HttpRequestMessage> changeSetRequests = isSyncMode
+                            ? batchReader.ReadChangeSetRequestAsync(batchId, cancellationToken).Result
+                            : await batchReader.ReadChangeSetRequestAsync(batchId, cancellationToken);
 
-                    if (isSyncMode == true)
-                    {
-                        changeSetRequests = batchReader.ReadChangeSetRequestAsync(batchId, cancellationToken).Result;
-                    }
-                    else
-                    {
-                        changeSetRequests = await batchReader.ReadChangeSetRequestAsync(batchId, cancellationToken);
-                    }
+                        foreach (HttpRequestMessage changeSetRequest in changeSetRequests)
+                        {
+                            changeSetRequest.CopyBatchRequestProperties(request);
+                        }
 
-                    foreach (HttpRequestMessage changeSetRequest in changeSetRequests)
-                    {
-                        changeSetRequest.CopyBatchRequestProperties(request);
-                    }
+                        requests.Add(new ChangeSetRequestItem(changeSetRequests));
+                        break;
+                    case ODataBatchReaderState.Operation:
+                        HttpRequestMessage operationRequest = isSyncMode
+                            ? batchReader.ReadOperationRequestAsync(batchId, true, cancellationToken).Result
+                            : await batchReader.ReadOperationRequestAsync(batchId, true, cancellationToken);
 
-                    requests.Add(new ChangeSetRequestItem(changeSetRequests));
-                }
-                else if (batchReader.State == ODataBatchReaderState.Operation)
-                {
-                    HttpRequestMessage operationRequest;
-
-                    if (isSyncMode == true)
-                    {
-                        operationRequest = batchReader.ReadOperationRequestAsync(batchId, bufferContentStream: true, cancellationToken: cancellationToken).Result;
-                    }
-                    else
-                    {
-                        operationRequest = await batchReader.ReadOperationRequestAsync(batchId, bufferContentStream: true, cancellationToken: cancellationToken);
-                    }
-
-                    operationRequest.CopyBatchRequestProperties(request);
-                    requests.Add(new OperationRequestItem(operationRequest));
+                        operationRequest.CopyBatchRequestProperties(request);
+                        requests.Add(new OperationRequestItem(operationRequest));
+                        break;
                 }
             }
 
@@ -182,7 +148,7 @@
         }
 
         /// <inheritdoc />
-        public async override Task<IList<ODataBatchResponseItem>> ExecuteRequestMessagesAsync(
+        public override async Task<IList<ODataBatchResponseItem>> ExecuteRequestMessagesAsync(
                    IEnumerable<ODataBatchRequestItem> requests,
                    CancellationToken cancellation)
         {
@@ -196,47 +162,31 @@
             {
                 foreach (ODataBatchRequestItem request in requests)
                 {
-                    var operation = request as OperationRequestItem;
-                    if (operation != null)
+                    ODataBatchResponseItem response;
+                    switch (request)
                     {
-                        ODataBatchResponseItem response;
-                        if (isSyncMode == true)
-                        {
-                            response = request.SendRequestAsync(Invoker, cancellation).Result;
-                        }
-                        else
-                        {
-                            response = await request.SendRequestAsync(Invoker, cancellation);
-                        }
-
-                        responses.Add(response);
+                        case OperationRequestItem operation:
+                            response = isSyncMode
+                                ? request.SendRequestAsync(Invoker, cancellation).Result
+                                : await request.SendRequestAsync(Invoker, cancellation);
+                            break;
+                        case ChangeSetRequestItem change:
+                            response = isSyncMode
+                                ? ExecuteChangeSet(change, cancellation).Result
+                                : await ExecuteChangeSet(change, cancellation);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException($"Unsupported request of type `{request.GetType()}`");
                     }
-                    else
-                    {
-                        if (isSyncMode == true)
-                        {
-                            Task task = ExecuteChangeSet((ChangeSetRequestItem)request, responses, cancellation);
 
-                            if (task.Exception != null)
-                            {
-                                throw task.Exception;
-                            }
-                        }
-                        else
-                        {
-                            await ExecuteChangeSet((ChangeSetRequestItem)request, responses, cancellation);
-                        }
-                    }
+                    responses.Add(response);
                 }
             }
             catch
             {
                 foreach (ODataBatchResponseItem response in responses)
                 {
-                    if (response != null)
-                    {
-                        response.Dispose();
-                    }
+                    response?.Dispose();
                 }
 
                 throw;
@@ -249,10 +199,9 @@
         /// Execute changeset processing.
         /// </summary>
         /// <param name="changeSet">Changeset for processing.</param>
-        /// <param name="responses">Responses for each request.</param>
         /// <param name="cancellation">Cancelation token.</param>
         /// <returns>Task for changeset processing.</returns>
-        private async Task ExecuteChangeSet(ChangeSetRequestItem changeSet, IList<ODataBatchResponseItem> responses, CancellationToken cancellation)
+        private async Task<ODataBatchResponseItem> ExecuteChangeSet(ChangeSetRequestItem changeSet, CancellationToken cancellation)
         {
             if (changeSet == null)
             {
@@ -276,17 +225,9 @@
                 }
             }
 
-            ChangeSetResponseItem changeSetResponse;
-            if (isSyncMode == true)
-            {
-                changeSetResponse = (ChangeSetResponseItem)changeSet.SendRequestAsync(Invoker, cancellation).Result;
-            }
-            else
-            {
-                changeSetResponse = (ChangeSetResponseItem)await changeSet.SendRequestAsync(Invoker, cancellation);
-            }
-
-            responses.Add(changeSetResponse);
+            ChangeSetResponseItem changeSetResponse = isSyncMode
+                ? (ChangeSetResponseItem)changeSet.SendRequestAsync(Invoker, cancellation).Result
+                : (ChangeSetResponseItem)await changeSet.SendRequestAsync(Invoker, cancellation);
 
             if (changeSetResponse.Responses.All(r => r.IsSuccessStatusCode))
             {
@@ -300,6 +241,8 @@
                     throw ex;
                 }
             }
+
+            return changeSetResponse;
         }
     }
 }
