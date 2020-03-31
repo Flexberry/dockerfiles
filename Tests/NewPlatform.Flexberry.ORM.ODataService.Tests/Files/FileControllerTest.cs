@@ -20,11 +20,11 @@
     //using Microsoft.QualityTools.Testing.Fakes;
     //using NUnit.Framework;
 
-    using NewPlatform.Flexberry.ORM.ODataService.Controllers;
-    using NewPlatform.Flexberry.ORM.ODataService.Extensions;
     using NewPlatform.Flexberry.ORM.ODataService.Files;
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Helpers;
-    
+    using NewPlatform.Flexberry.ORM.ODataService.WebApi.Controllers;
+    using NewPlatform.Flexberry.ORM.ODataService.WebApi.Extensions;
+
 
     using File = ICSSoft.STORMNET.FileType.File;
     using WebFile = ICSSoft.STORMNET.UserDataTypes.WebFile;

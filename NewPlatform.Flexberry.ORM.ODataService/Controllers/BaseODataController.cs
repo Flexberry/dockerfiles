@@ -3,6 +3,8 @@
     using System.Web.Http.Controllers;
     using System.Web.OData;
 
+    using NewPlatform.Flexberry.ORM.ODataService.WebApi.Controllers;
+
     /// <summary>
     /// Базовый класс для OData-контроллеров.
     /// </summary>

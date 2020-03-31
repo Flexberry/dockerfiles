@@ -1,4 +1,4 @@
-﻿namespace NewPlatform.Flexberry.ORM.ODataService.Controllers
+﻿namespace NewPlatform.Flexberry.ORM.ODataService.WebApi.Controllers
 {
     using System;
     using System.Web.Http;

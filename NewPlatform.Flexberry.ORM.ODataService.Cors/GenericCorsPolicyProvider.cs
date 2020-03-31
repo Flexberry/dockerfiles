@@ -1,4 +1,4 @@
-﻿namespace NewPlatform.Flexberry.ORM.ODataService
+﻿namespace NewPlatform.Flexberry.ORM.ODataService.Cors
 {
     using System.Collections.Generic;
     using System.Linq;

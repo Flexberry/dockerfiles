@@ -323,6 +323,14 @@
     <None Include="SqlScripts\NewPlatform.Flexberry.ORM.ODataService.Tests.crp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\NewPlatform.Flexberry.ORM.ODataService.Files\NewPlatform.Flexberry.ORM.ODataService.Files.csproj">
+      <Project>{22faa967-ea69-4ae9-9a07-ecee6c499bbb}</Project>
+      <Name>NewPlatform.Flexberry.ORM.ODataService.Files</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\NewPlatform.Flexberry.ORM.ODataService.WebApi\NewPlatform.Flexberry.ORM.ODataService.WebApi.csproj">
+      <Project>{d3ebd348-d0f8-4c1e-bdc0-6c77d9d443cb}</Project>
+      <Name>NewPlatform.Flexberry.ORM.ODataService.WebApi</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\NewPlatform.Flexberry.ORM.ODataService\NewPlatform.Flexberry.ORM.ODataService.csproj">
       <Project>{01bbe45a-3a3f-4ea5-9457-8c62167b5e99}</Project>
       <Name>NewPlatform.Flexberry.ORM.ODataService</Name>

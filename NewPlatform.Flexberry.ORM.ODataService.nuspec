@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>NewPlatform.Flexberry.ORM.ODataService</id>
-    <version>5.1.0-beta14</version>
+    <version>5.1.0-beta15</version>
     <title>Flexberry ORM ODataService</title>
     <authors>New Platform Ltd.</authors>
     <owners>New Platform Ltd.</owners>
@@ -26,6 +26,9 @@
       5. [BREAKINGCHANGE] Details BS not apply changes in agregator. Use BS for agregator when details changed.
       6. Refactor `DataObjectControllerActivator` to simplify overriding DOC initialization.
       7. Mapping only selected properties on getting objects.
+      8. [BREAKINGCHANGE] The namespace of api-extensions is changed to NewPlatform.Flexberry.ORM.ODataService.WebApi.Extensions .
+      9. [BREAKINGCHANGE] The namespace of api-controllers is changed to NewPlatform.Flexberry.ORM.ODataService.WebApi.Controllers .
+      10. [BREAKINGCHANGE] The namespace of GenericCorsPolicyProvider is changed to NewPlatform.Flexberry.ORM.ODataService.Cors .
 
       Fixed
       1. Fix error with POST request and header "Prefer".
@@ -58,5 +61,11 @@
   <files>
     <file src="NewPlatform.Flexberry.ORM.ODataService.dll" target="lib\net45\NewPlatform.Flexberry.ORM.ODataService.dll" />
     <file src="NewPlatform.Flexberry.ORM.ODataService.xml" target="lib\net45\NewPlatform.Flexberry.ORM.ODataService.xml" />
+    <file src="NewPlatform.Flexberry.ORM.ODataService.Cors.dll" target="lib\net45\NewPlatform.Flexberry.ORM.ODataService.Cors.dll" />
+    <file src="NewPlatform.Flexberry.ORM.ODataService.Cors.xml" target="lib\net45\NewPlatform.Flexberry.ORM.ODataService.Cors.xml" />
+    <file src="NewPlatform.Flexberry.ORM.ODataService.Files.dll" target="lib\net45\NewPlatform.Flexberry.ORM.ODataService.Files.dll" />
+    <file src="NewPlatform.Flexberry.ORM.ODataService.Files.xml" target="lib\net45\NewPlatform.Flexberry.ORM.ODataService.Files.xml" />
+    <file src="NewPlatform.Flexberry.ORM.ODataService.WebApi.dll" target="lib\net45\NewPlatform.Flexberry.ORM.ODataService.WebApi.dll" />
+    <file src="NewPlatform.Flexberry.ORM.ODataService.WebApi.xml" target="lib\net45\NewPlatform.Flexberry.ORM.ODataService.WebApi.xml" />
   </files>
 </package>
