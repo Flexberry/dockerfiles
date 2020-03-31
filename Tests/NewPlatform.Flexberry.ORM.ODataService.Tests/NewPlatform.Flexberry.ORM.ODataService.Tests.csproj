@@ -285,6 +285,7 @@
     <Compile Include="Model\DataObjectEdmModelTest.cs" />
     <Compile Include="Model\DefaultDataObjectModelBuilderTest.cs" />
     <Compile Include="Model\CustomizationEdmModelNames.cs" />
+    <Compile Include="Model\DynamicViewTests.cs" />
     <Compile Include="Offline\DefaultOfflineManagerIntegratedTest.cs" />
     <Compile Include="Offline\OfflineAuditServiceIntegratedTest.cs" />
     <Compile Include="BaseODataServiceIntegratedTest.cs" />

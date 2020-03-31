@@ -346,7 +346,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Model
         /// <returns>Список свойств типа.</returns>
         public static List<string> GetProperties(Type dataObjectType)
         {
-            var keyPropertyName = Information.ExtractPropertyName<DataObject>(n => n.__PrimaryKey);
+            const string keyPropertyName = nameof(DataObject.__PrimaryKey);
             var excludedPropertiesNames = typeof(DataObject).GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public)
                 .Where(n => n.Name != keyPropertyName)
                 .Select(n => n.Name)
@@ -356,17 +356,21 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Model
             View defaultView = null;
             if (viewsAttribute != null)
             {
-                PropertyInfo[] viewProperties = dataObjectType.GetNestedType("Views").GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
-                if (viewProperties.Length > 0)
+                PropertyInfo[] viewProperties = viewsAttribute.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
+                if (viewProperties.Any())
                     defaultView = (View)(viewProperties.FirstOrDefault(x => x.Name.EndsWith("E")) ?? viewProperties.First()).GetValue(null);
             }
 
-            List<PropertyInfo> dataObjectProperties = new List<PropertyInfo>(dataObjectType.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public)
-            .Where(x => !excludedPropertiesNames.Contains(x.Name)
-            && (x.CustomAttributes.Where(a => a.AttributeType == typeof(NotStoredAttribute)).Count() == 0 ||
-            (defaultView != null && defaultView.Properties.Where(dvprop => dvprop.Name == x.Name).Count() > 0))));
+            // Выбрать свойства, которых нет в списке исключенных
+            // и которые не являются нехранимыми или содержатся в дефолтном представлении.
+            List<PropertyInfo> dataObjectProperties = dataObjectType
+                .GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public)
+                .Where(x => !excludedPropertiesNames.Contains(x.Name))
+                .Where(x => x.CustomAttributes.All(a => a.AttributeType != typeof(NotStoredAttribute))
+                            || (defaultView != null && defaultView.Properties.Any(dvprop => dvprop.Name == x.Name)))
+                .ToList();
 
-            List<string> properties = new List<string>(dataObjectProperties.Select(x => x.Name).ToArray());
+            List<string> properties = dataObjectProperties.Select(x => x.Name).ToList();
 
             if (dataObjectType.BaseType != typeof(DataObject) && dataObjectType.BaseType != typeof(object))
             {
