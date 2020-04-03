@@ -7,8 +7,13 @@
     using NewPlatform.Flexberry.ORM.ODataService.Functions;
     using NewPlatform.Flexberry.ORM.ODataService.Model;
 
+    /// <summary>
+    /// A data class for internal purposes.
+    /// </summary>
     public sealed class ManagementToken
     {
+        public const string DataTokenKey = "NewPlatform.Flexberry.ORM.ODataService.ManagementToken";
+
         private DataObjectEdmModel _model;
 
         public DataObjectEdmModel Model

@@ -111,7 +111,7 @@
                         Path.GetTempPath(),
                         dataService);
 
-                    var token = config.MapODataServiceDataObjectRoute(_builder, server, "odata", "odata", true);
+                    var token = config.MapDataObjectRoute(_builder, server, "odata", "odata", true);
                     token.Events.CallbackAfterInternalServerError = AfterInternalServerError;
                     var args = new TestArgs { UnityContainer = container, DataService = dataService, HttpClient = client, Token = token };
                     action(args);

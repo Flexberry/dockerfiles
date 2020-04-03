@@ -6,6 +6,7 @@
     using System.Web.Http.Dependencies;
     using System.Web.Http.Dispatcher;
     using System.Web.Http.Routing;
+    using System.Web.OData.Routing;
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using NewPlatform.Flexberry.ORM.ODataService.Batch;
@@ -56,7 +57,7 @@
 
             DataObjectCache dataObjectCache = GetDataObjectCache(request, controllerDescriptor, controllerType);
 
-            ManagementToken token = request.GetODataServiceToken();
+            ManagementToken token = (request.GetRouteData().Route as ODataRoute).GetManagementToken();
 
             DataObjectController controller = new DataObjectController(dataService, dataObjectCache, token.Model, token.Events, token.Functions);
             controller.OfflineManager = GetOfflineManager(request, controllerDescriptor, controllerType) ?? controller.OfflineManager;
