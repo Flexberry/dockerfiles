@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>NewPlatform.Flexberry.ORM.ODataService</id>
-    <version>5.1.0-beta15</version>
+    <version>5.1.0-beta16</version>
     <title>Flexberry ORM ODataService</title>
     <authors>New Platform Ltd.</authors>
     <owners>New Platform Ltd.</owners>
@@ -17,6 +17,7 @@
       2. Support $batch request for transactional update data objects.
       3. Support for limits on master details.
       4. Support for limits on pseudodetails.
+      5. Decode Excel export column name. 
 
       Changed
       1. JavaScriptSerializer replaced with Newtonsoft.Json.JsonConvert for better performance.

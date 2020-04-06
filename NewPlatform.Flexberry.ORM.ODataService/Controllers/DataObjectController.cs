@@ -11,6 +11,7 @@
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Reflection;
+    using System.Web;
     using System.Web.Http;
     using System.Web.Http.Dispatcher;
     using System.Web.Http.Results;
@@ -296,8 +297,11 @@
             foreach (string column in colsOrder)
             {
                 var columnInfo = column.Split(new char[] { '/' }, 2);
-                par.PropertiesOrder.Add(columnInfo[0]);
-                par.HeaderCaptions.Add(new HeaderCaption { PropertyName = columnInfo[0], Caption = columnInfo[1] });
+                var decodeColumnInfo0 = HttpUtility.UrlDecode(columnInfo[0]);
+                var decodeColumnInfo1 = HttpUtility.UrlDecode(columnInfo[1]);
+
+                par.PropertiesOrder.Add(decodeColumnInfo0);
+                par.HeaderCaptions.Add(new HeaderCaption { PropertyName = decodeColumnInfo0, Caption = decodeColumnInfo1 });
             }
 
             for (int i = 0; i < view.Details.Length; i++)

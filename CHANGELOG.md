@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 2. Support $batch request for transactional update data objects.
 3. Support for limits on master details.
 4. Support for limits on pseudodetails.
+5. Decode Excel export column name. 
 
 ### Changed
 
