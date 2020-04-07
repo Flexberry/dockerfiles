@@ -69,6 +69,19 @@
         }
 
         /// <summary>
+        /// Метод вызываемый после возникновения исключения.
+        /// </summary>
+        /// <param name="e">Исключение, которое возникло внутри ODataService.</param>
+        /// <param name="code">Возвращаемый код HTTP. По-умолчанияю 500.</param>
+        /// <returns>Исключение, которое будет отправлено клиенту.</returns>
+        public static Exception AfterInternalServerError(Exception e, ref HttpStatusCode code)
+        {
+            Assert.Null(e);
+            code = HttpStatusCode.InternalServerError;
+            return e;
+        }
+
+        /// <summary>
         /// Осуществляет перебор тестовых сервисов данных из <see cref="BaseIntegratedTest"/>, и вызывает переданный делегат
         /// для каждого сервиса данных, передав в него <see cref="HttpClient"/> для осуществления запросов к OData-сервису.
         /// </summary>
@@ -99,6 +112,7 @@
                         dataService);
 
                     var token = config.MapODataServiceDataObjectRoute(_builder, server, "odata", "odata", true);
+                    token.Events.CallbackAfterInternalServerError = AfterInternalServerError;
                     var args = new TestArgs { UnityContainer = container, DataService = dataService, HttpClient = client, Token = token };
                     action(args);
                 }

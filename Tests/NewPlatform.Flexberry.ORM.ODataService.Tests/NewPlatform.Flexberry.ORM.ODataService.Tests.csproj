@@ -61,9 +61,8 @@
     <Reference Include="ChangesToSqlBTMonitor, Version=1.0.0.1, Culture=neutral, PublicKeyToken=e5ad39f116a43e0b, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.5.0.0\lib\net45\ChangesToSqlBTMonitor.dll</HintPath>
     </Reference>
-    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DocumentFormat.OpenXml.2.7.2\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
     <Reference Include="ExternalLangDef, Version=1.0.0.0, Culture=neutral, PublicKeyToken=50dc27591ed591e6, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.5.0.0\lib\net45\ExternalLangDef.dll</HintPath>
@@ -167,7 +166,7 @@
       <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.GisPostgresDataService.1.0.0-alpha02\lib\net45\NewPlatform.Flexberry.ORM.GisPostgresDataService.dll</HintPath>
     </Reference>
     <Reference Include="NewPlatform.Flexberry.Reports.ExportToExcel, Version=1.0.0.0, Culture=neutral, PublicKeyToken=dd3c9e296c34a5da, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.Reports.ExportToExcel.1.0.0-alpha05\lib\net45\NewPlatform.Flexberry.Reports.ExportToExcel.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.Reports.ExportToExcel.1.0.0-alpha09\lib\net45\NewPlatform.Flexberry.Reports.ExportToExcel.dll</HintPath>
     </Reference>
     <Reference Include="NewPlatform.Flexberry.Security, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b04c483e14c0d306, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NewPlatform.Flexberry.Security.2.0.0\lib\net45\NewPlatform.Flexberry.Security.dll</HintPath>

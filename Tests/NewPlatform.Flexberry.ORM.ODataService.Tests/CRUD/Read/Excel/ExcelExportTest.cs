@@ -66,7 +66,7 @@
                 args.DataService.UpdateObjects(ref countries);
 
                 // The request URL to the OData service is generated.
-                const string propertyName = "Наз,вание";
+                const string propertyName = "Название";
                 const string caption = "Название, понятное/// название";
                 string encodeInvalidColsOrder = string.Format(
                     "{0}/{1}",
