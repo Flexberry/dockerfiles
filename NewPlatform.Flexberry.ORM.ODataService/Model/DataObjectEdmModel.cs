@@ -20,7 +20,7 @@
 
     using Unity;
 
-    using Action = NewPlatform.Flexberry.ORM.ODataService.Functions.Action;
+    using Action = Functions.Action;
 
     /// <summary>
     /// EDM-модель, которая строится на основе сборок с объектами данных (унаследованными от <see cref="DataObject"/>).
@@ -212,14 +212,14 @@
                         AddElement(edmEnumType);
                     }
 
-                    EdmStructuralProperty edmProp = edmEntityType.AddStructuralProperty(GetEntityPropertName(propertyInfo), new EdmEnumTypeReference(edmEnumType, false));
+                    EdmStructuralProperty edmProp = edmEntityType.AddStructuralProperty(GetEntityPropertyName(propertyInfo), new EdmEnumTypeReference(edmEnumType, false));
                     this.SetAnnotationValue(edmProp, new ClrPropertyInfoAnnotation(propertyInfo));
                 }
 
                 IEdmPrimitiveType edmPrimitiveType = EdmTypeMap.GetEdmPrimitiveType(propertyType);
                 if (edmPrimitiveType != null)
                 {
-                    EdmStructuralProperty edmProp = edmEntityType.AddStructuralProperty(GetEntityPropertName(propertyInfo), edmPrimitiveType.PrimitiveKind);
+                    EdmStructuralProperty edmProp = edmEntityType.AddStructuralProperty(GetEntityPropertyName(propertyInfo), edmPrimitiveType.PrimitiveKind);
                     this.SetAnnotationValue(edmProp, new ClrPropertyInfoAnnotation(propertyInfo));
                 }
             }
@@ -264,7 +264,7 @@
 
                     var navigationProperty = new EdmNavigationPropertyInfo
                     {
-                        Name = GetEntityPropertName(masterProperty.Key),
+                        Name = GetEntityPropertyName(masterProperty.Key),
                         Target = edmTargetEntityType,
                         TargetMultiplicity = allowNull
                             ? EdmMultiplicity.ZeroOrOne
@@ -308,7 +308,7 @@
 
                     var navigationProperty = new EdmNavigationPropertyInfo
                     {
-                        Name = GetEntityPropertName(detailProperty.Key),
+                        Name = GetEntityPropertyName(detailProperty.Key),
                         Target = edmTargetEntityType,
                         TargetMultiplicity = EdmMultiplicity.Many
                     };
@@ -483,66 +483,6 @@
             }
 
             return dicType[propertyName];
-        }
-
-        /// <summary>
-        /// Строит имя типа сущности по clr типу.
-        /// </summary>
-        /// <param name="type">Тип</param>
-        /// <returns></returns>
-        private string GetEntityTypeName(Type type)
-        {
-            var name = type.Name;
-            var nameSpace = GetEntityTypeNamespace(type);
-            if (type != typeof(DataObject) && EdmModelBuilder != null && EdmModelBuilder.EntityTypeNameBuilder != null)
-                name = EdmModelBuilder.EntityTypeNameBuilder(type);
-            var fullname = $"{nameSpace}.{name}";
-            if (!_aliasesNameToType.ContainsKey(fullname))
-                _aliasesNameToType.Add(fullname, type);
-            if (!_aliasesTypeToName.ContainsKey(type))
-                _aliasesTypeToName.Add(type, fullname);
-            return name;
-        }
-
-        /// <summary>
-        /// Строит Namespace типа сущности по clr типу.
-        /// </summary>
-        /// <param name="type">Тип</param>
-        /// <returns></returns>
-        private string GetEntityTypeNamespace(Type type)
-        {
-            var name = type.Namespace;
-            if (type != typeof(DataObject) && EdmModelBuilder != null && EdmModelBuilder.EntityTypeNamespaceBuilder != null)
-                name = EdmModelBuilder.EntityTypeNamespaceBuilder(type);
-            if (!_aliasesNamespaceToType.ContainsKey(name))
-                _aliasesNamespaceToType.Add(name, type);
-            return name;
-        }
-
-        /// <summary>
-        /// Строит имя типа свойства сущности по clr типу.
-        /// </summary>
-        /// <param name="type">Тип</param>
-        /// <returns></returns>
-        private string GetEntityPropertName(PropertyInfo prop)
-        {
-            var name = prop.Name;
-            if (name != KeyPropertyName && prop.DeclaringType != typeof(DataObject) && EdmModelBuilder != null && EdmModelBuilder.EntityPropertyNameBuilder != null)
-                name = EdmModelBuilder.EntityPropertyNameBuilder(prop);
-            var typeFullName = $"{GetEntityTypeNamespace(prop.DeclaringType)}.{GetEntityTypeName(prop.DeclaringType)}";
-            if (!_aliasesNameToProperty.ContainsKey(typeFullName))
-            {
-                _aliasesNameToProperty.Add(typeFullName, new Dictionary<string, PropertyInfo>());
-                _namePropertyToAlias.Add(prop.DeclaringType, new Dictionary<string, string>());
-            }
-
-            if (!_aliasesNameToProperty[typeFullName].ContainsKey(name))
-            {
-                _aliasesNameToProperty[typeFullName].Add(name, prop);
-                _namePropertyToAlias[prop.DeclaringType].Add(prop.Name, name);
-            }
-
-            return name;
         }
 
         /// <summary>
@@ -751,6 +691,66 @@
                     edmFunction.AddParameter(parameter, new EdmEnumTypeReference(enumType, false));
                 }
             }
+        }
+
+        /// <summary>
+        /// Строит имя типа сущности по clr типу.
+        /// </summary>
+        /// <param name="type">Тип</param>
+        /// <returns>Имя типа сущности</returns>
+        private string GetEntityTypeName(Type type)
+        {
+            var name = type.Name;
+            var nameSpace = GetEntityTypeNamespace(type);
+            if (type != typeof(DataObject) && EdmModelBuilder != null && EdmModelBuilder.EntityTypeNameBuilder != null)
+                name = EdmModelBuilder.EntityTypeNameBuilder(type);
+            var fullname = $"{nameSpace}.{name}";
+            if (!_aliasesNameToType.ContainsKey(fullname))
+                _aliasesNameToType.Add(fullname, type);
+            if (!_aliasesTypeToName.ContainsKey(type))
+                _aliasesTypeToName.Add(type, fullname);
+            return name;
+        }
+
+        /// <summary>
+        /// Строит Namespace типа сущности по clr типу.
+        /// </summary>
+        /// <param name="type">Тип</param>
+        /// <returns>Namespace типа сущности</returns>
+        private string GetEntityTypeNamespace(Type type)
+        {
+            var name = type.Namespace;
+            if (type != typeof(DataObject) && EdmModelBuilder != null && EdmModelBuilder.EntityTypeNamespaceBuilder != null)
+                name = EdmModelBuilder.EntityTypeNamespaceBuilder(type);
+            if (!_aliasesNamespaceToType.ContainsKey(name))
+                _aliasesNamespaceToType.Add(name, type);
+            return name;
+        }
+
+        /// <summary>
+        /// Строит имя типа свойства сущности по clr типу.
+        /// </summary>
+        /// <param name="prop">Метаданные свойства</param>
+        /// <returns>Имя свойства</returns>
+        private string GetEntityPropertyName(PropertyInfo prop)
+        {
+            var name = prop.Name;
+            if (name != KeyPropertyName && prop.DeclaringType != typeof(DataObject) && EdmModelBuilder != null && EdmModelBuilder.EntityPropertyNameBuilder != null)
+                name = EdmModelBuilder.EntityPropertyNameBuilder(prop);
+            var typeFullName = $"{GetEntityTypeNamespace(prop.DeclaringType)}.{GetEntityTypeName(prop.DeclaringType)}";
+            if (!_aliasesNameToProperty.ContainsKey(typeFullName))
+            {
+                _aliasesNameToProperty.Add(typeFullName, new Dictionary<string, PropertyInfo>());
+                _namePropertyToAlias.Add(prop.DeclaringType, new Dictionary<string, string>());
+            }
+
+            if (!_aliasesNameToProperty[typeFullName].ContainsKey(name))
+            {
+                _aliasesNameToProperty[typeFullName].Add(name, prop);
+                _namePropertyToAlias[prop.DeclaringType].Add(prop.Name, name);
+            }
+
+            return name;
         }
 
         private IEdmTypeReference GetEdmTypeReference(Type clrType, out IEdmEntityType entityType, out bool isCollection)

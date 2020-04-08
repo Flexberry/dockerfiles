@@ -14,13 +14,13 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
 
     public abstract class BaseIntegratedTest : IDisposable
     {
+        private const string PoolingFalseConst = "Pooling=false;";
+
         private static string connectionStringOracle;
 
         private static string connectionStringPostgres;
 
         private static string connectionStringMssql;
-
-        private const string poolingFalseConst = "Pooling=false;";
 
         /// <summary>
         /// The temporary database name prefix.
@@ -85,15 +85,24 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
         {
             // ADO.NET doesn't close the connection with pooling. We have to disable it explicitly.
             // http://stackoverflow.com/questions/9033356/connection-still-idle-after-close
-            connectionStringPostgres = $"{poolingFalseConst}{ConfigurationManager.ConnectionStrings["ConnectionStringPostgres"]}";
-            connectionStringMssql = $"{poolingFalseConst}{ConfigurationManager.ConnectionStrings["ConnectionStringMssql"]}";
-            connectionStringOracle = $"{poolingFalseConst}{ConfigurationManager.ConnectionStrings["ConnectionStringOracle"]}";
+            connectionStringPostgres = $"{PoolingFalseConst}{ConfigurationManager.ConnectionStrings["ConnectionStringPostgres"]}";
+            connectionStringMssql = $"{PoolingFalseConst}{ConfigurationManager.ConnectionStrings["ConnectionStringMssql"]}";
+            connectionStringOracle = $"{PoolingFalseConst}{ConfigurationManager.ConnectionStrings["ConnectionStringOracle"]}";
+        }
+
+        /// <summary>
+        /// Deletes the temporary databases and perform other cleaning.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseIntegratedTest" /> class.
         /// </summary>
         /// <param name="tempDbNamePrefix">Prefix for temp database name.</param>
+        /// <param name="useGisDataService">Use DataService with Gis support.</param>
         protected BaseIntegratedTest(string tempDbNamePrefix, bool useGisDataService = false)
         {
             _useGisDataService = useGisDataService;
@@ -106,12 +115,12 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
             _tempDbNamePrefix = tempDbNamePrefix;
             _databaseName = _tempDbNamePrefix + "_" + DateTime.Now.ToString("yyyyMMddHHmmssff") + "_" + Guid.NewGuid().ToString("N");
 
-            if (!string.IsNullOrWhiteSpace(PostgresScript) && connectionStringPostgres != poolingFalseConst)
+            if (!string.IsNullOrWhiteSpace(PostgresScript) && connectionStringPostgres != PoolingFalseConst)
             {
                 if (!(tempDbNamePrefix.Length <= 12)) // Max length is 63 (-18 -32).
                     throw new ArgumentException();
                 if (!char.IsLetter(tempDbNamePrefix[0])) // Database names must have an alphabetic first character.
-                    throw new ArgumentException();
+                    throw new ArgumentException();                
                 using (var conn = new NpgsqlConnection(connectionStringPostgres))
                 {
                     conn.Open();
@@ -130,7 +139,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(MssqlScript) && connectionStringMssql != poolingFalseConst)
+            if (!string.IsNullOrWhiteSpace(MssqlScript) && connectionStringMssql != PoolingFalseConst)
             {
                 if (!(tempDbNamePrefix.Length <= 64))// Max is 128.
                     throw new ArgumentException();
@@ -154,7 +163,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(OracleScript) && connectionStringOracle != poolingFalseConst)
+            if (!string.IsNullOrWhiteSpace(OracleScript) && connectionStringOracle != PoolingFalseConst)
             {
                 if (!(tempDbNamePrefix.Length <= 8)) // Max length is 30 (-18 -4).
                     throw new ArgumentException();
@@ -245,7 +254,6 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
             return new OracleDataService { CustomizationString = connectionString };
         }
 
-
         /// <summary>
         /// Deletes the temporary databases and perform other cleaning.
         /// </summary>
@@ -304,14 +312,6 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
             _disposed = true;
         }
 
-        /// <summary>
-        /// Deletes the temporary databases and perform other cleaning.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
         private static string ConnectionStringOracleDataSource
         {
             get
@@ -320,7 +320,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
 
                 // ADO.NET doesn't close the connection with pooling. We have to disable it explicitly.
                 // http://stackoverflow.com/questions/9033356/connection-still-idle-after-close
-                return $"{poolingFalseConst}{dataSource};";
+                return $"{PoolingFalseConst}{dataSource};";
             }
         }
     }
