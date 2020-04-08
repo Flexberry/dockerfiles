@@ -4,7 +4,6 @@
     using System.Linq;
     using System.Web.Http;
     using System.Web.Http.Dispatcher;
-    using System.Web.OData.Batch;
     using System.Web.OData.Extensions;
     using System.Web.OData.Formatter;
     using System.Web.OData.Routing;
@@ -79,14 +78,11 @@
                 throw new InvalidOperationException("IDataService is not registered in the dependency scope.");
             }
 
-            ODataBatchHandler batchHandler = new DataObjectODataBatchHandler(dataService, httpServer, isSyncBatchUpdate);
-            batchHandler.ODataRouteName = routeName;
-            config.Routes.MapHttpBatchRoute(routeName + "Batch", routePrefix + "/$batch", batchHandler);
-
             // Routing for DataObjects.
             var pathHandler = new ExtendedODataPathHandler();
             var routingConventions = DataObjectRoutingConventions.CreateDefault();
-            ODataRoute route = config.MapODataServiceRoute(routeName, routePrefix, model, pathHandler, routingConventions);
+            var batchHandler = new DataObjectODataBatchHandler(dataService, httpServer, isSyncBatchUpdate);
+            ODataRoute route = config.MapODataServiceRoute(routeName, routePrefix, model, pathHandler, routingConventions, batchHandler);
 
             // Token.
             ManagementToken token = route.CreateManagementToken(model);
