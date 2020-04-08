@@ -21,7 +21,7 @@
 
     using Xunit;
 
-    using Action = NewPlatform.Flexberry.ORM.ODataService.Functions.Action;
+    using Action = ODataService.Functions.Action;
 
     /// <summary>
     /// Класс тестов для тестирования метаданных, получаемых от OData-сервиса.
@@ -111,7 +111,6 @@
                     typeof(IEnumerable<DataObject>),
                     parametersTypes));
             }
-
         }
 
         /// <summary>
@@ -220,7 +219,7 @@
                     Assert.Equal(1, ((JArray)receivedDict["value"]).Count);
                 }
 
-                DataServiceProvider.DataService = args.DataService;
+                DataService = args.DataService as SQLDataService;
                 requestUrl = $"http://localhost/odata/AddWithQueryParameters";
                 json = "{\"entitySet\": \"Странаs\", \"query\": \"$filter=Название eq 'Страна №2'\"}";
                 // Обращаемся к OData-сервису и обрабатываем ответ.
@@ -275,15 +274,15 @@
             });
         }
 
+        private SQLDataService DataService { get; set; }
 
-        private static IEnumerable<DataObject> AddWithQueryParameters(QueryParameters queryParameters, string entitySet, string query)
+        private IEnumerable<DataObject> AddWithQueryParameters(QueryParameters queryParameters, string entitySet, string query)
         {
             Assert.NotNull(queryParameters);
-            SQLDataService dataService = DataServiceProvider.DataService as SQLDataService;
             var type = queryParameters.GetDataObjectType(entitySet);
             var uri = $"http://a/b/c?{query}";
             var lcs = queryParameters.CreateLcs(type, uri);
-            var dobjs = dataService.LoadObjects(lcs);
+            var dobjs = DataService.LoadObjects(lcs);
             return dobjs.AsEnumerable();
         }
 
