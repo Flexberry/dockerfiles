@@ -188,6 +188,8 @@
     <Compile Include="Events\Delegates.cs" />
     <Compile Include="Events\EventHandlerContainer.cs" />
     <Compile Include="Events\IEventHandlerContainer.cs" />
+    <Compile Include="Extensions\ODataRouteExtensions.cs" />
+    <Compile Include="Extensions\ODataRouteHelper.cs" />
     <Compile Include="Formatter\CollectionDeserializationHelpers.cs" />
     <Compile Include="Formatter\DeserializationHelpers.cs" />
     <Compile Include="Formatter\ExtendedODataActionPayloadDeserializer.cs" />

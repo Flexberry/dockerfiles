@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>NewPlatform.Flexberry.ORM.ODataService</id>
-    <version>5.1.0-beta16</version>
+    <version>5.1.0-beta17</version>
     <title>Flexberry ORM ODataService</title>
     <authors>New Platform Ltd.</authors>
     <owners>New Platform Ltd.</owners>
@@ -17,7 +17,8 @@
       2. Support $batch request for transactional update data objects.
       3. Support for limits on master details.
       4. Support for limits on pseudodetails.
-      5. Decode Excel export column name. 
+      5. Decode Excel export column name.
+      6. HttpConfiguretion MapDataObjectRoute() extension method. 
 
       Changed
       1. JavaScriptSerializer replaced with Newtonsoft.Json.JsonConvert for better performance.
@@ -30,6 +31,8 @@
       8. [BREAKINGCHANGE] The namespace of api-extensions is changed to NewPlatform.Flexberry.ORM.ODataService.WebApi.Extensions .
       9. [BREAKINGCHANGE] The namespace of api-controllers is changed to NewPlatform.Flexberry.ORM.ODataService.WebApi.Controllers .
       10. [BREAKINGCHANGE] The namespace of GenericCorsPolicyProvider is changed to NewPlatform.Flexberry.ORM.ODataService.Cors .
+      11. [BREAKINGCHANGE] HttpConfiguration MapODataServiceDataObjectRoute extension method is marked obsolete.
+      12. Code unification with Microsoft.AspNetCore.OData .
 
       Fixed
       1. Fix error with POST request and header "Prefer".

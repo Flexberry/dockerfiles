@@ -10,7 +10,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 2. Support $batch request for transactional update data objects.
 3. Support for limits on master details.
 4. Support for limits on pseudodetails.
-5. Decode Excel export column name. 
+5. Decode Excel export column name.
+6. HttpConfiguretion MapDataObjectRoute() extension method. 
 
 ### Changed
 
@@ -24,6 +25,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 8. [BREAKINGCHANGE] The namespace of api-extensions is changed to NewPlatform.Flexberry.ORM.ODataService.WebApi.Extensions .
 9. [BREAKINGCHANGE] The namespace of api-controllers is changed to NewPlatform.Flexberry.ORM.ODataService.WebApi.Controllers .
 10. [BREAKINGCHANGE] The namespace of GenericCorsPolicyProvider is changed to NewPlatform.Flexberry.ORM.ODataService.Cors .
+11. [BREAKINGCHANGE] HttpConfiguration MapODataServiceDataObjectRoute extension method is marked obsolete.
+12. Code unification with Microsoft.AspNetCore.OData .
 
 ### Fixed
 

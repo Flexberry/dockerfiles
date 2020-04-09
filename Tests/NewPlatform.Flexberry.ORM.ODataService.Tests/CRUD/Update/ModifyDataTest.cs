@@ -330,7 +330,7 @@
                 response = args.HttpClient.PostAsJsonAsync(requestUrl, edmObj).Result;
 
                 // Убедимся, что запрос завершился успешно.
-                Assert.Equal(response.StatusCode, HttpStatusCode.Created);
+                Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
                 // Проверяем созданный объект, вычитав с помощью DataService
                 createdObj = new Медведь { __PrimaryKey = медвежонок.__PrimaryKey };
