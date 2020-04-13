@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<configuration>
+  <configSections>
+    <section name="log4net" type="System.Configuration.IgnoreSectionHandler" />
+    <section name="unity" type="Microsoft.Practices.Unity.Configuration.UnityConfigurationSection, Unity.Configuration" />
+  </configSections>
+  <appSettings>
+    <add key="DataServiceType" value="ICSSoft.STORMNET.Business.MSSQLDataService, ICSSoft.STORMNET.Business.MSSQLDataService" />
+    <add key="DefaultConnectionStringName" value="DefConnStr" />
+  </appSettings>
+  <connectionStrings>
+    <add name="DefConnStr" connectionString="" />
+  </connectionStrings>
+  <system.web>
+    <compilation debug="true" />
+  </system.web>
+  <system.webServer>
+    <handlers>
+      <remove name="OPTIONSVerbHandler" />
+      <remove name="TRACEVerbHandler" />
+      <remove name="ExtensionlessUrlHandler-Integrated-4.0" />
+      <add name="ExtensionlessUrlHandler-Integrated-4.0" path="*." verb="*" type="System.Web.Handlers.TransferRequestHandler" preCondition="integratedMode,runtimeVersionv4.0" />
+    </handlers>
+  </system.webServer>
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly>
+        <assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-8.0.0.0" newVersion="8.0.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Microsoft.OData.Edm" publicKeyToken="31bf3856ad364e35" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-6.15.0.0" newVersion="6.15.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Microsoft.OData.Core" publicKeyToken="31bf3856ad364e35" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-6.15.0.0" newVersion="6.15.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Microsoft.Spatial" publicKeyToken="31bf3856ad364e35" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-6.15.0.0" newVersion="6.15.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.Http" publicKeyToken="31bf3856ad364e35" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-5.2.3.0" newVersion="5.2.3.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Net.Http.Formatting" publicKeyToken="31bf3856ad364e35" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-5.2.3.0" newVersion="5.2.3.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <publisherPolicy apply="no" />
+        <assemblyIdentity name="Oracle.ManagedDataAccess" publicKeyToken="89b483f429c47342" culture="neutral" />
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+  <log4net>
+    <appender name="LogFileAppender" type="log4net.Appender.RollingFileAppender">
+      <param name="File" value="/tmp/flexberry.log" />
+      <param name="AppendToFile" value="true" />
+      <param name="RollingStyle" value="Date" />
+      <param name="Encoding" value="utf-8" />
+      <layout type="log4net.Layout.PatternLayout">
+        <param name="ConversionPattern" value="%-5p %d{yyyy-MM-dd HH:mm:ss} [%t] %m%n" />
+      </layout>
+    </appender>
+
+    <appender name="AdoNetAppender" type="ICSSoft.STORMNET.CustomAdoNetAppender">
+      <bufferSize value="0" />
+      <connectionType value="Npgsql.NpgsqlConnection, Npgsql" />
+      <ConnectionStringName value="DefConnStr" />
+      <commandText value="INSERT INTO ApplicationLog (primaryKey,Timestamp,ThreadName,Category,ProcessName,Message,FormattedMessage) VALUES (uuid_in(md5(random()::text || now()::text)::cstring), :log_date, :thread, :log_level, :logger, :message, :exception)" />
+      <parameter>
+        <parameterName value="@log_date" />
+        <dbType value="DateTime" />
+        <layout type="log4net.Layout.RawTimeStampLayout" />
+      </parameter>
+      <parameter>
+        <parameterName value="@thread" />
+        <dbType value="String" />
+        <size value="512" />
+        <layout type="log4net.Layout.PatternLayout">
+          <conversionPattern value="%thread" />
+        </layout>
+      </parameter>
+      <parameter>
+        <parameterName value="@log_level" />
+        <dbType value="String" />
+        <size value="64" />
+        <layout type="log4net.Layout.PatternLayout">
+          <conversionPattern value="%level" />
+        </layout>
+      </parameter>
+      <parameter>
+        <parameterName value="@logger" />
+        <dbType value="String" />
+        <size value="512" />
+        <layout type="log4net.Layout.PatternLayout">
+          <conversionPattern value="%logger" />
+        </layout>
+      </parameter>
+      <parameter>
+        <parameterName value="@message" />
+        <dbType value="String" />
+        <size value="2500" />
+        <layout type="log4net.Layout.PatternLayout">
+          <conversionPattern value="%message" />
+        </layout>
+      </parameter>
+      <parameter>
+        <parameterName value="@exception" />
+        <dbType value="String" />
+        <size value="4000" />
+        <layout type="log4net.Layout.ExceptionLayout" />
+      </parameter>
+    </appender>
+
+    <root>
+      <level value="DEBUG" />
+      <appender-ref ref="LogFileAppender" />
+      <!--<appender-ref ref="AdoNetAppender" />-->
+    </root>
+  </log4net>
+  <unity xmlns="http://schemas.microsoft.com/practices/2010/unity">
+    <container>
+      <register type="ICSSoft.STORMNET.Security.ISecurityManager, ICSSoft.STORMNET.DataObject"
+                mapTo="ICSSoft.STORMNET.Security.EmptySecurityManager, ICSSoft.STORMNET.DataObject" />
+      <register type="ICSSoft.STORMNET.Business.IDataService, ICSSoft.STORMNET.Business"
+                mapTo="ICSSoft.STORMNET.Business.MSSQLDataService, ICSSoft.STORMNET.Business.MSSQLDataService">
+        <constructor />
+      </register>
+      <!-- Конфигурация экспорта в Excel. -->
+      <register name="Export" type="NewPlatform.Flexberry.IExportService, ICSSoft.STORMNET.Business" mapTo="NewPlatform.Flexberry.Reports.ExportToExcel.ExportExcelODataService, NewPlatform.Flexberry.Reports.ExportToExcel">
+        <lifetime type="singleton" />
+      </register>
+      <register type="NewPlatform.Flexberry.Reports.ExportToExcel.ISpreadsheetCustomizer, NewPlatform.Flexberry.Reports.ExportToExcel" mapTo="EmberFlexberryDummy.SpreadsheetCustomizer, EmberFlexberry.ODataBackend">
+        <lifetime type="singleton" />
+      </register>
+    </container>
+  </unity>
+</configuration>
