@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Web.OData.Routing.Conventions;
+    using Microsoft.AspNet.OData.Routing.Conventions;
 
     /// <summary>
     /// Класс, который предоставляет вспомогательные методы для создания наборов конвенций маршрутизации.

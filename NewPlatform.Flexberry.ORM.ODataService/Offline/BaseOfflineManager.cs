@@ -1,7 +1,7 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Offline
 {
     using System.Collections.Generic;
-    using System.Web.OData.Query;
+    using Microsoft.AspNet.OData.Query;
 
     using ICSSoft.STORMNET;
 

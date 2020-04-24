@@ -4,19 +4,17 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.OData;
-    using System.Web.OData.Formatter.Serialization;
-    using Microsoft.OData.Core;
+    using Microsoft.AspNet.OData;
+    using Microsoft.AspNet.OData.Formatter.Serialization;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using NewPlatform.Flexberry.ORM.ODataService.Extensions;
 
     /// <summary>
     /// OData serializer for serializing a collection of <see cref="IEdmEntityType" />
     /// </summary>
-    internal class CustomODataFeedSerializer : ODataFeedSerializer
+    // The ODataResourceSetSerializer type represents Microsoft OData v5.7.0 ODataFeedSerializer type here.
+    internal class CustomODataFeedSerializer : ODataResourceSetSerializer
     {
         /// <summary>
         /// Name for count property in Request.
@@ -27,7 +25,7 @@
         /// The number of items in the feed.
         /// </returns>
         /// <summary>
-        /// Initializes a new instance of <see cref="ODataFeedSerializer"/>.
+        /// Initializes a new instance of <see cref="ODataResourceSetSerializer"/>.
         /// </summary>
         /// <param name="serializerProvider">The <see cref="ODataSerializerProvider"/> to use to write nested entries.</param>
         public CustomODataFeedSerializer(CustomODataSerializerProvider serializerProvider)
@@ -36,22 +34,22 @@
         }
 
         /// <summary>
-        /// Create the <see cref="ODataFeed"/> to be written for the given feed instance.
+        /// Create the <see cref="ODataResourceSet"/> to be written for the given feed instance.
         /// </summary>
-        /// <param name="feedInstance">The instance representing the feed being written.</param>
-        /// <param name="feedType">The EDM type of the feed being written.</param>
+        /// <param name="resourceSetInstance">The instance representing the resource set being written.</param>
+        /// <param name="resourceSetType">The EDM type of the feed being written.</param>
         /// <param name="writeContext">The serializer context.</param>
-        /// <returns>The created <see cref="ODataFeed"/> object.</returns>
-        public override ODataFeed CreateODataFeed(IEnumerable feedInstance, IEdmCollectionTypeReference feedType, ODataSerializerContext writeContext)
+        /// <returns>The created <see cref="ODataResourceSet"/> object.</returns>
+        public override ODataResourceSet CreateResourceSet(IEnumerable resourceSetInstance, IEdmCollectionTypeReference resourceSetType, ODataSerializerContext writeContext)
         {
-            var feed = base.CreateODataFeed(feedInstance, feedType, writeContext);
+            var resourceSet = base.CreateResourceSet(resourceSetInstance, resourceSetType, writeContext);
 
             if (writeContext.Request.Properties.ContainsKey(Count))
             {
-                feed.Count = (int)writeContext.Request.Properties[Count];
+                resourceSet.Count = (int)writeContext.Request.Properties[Count];
             }
 
-            return feed;
+            return resourceSet;
         }
 
         /// <summary>

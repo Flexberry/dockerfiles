@@ -7,7 +7,6 @@
     using System.Xml.Linq;
 
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Spatial;
 
     using FileType = ICSSoft.STORMNET.FileType;

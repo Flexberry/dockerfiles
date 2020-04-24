@@ -4,11 +4,12 @@
     using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
-    using System.Web.OData;
 
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Exceptions;
+
+    using Microsoft.AspNet.OData;
 
     using NewPlatform.Flexberry.ORM.ODataService.Controllers;
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;

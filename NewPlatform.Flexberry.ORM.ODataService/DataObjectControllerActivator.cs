@@ -6,9 +6,9 @@
     using System.Web.Http.Dependencies;
     using System.Web.Http.Dispatcher;
     using System.Web.Http.Routing;
-    using System.Web.OData.Routing;
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
+    using Microsoft.AspNet.OData.Routing;
     using NewPlatform.Flexberry.ORM.ODataService.Batch;
     using NewPlatform.Flexberry.ORM.ODataService.Controllers;
     using NewPlatform.Flexberry.ORM.ODataService.Extensions;

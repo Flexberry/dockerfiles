@@ -1,12 +1,7 @@
 namespace NewPlatform.Flexberry.ORM.ODataService.Model
 {
-    using ICSSoft.STORMNET;
-    using ICSSoft.STORMNET.Business.LINQProvider;
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Globalization;
-    using System.Linq;
     using System.Reflection;
 
     /// <summary>

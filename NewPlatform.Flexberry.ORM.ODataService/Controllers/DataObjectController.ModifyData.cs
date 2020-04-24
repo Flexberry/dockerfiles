@@ -11,27 +11,23 @@
     using System.Web.Http;
     using System.Web.Http.Results;
     using System.Web.Http.Validation;
-    using System.Web.OData;
-    using System.Web.OData.Extensions;
-    using System.Web.OData.Routing;
-
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.FunctionalLanguage;
-
+    using Microsoft.AspNet.OData;
+    using Microsoft.AspNet.OData.Extensions;
+    using Microsoft.AspNet.OData.Routing;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-
     using NewPlatform.Flexberry.ORM.ODataService.Batch;
     using NewPlatform.Flexberry.ORM.ODataService.Files;
     using NewPlatform.Flexberry.ORM.ODataService.Files.Providers;
     using NewPlatform.Flexberry.ORM.ODataService.Formatter;
     using NewPlatform.Flexberry.ORM.ODataService.Handlers;
     using NewPlatform.Flexberry.ORM.ODataService.WebApi.Controllers;
-
     using Newtonsoft.Json;
 
     using File = ICSSoft.STORMNET.FileType.File;
+    using KeySegment = Microsoft.OData.UriParser.KeySegment;
 
     /// <summary>
     /// Определяет класс контроллера OData, который поддерживает запись и чтение данных с использованием OData формата.
@@ -164,7 +160,8 @@
         public HttpResponseMessage DeleteString()
         {
             ODataPath odataPath = Request.ODataProperties().Path;
-            string key = odataPath.Segments[1].ToString().Trim().Replace("'", string.Empty);
+            var keySegment = odataPath.Segments[1] as KeySegment;
+            string key = keySegment.Keys.First().Value.ToString().Trim().Replace("'", string.Empty);
             return DeleteEntity(key);
         }
 
@@ -177,7 +174,8 @@
         public HttpResponseMessage DeleteGuid()
         {
             ODataPath odataPath = Request.ODataProperties().Path;
-            Guid key = new Guid(odataPath.Segments[1].ToString());
+            var keySegment = odataPath.Segments[1] as KeySegment;
+            Guid key = new Guid(keySegment.Keys.First().Value.ToString());
             return DeleteEntity(key);
         }
 

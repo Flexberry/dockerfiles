@@ -2,18 +2,20 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Web.OData;
-    using System.Web.OData.Formatter.Deserialization;
-    using Microsoft.OData.Core;
+    using Expressions;
+
+    using Microsoft.AspNet.OData;
+    using Microsoft.AspNet.OData.Formatter.Deserialization;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
 
     using NewPlatform.Flexberry.ORM.ODataService.Model;
-    using Expressions;
 
     /// <summary>
     /// Десериализатор для чтения передаваемых данных OData.
     /// </summary>
-    public class ExtendedODataEntityDeserializer : ODataEntityDeserializer
+    // The ODataResourceDeserializer type represents Microsoft OData v5.7.0 ODataEntityDeserializer type here.
+    public class ExtendedODataEntityDeserializer : ODataResourceDeserializer
     {
         /// <summary>
         /// Строковая константа, которая используется для доступа свойствам запроса.
@@ -68,16 +70,15 @@
         }
 
         /// <summary>
-        /// Десериалезует <paramref name="structuralProperty"/> в <paramref name="entityResource"/>.
+        /// Десериалезует <paramref name="structuralProperty"/> в <paramref name="resource"/>.
         /// </summary>
-        /// <param name="entityResource">Объект, в который  structural property будет прочитано.</param>
+        /// <param name="resource">Объект, в который  structural property будет прочитано.</param>
         /// <param name="structuralProperty">Объект содержащий structural properties.</param>
-        /// <param name="entityType">Тип сущности.</param>
+        /// <param name="structuredType">Структурированный тип.</param>
         /// <param name="readContext">Состояние и установки, используемые при чтении.</param>
-        public override void ApplyStructuralProperty(object entityResource, ODataProperty structuralProperty,
-            IEdmEntityTypeReference entityType, ODataDeserializerContext readContext)
+        public override void ApplyStructuralProperty(object resource, ODataProperty structuralProperty, IEdmStructuredTypeReference structuredType, ODataDeserializerContext readContext)
         {
-            if (entityResource == null)
+            if (resource == null)
             {
                 throw Error.ArgumentNull("entityResource");
             }
@@ -87,28 +88,24 @@
                 throw Error.ArgumentNull("structuralProperty");
             }
 
-            DeserializationHelpers.ApplyProperty(structuralProperty, entityType, entityResource, DeserializerProvider, readContext);
+            DeserializationHelpers.ApplyProperty(structuralProperty, structuredType, resource, DeserializerProvider, readContext);
         }
 
         /// <summary>
-        /// Десериализует navigation property.
+        /// Десериализует nested property.
         /// Также выполняет необходимые действия, чтобы обработка @odata.bind выполнялась по стандарту OData.
         /// </summary>
-        /// <param name="entityResource">Объект, в который navigation property будет прочитано.</param>
-        /// <param name="navigationLinkWrapper">navigation линк.</param>
-        /// <param name="entityType">Тип сущности.</param>
+        /// <param name="resource">Объект, в который nested property будет прочитано.</param>
+        /// <param name="resourceInfoWrapper">resource info.</param>
+        /// <param name="structuredType">Структурированный тип.</param>
         /// <param name="readContext">Состояние и установки, используемые при чтении.</param>
-        public override void ApplyNavigationProperty(
-            object entityResource,
-            ODataNavigationLinkWithItems navigationLinkWrapper,
-            IEdmEntityTypeReference entityType,
-            ODataDeserializerContext readContext)
+        public override void ApplyNestedProperty(object resource, ODataNestedResourceInfoWrapper resourceInfoWrapper, IEdmStructuredTypeReference structuredType, ODataDeserializerContext readContext)
         {
-            base.ApplyNavigationProperty(entityResource, navigationLinkWrapper, entityType, readContext);
-            EdmEntityObject edmEntity = (EdmEntityObject)entityResource;
+            base.ApplyNestedProperty(resource, resourceInfoWrapper, structuredType, readContext);
+            EdmEntityObject edmEntity = (EdmEntityObject)resource;
             DataObjectEdmModel model = readContext.Model as DataObjectEdmModel;
 
-            foreach (var childItem in navigationLinkWrapper.NestedItems)
+            foreach (var childItem in resourceInfoWrapper.NestedItems)
             {
                 if (!readContext.Request.Properties.ContainsKey(Dictionary))
                 {
@@ -116,7 +113,7 @@
                 }
 
                 var dictionary = (Dictionary<string, object>)readContext.Request.Properties[Dictionary];
-                var navigationPropertyName = navigationLinkWrapper.NavigationLink.Name;
+                var navigationPropertyName = resourceInfoWrapper.NestedResourceInfo.Name;
                 var entityReferenceLink = childItem as ODataEntityReferenceLinkBase;
 
                 if (entityReferenceLink != null)
@@ -158,8 +155,8 @@
                     }
                 }
 
-                var feed = childItem as ODataFeedWithEntries;
-                if (childItem == null || (feed != null && feed.Entries.Count == 0))
+                var feed = childItem as ODataResourceSetWrapper;
+                if (childItem == null || (feed != null && feed.Resources.Count == 0))
                 {
                     edmEntity.TrySetPropertyValue(navigationPropertyName, null);
                     if (!dictionary.ContainsKey(navigationPropertyName))

@@ -52,7 +52,7 @@
                         медведь.Берлога[0]),
                 };
                 var batchRequest = CreateBatchRequest(baseUrl, changesets);
-                using (var response = await args.HttpClient.SendAsync(batchRequest))
+                using (var response = args.HttpClient.SendAsync(batchRequest).Result)
                 {
                     CheckODataBatchResponseStatusCode(response, new[] { HttpStatusCode.OK, HttpStatusCode.OK });
 
@@ -117,7 +117,7 @@
                         берлога)
                 };
                 var batchRequest = CreateBatchRequest(baseUrl, changesets);
-                using (var response = await args.HttpClient.SendAsync(batchRequest))
+                using (var response = args.HttpClient.SendAsync(batchRequest).Result)
                 {
                     CheckODataBatchResponseStatusCode(response, new[] { HttpStatusCode.Created });
 

@@ -8,17 +8,11 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Web.Http;
-    using System.Web.OData;
-    using System.Web.OData.Properties;
-    using System.Web.OData.Query;
-    using System.Web.OData.Query.Expressions;
-    using System.Web.OData.Query.Validators;
-    using System.Web.OData.Routing;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.AspNet.OData;
+    using Microsoft.AspNet.OData.Query;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.UriParser;
 
     /// <summary>
     /// This defines a $orderby OData query option for querying.
@@ -41,7 +35,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
         /// Создает экземпляр NewPlatform.Flexberry.ORM.ODataService.Expressions.OrderByQueryOption по экземпляру System.Web.OData.Query.OrderByQueryOption.
         /// </summary>
         /// <param name="orderByQueryOption">Экземпляр System.Web.OData.Query.OrderByQueryOption.</param>
-        public OrderByQueryOption(System.Web.OData.Query.OrderByQueryOption orderByQueryOption, Type contextElementClrType)
+        public OrderByQueryOption(Microsoft.AspNet.OData.Query.OrderByQueryOption orderByQueryOption, Type contextElementClrType)
         {
             Context = orderByQueryOption.Context;
             _contextElementClrType = contextElementClrType;
@@ -146,9 +140,13 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
             ODataQuerySettings updatedSettings = querySettings;
             if (querySettings.HandleNullPropagation == HandleNullPropagationOption.Default)
             {
-                updatedSettings = new ODataQuerySettings(updatedSettings);
-                updatedSettings.HandleNullPropagation =
-                    HandleNullPropagationOptionHelper.GetDefaultHandleNullPropagationOption(query);
+                updatedSettings = new ODataQuerySettings()
+                {
+                    EnsureStableOrdering = querySettings.EnsureStableOrdering,
+                    EnableConstantParameterization = querySettings.EnableConstantParameterization,
+                    HandleNullPropagation = HandleNullPropagationOptionHelper.GetDefaultHandleNullPropagationOption(query),
+                    PageSize = querySettings.PageSize,
+                };
             }
 
             LambdaExpression orderByExpression =

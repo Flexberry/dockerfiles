@@ -15,10 +15,6 @@
     using System.Web.Http;
     using System.Web.Http.Dispatcher;
     using System.Web.Http.Results;
-    using System.Web.OData;
-    using System.Web.OData.Extensions;
-    using System.Web.OData.Query;
-    using System.Web.OData.Routing;
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Business.LINQProvider;
@@ -26,10 +22,12 @@
     using ICSSoft.STORMNET.KeyGen;
     using ICSSoft.STORMNET.Security;
     using ICSSoft.STORMNET.UserDataTypes;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.AspNet.OData;
+    using Microsoft.AspNet.OData.Extensions;
+    using Microsoft.AspNet.OData.Query;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.UriParser;
     using NewPlatform.Flexberry.ORM.ODataService.Events;
     using NewPlatform.Flexberry.ORM.ODataService.Expressions;
     using NewPlatform.Flexberry.ORM.ODataService.Formatter;
@@ -39,8 +37,8 @@
     using NewPlatform.Flexberry.ORM.ODataService.Offline;
     using NewPlatform.Flexberry.ORM.ODataService.WebApi.Controllers;
 
-    using ODataPath = System.Web.OData.Routing.ODataPath;
-    using OrderByQueryOption = NewPlatform.Flexberry.ORM.ODataService.Expressions.OrderByQueryOption;
+    using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
+    using OrderByQueryOption = Expressions.OrderByQueryOption;
 
     /// <summary>
     /// Определяет класс контроллера OData, который поддерживает запись и чтение данных с использованием OData формата.
@@ -182,7 +180,9 @@
             try
             {
                 ODataPath odataPath = Request.ODataProperties().Path;
-                string key = odataPath.Segments[1].ToString().Trim().Replace("'", string.Empty);
+                var keySegment = odataPath.Segments[1] as KeySegment;
+                string key = keySegment.Keys.First().Value.ToString().Trim().Replace("'", string.Empty);
+
                 Init();
                 var obj = LoadObject(type, key);
                 var result = Request.CreateResponse(
@@ -208,7 +208,8 @@
             try
             {
                 ODataPath odataPath = Request.ODataProperties().Path;
-                Guid key = new Guid(odataPath.Segments[1].ToString());
+                var keySegment = odataPath.Segments[1] as KeySegment;
+                Guid key = new Guid(keySegment.Keys.First().Value.ToString());
 
                 Init();
                 var obj = LoadObject(type, key);
@@ -778,7 +779,6 @@
             ODataQuerySettings updatedSettings = querySettings;
             if (querySettings.HandleNullPropagation == HandleNullPropagationOption.Default)
             {
-                updatedSettings = new ODataQuerySettings(updatedSettings);
                 updatedSettings.HandleNullPropagation = HandleNullPropagationOptionHelper.GetDefaultHandleNullPropagationOption(query);
             }
 
@@ -804,7 +804,8 @@
         /// <returns>Контекст запроса OData.</returns>
         private ODataQueryContext CreateODataQueryContext(Type type)
         {
-            ODataPath path = new ODataPath(new EntitySetPathSegment(_model.GetEdmEntitySet(_model.GetEdmEntityType(type))));
+            // The EntitySetSegment type represents the Microsoft OData v5.7.0 EntitySetPathSegment type here.
+            ODataPath path = new ODataPath(new EntitySetSegment(_model.GetEdmEntitySet(_model.GetEdmEntityType(type))));
             return new ODataQueryContext(_model, type, path);
         }
 
@@ -814,10 +815,12 @@
         /// <returns>Сущность или коллекция сущностей.</returns>
         private IEdmObject EvaluateOdataPath()
         {
-            type = _model.GetDataObjectType(Request.ODataProperties().Path.Segments.OfType<EntitySetPathSegment>().First().ToString());
+            // The EntitySetSegment type represents the Microsoft OData v5.7.0 EntitySetPathSegment type here.
+            type = _model.GetDataObjectType(Request.ODataProperties().Path.Segments.OfType<EntitySetSegment>().First().Identifier);
             DetailArray detail = null;
             ODataPath odataPath = Request.ODataProperties().Path;
-            Guid key = new Guid(odataPath.Segments[1].ToString());
+            var keySegment = odataPath.Segments[1] as KeySegment;
+            Guid key = new Guid(keySegment.Keys.First().Value.ToString());
             IEdmEntityType entityType = null;
             var obj = LoadObject(type, key);
             if (obj == null)
@@ -867,7 +870,8 @@
                         break;
                     }
 
-                    key = new Guid(odataPath.Segments[i].ToString());
+                    keySegment = odataPath.Segments[i] as KeySegment;
+                    key = new Guid(keySegment.Keys.First().Value.ToString());
                     obj = detail.GetAllObjects().FirstOrDefault(o => ((KeyGuid)o.__PrimaryKey).Guid == key);
                     if (obj == null)
                     {
@@ -1029,7 +1033,8 @@
         /// </summary>
         private void Init()
         {
-            type = _model.GetDataObjectType(Request.ODataProperties().Path.Segments.OfType<EntitySetPathSegment>().First().ToString());
+            // The EntitySetSegment type represents the Microsoft OData v5.7.0 EntitySetPathSegment type here.
+            type = _model.GetDataObjectType(Request.ODataProperties().Path.Segments.OfType<EntitySetSegment>().First().Identifier);
             QueryOptions = new ODataQueryOptions(new ODataQueryContext(_model, type, Request.ODataProperties().Path), Request);
             if (QueryOptions.SelectExpand != null && QueryOptions.SelectExpand.SelectExpandClause != null)
             {
@@ -1240,6 +1245,8 @@
                     }
                     else
                     {
+                        throw new NotImplementedException("-solo-");
+                        /*-solo-
                         var openPropertySegment = pathSelectItem.SelectedPath.FirstSegment as OpenPropertySegment;
                         if (openPropertySegment != null)
                         {
@@ -1247,6 +1254,7 @@
                         }
 
                         throw new Exception($"Invalid segment: {pathSelectItem.SelectedPath.FirstSegment.ToString()}");
+                        */
                     }
                 }
                 else

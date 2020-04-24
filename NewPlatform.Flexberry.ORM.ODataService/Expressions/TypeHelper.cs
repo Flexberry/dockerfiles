@@ -12,7 +12,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
     using System.Threading.Tasks;
     using System.Web.Http;
     using System.Web.Http.Dispatcher;
-    using System.Web.OData.Formatter;
+    using Microsoft.AspNet.OData.Formatter;
 
     /// <summary>
     /// Класс расширения для работы с типами.

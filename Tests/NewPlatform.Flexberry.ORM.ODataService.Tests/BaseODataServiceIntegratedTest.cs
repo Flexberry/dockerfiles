@@ -9,19 +9,15 @@
     using System.Text;
     using System.Web.Http;
     using System.Web.Http.Cors;
-    using System.Web.OData.Batch;
-
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.KeyGen;
-
+    using Microsoft.AspNet.OData.Batch;
     using NewPlatform.Flexberry.ORM.ODataService.Extensions;
     using NewPlatform.Flexberry.ORM.ODataService.Model;
     using NewPlatform.Flexberry.ORM.ODataService.WebApi.Extensions;
-
     using Unity;
     using Unity.AspNet.WebApi;
-
     using Xunit;
 
     /// <summary>

@@ -4,8 +4,7 @@
     using System.Net.Http;
 
     using ICSSoft.STORMNET.Business;
-
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     using NewPlatform.Flexberry.ORM.ODataService.Controllers;
     using NewPlatform.Flexberry.ORM.ODataService.Model;
@@ -17,6 +16,9 @@
     /// </summary>
     public class QueryParameters
     {
+        // The original Microsoft OData v7.1.0 private constant.
+        private const string RequestContainerKey = "Microsoft.AspNet.OData.RequestContainer";
+
         /// <summary>
         /// Запрос.
         /// </summary>
@@ -65,7 +67,15 @@
             HttpRequestMessage request = _controller.Request;
             if (odataQuery != null)
             {
-                request = new HttpRequestMessage(HttpMethod.Get, odataQuery);
+                var r = new HttpRequestMessage(HttpMethod.Get, odataQuery);
+
+                object value;
+                if (_controller.Request.Properties.TryGetValue(RequestContainerKey, out value))
+                {
+                    r.Properties.Add(RequestContainerKey, value);
+                }
+
+                request = r;
             }
 
             _controller.QueryOptions = _controller.CreateODataQueryOptions(type, request);

@@ -44,14 +44,14 @@
                 // ------------------ Только создания объектов ------------------
                 // Подготовка тестовых данных в формате OData.
                 var controller = new Controllers.DataObjectController(args.DataService, null, args.Token.Model, args.Token.Events, args.Token.Functions);
-                System.Web.OData.EdmEntityObject edmObj = controller.GetEdmObject(args.Token.Model.GetEdmEntityType(typeof(Медведь)), медв, 1, null);
+                Microsoft.AspNet.OData.EdmEntityObject edmObj = controller.GetEdmObject(args.Token.Model.GetEdmEntityType(typeof(Медведь)), медв, 1, null);
                 var edmЛес1 = controller.GetEdmObject(args.Token.Model.GetEdmEntityType(typeof(Лес)), лес1, 1, null);
                 var edmЛес2 = controller.GetEdmObject(args.Token.Model.GetEdmEntityType(typeof(Лес)), лес2, 1, null);
                 edmObj.TrySetPropertyValue("ЛесОбитания", edmЛес1);
                 var coll = controller.GetEdmCollection(медв.Берлога, typeof(Берлога), 1, null);
                 edmObj.TrySetPropertyValue("Берлога", coll);
-                System.Web.OData.EdmEntityObject edmБерлога1 = (System.Web.OData.EdmEntityObject)coll[0];
-                System.Web.OData.EdmEntityObject edmБерлога2 = (System.Web.OData.EdmEntityObject)coll[1];
+                Microsoft.AspNet.OData.EdmEntityObject edmБерлога1 = (Microsoft.AspNet.OData.EdmEntityObject)coll[0];
+                Microsoft.AspNet.OData.EdmEntityObject edmБерлога2 = (Microsoft.AspNet.OData.EdmEntityObject)coll[1];
                 edmБерлога1.TrySetPropertyValue("ЛесРасположения", edmЛес1);
                 edmБерлога2.TrySetPropertyValue("ЛесРасположения", edmЛес2);
 

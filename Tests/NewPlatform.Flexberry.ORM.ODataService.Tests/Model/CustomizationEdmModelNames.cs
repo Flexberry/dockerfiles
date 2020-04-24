@@ -69,7 +69,7 @@
                 // ------------------ Только создания объектов ------------------
                 // Подготовка тестовых данных в формате OData.
                 var controller = new Controllers.DataObjectController(args.DataService, null, args.Token.Model, args.Token.Events, args.Token.Functions);
-                System.Web.OData.EdmEntityObject edmObj = controller.GetEdmObject(args.Token.Model.GetEdmEntityType(typeof(Наследник)), наследник, 1, null);
+                Microsoft.AspNet.OData.EdmEntityObject edmObj = controller.GetEdmObject(args.Token.Model.GetEdmEntityType(typeof(Наследник)), наследник, 1, null);
                 var edm_master = controller.GetEdmObject(args.Token.Model.GetEdmEntityType(typeof(Master)), master, 1, null);
                 var edm_мастер = controller.GetEdmObject(args.Token.Model.GetEdmEntityType(typeof(Мастер)), мастер, 1, null);
                 var edm_мастер2 = controller.GetEdmObject(args.Token.Model.GetEdmEntityType(typeof(Мастер2)), мастер2, 1, null);
@@ -78,7 +78,7 @@
                 edm_мастер.TrySetPropertyValue("Master2Alias", edm_мастер2);
                 var coll = controller.GetEdmCollection(наследник.Детейл, typeof(Детейл), 1, null);
                 edmObj.TrySetPropertyValue("DetailAlias", coll);
-                System.Web.OData.EdmEntityObject edmДетейл = (System.Web.OData.EdmEntityObject)coll[0];
+                Microsoft.AspNet.OData.EdmEntityObject edmДетейл = (Microsoft.AspNet.OData.EdmEntityObject)coll[0];
 
                 // Формируем URL запроса к OData-сервису.
                 string requestUrl = string.Format("http://localhost/odata/{0}", args.Token.Model.GetEdmEntitySet(typeof(Наследник)).Name);

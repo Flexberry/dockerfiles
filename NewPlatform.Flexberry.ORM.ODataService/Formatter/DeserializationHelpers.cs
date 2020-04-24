@@ -1,21 +1,22 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
+// Branch of https://github.com/OData/WebApi/blob/7.1.0/src/Microsoft.AspNet.OData.Shared/Formatter/Deserialization/DeserializationHelpers.cs
 
 namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.Reflection;
     using System.Runtime.Serialization;
-    using System.Web.Http;
-    using System.Web.OData.Properties;
-    using Microsoft.OData.Core;
+    using Microsoft.AspNet.OData;
+    using Microsoft.AspNet.OData.Common;
+    using Microsoft.AspNet.OData.Formatter.Deserialization;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using System.Web.OData.Formatter.Deserialization;
     using NewPlatform.Flexberry.ORM.ODataService.Expressions;
-    using System.Web.OData;
-    using System;
 
     internal static class DeserializationHelpers
     {
@@ -40,6 +41,13 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
                 isDynamicProperty = structuredType != null && structuredType.IsOpen;
             }
 
+            if (!isDynamicProperty && edmProperty == null)
+            {
+                throw new ODataException(
+                    string.Format("The property '{0}' does not exist on type '{1}'. Make sure to only use property names that are defined by the type",
+                    property.Name, resourceType.Definition));
+            }
+
             // dynamic properties have null values
             IEdmTypeReference propertyType = edmProperty != null ? edmProperty.Type : null;
 
@@ -50,7 +58,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
             if (isDynamicProperty)
             {
                 SetDynamicProperty(resource, resourceType, propertyKind, propertyName, value, propertyType,
-                    readContext);
+                    readContext.Model);
             }
             else
             {
@@ -60,18 +68,18 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
 
         internal static void SetDynamicProperty(object resource, IEdmStructuredTypeReference resourceType,
             EdmTypeKind propertyKind, string propertyName, object propertyValue, IEdmTypeReference propertyType,
-            ODataDeserializerContext readContext)
-        {  
+            IEdmModel model)
+        {
             if (propertyKind == EdmTypeKind.Collection && propertyValue.GetType() != typeof(EdmComplexObjectCollection)
                 && propertyValue.GetType() != typeof(EdmEnumObjectCollection))
             {
                 SetDynamicCollectionProperty(resource, propertyName, propertyValue, propertyType.AsCollection(),
-                    resourceType.StructuredDefinition(), readContext);
+                    resourceType.StructuredDefinition(), model);
             }
             else
             {
                 SetDynamicProperty(resource, propertyName, propertyValue, resourceType.StructuredDefinition(),
-                    readContext);
+                    model);
             }
         }
 
@@ -103,10 +111,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
 
         internal static void SetCollectionProperty(object resource, IEdmProperty edmProperty, object value, string propertyName)
         {
-            if (edmProperty == null)
-            {
-                throw new ArgumentNullException(nameof(edmProperty), "Contract assertion not met: edmProperty != null");
-            }
+            Contract.Assert(edmProperty != null);
 
             SetCollectionProperty(resource, propertyName, edmProperty.Type.AsCollection(), value, clearCollection: false);
         }
@@ -117,16 +122,14 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
             if (value != null)
             {
                 IEnumerable collection = value as IEnumerable;
-                if (collection == null)
-                {
-                    throw new ArgumentException("SetCollectionProperty is always passed the result of ODataFeedDeserializer or ODataCollectionDeserializer", "value");
-                }
+                Contract.Assert(collection != null,
+                    "SetCollectionProperty is always passed the result of ODataFeedDeserializer or ODataCollectionDeserializer");
 
                 Type resourceType = resource.GetType();
                 Type propertyType = GetPropertyType(resource, propertyName);
 
                 Type elementType;
-                if (!propertyType.IsCollection(out elementType))
+                if (!TypeHelper.IsCollection(propertyType, out elementType))
                 {
                     string message = Error.Format(SRResources.PropertyIsNotCollection, propertyType.FullName, propertyName, resourceType.FullName);
                     throw new SerializationException(message);
@@ -167,38 +170,23 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
 
         internal static void SetDynamicCollectionProperty(object resource, string propertyName, object value,
             IEdmCollectionTypeReference edmPropertyType, IEdmStructuredType structuredType,
-            ODataDeserializerContext readContext)
+            IEdmModel model)
         {
-            if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value), "Contract assertion not met: value != null");
-            }
-
-            if (readContext == null)
-            {
-                throw new ArgumentNullException(nameof(readContext), "Contract assertion not met: readContext != null");
-            }
-
-            if (readContext.Model == null)
-            {
-                throw new ArgumentException("Contract assertion not met: readContext.Model != null", nameof(readContext));
-            }
+            Contract.Assert(value != null);
+            Contract.Assert(model != null);
 
             IEnumerable collection = value as IEnumerable;
-            if (collection == null)
-            {
-                throw new ArgumentException("Contract assertion not met: collection != null", nameof(value));
-            }
+            Contract.Assert(collection != null);
 
             Type resourceType = resource.GetType();
-            Type elementType = EdmLibHelpers.GetClrType(edmPropertyType.ElementType(), readContext.Model);
+            Type elementType = EdmLibHelpers.GetClrType(edmPropertyType.ElementType(), model);
             Type propertyType = typeof(ICollection<>).MakeGenericType(elementType);
             IEnumerable newCollection;
             if (CollectionDeserializationHelpers.TryCreateInstance(propertyType, edmPropertyType, elementType,
                 out newCollection))
             {
                 collection.AddToCollection(newCollection, elementType, resourceType, propertyName, propertyType);
-                SetDynamicProperty(resource, propertyName, newCollection, structuredType, readContext);
+                SetDynamicProperty(resource, propertyName, newCollection, structuredType, model);
             }
         }
 
@@ -216,7 +204,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
         }
 
         internal static void SetDynamicProperty(object resource, string propertyName, object value,
-            IEdmStructuredType structuredType, ODataDeserializerContext readContext)
+            IEdmStructuredType structuredType, IEdmModel model)
         {
             IDelta delta = resource as IDelta;
             if (delta != null)
@@ -226,7 +214,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
             else
             {
                 PropertyInfo propertyInfo = EdmLibHelpers.GetDynamicPropertyDictionary(structuredType,
-                    readContext.Model);
+                    model);
                 if (propertyInfo == null)
                 {
                     return;
@@ -269,13 +257,6 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
                 return null;
             }
 
-            ODataComplexValue complexValue = oDataValue as ODataComplexValue;
-            if (complexValue != null)
-            {
-                typeKind = EdmTypeKind.Complex;
-                return ConvertComplexValue(complexValue, ref propertyType, deserializerProvider, readContext);
-            }
-
             ODataEnumValue enumValue = oDataValue as ODataEnumValue;
             if (enumValue != null)
             {
@@ -290,21 +271,30 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
                 return ConvertCollectionValue(collection, ref propertyType, deserializerProvider, readContext);
             }
 
+            ODataUntypedValue untypedValue = oDataValue as ODataUntypedValue;
+            if (untypedValue != null)
+            {
+                Contract.Assert(!String.IsNullOrEmpty(untypedValue.RawValue));
+
+                if (untypedValue.RawValue.StartsWith("[", StringComparison.Ordinal) ||
+                    untypedValue.RawValue.StartsWith("{", StringComparison.Ordinal))
+                {
+                    throw new ODataException(
+                        string.Format("The given untyped value '{0}' in payload is invalid. Consider using a OData type annotation explicitly.",
+                        untypedValue.RawValue));
+                }
+
+                oDataValue = ConvertPrimitiveValue(untypedValue.RawValue);
+            }
+
             typeKind = EdmTypeKind.Primitive;
             return oDataValue;
         }
 
         internal static Type GetPropertyType(object resource, string propertyName)
         {
-            if (resource == null)
-            {
-                throw new ArgumentNullException(nameof(resource), "Contract assertion not met: resource != null");
-            }
-
-            if (propertyName == null)
-            {
-                throw new ArgumentNullException(nameof(propertyName), "Contract assertion not met: propertyName != null");
-            }
+            Contract.Assert(resource != null);
+            Contract.Assert(propertyName != null);
 
             IDelta delta = resource as IDelta;
             if (delta != null)
@@ -318,37 +308,6 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
                 PropertyInfo property = resource.GetType().GetProperty(propertyName);
                 return property == null ? null : property.PropertyType;
             }
-        }
-
-        private static object ConvertComplexValue(ODataComplexValue complexValue, ref IEdmTypeReference propertyType,
-            ODataDeserializerProvider deserializerProvider, ODataDeserializerContext readContext)
-        {
-            IEdmComplexTypeReference edmComplexType;
-            if (propertyType == null)
-            {
-                // open complex property
-                if (string.IsNullOrEmpty(complexValue.TypeName))
-                {
-                    throw new ArgumentException("ODataLib should have verified that open complex value has a type name since we provided metadata.", nameof(complexValue));
-                }
-
-                IEdmModel model = readContext.Model;
-                IEdmType edmType = model.FindType(complexValue.TypeName);
-                if (edmType.TypeKind != EdmTypeKind.Complex)
-                {
-                    throw new ArgumentException("ODataLib should have verified that complex value has a complex resource type.", "value");
-                }
-
-                edmComplexType = new EdmComplexTypeReference(edmType as IEdmComplexType, isNullable: true);
-                propertyType = edmComplexType;
-            }
-            else
-            {
-                edmComplexType = propertyType.AsComplex();
-            }
-
-            ODataEdmTypeDeserializer deserializer = deserializerProvider.GetEdmTypeDeserializer(edmComplexType);
-            return deserializer.ReadInline(complexValue, propertyType, readContext);
         }
 
         private static bool CanSetProperty(object resource, string propertyName)
@@ -377,11 +336,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
             else
             {
                 PropertyInfo property = resource.GetType().GetProperty(propertyName);
-                if (property == null)
-                {
-                    throw new ArgumentException("ODataLib should have already verified that the property exists on the type.", "value");
-                }
-
+                Contract.Assert(property != null, "ODataLib should have already verified that the property exists on the type.");
                 return property.GetValue(resource, index: null);
             }
         }
@@ -394,19 +349,14 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
             if (propertyType == null)
             {
                 // dynamic collection property
-                if (string.IsNullOrEmpty(collection.TypeName))
-                {
-                    throw new ArgumentException("ODataLib should have verified that dynamic collection value has a type name " + "since we provided metadata.", nameof(collection));
-                }
+                Contract.Assert(!String.IsNullOrEmpty(collection.TypeName),
+                    "ODataLib should have verified that dynamic collection value has a type name " +
+                    "since we provided metadata.");
 
                 string elementTypeName = GetCollectionElementTypeName(collection.TypeName, isNested: false);
                 IEdmModel model = readContext.Model;
                 IEdmSchemaType elementType = model.FindType(elementTypeName);
-                if (elementType == null)
-                {
-                    throw new ArgumentException("Contract assertion not met: elementType != null", "value");
-                }
-
+                Contract.Assert(elementType != null);
                 collectionType =
                     new EdmCollectionTypeReference(
                         new EdmCollectionType(elementType.ToEdmTypeReference(isNullable: false)));
@@ -415,14 +365,48 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
             else
             {
                 collectionType = propertyType as IEdmCollectionTypeReference;
-                if (collectionType == null)
-                {
-                    throw new ArgumentException("The type for collection must be a IEdmCollectionType.", "value");
-                }
+                Contract.Assert(collectionType != null, "The type for collection must be a IEdmCollectionType.");
             }
 
             ODataEdmTypeDeserializer deserializer = deserializerProvider.GetEdmTypeDeserializer(collectionType);
             return deserializer.ReadInline(collection, collectionType, readContext);
+        }
+
+        private static object ConvertPrimitiveValue(string value)
+        {
+            double doubleValue;
+            int intValue;
+            decimal decimalValue;
+
+            if (String.CompareOrdinal(value, "null") == 0)
+            {
+                return null;
+            }
+
+            if (Int32.TryParse(value, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out intValue))
+            {
+                return intValue;
+            }
+
+            // todo: if it is Ieee754Compatible, parse decimal after double
+            if (Decimal.TryParse(value, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out decimalValue))
+            {
+                return decimalValue;
+            }
+
+            if (Double.TryParse(value, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out doubleValue))
+            {
+                return doubleValue;
+            }
+
+            if (!value.StartsWith("\"", StringComparison.Ordinal) || !value.EndsWith("\"", StringComparison.Ordinal))
+            {
+                throw new ODataException(
+                    string.Format("The given untyped value '{0}' in payload is invalid. Consider using a OData type annotation explicitly.",
+                    value));
+            }
+
+            return value.Substring(1, value.Length - 2);
         }
 
         private static object ConvertEnumValue(ODataEnumValue enumValue, ref IEdmTypeReference propertyType,
@@ -432,18 +416,11 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
             if (propertyType == null)
             {
                 // dynamic enum property
-                if (string.IsNullOrEmpty(enumValue.TypeName))
-                {
-                    throw new ArgumentException("ODataLib should have verified that dynamic enum value has a type name since we provided metadata.", nameof(enumValue));
-                }
-
+                Contract.Assert(!String.IsNullOrEmpty(enumValue.TypeName),
+                    "ODataLib should have verified that dynamic enum value has a type name since we provided metadata.");
                 IEdmModel model = readContext.Model;
                 IEdmType edmType = model.FindType(enumValue.TypeName);
-                if (edmType.TypeKind != EdmTypeKind.Enum)
-                {
-                    throw new ArgumentException("ODataLib should have verified that enum value has a enum resource type.", "value");
-                }
-
+                Contract.Assert(edmType.TypeKind == EdmTypeKind.Enum, "ODataLib should have verified that enum value has a enum resource type.");
                 edmEnumType = new EdmEnumTypeReference(edmType as IEdmEnumType, isNullable: true);
                 propertyType = edmEnumType;
             }
@@ -457,7 +434,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
         }
 
         // The same logic from ODL to get the element type name in a collection.
-        private static string GetCollectionElementTypeName(string typeName, bool isNested)
+        internal static string GetCollectionElementTypeName(string typeName, bool isNested)
         {
             const string CollectionTypeQualifier = "Collection";
             int collectionTypeQualifierLength = CollectionTypeQualifier.Length;

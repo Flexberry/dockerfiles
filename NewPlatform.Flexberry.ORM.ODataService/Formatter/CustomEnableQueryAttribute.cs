@@ -6,8 +6,8 @@
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
-    using System.Web.OData;
-    using System.Web.OData.Query;
+    using Microsoft.AspNet.OData;
+    using Microsoft.AspNet.OData.Query;
 
     /// <summary>
     /// This class defines an attribute that can be applied to an action to enable querying using the OData query

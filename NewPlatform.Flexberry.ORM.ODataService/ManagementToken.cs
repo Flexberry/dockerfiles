@@ -1,7 +1,7 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService
 {
     using System;
-    using System.Web.OData.Routing;
+    using Microsoft.AspNet.OData.Routing;
 
     using NewPlatform.Flexberry.ORM.ODataService.Events;
     using NewPlatform.Flexberry.ORM.ODataService.Functions;

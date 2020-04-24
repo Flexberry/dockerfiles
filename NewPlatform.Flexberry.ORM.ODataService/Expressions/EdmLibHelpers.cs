@@ -5,7 +5,6 @@
 namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data.Linq;
     using System.Diagnostics.CodeAnalysis;
@@ -13,19 +12,12 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Web.Http;
     using System.Web.Http.Dispatcher;
-    using System.Web.OData;
-    using System.Web.OData.Builder;
-    using System.Web.OData.Properties;
-    using System.Web.OData.Query.Expressions;
     using System.Xml.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Expressions;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Vocabularies.V1;
     using Microsoft.Spatial;
+    using Microsoft.AspNet.OData;
+    using Microsoft.AspNet.OData.Builder;
 
     /// <summary>
     /// Класс содержит вспомогательные методы для работы с EDM-моделью.

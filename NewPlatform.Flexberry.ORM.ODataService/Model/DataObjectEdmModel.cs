@@ -5,15 +5,12 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using System.Web.OData;
 
     using ICSSoft.Services;
     using ICSSoft.STORMNET;
 
+    using Microsoft.AspNet.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Expressions;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.Spatial;
 
     using NewPlatform.Flexberry.ORM.ODataService.Functions;
@@ -205,7 +202,7 @@
                         for (int i = 0; i < enumNames.Length; i++)
                         {
                             int intValue = (int)enumValues.GetValue(i);
-                            edmEnumType.AddMember(new EdmEnumMember(edmEnumType, enumNames[i], new EdmIntegerConstant(intValue)));
+                            edmEnumType.AddMember(new EdmEnumMember(edmEnumType, enumNames[i], new EdmEnumMemberValue(intValue)));
                         }
 
                         _registeredEnums.Add(propertyType, edmEnumType);
@@ -617,7 +614,9 @@
 
                 edmAction = new EdmAction(DefaultNamespace, action.Name, returnEdmTypeReference);
                 edmAction.AddParameter("bindingParameter", returnEdmTypeReference);
-                entityContainer.AddActionImport(action.Name, edmAction, new EdmEntitySetReferenceExpression(GetEdmEntitySet(returnEntityType)));
+
+                // The EdmPathExpression type represents the Microsoft OData v5.7.0 EdmEntitySetReferenceExpression type here.
+                entityContainer.AddActionImport(action.Name, edmAction, new EdmPathExpression(GetEdmEntitySet(returnEntityType).Name));
             }
 
             AddElement(edmAction);
@@ -672,7 +671,9 @@
 
                 edmFunction = new EdmFunction(DefaultNamespace, function.Name, returnEdmTypeReference, true, null, true);
                 edmFunction.AddParameter("bindingParameter", returnEdmTypeReference);
-                entityContainer.AddFunctionImport(function.Name, edmFunction, new EdmEntitySetReferenceExpression(GetEdmEntitySet(returnEntityType)), true);
+
+                // The EdmPathExpression type represents the Microsoft OData v5.7.0 EdmEntitySetReferenceExpression type here.
+                entityContainer.AddFunctionImport(function.Name, edmFunction, new EdmPathExpression(GetEdmEntitySet(returnEntityType).Name));
             }
 
             AddElement(edmFunction);

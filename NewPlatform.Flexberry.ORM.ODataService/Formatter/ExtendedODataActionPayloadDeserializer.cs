@@ -1,24 +1,24 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
     using System.Runtime.Serialization;
-    using System.Web.Http;
-    using System.Web.OData.Properties;
-    using System.Web.OData.Routing;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Edm;
-    using System.Web.OData.Formatter.Deserialization;
-    using System;
-    using System.Web.OData;
-    using NewPlatform.Flexberry.ORM.ODataService.Expressions;
     using ICSSoft.STORMNET;
+    using Microsoft.AspNet.OData;
+    using Microsoft.AspNet.OData.Formatter.Deserialization;
+    using Microsoft.OData;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.UriParser;
+    using NewPlatform.Flexberry.ORM.ODataService.Expressions;
     using NewPlatform.Flexberry.ORM.ODataService.Model;
-    using Microsoft.OData.Edm.Library;
+
+    using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
     /// <inheritdoc />
     public class ExtendedODataActionPayloadDeserializer : ODataDeserializer
@@ -47,14 +47,11 @@
         {
             if (messageReader == null)
             {
-                throw new ArgumentNullException(nameof(messageReader));
+                throw Error.ArgumentNull("messageReader");
             }
 
             IEdmAction action = GetAction(readContext);
-            if (action == null)
-            {
-                throw new ArgumentException("Contract assertion not met: action != null", nameof(readContext));
-            }
+            Contract.Assert(action != null);
 
             // Create the correct resource type;
             Dictionary<string, object> payload;
@@ -80,11 +77,7 @@
                         parameterName = reader.Name;
                         parameter = action.Parameters.SingleOrDefault(p => p.Name == parameterName);
                         // ODataLib protects against this but asserting just in case.
-                        if (parameter == null)
-                        {
-                            throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName), "value");
-                        }
-
+                        Contract.Assert(parameter != null, String.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName));
                         if (parameter.Type.IsPrimitive())
                         {
                             payload[parameterName] = reader.Value;
@@ -100,29 +93,22 @@
                         parameterName = reader.Name;
                         parameter = action.Parameters.SingleOrDefault(p => p.Name == parameterName);
                         // ODataLib protects against this but asserting just in case.
-                        if (parameter == null)
-                        {
-                            throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName), "value");
-                        }
-
+                        Contract.Assert(parameter != null, String.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName));
                         IEdmCollectionTypeReference collectionType = parameter.Type as IEdmCollectionTypeReference;
-                        if (collectionType == null)
-                        {
-                            throw new ArgumentException("Contract assertion not met: collectionType != null", "value");
-                        }
-
+                        Contract.Assert(collectionType != null);
                         ODataCollectionValue value = ReadCollection(reader.CreateCollectionReader());
                         ODataCollectionDeserializer collectionDeserializer = (ODataCollectionDeserializer)DeserializerProvider.GetEdmTypeDeserializer(collectionType);
                         payload[parameterName] = collectionDeserializer.ReadInline(value, collectionType, readContext);
                         break;
 
-                    case ODataParameterReaderState.Entry:
+                    case ODataParameterReaderState.Resource:
                         parameterName = reader.Name;
                         parameter = action.Parameters.SingleOrDefault(p => p.Name == parameterName);
-                        if (parameter == null)
-                        {
-                            throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName), "value");
-                        }
+                        Contract.Assert(parameter != null, String.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName));
+                        Contract.Assert(parameter.Type.IsStructured());
+
+                        ODataReader resourceReader = reader.CreateResourceReader();
+                        object item = resourceReader.ReadResourceOrResourceSet();
 
                         IEdmEntityTypeReference entityTypeReference = parameter.Type as IEdmEntityTypeReference;
                         if (entityTypeReference == null)
@@ -130,45 +116,39 @@
                             throw new ArgumentException("Contract assertion not met: entityTypeReference != null", "value");
                         }
 
-                        ODataReader entryReader = reader.CreateEntryReader();
-                        object item = ODataEntityDeserializer.ReadEntryOrFeed(entryReader);
                         var savedProps = new List<ODataProperty>();
-                        if (item is ODataEntryWithNavigationLinks)
+                        if (item is ODataResourceWrapper)
                         {
-                            var obj = CreateDataObject(readContext.Model as DataObjectEdmModel, entityTypeReference, item as ODataEntryWithNavigationLinks, out Type objType);
+                            var obj = CreateDataObject(readContext.Model as DataObjectEdmModel, entityTypeReference, item as ODataResourceWrapper, out Type objType);
                             payload[parameterName] = obj;
                             break;
                         }
 
-                        ODataEntityDeserializer entityDeserializer = (ODataEntityDeserializer)DeserializerProvider.GetEdmTypeDeserializer(entityTypeReference);
-                        payload[parameterName] = entityDeserializer.ReadInline(item, entityTypeReference, readContext);
+                        ODataResourceDeserializer resourceDeserializer = (ODataResourceDeserializer)DeserializerProvider.GetEdmTypeDeserializer(parameter.Type);
+                        payload[parameterName] = resourceDeserializer.ReadInline(item, parameter.Type, readContext);
                         break;
 
-                    case ODataParameterReaderState.Feed:
+                    case ODataParameterReaderState.ResourceSet:
                         parameterName = reader.Name;
                         parameter = action.Parameters.SingleOrDefault(p => p.Name == parameterName);
-                        if (parameter == null)
-                        {
-                            throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName), "value");
-                        }
+                        Contract.Assert(parameter != null, String.Format(CultureInfo.InvariantCulture, "Parameter '{0}' not found.", parameterName));
 
-                        IEdmCollectionTypeReference feedType = parameter.Type as IEdmCollectionTypeReference;
-                        if (feedType == null)
-                        {
-                            throw new ArgumentException("Contract assertion not met: feedType != null", "value");
-                        }
+                        IEdmCollectionTypeReference resourceSetType = parameter.Type as IEdmCollectionTypeReference;
+                        Contract.Assert(resourceSetType != null);
 
-                        ODataReader feedReader = reader.CreateFeedReader();
-                        object feed = ODataEntityDeserializer.ReadEntryOrFeed(feedReader);
+                        ODataReader resourceSetReader = reader.CreateResourceSetReader();
+                        object feed = resourceSetReader.ReadResourceOrResourceSet();
+                        ODataResourceSetDeserializer resourceSetDeserializer = (ODataResourceSetDeserializer)DeserializerProvider.GetEdmTypeDeserializer(resourceSetType);
+
                         IEnumerable enumerable;
-                        ODataFeedWithEntries odataFeedWithEntries = feed as ODataFeedWithEntries;
+                        ODataResourceSetWrapper odataFeedWithEntries = feed as ODataResourceSetWrapper;
                         if (odataFeedWithEntries != null)
                         {
                             List<DataObject> list = new List<DataObject>();
                             Type objType = null;
-                            foreach (ODataEntryWithNavigationLinks entry in odataFeedWithEntries.Entries)
+                            foreach (ODataResourceWrapper entry in odataFeedWithEntries.Resources)
                             {
-                                list.Add(CreateDataObject(readContext.Model as DataObjectEdmModel, feedType.ElementType() as IEdmEntityTypeReference, entry, out objType));
+                                list.Add(CreateDataObject(readContext.Model as DataObjectEdmModel, resourceSetType.ElementType() as IEdmEntityTypeReference, entry, out objType));
                             }
 
                             IEnumerable castedResult =
@@ -178,30 +158,21 @@
                             break;
                         }
 
-                        ODataFeedDeserializer feedDeserializer = (ODataFeedDeserializer)DeserializerProvider.GetEdmTypeDeserializer(feedType);
+                        object result = resourceSetDeserializer.ReadInline(feed, resourceSetType, readContext);
 
-                        object result = feedDeserializer.ReadInline(feed, feedType, readContext);
-
-                        IEdmTypeReference elementTypeReference = feedType.ElementType();
-                        if (!elementTypeReference.IsEntity())
-                        {
-                            throw new ArgumentException("Contract assertion not met: elementTypeReference.IsEntity()", "value");
-                        }
+                        IEdmTypeReference elementTypeReference = resourceSetType.ElementType();
+                        Contract.Assert(elementTypeReference.IsStructured());
 
                         enumerable = result as IEnumerable;
                         if (enumerable != null)
                         {
                             var isUntypedProp = readContext.GetType().GetProperty("IsUntyped", BindingFlags.NonPublic | BindingFlags.Instance);
                             bool isUntyped = (bool)isUntypedProp.GetValue(readContext, null);
+
+                            //if (readContext.IsUntyped)
                             if (isUntyped)
                             {
-                                EdmEntityObjectCollection entityCollection = new EdmEntityObjectCollection(feedType);
-                                foreach (EdmEntityObject entityObject in enumerable)
-                                {
-                                    entityCollection.Add(entityObject);
-                                }
-
-                                payload[parameterName] = entityCollection;
+                                payload[parameterName] = ConvertToEdmObject(enumerable, resourceSetType);
                             }
                             else
                             {
@@ -212,11 +183,59 @@
                                 payload[parameterName] = castedResult;
                             }
                         }
+
                         break;
                 }
             }
 
             return payload;
+        }
+
+        public static IEdmObject ConvertToEdmObject(IEnumerable enumerable, IEdmCollectionTypeReference collectionType)
+        {
+            Contract.Assert(enumerable != null);
+            Contract.Assert(collectionType != null);
+
+            IEdmTypeReference elementType = collectionType.ElementType();
+
+            if (elementType.IsEntity())
+            {
+                EdmEntityObjectCollection entityCollection =
+                                        new EdmEntityObjectCollection(collectionType);
+
+                foreach (EdmEntityObject entityObject in enumerable)
+                {
+                    entityCollection.Add(entityObject);
+                }
+
+                return entityCollection;
+            }
+            else if (elementType.IsComplex())
+            {
+                EdmComplexObjectCollection complexCollection =
+                                        new EdmComplexObjectCollection(collectionType);
+
+                foreach (EdmComplexObject complexObject in enumerable)
+                {
+                    complexCollection.Add(complexObject);
+                }
+
+                return complexCollection;
+            }
+            else if (elementType.IsEnum())
+            {
+                EdmEnumObjectCollection enumCollection =
+                                        new EdmEnumObjectCollection(collectionType);
+
+                foreach (EdmEnumObject enumObject in enumerable)
+                {
+                    enumCollection.Add(enumObject);
+                }
+
+                return enumCollection;
+            }
+
+            return null;
         }
 
         internal static IEdmAction GetAction(ODataDeserializerContext readContext)
@@ -236,19 +255,21 @@
             if (path.PathTemplate == "~/unboundaction")
             {
                 // only one segment, it may be an unbound action
-                UnboundActionPathSegment unboundActionSegment = path.Segments.Last() as UnboundActionPathSegment;
+                // The OperationImportSegment type represents the Microsoft OData v5.7.0 UnboundActionPathSegment type here.
+                OperationImportSegment unboundActionSegment = path.Segments.Last() as OperationImportSegment;
                 if (unboundActionSegment != null)
                 {
-                    action = unboundActionSegment.Action.Action;
+                    action = unboundActionSegment.OperationImports.FirstOrDefault()?.Operation as IEdmAction;
                 }
             }
             else
             {
                 // otherwise, it may be a bound action
-                BoundActionPathSegment actionSegment = path.Segments.Last() as BoundActionPathSegment;
-                if (actionSegment != null)
+                // The OperationImportSegment type represents the Microsoft OData v5.7.0 BoundActionPathSegment type here.
+                OperationSegment boundActionSegment = path.Segments.Last() as OperationSegment;
+                if (boundActionSegment != null)
                 {
-                    action = actionSegment.Action;
+                    action = boundActionSegment.Operations.FirstOrDefault() as IEdmAction;
                 }
             }
 
@@ -278,15 +299,15 @@
                 }
             }
 
-            return new ODataCollectionValue { Items = items, TypeName = typeName };
+            return new ODataCollectionValue { Items = items.Cast<object>(), TypeName = typeName };
         }
 
-        private DataObject CreateDataObject(DataObjectEdmModel model, IEdmEntityTypeReference entityTypeReference, ODataEntryWithNavigationLinks entry, out Type objType)
+        private DataObject CreateDataObject(DataObjectEdmModel model, IEdmEntityTypeReference entityTypeReference, ODataResourceWrapper entry, out Type objType)
         {
             IEdmEntityType entityType = entityTypeReference.EntityDefinition();
             objType = model.GetDataObjectType(model.GetEdmEntitySet(entityType).Name);
             var obj = (DataObject)Activator.CreateInstance(objType);
-            foreach (ODataProperty odataProp in entry.Entry.Properties)
+            foreach (ODataProperty odataProp in entry.Resource.Properties)
             {
                 string clrPropName = model.GetDataObjectPropertyName(objType, odataProp.Name);
                 Information.SetPropValueByName(obj, clrPropName, odataProp.Value);
@@ -294,6 +315,5 @@
 
             return obj;
         }
-
     }
 }

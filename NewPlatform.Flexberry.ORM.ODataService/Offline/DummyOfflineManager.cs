@@ -1,9 +1,8 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Offline
 {
     using System.Collections.Generic;
-    using System.Web.OData.Query;
-
     using ICSSoft.STORMNET;
+    using Microsoft.AspNet.OData.Query;
 
     public class DummyOfflineManager : BaseOfflineManager
     {

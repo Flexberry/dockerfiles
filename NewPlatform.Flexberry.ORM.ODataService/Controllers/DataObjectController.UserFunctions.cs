@@ -8,14 +8,17 @@
     using System.Net.Http;
     using System.Reflection;
     using System.Web.Http;
-    using System.Web.OData.Extensions;
-    using System.Web.OData.Routing;
     using ICSSoft.STORMNET;
-    using Microsoft.OData.Core;
+    using Microsoft.AspNet.OData.Extensions;
+    using Microsoft.AspNet.OData.Routing;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using NewPlatform.Flexberry.ORM.ODataService.Formatter;
     using NewPlatform.Flexberry.ORM.ODataService.Functions;
     using NewPlatform.Flexberry.ORM.ODataService.Handlers;
     using NewPlatform.Flexberry.ORM.ODataService.Routing;
+
+    using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
     /// <summary>
     /// OData controller class.
@@ -82,12 +85,15 @@
             queryParameters.Count = null;
             queryParameters.Request = Request;
             ODataPath odataPath = Request.ODataProperties().Path;
-            UnboundFunctionPathSegment segment = odataPath.Segments[odataPath.Segments.Count - 1] as UnboundFunctionPathSegment;
 
-            if (segment == null || !_functions.IsRegistered(segment.FunctionName))
+            // The OperationImportSegment type represents the Microsoft OData v5.7.0 UnboundFunctionPathSegment type here.
+            OperationImportSegment segment = odataPath.Segments[odataPath.Segments.Count - 1] as OperationImportSegment;
+
+            // The OperationImportSegment.Identifier property represents the Microsoft OData v5.7.0 UnboundFunctionPathSegment.FunctionName property here.
+            if (segment == null || !_functions.IsRegistered(segment.Identifier))
                 return SetResult("Function not found");
 
-            Function function = _functions.GetFunction(segment.FunctionName);
+            Function function = _functions.GetFunction(segment.Identifier);
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             foreach (string parameterName in function.ParametersTypes.Keys)
             {

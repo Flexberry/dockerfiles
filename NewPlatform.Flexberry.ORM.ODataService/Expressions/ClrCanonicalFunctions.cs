@@ -3,15 +3,15 @@
 // Branch of https://github.com/OData/WebApi/blob/v5.7.0/OData/src/System.Web.OData/OData/Query/Expressions/ClrCanonicalFunctions.cs
 namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 {
-    using Microsoft.Spatial;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using Microsoft.OData.Edm.Library;
     using ICSSoft.STORMNET.Business.LINQProvider.Extensions;
+    using Microsoft.OData.Edm;
+    using Microsoft.Spatial;
 
     /// <summary>
     /// Класс содержит определения функций описанных в стандарте OData в главе 11.2.5.1 System Query Option $filter:

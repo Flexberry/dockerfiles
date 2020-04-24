@@ -1,13 +1,10 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Tests.CRUD.Update
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
-    using System.Net.Http.Headers;
-    using System.Text;
-    using System.Web.OData.Batch;
+
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.KeyGen;
     using ICSSoft.STORMNET.Windows.Forms;
@@ -170,7 +167,7 @@
                         новаяБерлога),
                 };
                 HttpRequestMessage batchRequest = CreateBatchRequest(baseUrl, changesets);
-                using (HttpResponseMessage response = await args.HttpClient.SendAsync(batchRequest))
+                using (HttpResponseMessage response = args.HttpClient.SendAsync(batchRequest).Result)
                 {
                     CheckODataBatchResponseStatusCode(response, new HttpStatusCode[] { HttpStatusCode.OK, HttpStatusCode.Created });
 
@@ -221,7 +218,7 @@
                         медведь.Берлога[0]),
                 };
                 HttpRequestMessage batchRequest = CreateBatchRequest(baseUrl, changesets);
-                using (HttpResponseMessage response = await args.HttpClient.SendAsync(batchRequest))
+                using (HttpResponseMessage response = args.HttpClient.SendAsync(batchRequest).Result)
                 {
                     CheckODataBatchResponseStatusCode(response, new HttpStatusCode[] { HttpStatusCode.OK, HttpStatusCode.OK });
 
@@ -264,7 +261,7 @@
                 };
 
                 HttpRequestMessage batchRequest = CreateBatchRequest(baseUrl, changesets);
-                using (HttpResponseMessage response = await args.HttpClient.SendAsync(batchRequest))
+                using (HttpResponseMessage response = args.HttpClient.SendAsync(batchRequest).Result)
                 {
                     CheckODataBatchResponseStatusCode(response, new HttpStatusCode[] { HttpStatusCode.OK, HttpStatusCode.NoContent });
 

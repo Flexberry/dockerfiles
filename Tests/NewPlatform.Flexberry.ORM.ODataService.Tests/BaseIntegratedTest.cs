@@ -5,12 +5,12 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
     using System;
     using System.Collections.Generic;
     using System.Configuration;
+    using System.Data.OracleClient;
     using System.Data.SqlClient;
     using System.Linq;
     using System.Threading;
     using ICSSoft.STORMNET.Business;
     using Npgsql;
-    using Oracle.ManagedDataAccess.Client;
 
     public abstract class BaseIntegratedTest : IDisposable
     {

@@ -4,7 +4,6 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Model
     using System.Collections.Generic;
     using System.Linq;
 
-    using Microsoft.OData.Edm;
     using System.Reflection;
 
     /// <summary>

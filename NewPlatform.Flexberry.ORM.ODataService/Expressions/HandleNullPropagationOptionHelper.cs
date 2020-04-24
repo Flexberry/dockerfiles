@@ -5,8 +5,7 @@
 namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 {
     using System.Linq;
-    using System.Web.Http;
-    using System.Web.OData.Query;
+    using Microsoft.AspNet.OData.Query;
 
     /// <summary>
     /// Вспомогательный класс для обработки распространения значения null.

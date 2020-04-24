@@ -8,10 +8,12 @@
     using System.Threading.Tasks;
     using System.Web.Http;
     using System.Web.Http.Batch;
-    using System.Web.OData.Batch;
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
-    using Microsoft.OData.Core;
+    using Microsoft.AspNet.OData.Batch;
+    using Microsoft.AspNet.OData.Extensions;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.OData;
 
     /// <summary>
     /// Batch handler for DataService.
@@ -101,16 +103,15 @@
                 throw new ArgumentNullException(nameof(request));
             }
 
-            ODataMessageReaderSettings oDataReaderSettings = new ODataMessageReaderSettings
-            {
-                DisableMessageStreamDisposal = true,
-                MessageQuotas = MessageQuotas,
-                BaseUri = GetBaseUri(request)
-            };
+            IServiceProvider requestContainer = request.CreateRequestContainer(ODataRouteName);
+            ODataMessageReaderSettings oDataReaderSettings = requestContainer.GetRequiredService<ODataMessageReaderSettings>();
+
+            oDataReaderSettings.MessageQuotas = MessageQuotas;
+            oDataReaderSettings.BaseUri = GetBaseUri(request);
 
             ODataMessageReader reader = isSyncMode
-                ? request.Content.GetODataMessageReaderAsync(oDataReaderSettings, cancellationToken).Result
-                : await request.Content.GetODataMessageReaderAsync(oDataReaderSettings, cancellationToken);
+                ? request.Content.GetODataMessageReaderAsync(requestContainer, cancellationToken).Result
+                : await request.Content.GetODataMessageReaderAsync(requestContainer, cancellationToken);
 
             request.RegisterForDispose(reader);
 
@@ -129,6 +130,7 @@
                         foreach (HttpRequestMessage changeSetRequest in changeSetRequests)
                         {
                             changeSetRequest.CopyBatchRequestProperties(request);
+                            changeSetRequest.DeleteRequestContainer(false);
                         }
 
                         requests.Add(new ChangeSetRequestItem(changeSetRequests));
@@ -139,6 +141,7 @@
                             : await batchReader.ReadOperationRequestAsync(batchId, true, cancellationToken);
 
                         operationRequest.CopyBatchRequestProperties(request);
+                        operationRequest.DeleteRequestContainer(false);
                         requests.Add(new OperationRequestItem(operationRequest));
                         break;
                 }

@@ -6,13 +6,13 @@
     using System.Net;
     using System.Net.Http;
     using System.Web.Http;
-    using System.Web.OData.Extensions;
 
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Business.LINQProvider;
 
-    using Microsoft.OData.Core;
+    using Microsoft.AspNet.OData.Extensions;
+    using Microsoft.OData;
 
     using NewPlatform.Flexberry.ORM.ODataService.Functions;
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
