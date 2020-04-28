@@ -12,6 +12,7 @@
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.KeyGen;
+    using ICSSoft.STORMNET.Windows.Forms;
     using Microsoft.AspNet.OData.Batch;
     using NewPlatform.Flexberry.ORM.ODataService.Extensions;
     using NewPlatform.Flexberry.ORM.ODataService.Model;
@@ -110,6 +111,7 @@
                     var token = config.MapDataObjectRoute(_builder, server, "odata", "odata", true);
                     token.Events.CallbackAfterInternalServerError = AfterInternalServerError;
                     var args = new TestArgs { UnityContainer = container, DataService = dataService, HttpClient = client, Token = token };
+                    ExternalLangDef.LanguageDef.DataService = dataService;
                     action(args);
                 }
             }

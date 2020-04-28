@@ -212,13 +212,23 @@
     <Compile Include="КлассСМножествомТипов.cs" />
     <Compile Include="КлассСоСтроковымКлючом.cs" />
     <Compile Include="Книга.cs" />
+    <Compile Include="Котенок.cs" />
+    <Compile Include="Кошка.cs" />
+    <Compile Include="Лапа.cs" />
     <Compile Include="Лес.cs" />
     <Compile Include="Мастер.cs" />
     <Compile Include="Мастер2.cs" />
     <Compile Include="Медведь.cs" />
     <Compile Include="Наследник.cs" />
+    <Compile Include="Перелом.cs" />
+    <Compile Include="Порода.cs" />
     <Compile Include="ПоставщикКниг.cs" />
+    <Compile Include="Сторона.cs" />
     <Compile Include="Страна.cs" />
+    <Compile Include="ТипКошки.cs" />
+    <Compile Include="ТипЛапы.cs" />
+    <Compile Include="ТипПерелома.cs" />
+    <Compile Include="ТипПороды.cs" />
     <Compile Include="Цифра.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -352,22 +352,12 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Model
                 .Select(n => n.Name)
                 .ToArray();
 
-            Type viewsAttribute = dataObjectType.GetNestedType("Views");
-            View defaultView = null;
-            if (viewsAttribute != null)
-            {
-                PropertyInfo[] viewProperties = viewsAttribute.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
-                if (viewProperties.Any())
-                    defaultView = (View)(viewProperties.FirstOrDefault(x => x.Name.EndsWith("E")) ?? viewProperties.First()).GetValue(null);
-            }
-
             // Выбрать свойства, которых нет в списке исключенных
             // и которые не являются нехранимыми или содержатся в дефолтном представлении.
             List<PropertyInfo> dataObjectProperties = dataObjectType
                 .GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public)
                 .Where(x => !excludedPropertiesNames.Contains(x.Name))
-                .Where(x => x.CustomAttributes.All(a => a.AttributeType != typeof(NotStoredAttribute))
-                            || (defaultView != null && defaultView.Properties.Any(dvprop => dvprop.Name == x.Name)))
+                .Where(x => x.CustomAttributes.All(a => a.AttributeType != typeof(NotStoredAttribute)))
                 .ToList();
 
             List<string> properties = dataObjectProperties.Select(x => x.Name).ToList();

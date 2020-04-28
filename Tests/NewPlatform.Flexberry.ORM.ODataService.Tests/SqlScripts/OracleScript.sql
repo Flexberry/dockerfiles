@@ -58,6 +58,34 @@ CREATE TABLE "Лес"
 ) ;
 
 
+CREATE TABLE "ТипПороды"
+(
+
+	"primaryKey" RAW(16) NOT NULL,
+
+	"Название" NVARCHAR2(255) NULL,
+
+	"ДатаРегистрации" DATE NULL,
+
+	 PRIMARY KEY ("primaryKey")
+) ;
+
+
+CREATE TABLE "Порода"
+(
+
+	"primaryKey" RAW(16) NOT NULL,
+
+	"Название" NVARCHAR2(255) NULL,
+
+	"ТипПороды_m0" RAW(16) NULL,
+
+	"Иерархия_m0" RAW(16) NULL,
+
+	 PRIMARY KEY ("primaryKey")
+) ;
+
+
 CREATE TABLE "TestDetailWithCicle"
 (
 
@@ -260,6 +288,21 @@ CREATE TABLE "Книга"
 ) ;
 
 
+CREATE TABLE "Перелом"
+(
+
+	"primaryKey" RAW(16) NOT NULL,
+
+	"Дата" DATE NULL,
+
+	"Тип" NVARCHAR2(8) NULL,
+
+	"Лапа_m0" RAW(16) NOT NULL,
+
+	 PRIMARY KEY ("primaryKey")
+) ;
+
+
 CREATE TABLE "БазовыйКласс"
 (
 
@@ -357,6 +400,37 @@ CREATE TABLE "Блоха"
 ) ;
 
 
+CREATE TABLE "Лапа"
+(
+
+	"primaryKey" RAW(16) NOT NULL,
+
+	"Цвет" NVARCHAR2(255) NULL,
+
+	"Размер" NUMBER(10) NULL,
+
+	"ДатаРождения" DATE NULL,
+
+	"БылиЛиПереломы" NUMBER(1) NULL,
+
+	"Сторона" NVARCHAR2(11) NULL,
+
+	"Номер" NUMBER(10) NULL,
+
+	"РазмерDouble" FLOAT(126) NULL,
+
+	"РазмерFloat" FLOAT(53) NULL,
+
+	"РазмерDecimal" NUMBER(38) NULL,
+
+	"ТипЛапы_m0" RAW(16) NULL,
+
+	"Кошка_m0" RAW(16) NOT NULL,
+
+	 PRIMARY KEY ("primaryKey")
+) ;
+
+
 CREATE TABLE "КлассСоСтрокКл"
 (
 
@@ -413,6 +487,21 @@ CREATE TABLE "TestMaster"
 ) ;
 
 
+CREATE TABLE "Котенок"
+(
+
+	"primaryKey" RAW(16) NOT NULL,
+
+	"КличкаКотенка" NVARCHAR2(255) NULL,
+
+	"Глупость" NUMBER(10) NULL,
+
+	"Кошка_m0" RAW(16) NOT NULL,
+
+	 PRIMARY KEY ("primaryKey")
+) ;
+
+
 CREATE TABLE "Библиотека"
 (
 
@@ -456,6 +545,19 @@ CREATE TABLE "Журнал"
 ) ;
 
 
+CREATE TABLE "ТипЛапы"
+(
+
+	"primaryKey" RAW(16) NOT NULL,
+
+	"Название" NVARCHAR2(255) NULL,
+
+	"Актуально" NUMBER(1) NULL,
+
+	 PRIMARY KEY ("primaryKey")
+) ;
+
+
 CREATE TABLE "КлассStoredDerived"
 (
 
@@ -464,6 +566,31 @@ CREATE TABLE "КлассStoredDerived"
 	"StrAttr2" NVARCHAR2(255) NULL,
 
 	"StrAttr" NVARCHAR2(255) NULL,
+
+	 PRIMARY KEY ("primaryKey")
+) ;
+
+
+CREATE TABLE "Кошка"
+(
+
+	"primaryKey" RAW(16) NOT NULL,
+
+	"Кличка" NVARCHAR2(255) NULL,
+
+	"ДатаРождения" DATE NULL,
+
+	"Тип" NVARCHAR2(11) NULL,
+
+	"ПородаСтрокой" NVARCHAR2(255) NULL,
+
+	"Агрессивная" NUMBER(1) NULL,
+
+	"УсыСлева" NUMBER(10) NULL,
+
+	"УсыСправа" NUMBER(10) NULL,
+
+	"Порода_m0" RAW(16) NOT NULL,
 
 	 PRIMARY KEY ("primaryKey")
 ) ;
@@ -802,6 +929,16 @@ ALTER TABLE "Лес"
 
 CREATE INDEX "Лес_IСтрана" on "Лес" ("Страна");
 
+ALTER TABLE "Порода"
+	ADD CONSTRAINT "Порода_FТипПо_7829" FOREIGN KEY ("ТипПороды_m0") REFERENCES "ТипПороды" ("primaryKey");
+
+CREATE INDEX "Порода_IТипПо_4914" on "Порода" ("ТипПороды_m0");
+
+ALTER TABLE "Порода"
+	ADD CONSTRAINT "Порода_FПорода_0" FOREIGN KEY ("Иерархия_m0") REFERENCES "Порода" ("primaryKey");
+
+CREATE INDEX "Порода_IИерар_2335" on "Порода" ("Иерархия_m0");
+
 ALTER TABLE "TestDetailWithCicle"
 	ADD CONSTRAINT "TestDetailWithCicle_FTest_5294" FOREIGN KEY ("Parent") REFERENCES "TestDetailWithCicle" ("primaryKey");
 
@@ -852,6 +989,11 @@ ALTER TABLE "Книга"
 
 CREATE INDEX "Книга_IБиблио_4875" on "Книга" ("Библиотека1");
 
+ALTER TABLE "Перелом"
+	ADD CONSTRAINT "Перелом_FЛапа_0" FOREIGN KEY ("Лапа_m0") REFERENCES "Лапа" ("primaryKey");
+
+CREATE INDEX "Перелом_IЛапа_m0" on "Перелом" ("Лапа_m0");
+
 ALTER TABLE "Наследник"
 	ADD CONSTRAINT "Наследник_FМас_278" FOREIGN KEY ("Мастер") REFERENCES "Мастер" ("primaryKey");
 
@@ -877,6 +1019,16 @@ ALTER TABLE "Блоха"
 
 CREATE INDEX "Блоха_IМедвед_6073" on "Блоха" ("МедведьОбитания");
 
+ALTER TABLE "Лапа"
+	ADD CONSTRAINT "Лапа_FТипЛапы_0" FOREIGN KEY ("ТипЛапы_m0") REFERENCES "ТипЛапы" ("primaryKey");
+
+CREATE INDEX "Лапа_IТипЛапы_m0" on "Лапа" ("ТипЛапы_m0");
+
+ALTER TABLE "Лапа"
+	ADD CONSTRAINT "Лапа_FКошка_0" FOREIGN KEY ("Кошка_m0") REFERENCES "Кошка" ("primaryKey");
+
+CREATE INDEX "Лапа_IКошка_m0" on "Лапа" ("Кошка_m0");
+
 ALTER TABLE "Берлога"
 	ADD CONSTRAINT "Берлога_FЛес_0" FOREIGN KEY ("ЛесРасположения") REFERENCES "Лес" ("primaryKey");
 
@@ -886,6 +1038,11 @@ ALTER TABLE "Берлога"
 	ADD CONSTRAINT "Берлога_FМедв_5600" FOREIGN KEY ("Медведь") REFERENCES "Медведь" ("primaryKey");
 
 CREATE INDEX "Берлога_IМедведь" on "Берлога" ("Медведь");
+
+ALTER TABLE "Котенок"
+	ADD CONSTRAINT "Котенок_FКошка_0" FOREIGN KEY ("Кошка_m0") REFERENCES "Кошка" ("primaryKey");
+
+CREATE INDEX "Котенок_IКошка_m0" on "Котенок" ("Кошка_m0");
 
 ALTER TABLE "Детейл2"
 	ADD CONSTRAINT "Детейл2_FДетейл_0" FOREIGN KEY ("Детейл_m0") REFERENCES "Детейл" ("primaryKey");
@@ -906,6 +1063,11 @@ ALTER TABLE "Журнал"
 	ADD CONSTRAINT "Журнал_FБибли_9226" FOREIGN KEY ("Библиотека2") REFERENCES "Библиотека" ("primaryKey");
 
 CREATE INDEX "Журнал_IБибли_1176" on "Журнал" ("Библиотека2");
+
+ALTER TABLE "Кошка"
+	ADD CONSTRAINT "Кошка_FПорода_0" FOREIGN KEY ("Порода_m0") REFERENCES "Порода" ("primaryKey");
+
+CREATE INDEX "Кошка_IПорода_m0" on "Кошка" ("Порода_m0");
 
 ALTER TABLE "ДетейлНаследник"
 	ADD CONSTRAINT "ДетейлНаслед_2684" FOREIGN KEY ("БазовыйКласс_m0") REFERENCES "БазовыйКласс" ("primaryKey");

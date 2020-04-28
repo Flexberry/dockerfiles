@@ -494,7 +494,7 @@
                 throw new ArgumentNullException(nameof(dataObjectType), "Contract assertion not met: dataObjectType != null");
             }
 
-            return _metadata[dataObjectType].DefaultView;
+            return _metadata[dataObjectType].DefaultView.Clone();
         }
 
         /// <summary>
