@@ -76,7 +76,7 @@
                 };
                 HttpRequestMessage batchRequest = CreateBatchRequest(baseUrl, changesets);
 
-                using (HttpResponseMessage response = await args.HttpClient.SendAsync(batchRequest))
+                using (HttpResponseMessage response = args.HttpClient.SendAsync(batchRequest).Result)
                 {
                     // Убедимся, что запрос завершился успешно.
                     CheckODataBatchResponseStatusCode(response, new[] { HttpStatusCode.Created });
@@ -111,7 +111,7 @@
                 };
                 HttpRequestMessage batchRequest = CreateBatchRequest(baseUrl, changesets);
 
-                using (HttpResponseMessage response = await args.HttpClient.SendAsync(batchRequest))
+                using (HttpResponseMessage response = args.HttpClient.SendAsync(batchRequest).Result)
                 {
                     // Убедимся, что запрос завершился успешно.
                     CheckODataBatchResponseStatusCode(response, new[] { HttpStatusCode.Created, HttpStatusCode.Created });
