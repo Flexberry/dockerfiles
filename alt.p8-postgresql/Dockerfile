@@ -20,7 +20,7 @@ RUN \
   tar cvzf /tmp/tds_fdw.tgz \
     /usr/lib64/pgsql/tds_fdw.so \
     /usr/share/pgsql/extension/tds_fdw.control \
-    /usr/share/pgsql/extension/tds_fdw--2.0.0-alpha.3.sql \
+    /usr/share/pgsql/extension/tds_fdw-*.sql \
     /usr/share/doc/postgresql/extension/README.tds_fdw.md \
     /etc/freetds/freetds.conf \
     /etc/freetds/locales.conf \
@@ -53,9 +53,12 @@ COPY --from=dev /dockerLayer /
 RUN  chmod +x /docker-cmd.sh; \
   chown postgres:postgres /var/lib/pgsql/data/postgresql.conf /var/lib/pgsql/data/pg_hba.conf; \
   /etc/init.d/postgresql start; \
+  rm -f /var/lib/pgsql/data/pg_log/*; \
   sleep 5; \
   until echo  "\l" |  psql -U postgres; do sleep 5; done ; \
   echo  -ne "ALTER ROLE postgres WITH PASSWORD 'p@ssw0rd';\nCREATE EXTENSION tds_fdw;\n" |  psql -U postgres; \
+  mkdir -m 700 /var/lib/pgsql/pg-archive; chown postgres:postgres /var/lib/pgsql/pg-archive; \
+  echo -ne "CREATE ROLE replication WITH REPLICATION PASSWORD 'Hw572BbvG7g4cwq5' LOGIN;" |  psql -U postgres; \
   /etc/init.d/postgresql stop; \
   sleep 5; \
   while [ -f /var/lib/pgsql/data/postmaster.pid ]; do sleep 5; done; \
