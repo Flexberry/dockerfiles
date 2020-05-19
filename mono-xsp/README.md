@@ -1,5 +1,5 @@
 # How to use this image
-This image [flexberry/mono-xsp](https://hub.docker.com/r/flexberry/mono-xsp/) is based on customized [flexberry/mono](https://hub.docker.com/r/flexberry/mono-xsp/) image.
+This image [flexberry/mono-xsp](https://hub.docker.com/r/flexberry/mono-xsp/) is based on customized [flexberry/mono](https://hub.docker.com/r/flexberry/mono/) image.
 The image adds XSP to the base image and is ready to run an ASP.NET application with the XSP web server.
 
 ## Create a Dockerfile in your Mono web app project
