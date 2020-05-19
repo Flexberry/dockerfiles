@@ -38,26 +38,29 @@ then
         echo "host replication replication 0.0.0.0/0 md5" >> /var/lib/pgsql/data/pg_hba.conf
         chown postgres:postgres /var/lib/pgsql/data/pg_hba.conf
       ;;
-    slave)
+    slave | forceslave)
       if [ -z "$MASTERPORT" ]
       then
         MASTERPORT=5432
       fi
       POSTGRES_PARAMS='-c hot_standby=on'
-      rm -rf /var/lib/pgsql/data/* /var/lib/pgsql/data/.??*
-      echo "$MASTERHOST:$MASTERPORT:*:replication:Hw572BbvG7g4cwq5" > /var/lib/pgsql/.pgpass
-      chown -R postgres:postgres /var/lib/pgsql/.pgpass;
-      chmod 600 /var/lib/pgsql/.pgpass;
-      until su -c "export MASTERHOST=$MASTERHOST; export MASTERPORT=$MASTERPORT; pg_basebackup -w -h $MASTERHOST -U replication -D /var/lib/pgsql/data -P --xlog -p $MASTERPORT" -s /bin/sh postgres;
-      do
-        sleep 5
-      done
-      echo "
+      if [ ! -f /var/lib/pgsql/data/recovery.conf ]
+      then
+        rm -rf /var/lib/pgsql/data/* /var/lib/pgsql/data/.??*
+        echo "$MASTERHOST:$MASTERPORT:*:replication:Hw572BbvG7g4cwq5" > /var/lib/pgsql/.pgpass
+        chown -R postgres:postgres /var/lib/pgsql/.pgpass;
+        chmod 600 /var/lib/pgsql/.pgpass;
+        until su -c "export MASTERHOST=$MASTERHOST; export MASTERPORT=$MASTERPORT; pg_basebackup -w -h $MASTERHOST -U replication -D /var/lib/pgsql/data -P --xlog -p $MASTERPORT" -s /bin/sh postgres;
+        do
+          sleep 5
+        done
+        echo "
 standby_mode=on
 primary_conninfo = 'host=$MASTERHOST port=$MASTERPORT user=replication password=Hw572BbvG7g4cwq5 application_name=node1'
 trigger_file='/tmp/postgresql.trigger.5432'
 " > /var/lib/pgsql/data/recovery.conf
-      chown postgres:postgres /var/lib/pgsql/data/recovery.conf
+        chown postgres:postgres /var/lib/pgsql/data/recovery.conf
+      fi
       ;;
   esac
 
