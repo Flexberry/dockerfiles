@@ -11,4 +11,5 @@
 - github-репозиторий: [Flexberry Service Bus](https://github.com/Flexberry/NewPlatform.Flexberry.ServiceBus)
   - образ [flexberry/flexberry-service-bus](https://github.com/Flexberry/NewPlatform.Flexberry.ServiceBus/tree/develop/Docker/flexberry-service-bus)
   - образ [flexberry/flexberry-service-bus-postgres-db](https://github.com/Flexberry/NewPlatform.Flexberry.ServiceBus/tree/develop/Docker/flexberry-service-bus-postgres-db)
+- образ [flexberry/servicebuseditor](https://github.com/Flexberry/NewPlatform.Flexberry.ServiceBus.Editor/tree/develop/Docker)
   
