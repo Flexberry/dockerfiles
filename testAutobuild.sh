@@ -265,45 +265,48 @@ fi
 
 echo "СОБИРАЕТСЯ ОБРАЗ $IMAGE РЕПОЗИТОРИЯ $repository В ПОДДИРЕКТОРИИ $subdir С GIT-ТЕГОМ $gitTag"
 
+echo "Выполнить локальную сборку(Y/n)?";
+read reply
+if [ -z "$reply" -o "$reply" = 'y' -o  "$reply" = 'Y' ]
+then
+  for parentImages in `parentImagesFromDockerfile`
+  do
+    echo "ЗАГРУЗКА РОДИТЕЛЬСКОГО ОБРАЗА $parentImages"
+    docker pull $parentImages
+  done
 
-for parentImages in `parentImagesFromDockerfile`
-do
-  echo "ЗАГРУЗКА РОДИТЕЛЬСКОГО ОБРАЗА $parentImages"
-  docker pull $parentImages
-done
-
-fullImageName="${imageNamePrefix}${BUILD}"
-# if [ -n "$prerelease" ]
-# then
-#   fullImageName="$fullImageName-$prerelease"
-# fi
-set -- ` parceVersion $BUILD`
-major=$1
-minor=$2
-patch=$3
-majorImageName="${imageNamePrefix}${major}"
-minorImageName="${imageNamePrefix}${major}.${minor}"
+  fullImageName="${imageNamePrefix}${BUILD}"
+  # if [ -n "$prerelease" ]
+  # then
+  #   fullImageName="$fullImageName-$prerelease"
+  # fi
+  set -- ` parceVersion $BUILD`
+  major=$1
+  minor=$2
+  patch=$3
+  majorImageName="${imageNamePrefix}${major}"
+  minorImageName="${imageNamePrefix}${major}.${minor}"
 
 
-echo "СОЗДАНИЕ ОСНОВНОГО ОБРАЗА $fullImageName"
-docker build -t $fullImageName .
+  echo "СОЗДАНИЕ ОСНОВНОГО ОБРАЗА $fullImageName"
+  docker build -t $fullImageName .
 
-for testFile in *.test.yml
-do
-  if [ ! -f $testFile ]
-  then
-    break
-  fi
-  echo -ne "\n\nТЕСТИРОВАНИЕ ОБРАЗА ФАЙЛОМ КОНИГУРАЦИИ $testFile ..."
-  if docker-compose -f $testFile up --build --exit-code-from sut
-  then
-    echo "ТЕСТИРОВАНИЕ ЗАКОНЧИЛОСЬ УСПЕШНО!"
-  else
-    echo "ТЕСТИРОВАНИЕ ЗАКОНЧИЛОСЬ С ОШИБКОЙ";
-    exit $?
-  fi
-done
-
+  for testFile in *.test.yml
+  do
+    if [ ! -f $testFile ]
+    then
+      break
+    fi
+    echo -ne "\n\nТЕСТИРОВАНИЕ ОБРАЗА ФАЙЛОМ КОНИГУРАЦИИ $testFile ..."
+    if docker-compose -f $testFile up --build --exit-code-from sut
+    then
+      echo "ТЕСТИРОВАНИЕ ЗАКОНЧИЛОСЬ УСПЕШНО!"
+    else
+      echo "ТЕСТИРОВАНИЕ ЗАКОНЧИЛОСЬ С ОШИБКОЙ";
+      exit $?
+    fi
+  done
+fi
 echo "Выполнить формирование тегов и удаленную сборку(Y/n)?";
 read reply
 if [ -n "$reply" -a "$reply" != 'y' -a  "$reply" != 'Y' ]
