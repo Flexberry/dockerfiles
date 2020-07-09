@@ -1,0 +1,1 @@
+nginx && fastcgi-mono-server4 --root=/app --applications=/:. --socket=tcp:127.0.0.1:9000 --printlog --loglevels=Standard
