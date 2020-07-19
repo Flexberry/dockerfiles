@@ -48,5 +48,5 @@ done
 
 while :;
 do
-  cat /dev/zero
+  sleep 86400
 done
