@@ -1,0 +1,27 @@
+version: "3.2"
+services:
+
+  osrm_frontend_car:
+    image: osrm/osrm-frontend
+    ports:
+      - 9966:9966
+    environment:
+      - OSRM_BACKEND=http://$BACKEND:5000
+      - OSRM_CENTER=57.998564,56.262574
+
+  osrm_frontend_foot:
+    image: osrm/osrm-frontend
+    ports:
+      - 9967:9966
+    environment:
+      - OSRM_BACKEND=http://$BACKEND:5001
+      - OSRM_CENTER=57.998564,56.262574
+      
+  osrm_frontend_bicycle:
+    image: osrm/osrm-frontend
+    ports:
+      - 9968:9966
+    environment:
+      - OSRM_BACKEND=http://$BACKEND:5002
+      - OSRM_CENTER=57.998564,56.262574      
+      
