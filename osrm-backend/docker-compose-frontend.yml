@@ -6,7 +6,7 @@ services:
     ports:
       - 9966:9966
     environment:
-      - OSRM_BACKEND=http://$BACKEND:5000
+      - OSRM_BACKEND=http://localhost:5000
       - OSRM_CENTER=57.998564,56.262574
 
   osrm_frontend_foot:
@@ -14,7 +14,7 @@ services:
     ports:
       - 9967:9966
     environment:
-      - OSRM_BACKEND=http://$BACKEND:5001
+      - OSRM_BACKEND=http://localhost:5001
       - OSRM_CENTER=57.998564,56.262574
       
   osrm_frontend_bicycle:
@@ -22,6 +22,6 @@ services:
     ports:
       - 9968:9966
     environment:
-      - OSRM_BACKEND=http://$BACKEND:5002
+      - OSRM_BACKEND=http://localhost:5002
       - OSRM_CENTER=57.998564,56.262574      
       
