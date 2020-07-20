@@ -7,5 +7,5 @@ COPY /entrypoint.sh /
 
 ENTRYPOINT /entrypoint.sh
 
-EXPOSE 5000 5001
+EXPOSE 5000 5001 5002
 
