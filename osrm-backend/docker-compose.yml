@@ -1,0 +1,16 @@
+version: "3.2"
+services:
+  osrm_backend:
+    image: flexberry/osrm-backend
+    ports: 
+      - 5000:5000
+      - 5001:5001
+      - 5002:5002
+    environment:
+      - Services=$Services
+      - OSMREG=$OSMREG
+    volumes:
+      - osrmdata:/data  
+      
+volumes:
+  osrmdata:
