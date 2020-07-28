@@ -48,7 +48,7 @@ RUN  /etc/init.d/postgresql initdb;
 
 # COPY data/postgresql.conf data/pg_hba.conf /var/lib/pgsql/data/
 USER postgres
-COPY /root /
+COPY /_root /
 USER root
 COPY /docker-cmd.sh /
 COPY --from=dev /dockerLayer /
