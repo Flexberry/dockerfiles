@@ -6,7 +6,7 @@ MAINTAINER mail@flexberry.ru
 
 RUN export http_proxy=$http_proxy;\
   apt-get update && \
-  apt-get install -y dotnet; \
+  apt-get install -y dotnet dotnet-sdk; \
   rm -f /var/cache/apt/archives/*.rpm /var/cache/apt/*.bin /var/lib/apt/lists/*.*; \
   bzip2 -9 /var/lib/rpm/*
 

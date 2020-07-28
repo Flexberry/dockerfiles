@@ -40,18 +40,21 @@ MAINTAINER mail@flexberry.ru
 RUN export http_proxy=$http_proxy;\
   bzip2 -d /var/lib/rpm/*.bz2; \
   apt-get update && \
-  apt-get install -y postgresql9.6-contrib postgresql9.6-server && \
+  apt-get install -y postgresql9.6-contrib postgresql9.6-server vixie-cron && \
   rm -f /var/cache/apt/archives/*.rpm /var/cache/apt/*.bin /var/lib/apt/lists/*.*; \
   bzip2 -9 /var/lib/rpm/*
 
 RUN  /etc/init.d/postgresql initdb;
 
-COPY data/postgresql.conf data/pg_hba.conf /var/lib/pgsql/data/
+# COPY data/postgresql.conf data/pg_hba.conf /var/lib/pgsql/data/
+USER postgres
+COPY /root /
+USER root
 COPY /docker-cmd.sh /
 COPY --from=dev /dockerLayer /
 
 RUN  chmod +x /docker-cmd.sh; \
-  chown postgres:postgres /var/lib/pgsql/data/postgresql.conf /var/lib/pgsql/data/pg_hba.conf; \
+  chown postgres:postgres /var/lib/pgsql/ /var/lib/pgsql/data/ /var/lib/pgsql/data/postgresql.conf /var/lib/pgsql/data/pg_hba.conf; \
   /etc/init.d/postgresql start; \
   rm -f /var/lib/pgsql/data/pg_log/*; \
   sleep 5; \

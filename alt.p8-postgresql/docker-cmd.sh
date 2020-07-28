@@ -1,6 +1,8 @@
 #!/bin/sh
 set -x
 
+/etc/init.d/crond  start
+
 if [ -z "$POSTGRES_logging_collector" ]; then POSTGRES_logging_collector=on; fi
 if [ -z "$POSTGRES_log_directory" ]; then POSTGRES_log_directory=pg_log; fi
 if [ -z "$POSTGRES_log_filename" ]; then POSTGRES_log_filename=\'postgresql-%u_%H.log\'; fi
