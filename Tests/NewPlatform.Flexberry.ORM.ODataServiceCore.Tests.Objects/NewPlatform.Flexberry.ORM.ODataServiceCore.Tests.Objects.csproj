@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RootNamespace>NewPlatform.Flexberry.ORM.ODataService.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\projects\flexberry\solo12\NewPlatform.Flexberry.ORM.ODataService\Tests\NewPlatform.Flexberry.ORM.ODataServiceCore.Tests.Objects\NewPlatform.Flexberry.ORM.ODataServiceCore.Tests.Objects.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NewPlatform.Flexberry.ORM.Abstractions" Version="6.0.0-alpha09" />
+    <PackageReference Include="NewPlatform.Flexberry.ORM.MSSQLDataService" Version="6.0.0-alpha09" />
+  </ItemGroup>
+
+</Project>

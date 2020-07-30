@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>NewPlatform.Flexberry.ORM.ODataService</id>
+    <version>6.2.0-alpha01</version>
+    <title>Flexberry ORM ODataService</title>
+    <authors>New Platform Ltd.</authors>
+    <owners>New Platform Ltd.</owners>
+    <licenseUrl>http://flexberry.ru/License-FlexberryOrm-Runtime</licenseUrl>
+    <projectUrl>http://flexberry.net/FlexberryORM</projectUrl>
+    <iconUrl>https://flexberry.net/img/logo-color.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Flexberry ORM OData Service Package.</description>
+    <releaseNotes>
+      Changed
+      1. Initial .NET Standard 2.0 release with Microsoft.AspNet.OData 7.1.0, Microsoft.OData.Core 7.5.0, ORM 6.0
+    </releaseNotes>
+    <copyright>Copyright New Platform Ltd 2020</copyright>
+    <tags>Flexberry ORM OData ODataService</tags>
+    <dependencies>
+      <dependency id="Microsoft.AspNetCore.Http.Abstractions" version="2.2.0" />
+      <dependency id="Microsoft.AspNetCore.Mvc.Abstractions" version="2.2.0" />
+      <dependency id="Microsoft.AspNetCore.Mvc.Core" version="2.2.5" />
+      <dependency id="Microsoft.AspNetCore.Mvc.Formatters.Json" version="2.2.0" />
+      <dependency id="Microsoft.AspNetCore.StaticFiles" version="2.2.0" />
+      <dependency id="NETStandardLibrary" version="2.0.3" />
+      <dependency id="NewPlatform.Flexberry.AspNetCore.OData" version="7.1.0-beta01" />
+      <dependency id="NewPlatform.Flexberry.LockService" version="3.0.0-alpha02" />
+      <dependency id="NewPlatform.Flexberry.ORM.Abstractions" version="6.0.0-alpha09" />
+      <dependency id="Newtonsoft.Json" version="12.0.3" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="NewPlatform.Flexberry.ORM.ODataServiceCore.dll" target="lib\netstandard2.0\NewPlatform.Flexberry.ORM.ODataServiceCore.dll" />
+    <file src="NewPlatform.Flexberry.ORM.ODataServiceCore.xml" target="lib\netstandard2.0\NewPlatform.Flexberry.ORM.ODataServiceCore.xml" />
+    <file src="NewPlatform.Flexberry.ORM.ODataServiceCore.Common.dll" target="lib\netstandard2.0\NewPlatform.Flexberry.ORM.ODataServiceCore.Common.dll" />
+    <file src="NewPlatform.Flexberry.ORM.ODataServiceCore.Common.xml" target="lib\netstandard2.0\NewPlatform.Flexberry.ORM.ODataServiceCore.Common.xml" />
+    <file src="NewPlatform.Flexberry.ORM.ODataServiceCore.Files.dll" target="lib\netstandard2.0\NewPlatform.Flexberry.ORM.ODataServiceCore.Files.dll" />
+    <file src="NewPlatform.Flexberry.ORM.ODataServiceCore.Files.xml" target="lib\netstandard2.0\NewPlatform.Flexberry.ORM.ODataServiceCore.Files.xml" />
+    <file src="NewPlatform.Flexberry.ORM.ODataServiceCore.WebApi.dll" target="lib\netstandard2.0\NewPlatform.Flexberry.ORM.ODataServiceCore.WebApi.dll" />
+    <file src="NewPlatform.Flexberry.ORM.ODataServiceCore.WebApi.xml" target="lib\netstandard2.0\NewPlatform.Flexberry.ORM.ODataServiceCore.WebApi.xml" />
+  </files>
+</package>

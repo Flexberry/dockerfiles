@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\projects\flexberry\solo12\NewPlatform.Flexberry.ORM.ODataService\Tests\NewPlatform.Flexberry.ORM.ODataServiceCore.Tests.BusinessServers\NewPlatform.Flexberry.ORM.ODataServiceCore.Tests.BusinessServers.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NewPlatform.Flexberry.ORM.Abstractions" Version="6.0.0-alpha09" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NewPlatform.Flexberry.ORM.ODataServiceCore.Tests.Objects\NewPlatform.Flexberry.ORM.ODataServiceCore.Tests.Objects.csproj" />
+  </ItemGroup>
+
+</Project>
