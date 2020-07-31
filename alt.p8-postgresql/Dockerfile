@@ -62,6 +62,7 @@ RUN  chmod +x /docker-cmd.sh; \
   echo  -ne "ALTER ROLE postgres WITH PASSWORD 'p@ssw0rd';\nCREATE EXTENSION tds_fdw;\n" |  psql -U postgres; \
   mkdir -m 700 /var/lib/pgsql/pg-archive; chown postgres:postgres /var/lib/pgsql/pg-archive; \
   echo -ne "CREATE ROLE replication WITH REPLICATION PASSWORD 'Hw572BbvG7g4cwq5' LOGIN;" |  psql -U postgres; \
+  echo -ne "CREATE DATABASE adm" |  psql -U postgres; \
   /etc/init.d/postgresql stop; \
   sleep 5; \
   while [ -f /var/lib/pgsql/data/postmaster.pid ]; do sleep 5; done; \
