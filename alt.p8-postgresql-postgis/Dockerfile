@@ -21,7 +21,6 @@ RUN \
   wget -c http://postgis.net/stuff/postgis-2.5.4.tar.gz; \
   tar xvzf postgis-2.5.4.tar.gz
   
-#git clone https://github.com/postgis/postgis; 
   
 RUN \    
   cd /root/postgis-2.5.4; \
@@ -30,12 +29,9 @@ RUN \
   mkdir /dockerLayer; cd /dockerLayer;\
   tar xvfz /tmp/postgis.tgz; \
   mv ./usr/local/lib ./usr/lib64; 
-
-#  git checkout stable-2.5; \
-#  ./autogen.sh; ./configure; \  
+  
   
 FROM flexberry/alt.p8-postgresql 
-# :9.6-1.1.1
 
 MAINTAINER mail@flexberry.ru
 
@@ -58,11 +54,4 @@ RUN \
   killall postgres; \
   while [ -f /tmp/.s.PGSQL.5432.lock ]; do sleep 5; done;
 
-#RUN \
-#  bzip2 -d /var/lib/rpm/*.bz2; \
-#  apt-get -y update && \
-#  apt-get install -y postgresql-postgis; \
-#  rm -f /var/cache/apt/archives/*.rpm /var/cache/apt/*.bin /var/lib/apt/lists/*.*; \
-#  bzip2 -9 /var/lib/rpm/*
 
-EXPOSE 5432

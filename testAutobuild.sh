@@ -23,6 +23,8 @@
 # При успешном тестировании производится линковка собранного образа со всеми его алиасами
 # сформированный git-тег добавляется git-репозиторий и передается (`git pull`) на githib.com
 
+export BUILD_NOCACHE
+
 isPreRelease() {
   if=$IFS
   IFS=" 0123456789."
@@ -289,7 +291,7 @@ then
 
 
   echo "СОЗДАНИЕ ОСНОВНОГО ОБРАЗА $fullImageName"
-  docker build -t $fullImageName .
+  docker build $BUILD_NOCACHE -t $fullImageName .
 
   for testFile in *.test.yml
   do
