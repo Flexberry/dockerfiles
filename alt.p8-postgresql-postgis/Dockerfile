@@ -18,18 +18,21 @@ RUN \
   
 RUN \  
   cd /root/; \
-  git clone https://github.com/postgis/postgis; 
+  wget -c http://postgis.net/stuff/postgis-2.5.4.tar.gz; \
+  tar xvzf postgis-2.5.4.tar.gz
+  
+#git clone https://github.com/postgis/postgis; 
   
 RUN \    
-  cd /root/postgis; \
-  git checkout stable-2.5; \
-  ./autogen.sh; ./configure; \
+  cd /root/postgis-2.5.4; \
   make; make check; make install; \
-  tar cvzf /tmp/postgis.tgz /usr/local/lib /usr/lib64/pgsql /usr/share/pgsql/contrib/postgis-2.5 /usr/bin/raster2pgsql /usr/bin/pgsql2shp /usr/bin/shp2pgsql; \
+  tar cvzf /tmp/postgis.tgz /usr/local/lib /usr/lib64/pgsql /usr/share/pgsql/extension/ /usr/share/pgsql/contrib/postgis-2.5 /usr/bin/raster2pgsql /usr/bin/pgsql2shp /usr/bin/shp2pgsql; \
   mkdir /dockerLayer; cd /dockerLayer;\
   tar xvfz /tmp/postgis.tgz; \
   mv ./usr/local/lib ./usr/lib64; 
-  
+
+#  git checkout stable-2.5; \
+#  ./autogen.sh; ./configure; \  
   
 FROM flexberry/alt.p8-postgresql 
 # :9.6-1.1.1
@@ -39,6 +42,21 @@ MAINTAINER mail@flexberry.ru
 USER root
 
 COPY --from=dev /dockerLayer /
+
+RUN \
+  bzip2 -d /var/lib/rpm/*.bz2; \
+  apt-get -y update && \
+  apt-get install -y libgeos libxml2 libproj libgdal; \
+  /etc/init.d/postgresql start; \
+  rm -f /var/lib/pgsql/data/pg_log/*; \
+  sleep 5; \
+  until echo  "\l" |  psql -U postgres; do sleep 5; done ; \
+  echo  -ne "CREATE EXTENSION postgis;\n" |  psql -U postgres; \
+  /etc/init.d/postgresql stop; \
+  sleep 5; \
+  while [ -f /var/lib/pgsql/data/postmaster.pid ]; do sleep 5; done; \
+  killall postgres; \
+  while [ -f /tmp/.s.PGSQL.5432.lock ]; do sleep 5; done;
 
 #RUN \
 #  bzip2 -d /var/lib/rpm/*.bz2; \
