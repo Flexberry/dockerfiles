@@ -14,7 +14,7 @@ RUN \
   apt-repo add http://ftp.altlinux.org/pub/distributions/archive/p8/date/$REPODATA x86_64 classic; \
   apt-repo add http://ftp.altlinux.org/pub/distributions/archive/p8/date/$REPODATA noarch classic; \
   apt-get update; \
-  apt-get install -y postgresql9.6-devel libxml2-devel libgeos-devel libproj-devel libgdal-devel bison; 
+  apt-get install -y postgresql9.6-devel protobuf-c-compiler libprotobuf-devel libprotobuf-c-devel  libxml2-devel libgeos-devel libproj-devel libgdal-devel bison; 
   
 RUN \  
   cd /root/; \
@@ -24,6 +24,8 @@ RUN \
   
 RUN \    
   cd /root/postgis-2.5.4; \
+  ./autogen.sh; \
+  ./configure --with-pgconfig=/usr/bin/pg_config; \
   make; make check; make install; \
   tar cvzf /tmp/postgis.tgz /usr/local/lib /usr/lib64/pgsql /usr/share/pgsql/extension/ /usr/share/pgsql/contrib/postgis-2.5 /usr/bin/raster2pgsql /usr/bin/pgsql2shp /usr/bin/shp2pgsql; \
   mkdir /dockerLayer; cd /dockerLayer;\
@@ -42,7 +44,7 @@ COPY --from=dev /dockerLayer /
 RUN \
   bzip2 -d /var/lib/rpm/*.bz2; \
   apt-get -y update && \
-  apt-get install -y libgeos libxml2 libproj libgdal; \
+  apt-get install -y libgeos libxml2 libproj libgdal libprotobuf-c; \
   /etc/init.d/postgresql start; \
   rm -f /var/lib/pgsql/data/pg_log/*; \
   sleep 5; \

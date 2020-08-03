@@ -1,8 +1,11 @@
 PGDATA=/var/lib/pgsql/data
 DEBUG_MODE=0
 PROTOCOL=1
-VACUUMDBNAME=postgres
+VACUUMDBNAME=adm
+SAVESYSSTATDBNAME=adm
+SAVEPGSMTSTATDBNAME=adm
 # m  h  d  m w command
-# 0  21 *  * * $PGDATA/adm/vacuum.sh $PGDATA/vacuumLog 1 empty $VACUUMDBNAME # normal all_schemas all_tables 1 2147483647 tablesizeasc
-# 0  21 *  * * $PGDATA/adm/savesysstat.sh $PGDATA/savesysstatLog 1 empty 
+# 0  21 *  * * $PGDATA/adm/vacuum.sh calldir 1 empty $VACUUMDBNAME # normal all_schemas all_tables 1 2147483647 tablesizeasc
+# 0  21 *  * * $PGDATA/adm/savesysstat.sh calldir 1 $SAVESYSSTATDBNAME # '' 1 0
+# 0  21 *  * * $PGDATA/adm/savepgstmtstat.sh calldir 1 $SAVEPGSMTSTATDBNAME # '' 1 0
 
