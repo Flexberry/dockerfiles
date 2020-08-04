@@ -10,6 +10,13 @@
 # Обеспечивается протоколирование выполняемых над таблицами операций.
 # Добавлены функции checkoperprotocol(), operprotocol_start(), operprotocol_end(), getuuid(), изменена функция finish().
 
+# Версия: 1.2
+# Дата:   22.05.2020
+# Начальная последовательность вызовов различных функций данной библиотеки в разных скриптах выделена в функцию startscript().
+# Дата:   03.08.2020
+# Уточнение функции execsql() - значение в глобальной переменной RESCODE усекается от завершающих пробелов
+# В функции checkdb() исключено ограничение на проверку БД postgres
+
 # Глобальные переменные, которые могут использоваться в данной библиотеке и которые нужно объявить до использования её функций:
 # PROTOCOL, LOG_FILE, CONNECT, PSQL, RESCODE, SQL, OPERPRIMARYKEY, OPERPROTOCOL
 
@@ -82,14 +89,14 @@ execsql()
         echo $0: Не задан текст sql-команды для выполнения >>$LOG_FILE
         return 20
     fi
-    
+
     # Заплатка, чтоб не лепить ещё один позиционный параметр к вызову функции
     local INTRANSACTION="-1"
     local ISVACUUM=${SQL:0:6}
     if [ "$ISVACUUM" == "vacuum" ]; then
         INTRANSACTION=
     fi
-    
+
     if [ "$MSGTEXT" != "" ]; then
         echo $MSGTEXT >>$LOG_FILE
     fi
@@ -105,6 +112,10 @@ execsql()
         echo $0: Досрочное завершение из-за ошибки psql $res при выполнении sql-команды >>$LOG_FILE
         return $res
     fi
+    # 03.08.2020
+    # Удалим незначащие завершающие пробелы. В частности, пробельная строка будет заменена пустой строкой
+    RESCODE=${RESCODE%%[[:space:]]}
+
     return 0
 }
 
@@ -146,11 +157,11 @@ checkdb()
         return 10
     fi
 
-    if [ "$DBNAME" == "postgres" ]; then
-        echo $0: БД postgres не предусмотрена в качестве БД для опрераций>>$LOG_FILE
-        return 20
-    fi
-    
+#    if [ "$DBNAME" == "postgres" ]; then
+#        echo $0: БД postgres не предусмотрена в качестве БД для операций>>$LOG_FILE
+#        return 20
+#    fi
+
     local SQL="select coalesce((select oid::integer from pg_catalog.pg_database where datname='$DBNAME' and not datistemplate),-1) as oid"
     execsql postgres "Проверка наличия БД $DBNAME" $PROTOCOL "$SQL" "$PSQL" "$CONNECT" "$LOG_FILE"
     local res=$?
@@ -209,7 +220,7 @@ checkchema()
         echo $0: Не задано имя схемы для проверки >>$LOG_FILE
         return 10
     fi
-    
+
     local SQL="select coalesce((select 1 from pg_catalog.pg_namespace where nspname = '$SCHEMANAME'),0)"
     execsql "$DBNAME" "Проверка существования схемы $SCHEMANAME в БД $DBNAME" $PROTOCOL "$SQL" "$PSQL" "$CONNECT" "$LOG_FILE"
     local res=$?
@@ -418,7 +429,7 @@ operprotocol_start()
     local PRIMARYKEY=$RESCODE
 
     local SQL="insert into adm.operprotocol
-(primarykey, operprotocol, operagent, operdb, opername, operobject, operstart, operend, operpunct, opernotes) 
+(primarykey, operprotocol, operagent, operdb, opername, operobject, operstart, operend, operpunct, opernotes)
 values(trim('$PRIMARYKEY')::uuid, $LOC_OPERPROTOCOL, '$OPERAGENT', '$OPERDB', '$OPERNAME', $OPEROBJECT, $OPERSTART::timestamp(3) with time zone, $OPEREND::timestamp(3) with time zone, 0, $OPERNOTES);"
     execsql "$ADMDBNAME" "Регистрация новой операции $OPERDB, $OPERNAME, $OPEROBJECT в таблице adm.operprotocol в БД $ADMDBNAME" $PROTOCOL "$SQL" "$PSQL" "$CONNECT" "$LOG_FILE"
     local res=$?
@@ -471,7 +482,7 @@ operprotocol_end()
     if [[ "$OPERPRIMARYKEY" == "null" || "$OPERPRIMARYKEY" == "empty" ]]; then
         return 0
     fi
-    
+
     if [ "$4" != "" ]; then
         local PROTOCOL=$4
     fi
@@ -617,10 +628,10 @@ checksharedpreloadlibraries()
         echo $0: Не задано имя библиотеки для проверки >>$LOG_FILE
         return 10
     fi
-    
+
     local SQL="select coalesce(
-(select 1 from pg_catalog.pg_settings 
-  where name = '$LIBRARYNAME' 
+(select 1 from pg_catalog.pg_settings
+  where name = '$LIBRARYNAME'
     and (setting = '$LIBRARYNAME' or
          setting similar to '%[^_a-z0-9]*$LIBRARYNAME[^_a-z0-9]*%' or
          setting similar to '%[^_a-z0-9]*$LIBRARYNAME%' or
@@ -720,7 +731,7 @@ select string_agg(id::varchar,',') from t_oids;
 # Параметры вывода:
 # ADMDBNAME=$1   - имя административной БД для подключения
 # DBCOND=$2      - дополнительное условие на записи таблицы adm.dbmaintenance или пусто
-#                - это м.б. один из её столбцов - savesysstat, savepgstmtstat - или произвольное условие, 
+#                - это м.б. один из её столбцов - savesysstat, savepgstmtstat - или произвольное условие,
 #                - но для ссылки на столбцы таблицы adm.dbmaintenance используется алиас "a"
 # PROTOCOL=$3    - вести протокол в лог-файле (1) или нет (0)
 # Коды возврата:
@@ -767,7 +778,7 @@ select string_agg(b.oid::varchar, ',') as oids
         inner join pg_catalog.pg_database b
             on b.datname = a.datname
  where a.actual $DBCOND"
-  
+
     execsql "$ADMDBNAME" "Получение списка oid для обслуживаемых БД" $PROTOCOL "$SQL" "$PSQL" "$CONNECT" "$LOG_FILE"
     res=$?
     if [ $res -eq 0 ]; then
@@ -849,7 +860,7 @@ getclocktimestamp()
             FORMAT="YYYY-MM-DD HH24:MI:SS"
             ;;
     esac
-    
+
     local SQL="select to_char(clock_timestamp(),'$FORMAT') as clocktimestamp"
     execsql "$DBNAME" "Получение текущего времени с сервера БД $DBNAME" $PROTOCOL "$SQL" "$PSQL" "$CONNECT" "$LOG_FILE"
     res=$?
@@ -895,7 +906,6 @@ getuuid()
 }
 
 # finish - функция для отметки в заданном лог-файле о завершении главного сценария.
-
 # Если при вызове функции не заданы позиционные параметры 6, 7 и 8 для вызова psql, подключения к  серверу и вывода в лог-файл,
 # тогда используются глобальные переменные PSQL, CONNECT и LOG_FILE.
 # Функция не использует никакие другие глобальные переменные и не изменяет значения указанных глобальных переменных,
@@ -915,7 +925,7 @@ finish()
     if [ "$MSGTEXT" == "empty" ]; then
         MSGTEXT=
     fi
-    
+
     local ADMDBNAME=$3
     if [ "$ADMDBNAME" == "" ]; then
         ADMDBNAME=empty
@@ -936,9 +946,9 @@ finish()
     if [ "$8" != "" ]; then
         local LOG_FILE=$8
     fi
-    
+
     operprotocol_end "$ADMDBNAME" "$MSGTEXT" "$OPERPRIMARYKEY" $PROTOCOL "$PSQL" "$CONNECT" "$LOG_FILE"
-    
+
     local CURDATE=`/bin/date '+%d.%m.%Y %H:%M:%S.%N'`
 
     # В крайнем случае лог-файл м.б. не задан
@@ -955,4 +965,96 @@ finish()
         echo Завершение $SCRIPTNAME: $CURDATE. Время работы  $SECONDS сек
     fi
     return 0
+}
+
+# startscript() - функция, выполняющая подготовительные действия и проверки при старте некоторого сценария.
+# Если при вызове функции не заданы позиционные параметры 6, 7 и 8 для вызова psql, подключения к  серверу и вывода в лог-файл,
+# тогда используются глобальные переменные PSQL, CONNECT и LOG_FILE.
+# Функция не использует никакие другие глобальные переменные и не изменяет значения указанных глобальных переменных,
+# кроме RESCODE, применяемой по внутренних целях.
+# Параметры вывода:
+# ADMDBNAME=$1  - имя административной БД
+# OPERDB=$2     - имя целевой БД или пусто
+# CALLMSG=$3    - текстовая информация о вызове сценария
+# CALLCMD=$4    - параметры вызова сценария
+# PROTOCOL=$5   - вести протокол в лог-файле (1) или нет (0)
+# Коды возврата:
+# 0             - успешное завершение
+# 1             - Досрочное завершение из-за проблем при проверке заданной административной БД $ADMDBNAME
+# 2             - Досрочное завершение из-за проблем при проверке схемы adm в заданной административной БД $ADMDBNAME
+# 3             - Досрочное завершение из-за проблем при проверке пакета расширения uuid-ossp в заданной административной БД $ADMDBNAME
+# 4             - Досрочное завершение из-за проблем при проверке таблицы протоколирования операций adm.operprotocol в заданной административной БД $ADMDBNAME
+# 100           - Ошибка при регистрации операции. Протоколирование более не ведётся, но продолжать ваполнение основного скрипта возможно
+# RESCODE       - глобальная переменная, применяемая во внутренних целях
+# PROTDBNAME    - глобальная переменная, содержащая имя БД для протоколирования, т.е. $ADMDBNAME или empty при ошибке регистрации операции
+# OPERPRIMARYKEY- глобальная переменная для протоколирования
+# OPERPROTOCOL  - глобальная переменная для протоколирования
+startscript()
+{
+    local ADMDBNAME=$1
+    local OPERDB=$2
+    local CALLMSG=$3
+    local CALLCMD=$4
+    local PROTOCOL=$5
+    if [ "$PROTOCOL" == "" ]; then
+        PROTOCOL=1
+    fi
+
+    if [ "$6" != "" ]; then
+        local PSQL=$6
+    fi
+    if [ "$7" != "" ]; then
+        local CONNECT=$7
+    fi
+    if [ "$8" != "" ]; then
+        local LOG_FILE=$8
+    fi
+
+    # Проверим наличие заданной административной БД $ADMDBNAME
+    checkdb "$ADMDBNAME" $PROTOCOL "$PSQL" "$CONNECT" "$LOG_FILE"
+    local res=$?
+    if [ $res -ne 0 ]; then
+        finish "$0" "Досрочное завершение из-за проблем при проверке заданной административной БД $ADMDBNAME"
+        return 1
+    fi
+
+    # Проверим наличие схемы adm в административной БД $ADMDBNAME  и создадим её в случае отсутствия
+    checkchema "$ADMDBNAME" adm 1 $PROTOCOL "$PSQL" "$CONNECT" "$LOG_FILE"
+    res=$?
+    if [ $res -ne 0 ]; then
+        finish "$0" "Досрочное завершение из-за проблем при проверке схемы adm в заданной административной БД $ADMDBNAME"
+        return 2
+    fi
+
+    # Проверим наличие установленного пакета расширения uuid-ossp в административной БД $ADMDBNAME и установим его в случае отсутствия
+    checkextension "$ADMDBNAME" "uuid-ossp" 1 $PROTOCOL "$PSQL" "$CONNECT" "$LOG_FILE"
+    res=$?
+    if [ $res -ne 0 ]; then
+        finish "$0" "Досрочное завершение из-за проблем при проверке пакета расширения uuid-ossp в заданной административной БД $ADMDBNAME"
+        return 3
+    fi
+
+    # Проверим наличие в административной БД $ADMDBNAME таблицы протоколирования операций adm.operprotocol и создадим её в случае отсутствия.
+    checkoperprotocol "$ADMDBNAME" 1 $PROTOCOL "$PSQL" "$CONNECT" "$LOG_FILE"
+    res=$?
+    if [ $res -ne 0 ]; then
+        finish "$0" "Досрочное завершение из-за проблем при проверке таблицы протоколирования операций adm.operprotocol в заданной административной БД $ADMDBNAME"
+        return 4
+    fi
+
+    # Зарегистрируем начало работы
+    PROTDBNAME=empty
+    operprotocol_start "$ADMDBNAME" default "$OPERDB" "$CALLMSG" "" null null "$CALLCMD" "" $PROTOCOL "$PSQL" "$CONNECT" "$LOG_FILE"
+    res=$?
+    if [ $res -eq 0 ]; then
+        PROTDBNAME="$ADMDBNAME"
+        OPERPROTOCOL=$OPERPRIMARYKEY
+    else
+        echo Ошибка $res при регистрации операции. Протоколирование более не ведётся >>$LOG_FILE
+        OPERPRIMARYKEY=
+        OPERPROTOCOL=
+        res=100
+    fi
+
+    return $res
 }

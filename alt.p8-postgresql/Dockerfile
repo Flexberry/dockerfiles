@@ -55,6 +55,7 @@ COPY --from=dev /dockerLayer /
 
 RUN  chmod +x /docker-cmd.sh; \
   chown postgres:postgres /var/lib/pgsql/ /var/lib/pgsql/data/ /var/lib/pgsql/data/postgresql.conf /var/lib/pgsql/data/pg_hba.conf; \
+  chmod 700  /var/lib/pgsql/data; \
   /etc/init.d/postgresql start; \
   rm -f /var/lib/pgsql/data/pg_log/*; \
   sleep 5; \
