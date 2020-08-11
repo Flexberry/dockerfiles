@@ -7,11 +7,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    <PackageReference Include="NewPlatform.Flexberry.LockService" Version="3.0.0-alpha02" />
-    <PackageReference Include="NewPlatform.Flexberry.LogService.Objects" Version="4.0.0-alpha01" />
-    <PackageReference Include="NewPlatform.Flexberry.ORM.Abstractions" Version="6.0.0-alpha09" />
-    <PackageReference Include="NewPlatform.Flexberry.ORM.PostgresDataService" Version="6.0.0-alpha09" />
-    <PackageReference Include="NewPlatform.Flexberry.UserSettingsService" Version="4.0.0-alpha02" />
+    <PackageReference Include="NewPlatform.Flexberry.LockService" Version="3.0.0-beta01" />
+    <PackageReference Include="NewPlatform.Flexberry.LogService.Objects" Version="4.0.0-beta01" />
+    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta04" />
+    <PackageReference Include="NewPlatform.Flexberry.ORM.PostgresDataService" Version="6.0.0-beta04" />
+    <PackageReference Include="NewPlatform.Flexberry.UserSettingsService" Version="4.0.0-beta01" />
   </ItemGroup>
 
   <ItemGroup>
