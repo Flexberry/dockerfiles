@@ -34,6 +34,7 @@
         /// <param name="routeName">The name of the route (<see cref="DataObjectRoutingConventions.DefaultRouteName"/> to be default).</param>
         /// <param name="routePrefix">The route prefix (<see cref="DataObjectRoutingConventions.DefaultRoutePrefix"/> to be default).</param>
         /// <param name="isSyncBatchUpdate">Use synchronous mode for call subrequests in batch query.</param>
+        /// <param name="messageQuotasMaxPartsPerBatch">The maximum number of top level query operations and changesets allowed in a single batch.</param>
         /// <returns>A <see cref="ManagementToken"/> instance.</returns>
         public static ManagementToken MapDataObjectRoute(
             this HttpConfiguration config,
@@ -41,7 +42,8 @@
             HttpServer httpServer,
             string routeName = DataObjectRoutingConventions.DefaultRouteName,
             string routePrefix = DataObjectRoutingConventions.DefaultRoutePrefix,
-            bool? isSyncBatchUpdate = null)
+            bool? isSyncBatchUpdate = null,
+            int messageQuotasMaxPartsPerBatch = 1000)
         {
             if (config == null)
             {
@@ -87,6 +89,7 @@
             var pathHandler = new ExtendedODataPathHandler();
             List<IODataRoutingConvention> routingConventions = DataObjectRoutingConventions.CreateDefault();
             var batchHandler = new DataObjectODataBatchHandler(dataService, httpServer, isSyncBatchUpdate);
+            batchHandler.MessageQuotas.MaxPartsPerBatch = messageQuotasMaxPartsPerBatch;
             ODataRoute route = config.MapODataServiceRoute(routeName, routePrefix, cb => cb
                 .AddService(ServiceLifetime.Singleton, typeof(IEdmModel), sp => model)
                 .AddService(ServiceLifetime.Singleton, typeof(IODataPathHandler), sp => pathHandler)
@@ -121,6 +124,7 @@
         /// <param name="routeName">The name of the route (<see cref="DataObjectRoutingConventions.DefaultRouteName"/> to be default).</param>
         /// <param name="routePrefix">The route prefix (<see cref="DataObjectRoutingConventions.DefaultRoutePrefix"/> to be default).</param>
         /// <param name="isSyncBatchUpdate">Use synchronous mode for call subrequests in batch query.</param>
+        /// <param name="messageQuotasMaxPartsPerBatch">The maximum number of top level query operations and changesets allowed in a single batch.</param>
         /// <returns>A <see cref="ManagementToken"/> instance.</returns>
         [Obsolete("Use MapDataObjectRoute() method instead.")]
         public static ManagementToken MapODataServiceDataObjectRoute(
@@ -129,9 +133,10 @@
             HttpServer httpServer,
             string routeName = DataObjectRoutingConventions.DefaultRouteName,
             string routePrefix = DataObjectRoutingConventions.DefaultRoutePrefix,
-            bool? isSyncBatchUpdate = null)
+            bool? isSyncBatchUpdate = null,
+            int messageQuotasMaxPartsPerBatch = 1000)
         {
-            return MapDataObjectRoute(config, builder, httpServer, routeName, routePrefix, isSyncBatchUpdate);
+            return MapDataObjectRoute(config, builder, httpServer, routeName, routePrefix, isSyncBatchUpdate, messageQuotasMaxPartsPerBatch);
         }
     }
 }

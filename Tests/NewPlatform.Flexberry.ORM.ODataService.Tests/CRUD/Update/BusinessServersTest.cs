@@ -4,7 +4,7 @@
     using System.Linq;
     using System.Net;
     using System.Net.Http;
-
+    
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.KeyGen;
     using ICSSoft.STORMNET.Windows.Forms;
@@ -143,7 +143,7 @@
         [Fact]
         public void CallAggregatorBSOnAddDetailTest()
         {
-            ActODataService(async (args) =>
+            ActODataService(args =>
             {
                 var медведь = new Медведь();
                 медведь.Берлога.Add(new Берлога());
@@ -173,7 +173,7 @@
 
                     args.DataService.LoadObject(Медведь.Views.МедведьE, медведь);
 
-                    var берлоги = медведь.Берлога.GetAllObjects().Cast<Берлога>();
+                    var берлоги = медведь.Берлога.Cast<Берлога>();
 
                     Assert.Equal(1, берлоги.Count(б => б.Заброшена));
                     Assert.Equal(1, берлоги.Count(б => !б.Заброшена));
@@ -187,7 +187,7 @@
         [Fact]
         public void CallAggregatorBSOnUpdateDetailTest()
         {
-            ActODataService(async (args) =>
+            ActODataService(args =>
             {
                 var медведь = new Медведь();
                 медведь.Берлога.Add(new Берлога() { Заброшена = true });
@@ -224,7 +224,7 @@
 
                     args.DataService.LoadObject(Медведь.Views.МедведьE, медведь);
 
-                    var берлоги = медведь.Берлога.GetAllObjects().Cast<Берлога>();
+                    var берлоги = медведь.Берлога.Cast<Берлога>();
 
                     Assert.Equal(2, берлоги.Count());
 
@@ -242,7 +242,7 @@
         [Fact]
         public void CallAggregatorBSOnDeleteDetailTest()
         {
-            ActODataService(async (args) =>
+            ActODataService(args =>
             {
                 var медведь = new Медведь();
                 медведь.Берлога.Add(new Берлога());
@@ -268,7 +268,7 @@
                     args.DataService.LoadObject(Медведь.Views.МедведьE, медведь);
 
                     Assert.Equal(1, медведь.Берлога.Count);
-                    Assert.Equal(1, медведь.Берлога.GetAllObjects().Cast<Берлога>().First().Комфортность);
+                    Assert.Equal(1, медведь.Берлога.Cast<Берлога>().First().Комфортность);
                 }
             });
         }
