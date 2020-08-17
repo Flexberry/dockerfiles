@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>NewPlatform.Flexberry.ORM.ODataService</id>
-    <version>6.1.0-beta02</version>
+    <version>6.1.0-beta03</version>
     <title>Flexberry ORM ODataService</title>
     <authors>New Platform Ltd.</authors>
     <owners>New Platform Ltd.</owners>
@@ -14,6 +14,9 @@
     <releaseNotes>
       Changed
       1. Update dependencies: Microsoft.AspNet.OData to 7.1.0, Microsoft.OData.Core to 7.5.0, ORM to 6.0
+      1. Update to Microsoft .NET Framework 4.6.1
+      2. Removing files through file providers.
+      3. Add additional edm mapping into model builder.
     </releaseNotes>
     <copyright>Copyright New Platform Ltd 2020</copyright>
     <tags>Flexberry ORM OData ODataService</tags>

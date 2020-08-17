@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Data.Linq;
     using System.IO;
+    using System.Linq;
     using System.Xml.Linq;
 
     using Microsoft.OData.Edm;
@@ -113,11 +114,20 @@
         /// Осуществляет получение EDM-типа, по соответствующему ему CLR-типу.
         /// </summary>
         /// <param name="clrType">CLR-тип, для которого требуется получить соответствующий ему EDM-тип.</param>
+        /// <param name="additionalMapping">Дополнительный маппинг типов.</param>
         /// <returns>EDM-тип, соответствующий заданному CRL-типу.</returns>
-        public static IEdmPrimitiveType GetEdmPrimitiveType(Type clrType)
+        public static IEdmPrimitiveType GetEdmPrimitiveType(Type clrType, Dictionary<Type, IEdmPrimitiveType> additionalMapping)
         {
-            IEdmPrimitiveType edmPrimitiveType;
-            _typesMap.TryGetValue(clrType, out edmPrimitiveType);
+            var typesMap = _typesMap;
+            additionalMapping?.ToList().ForEach(x =>
+            {
+                if (!typesMap.ContainsKey(x.Key))
+                {
+                    typesMap.Add(x.Key, x.Value);
+                }
+            });
+
+            _typesMap.TryGetValue(clrType, out var edmPrimitiveType);
 
             return edmPrimitiveType;
         }

@@ -1,7 +1,10 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Model
 {
     using System;
+    using System.Collections.Generic;
     using System.Reflection;
+
+    using Microsoft.OData.Edm;
 
     /// <summary>
     /// Interface of builder for <see cref="DataObjectEdmModel"/> instances.
@@ -33,6 +36,11 @@
         /// Delegate for building names for EDM entity properties.
         /// </summary>
         Func<PropertyInfo, string> EntityPropertyNameBuilder { get; set; }
+
+        /// <summary>
+        /// Additional mapping of CLR type to edm primitive type. When it's required on the application side.
+        /// </summary>
+        Dictionary<Type, IEdmPrimitiveType> AdditionalMapping { get; }
 
         /// <summary>
         /// Returns <see cref="ICSSoft.STORMNET.Business.LINQProvider.PseudoDetail{T, TP}"/> as object.

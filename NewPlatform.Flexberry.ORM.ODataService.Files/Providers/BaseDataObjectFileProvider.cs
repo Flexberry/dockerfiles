@@ -92,6 +92,7 @@
                 fileDescription.EntityTypeName = dataObject.GetType().AssemblyQualifiedName;
                 fileDescription.EntityPropertyName = dataObjectFilePropertyName;
                 fileDescription.EntityPrimaryKey = dataObject.__PrimaryKey.ToString();
+                fileDescription.FilePropertyType = FilePropertyType;
             }
 
             return fileDescription;
@@ -124,7 +125,7 @@
 
                 fileDescriptions.AddRange(
                     filePropertiesNames
-                    .Select(x => GetFileDescription(dataObject, x))
+                    .Select(filePropertyName => GetFileDescription(dataObject, filePropertyName))
                     .Where(x => x != null));
             }
 

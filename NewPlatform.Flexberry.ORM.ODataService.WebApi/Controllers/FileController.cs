@@ -124,10 +124,17 @@
         /// </param>
         public static void RemoveFileUploadDirectories(List<FileDescription> removingFileDescriptions)
         {
-            removingFileDescriptions?
-                .Where(x => x != null)
-                .ToList()
-                .ForEach(x => RemoveFileUploadDirectory(x.FileUploadKey));
+            if (removingFileDescriptions == null)
+                return;
+
+            dataObjectFileProviders.ForEach(
+                fp =>
+                {
+                    var selectedDescriptions = removingFileDescriptions
+                        .Where(x => x != null && fp.FilePropertyType == x.FilePropertyType)
+                        .ToList();
+                    selectedDescriptions.ForEach(fp.RemoveFile);
+                });
         }
 
         /// <summary>
