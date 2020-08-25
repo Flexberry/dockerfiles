@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NewPlatform.Flexberry.ORM.ODataServiceCore.Tests.BusinessServers</name>
+    </assembly>
+    <members>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.CarBS">
+            <summary>
+            CarBS.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.БерлогаБС">
+            <summary>
+            БерлогаБС.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.ЛесБС">
+            <summary>
+            ЛесБС.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.МедведьБС">
+            <summary>
+            МедведьБС.
+            </summary>
+        </member>
+    </members>
+</doc>
