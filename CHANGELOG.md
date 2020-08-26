@@ -12,6 +12,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 4. Support for limits on pseudodetails.
 5. Decode Excel export column name.
 6. HttpConfiguretion MapDataObjectRoute() extension method. 
+7. Removing files through file providers.
+8. Add additional edm mapping into model builder.
 
 ### Changed
 

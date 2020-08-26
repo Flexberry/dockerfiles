@@ -19,6 +19,7 @@
     using Microsoft.AspNet.OData.Routing;
     using Microsoft.OData.Edm;
     using NewPlatform.Flexberry.ORM.ODataService.Batch;
+    using NewPlatform.Flexberry.ORM.ODataService.Extensions;
     using NewPlatform.Flexberry.ORM.ODataService.Files;
     using NewPlatform.Flexberry.ORM.ODataService.Files.Providers;
     using NewPlatform.Flexberry.ORM.ODataService.Formatter;
@@ -192,12 +193,6 @@
 
                 var obj = _dataObjectCache.CreateDataObject(type, key);
 
-                // Раз объект данных удаляется, то и все ассоциированные с ним файлы должны быть удалены.
-                // Запоминаем метаданные всех ассоциированных файлов, кроме файлов соответствующих файловым свойствам типа File
-                // (файлы соответствующие свойствам типа File хранятся в БД, и из файловой системы просто нечего удалять).
-                // TODO: подумать как быть с детейлами, детейлами детейлов, и т д.
-                _removingFileDescriptions.AddRange(FileController.GetDataObjectFileDescriptions(obj, new List<Type> { typeof(File) }));
-
                 // Удаляем объект с заданным ключем.
                 // Детейлы удалятся вместе с агрегатором автоматически.
                 // Если удаляемый объект является мастером для какого-либо объекта, то
@@ -207,6 +202,12 @@
                 // IReferencesCascadeDelete/IReferencesNullDelete и требуемые действия будут выполнены автоматически.
                 // В данный момент ReferentialConstraints не создаются в модели.
                 obj.SetStatus(ObjectStatus.Deleted);
+
+                // Раз объект данных удаляется, то и все ассоциированные с ним файлы должны быть удалены.
+                // Запоминаем метаданные всех ассоциированных файлов, кроме файлов соответствующих файловым свойствам типа File
+                // (файлы соответствующие свойствам типа File хранятся в БД, и из файловой системы просто нечего удалять).
+                // TODO: подумать как быть с детейлами, детейлами детейлов, и т д.
+                _removingFileDescriptions.AddRange(FileController.GetDataObjectFileDescriptions(obj, new List<Type> { typeof(File) }));
 
                 List<DataObject> objs = new List<DataObject>();
 
@@ -357,7 +358,8 @@
 
             string json = (string)Request.Properties[requestContentKey];
 
-            Dictionary<string, object> props = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+            Dictionary<string, object> props =
+                JsonConvert.DeserializeObject<Dictionary<string, object>>(json, new JsonSerializerSettings() { FloatParseHandling = FloatParseHandling.Decimal });
             var keys = props.Keys.ToArray();
             var odataBindNullList = new List<string>();
             foreach (var key in keys)
@@ -529,14 +531,28 @@
                     return dataObjectFromCache;
                 }
 
+                // Вычитывать объект сразу с детейлами нельзя, поскольку в этой же транзакции могут уже оказать отдельные операции с детейлами и перевычитка затрёт эти изменения.
+                View lightView = view.Clone();
+                DetailInView[] lightViewDetails = lightView.Details;
+                foreach (DetailInView detailInView in lightViewDetails)
+                {
+                    lightView.RemoveDetail(detailInView.Name);
+                }
+
                 // Проверим существование объекта в базе.
-                LoadingCustomizationStruct lcs = LoadingCustomizationStruct.GetSimpleStruct(objType, view);
+                LoadingCustomizationStruct lcs = LoadingCustomizationStruct.GetSimpleStruct(objType, lightView);
                 lcs.LimitFunction = FunctionBuilder.BuildEquals(keyValue);
                 lcs.ReturnTop = 2;
                 DataObject[] dobjs = _dataService.LoadObjects(lcs, _dataObjectCache);
                 if (dobjs.Length == 1)
                 {
                     DataObject dataObject = dobjs[0];
+                    if (lightViewDetails.Any())
+                    {
+                        // Дочитаем детейлы, чтобы в бизнес-серверах эти данные уже были. Детейлы с изменёнными состояниями будут пропущены из зачитки.
+                        _dataService.SafeLoadDetails(view, new DataObject[] { dataObject }, _dataObjectCache);
+                    }
+
                     return dataObject;
                 }
             }
@@ -657,34 +673,7 @@
 
                             if (dataObjectPropName == agregatorPropertyName)
                             {
-                                Type agregatorType = master.GetType();
-                                string detailPropertyName = Information.GetDetailArrayPropertyName(agregatorType, objType);
-
-                                Type parentType = objType.BaseType;
-                                while (detailPropertyName == null && parentType != typeof(DataObject) && parentType != typeof(object) && parentType != null)
-                                {
-                                    detailPropertyName = Information.GetDetailArrayPropertyName(agregatorType, parentType);
-                                    parentType = parentType.BaseType;
-                                }
-
-                                if (detailPropertyName != null)
-                                {
-                                    DetailArray details = (DetailArray)Information.GetPropValueByName(master, detailPropertyName);
-
-                                    if (details != null)
-                                    {
-                                        DataObject existDetail = details.GetByKey(obj.__PrimaryKey);
-
-                                        if (existDetail == null)
-                                        {
-                                            details.AddObject(obj);
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    LogService.LogWarn($"Не найден детейл {objType.AssemblyQualifiedName} в агрегаторе {agregatorType.AssemblyQualifiedName}.");
-                                }
+                                master.AddDetail(obj);
                             }
                         }
                         else
@@ -766,6 +755,7 @@
                                 // Если в метаданных файла присутствует FileUploadKey значит файл был загружен на сервер,
                                 // но еще не был ассоциирован с объектом данных, и это нужно сделать.
                                 FileDescription fileDescription = FileDescription.FromJson(serializedFileDescription);
+                                fileDescription.FilePropertyType = dataObjectPropertyType;
                                 if (!(string.IsNullOrEmpty(fileDescription.FileUploadKey) || string.IsNullOrEmpty(fileDescription.FileName)))
                                 {
                                     Information.SetPropValueByName(obj, dataObjectPropName, dataObjectFileProvider.GetFileProperty(fileDescription));

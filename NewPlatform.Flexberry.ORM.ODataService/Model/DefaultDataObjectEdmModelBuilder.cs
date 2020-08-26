@@ -8,6 +8,8 @@
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.KeyGen;
 
+    using Microsoft.OData.Edm;
+
     /// <summary>
     /// Default implementation of <see cref="IDataObjectEdmModelBuilder"/>.
     /// Builds EDM-model by list of assemblies.
@@ -29,6 +31,11 @@
         /// The list of links from master to pseudodetail (pseudoproperty) definitions.
         /// </summary>
         private readonly PseudoDetailDefinitions _pseudoDetailDefinitions;
+
+        /// <summary>
+        /// Additional mapping of CLR type to edm primitive type. When it's required on the application side.
+        /// </summary>
+        public Dictionary<Type, IEdmPrimitiveType> AdditionalMapping { get; }
 
         /// <summary>
         /// Delegate for additional filtering exposed types.
@@ -69,11 +76,19 @@
         /// </summary>
         /// <param name="searchAssemblies">The list of assemblies for searching types to expose.</param>
         /// <param name="useNamespaceInEntitySetName">Is need to add the whole type namespace for EDM entity set.</param>
-        public DefaultDataObjectEdmModelBuilder(IEnumerable<Assembly> searchAssemblies, bool useNamespaceInEntitySetName = true, PseudoDetailDefinitions pseudoDetailDefinitions = null)
+        /// <param name="pseudoDetailDefinitions">A collection of pseudodetail links.</param>
+        /// <param name="additionalMapping">Additional mapping of CLR type to edm primitive type.</param>
+        public DefaultDataObjectEdmModelBuilder(
+            IEnumerable<Assembly> searchAssemblies,
+            bool useNamespaceInEntitySetName = true,
+            PseudoDetailDefinitions pseudoDetailDefinitions = null,
+            Dictionary<Type, IEdmPrimitiveType> additionalMapping = null)
         {
             _searchAssemblies = searchAssemblies ?? throw new ArgumentNullException(nameof(searchAssemblies), "Contract assertion not met: searchAssemblies != null");
             _useNamespaceInEntitySetName = useNamespaceInEntitySetName;
             _pseudoDetailDefinitions = pseudoDetailDefinitions ?? new PseudoDetailDefinitions();
+
+            AdditionalMapping = additionalMapping;
 
             EntitySetNameBuilder = BuildEntitySetName;
             EntityPropertyNameBuilder = BuildEntityPropertyName;
