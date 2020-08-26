@@ -14,7 +14,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta04" />
+    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta08" />
   </ItemGroup>
 
 </Project>

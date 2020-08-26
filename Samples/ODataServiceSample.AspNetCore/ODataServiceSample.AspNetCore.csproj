@@ -9,8 +9,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="NewPlatform.Flexberry.LockService" Version="3.0.0-beta01" />
     <PackageReference Include="NewPlatform.Flexberry.LogService.Objects" Version="4.0.0-beta01" />
-    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta04" />
-    <PackageReference Include="NewPlatform.Flexberry.ORM.PostgresDataService" Version="6.0.0-beta04" />
+    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta08" />
+    <PackageReference Include="NewPlatform.Flexberry.ORM.PostgresDataService" Version="6.0.0-beta07" />
     <PackageReference Include="NewPlatform.Flexberry.UserSettingsService" Version="4.0.0-beta01" />
   </ItemGroup>
 
@@ -19,8 +19,8 @@
     <ProjectReference Include="..\..\NewPlatform.Flexberry.ORM.ODataServiceCore.Files\NewPlatform.Flexberry.ORM.ODataServiceCore.Files.csproj" />
     <ProjectReference Include="..\..\NewPlatform.Flexberry.ORM.ODataServiceCore.WebApi\NewPlatform.Flexberry.ORM.ODataServiceCore.WebApi.csproj" />
     <ProjectReference Include="..\..\NewPlatform.Flexberry.ORM.ODataServiceCore\NewPlatform.Flexberry.ORM.ODataServiceCore.csproj" />
-    <ProjectReference Include="..\..\Tests\NewPlatform.Flexberry.ORM.ODataServiceCore.Tests.BusinessServers\NewPlatform.Flexberry.ORM.ODataServiceCore.Tests.BusinessServers.csproj" />
-    <ProjectReference Include="..\..\Tests\NewPlatform.Flexberry.ORM.ODataServiceCore.Tests.Objects\NewPlatform.Flexberry.ORM.ODataServiceCore.Tests.Objects.csproj" />
+    <ProjectReference Include="..\..\Tests\BusinessServers\NewPlatform.Flexberry.ORM.ODataService.Tests.BusinessServers.csproj" />
+    <ProjectReference Include="..\..\Tests\Objects\NewPlatform.Flexberry.ORM.ODataService.Tests.Objects.csproj" />
   </ItemGroup>
 
   <ItemGroup>
