@@ -1,0 +1,1493 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NewPlatform.Flexberry.ORM.ODataServiceCore.Tests.Objects</name>
+    </assembly>
+    <members>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Car">
+            <summary>
+            Car.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Car.Number">
+            <summary>
+            Number.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Car.Model">
+            <summary>
+            Model.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Car.TipCar">
+            <summary>
+            TipCar.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Car.Driver">
+            <summary>
+            мастеровая ссылка на шапку NewPlatform.Flexberry.ORM.ODataService.Tests.Driver.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Car.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Car.Views.AllData">
+            <summary>
+            "AllData" view.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfCar">
+            <summary>
+            Detail array of Car.
+            </summary>
+        </member>
+        <member name="M:NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfCar.#ctor(NewPlatform.Flexberry.ORM.ODataService.Tests.Driver)">
+            <summary>
+            Construct detail array.
+            </summary>
+            <summary>
+            Returns object with type Car by index.
+            </summary>
+            <summary>
+            Adds object with type Car.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Driver">
+            <summary>
+            Driver.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Driver.Name">
+            <summary>
+            Name.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Driver.CarCount">
+            <summary>
+            CarCount.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Driver.Documents">
+            <summary>
+            Documents.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Driver.Car">
+            <summary>
+            Driver.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Driver.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Driver.Views.AllData">
+            <summary>
+            "AllData" view.
+            </summary>
+        </member>
+        <member name="M:NewPlatform.Flexberry.ORM.ODataService.Tests.GUIDToStringGenerator.Generate(System.Type)">
+            <summary>
+            Генерировать Guid
+            </summary>
+        </member>
+        <member name="M:NewPlatform.Flexberry.ORM.ODataService.Tests.GUIDToStringGenerator.Generate(System.Type,System.Object)">
+            <summary>
+            Генерировать Guid
+            </summary>
+        </member>
+        <member name="M:NewPlatform.Flexberry.ORM.ODataService.Tests.GUIDToStringGenerator.GenerateUniqe(System.Type)">
+            <summary>
+            Генерировать Guid
+            </summary>
+        </member>
+        <member name="M:NewPlatform.Flexberry.ORM.ODataService.Tests.GUIDToStringGenerator.GenerateUniqe(System.Type,System.Object)">
+            <summary>
+            Генерировать Guid
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.GUIDToStringGenerator.KeyType">
+            <summary>
+            Вернуть тип ключа
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.GUIDToStringGenerator.Unique">
+            <summary>
+            Уникален ли первичный ключ
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Master">
+            <summary>
+            Master.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Master.property">
+            <summary>
+            property.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.TestDetailWithCicle">
+            <summary>
+            TestDetailWithCicle.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.TestDetailWithCicle.TestDetailName">
+            <summary>
+            TestDetailName.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.TestDetailWithCicle.Parent">
+            <summary>
+            TestDetailWithCicle.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.TestDetailWithCicle.TestMaster">
+            <summary>
+            мастеровая ссылка на шапку NewPlatform.Flexberry.ORM.ODataService.Tests.TestMaster.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.TestDetailWithCicle.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.TestDetailWithCicle.Views.TestDetailWithCicleE">
+            <summary>
+            "TestDetailWithCicleE" view.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.TestDetailWithCicle.Views.TestDetaiWithCicleL">
+            <summary>
+            "TestDetaiWithCicleL" view.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfTestDetailWithCicle">
+            <summary>
+            Detail array of TestDetailWithCicle.
+            </summary>
+        </member>
+        <member name="M:NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfTestDetailWithCicle.#ctor(NewPlatform.Flexberry.ORM.ODataService.Tests.TestMaster)">
+            <summary>
+            Construct detail array.
+            </summary>
+            <summary>
+            Returns object with type TestDetailWithCicle by index.
+            </summary>
+            <summary>
+            Adds object with type TestDetailWithCicle.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.TestMaster">
+            <summary>
+            TestMaster.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.TestMaster.TestMasterName">
+            <summary>
+            TestMasterName.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.TestMaster.TestDetailWithCicle">
+            <summary>
+            TestMaster.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.TestMaster.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.TestMaster.Views.TestMasterE">
+            <summary>
+            "TestMasterE" view.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.TestMaster.Views.TestMasterL">
+            <summary>
+            "TestMasterL" view.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.tTip">
+            <summary>
+            tTip.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.tПол">
+            <summary>
+            Пол.
+            </summary>
+        </member>
+        <member name="F:NewPlatform.Flexberry.ORM.ODataService.Tests.tПол.Мужской">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NewPlatform.Flexberry.ORM.ODataService.Tests.tПол.Женский">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NewPlatform.Flexberry.ORM.ODataService.Tests.tПол.НеПонятно">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Автор">
+            <summary>
+            Автор.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Автор.Имя">
+            <summary>
+            Имя.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Автор.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Автор.Views.View">
+            <summary>
+            "View" view.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.БазовыйКласс">
+            <summary>
+            БазовыйКласс.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.БазовыйКласс.Свойство1">
+            <summary>
+            Свойство1.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.БазовыйКласс.Свойство2">
+            <summary>
+            Свойство2.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.БазовыйКласс.Детейл">
+            <summary>
+            БазовыйКласс.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.БазовыйКласс.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.БазовыйКласс.Views.БазовыйКлассE">
+            <summary>
+            "БазовыйКлассE" view.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Берлога">
+            <summary>
+            Берлога.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Берлога.ПолеБС">
+            <summary>
+            ПолеБС.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Берлога.Наименование">
+            <summary>
+            Наименование.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Берлога.Комфортность">
+            <summary>
+            Комфортность.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Берлога.Заброшена">
+            <summary>
+            Заброшена.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Берлога.Сертификат">
+            <summary>
+            Сертификат.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Берлога.СертификатСтрока">
+            <summary>
+            СертификатСтрока.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Берлога.ЛесРасположения">
+            <summary>
+            Берлога.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Берлога.Медведь">
+            <summary>
+            мастеровая ссылка на шапку NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Берлога.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Берлога.Views.LoadTestView">
+            <summary>
+            Представление для работы тестов на загрузку объектов.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Берлога.Views.БерлогаE">
+            <summary>
+            "БерлогаE" view.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfБерлога">
+            <summary>
+            Detail array of Берлога.
+            </summary>
+        </member>
+        <member name="M:NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfБерлога.#ctor(NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь)">
+            <summary>
+            Construct detail array.
+            </summary>
+            <summary>
+            Returns object with type Берлога by index.
+            </summary>
+            <summary>
+            Adds object with type Берлога.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Библиотека">
+            <summary>
+            Библиотека.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Библиотека.Адрес">
+            <summary>
+            Адрес.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Библиотека.Журнал">
+            <summary>
+            Библиотека.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Библиотека.Книга">
+            <summary>
+            Библиотека.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Библиотека.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Библиотека.Views.Eview">
+            <summary>
+            "Eview" view.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Блоха">
+            <summary>
+            Блоха.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Блоха.Кличка">
+            <summary>
+            Кличка.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Блоха.МедведьОбитания">
+            <summary>
+            Блоха.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Блоха.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Блоха.Views.PseudoDetailView">
+            <summary>
+            Представление для работы тестов на фильтрацию с использованием псевдодетейла.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Детейл">
+            <summary>
+            Детейл.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Детейл.prop1">
+            <summary>
+            prop1.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Детейл.Детейл2">
+            <summary>
+            Детейл.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Детейл.БазовыйКласс">
+            <summary>
+            мастеровая ссылка на шапку NewPlatform.Flexberry.ORM.ODataService.Tests.БазовыйКласс.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Детейл.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Детейл.Views.ДетейлE">
+            <summary>
+            "ДетейлE" view.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfДетейл">
+            <summary>
+            Detail array of Детейл.
+            </summary>
+        </member>
+        <member name="M:NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfДетейл.#ctor(NewPlatform.Flexberry.ORM.ODataService.Tests.БазовыйКласс)">
+            <summary>
+            Construct detail array.
+            </summary>
+            <summary>
+            Returns object with type Детейл by index.
+            </summary>
+            <summary>
+            Adds object with type Детейл.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Детейл2">
+            <summary>
+            Детейл2.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Детейл2.prop2">
+            <summary>
+            prop2.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Детейл2.Детейл">
+            <summary>
+            мастеровая ссылка на шапку NewPlatform.Flexberry.ORM.ODataService.Tests.Детейл.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfДетейл2">
+            <summary>
+            Detail array of Детейл2.
+            </summary>
+        </member>
+        <member name="M:NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfДетейл2.#ctor(NewPlatform.Flexberry.ORM.ODataService.Tests.Детейл)">
+            <summary>
+            Construct detail array.
+            </summary>
+            <summary>
+            Returns object with type Детейл2 by index.
+            </summary>
+            <summary>
+            Adds object with type Детейл2.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.ДетейлНаследник">
+            <summary>
+            ДетейлНаследник.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.ДетейлНаследник.prop3">
+            <summary>
+            prop3.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.ДетейлНаследник.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.ДетейлНаследник.Views.ДетейлНаследникE">
+            <summary>
+            "ДетейлНаследникE" view.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.ДочернийКласс">
+            <summary>
+            ДочернийКласс.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.ДочернийКласс.ChildProperty">
+            <summary>
+            ChildProperty.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.ДочернийКласс.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.ДочернийКласс.Views.ДочернийКлассE">
+            <summary>
+            "ДочернийКлассE" view.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Журнал">
+            <summary>
+            Журнал.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Журнал.Название">
+            <summary>
+            Название.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Журнал.Номер">
+            <summary>
+            Номер.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Журнал.Автор2">
+            <summary>
+            Журнал.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Журнал.Библиотека2">
+            <summary>
+            мастеровая ссылка на шапку NewPlatform.Flexberry.ORM.ODataService.Tests.Библиотека.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Журнал.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Журнал.Views.Dжурнал">
+            <summary>
+            "Dжурнал" view.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfЖурнал">
+            <summary>
+            Detail array of Журнал.
+            </summary>
+        </member>
+        <member name="M:NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfЖурнал.#ctor(NewPlatform.Flexberry.ORM.ODataService.Tests.Библиотека)">
+            <summary>
+            Construct detail array.
+            </summary>
+            <summary>
+            Returns object with type Журнал by index.
+            </summary>
+            <summary>
+            Adds object with type Журнал.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассNotStored">
+            <summary>
+            КлассNotStored.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассNotStored.StrAttr">
+            <summary>
+            StrAttr.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассNotStored.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассNotStored.Views.КлассNotStoredE">
+            <summary>
+            "КлассNotStoredE" view.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассStoredDerived">
+            <summary>
+            КлассStoredDerived.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассStoredDerived.StrAttr2">
+            <summary>
+            StrAttr2.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассStoredDerived.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассStoredDerived.Views.КлассStoredDerivedE">
+            <summary>
+            "КлассStoredDerivedE" view.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов">
+            <summary>
+            КлассСМножествомТипов.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertyGeography">
+            <summary>
+            PropertyGeography.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertyEnum">
+            <summary>
+            PropertyEnum.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertyBool">
+            <summary>
+            PropertyBool.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertyInt">
+            <summary>
+            PropertyInt.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertyDateTime">
+            <summary>
+            PropertyDateTime.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertyString">
+            <summary>
+            PropertyString.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertyFloat">
+            <summary>
+            PropertyFloat.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertyDouble">
+            <summary>
+            PropertyDouble.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertyDecimal">
+            <summary>
+            PropertyDecimal.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertySystemNullableDateTime">
+            <summary>
+            PropertySystemNullableDateTime.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertySystemNullableInt">
+            <summary>
+            PropertySystemNullableInt.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertySystemNullableGuid">
+            <summary>
+            PropertySystemNullableGuid.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertySystemNullableDecimal">
+            <summary>
+            PropertySystemNullableDecimal.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertyStormnetNullableDateTime">
+            <summary>
+            PropertyStormnetNullableDateTime.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertyStormnetNullableInt">
+            <summary>
+            PropertyStormnetNullableInt.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertyStormnetKeyGuid">
+            <summary>
+            PropertyStormnetKeyGuid.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertyStormnetNullableDecimal">
+            <summary>
+            PropertyStormnetNullableDecimal.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertyStormnetPartliedDate">
+            <summary>
+            PropertyStormnetPartliedDate.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertyStormnetContact">
+            <summary>
+            PropertyStormnetContact.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertyStormnetBlob">
+            <summary>
+            PropertyStormnetBlob.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertyStormnetEvent">
+            <summary>
+            PropertyStormnetEvent.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertyStormnetGeoData">
+            <summary>
+            PropertyStormnetGeoData.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertyStormnetImage">
+            <summary>
+            PropertyStormnetImage.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertyStormnetWebFile">
+            <summary>
+            PropertyStormnetWebFile.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.PropertyStormnetFile">
+            <summary>
+            PropertyStormnetFile.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.NotStoredProperty">
+            <summary>
+            NotStoredProperty.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСМножествомТипов.Views.КлассСМножествомТиповE">
+            <summary>
+            "КлассСМножествомТиповE" view.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСоСтроковымКлючом">
+            <summary>
+            КлассСоСтроковымКлючом.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСоСтроковымКлючом.__PrimaryKey">
+            <summary>
+            Gets or sets __PrimaryKey.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.КлассСоСтроковымКлючом.StoragePrimaryKey">
+            <summary>
+            StoragePrimaryKey.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Книга">
+            <summary>
+            Книга.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Книга.Название">
+            <summary>
+            Название.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Книга.Автор1">
+            <summary>
+            Книга.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Книга.Библиотека1">
+            <summary>
+            мастеровая ссылка на шапку NewPlatform.Flexberry.ORM.ODataService.Tests.Библиотека.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Книга.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Книга.Views.Dкнига">
+            <summary>
+            "Dкнига" view.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfКнига">
+            <summary>
+            Detail array of Книга.
+            </summary>
+        </member>
+        <member name="M:NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfКнига.#ctor(NewPlatform.Flexberry.ORM.ODataService.Tests.Библиотека)">
+            <summary>
+            Construct detail array.
+            </summary>
+            <summary>
+            Returns object with type Книга by index.
+            </summary>
+            <summary>
+            Adds object with type Книга.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Котенок">
+            <summary>
+            Котенок.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Котенок.КличкаКотенка">
+            <summary>
+            КличкаКотенка.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Котенок.Глупость">
+            <summary>
+            Глупость.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Котенок.Кошка">
+            <summary>
+            Котенок.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Кошка">
+            <summary>
+            Кошка.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Кошка.Кличка">
+            <summary>
+            Кличка.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Кошка.ДатаРождения">
+            <summary>
+            ДатаРождения.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Кошка.Тип">
+            <summary>
+            Тип.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Кошка.ПородаСтрокой">
+            <summary>
+            ПородаСтрокой.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Кошка.Агрессивная">
+            <summary>
+            Агрессивная.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Кошка.КоличествоУсовСлева">
+            <summary>
+            КоличествоУсовСлева.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Кошка.КоличествоУсовСправа">
+            <summary>
+            КоличествоУсовСправа.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Кошка.КошкаСтрокой">
+            <summary>
+            КошкаСтрокой.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Кошка.Порода">
+            <summary>
+            Кошка.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Кошка.Лапа">
+            <summary>
+            Кошка.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Кошка.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Кошка.Views.КошкаE">
+            <summary>
+            "КошкаE" view.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Лапа">
+            <summary>
+            Лапа.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Лапа.Цвет">
+            <summary>
+            Цвет.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Лапа.Размер">
+            <summary>
+            Размер.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Лапа.ДатаРождения">
+            <summary>
+            ДатаРождения.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Лапа.БылиЛиПереломы">
+            <summary>
+            БылиЛиПереломы.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Лапа.Сторона">
+            <summary>
+            Сторона.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Лапа.Номер">
+            <summary>
+            Номер.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Лапа.РазмерСтрокой">
+            <summary>
+            РазмерСтрокой.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Лапа.РазмерDouble">
+            <summary>
+            РазмерDouble.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Лапа.РазмерFloat">
+            <summary>
+            РазмерFloat.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Лапа.РазмерDecimal">
+            <summary>
+            РазмерDecimal.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Лапа.РазмерChar">
+            <summary>
+            РазмерChar.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Лапа.ТипЛапы">
+            <summary>
+            Лапа.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Лапа.Перелом">
+            <summary>
+            Лапа.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Лапа.Кошка">
+            <summary>
+            мастеровая ссылка на шапку NewPlatform.Flexberry.ORM.ODataService.Tests.Кошка.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Лапа.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Лапа.Views.ЛапаE">
+            <summary>
+            "ЛапаE" view.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfЛапа">
+            <summary>
+            Detail array of Лапа.
+            </summary>
+        </member>
+        <member name="M:NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfЛапа.#ctor(NewPlatform.Flexberry.ORM.ODataService.Tests.Кошка)">
+            <summary>
+            Construct detail array.
+            </summary>
+            <summary>
+            Returns object with type Лапа by index.
+            </summary>
+            <summary>
+            Adds object with type Лапа.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Лес">
+            <summary>
+            Лес.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Лес.Название">
+            <summary>
+            Название.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Лес.Площадь">
+            <summary>
+            Площадь.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Лес.Заповедник">
+            <summary>
+            Заповедник.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Лес.ДатаПоследнегоОсмотра">
+            <summary>
+            ДатаПоследнегоОсмотра.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Лес.Страна">
+            <summary>
+            Лес.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Лес.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Лес.Views.ЛесE">
+            <summary>
+            "ЛесE" view.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Лес.Views.ЛесL">
+            <summary>
+            "ЛесL" view.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Мастер">
+            <summary>
+            Мастер.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Мастер.prop">
+            <summary>
+            prop.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Мастер.Мастер2">
+            <summary>
+            Мастер.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Мастер2">
+            <summary>
+            Мастер2.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Мастер2.свойство2">
+            <summary>
+            свойство2.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь">
+             <summary>
+             Медведь
+            Аудит включен для тестирования оффлайн-сервиса аудита в OData.
+             </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.ПолеБС">
+            <summary>
+            ПолеБС.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.ПорядковыйНомер">
+            <summary>
+            ПорядковыйНомер.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.Вес">
+            <summary>
+            Вес.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.ЦветГлаз">
+            <summary>
+            ЦветГлаз.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.Пол">
+            <summary>
+            Пол.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.ДатаРождения">
+            <summary>
+            ДатаРождения.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.МедведьСтрокой">
+            <summary>
+            МедведьСтрокой.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.ВычислимоеПоле">
+            <summary>
+            ВычислимоеПоле.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.CreateTime">
+            <summary>
+            Время создания объекта.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.Creator">
+            <summary>
+            Создатель объекта.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.EditTime">
+            <summary>
+            Время последнего редактирования объекта.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.Editor">
+            <summary>
+            Последний редактор объекта.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.СтранаРождения">
+             <summary>
+             Медведь
+            Аудит включен для тестирования оффлайн-сервиса аудита в OData.
+             </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.ЛесОбитания">
+             <summary>
+             Медведь
+            Аудит включен для тестирования оффлайн-сервиса аудита в OData.
+             </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.Мама">
+             <summary>
+             Медведь
+            Аудит включен для тестирования оффлайн-сервиса аудита в OData.
+             </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.Папа">
+             <summary>
+             Медведь
+            Аудит включен для тестирования оффлайн-сервиса аудита в OData.
+             </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.Берлога">
+             <summary>
+             Медведь
+            Аудит включен для тестирования оффлайн-сервиса аудита в OData.
+             </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.Views.LoadTestView">
+            <summary>
+            Представление для работы тестов на загрузку объектов.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.Views.OrderNumberTest">
+            <summary>
+            Представление для работы теста по использованию порядкового номера.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.Views.МедведьE">
+            <summary>
+            "МедведьE" view.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.Views.МедведьL">
+            <summary>
+            "МедведьL" view.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.Views.МедведьShort">
+            <summary>
+            "МедведьShort" view.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.Views.МедведьСДелейломИВычислимымСвойством">
+            <summary>
+            "МедведьСДелейломИВычислимымСвойством" view.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.AuditSettings">
+            <summary>
+            Audit class settings.
+            </summary>
+        </member>
+        <member name="F:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.AuditSettings.AuditEnabled">
+            <summary>
+            Включён ли аудит для класса.
+            </summary>
+        </member>
+        <member name="F:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.AuditSettings.UseDefaultView">
+            <summary>
+            Использовать имя представления для аудита по умолчанию.
+            </summary>
+        </member>
+        <member name="F:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.AuditSettings.SelectAudit">
+            <summary>
+            Включён ли аудит операции чтения.
+            </summary>
+        </member>
+        <member name="F:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.AuditSettings.SelectAuditViewName">
+            <summary>
+            Имя представления для аудирования операции чтения.
+            </summary>
+        </member>
+        <member name="F:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.AuditSettings.InsertAudit">
+            <summary>
+            Включён ли аудит операции создания.
+            </summary>
+        </member>
+        <member name="F:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.AuditSettings.InsertAuditViewName">
+            <summary>
+            Имя представления для аудирования операции создания.
+            </summary>
+        </member>
+        <member name="F:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.AuditSettings.UpdateAudit">
+            <summary>
+            Включён ли аудит операции изменения.
+            </summary>
+        </member>
+        <member name="F:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.AuditSettings.UpdateAuditViewName">
+            <summary>
+            Имя представления для аудирования операции изменения.
+            </summary>
+        </member>
+        <member name="F:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.AuditSettings.DeleteAudit">
+            <summary>
+            Включён ли аудит операции удаления.
+            </summary>
+        </member>
+        <member name="F:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.AuditSettings.DeleteAuditViewName">
+            <summary>
+            Имя представления для аудирования операции удаления.
+            </summary>
+        </member>
+        <member name="F:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.AuditSettings.FormUrl">
+            <summary>
+            Путь к форме просмотра результатов аудита.
+            </summary>
+        </member>
+        <member name="F:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.AuditSettings.WriteMode">
+            <summary>
+            Режим записи данных аудита (синхронный или асинхронный).
+            </summary>
+        </member>
+        <member name="F:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.AuditSettings.PrunningLength">
+            <summary>
+            Максимальная длина сохраняемого значения поля (если 0, то строка обрезаться не будет).
+            </summary>
+        </member>
+        <member name="F:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.AuditSettings.ShowPrimaryKey">
+            <summary>
+            Показывать ли пользователям в изменениях первичные ключи.
+            </summary>
+        </member>
+        <member name="F:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.AuditSettings.KeepOldValue">
+            <summary>
+            Сохранять ли старое значение.
+            </summary>
+        </member>
+        <member name="F:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.AuditSettings.Compress">
+            <summary>
+            Сжимать ли сохраняемые значения.
+            </summary>
+        </member>
+        <member name="F:NewPlatform.Flexberry.ORM.ODataService.Tests.Медведь.AuditSettings.KeepAllValues">
+            <summary>
+            Сохранять ли все значения атрибутов, а не только изменяемые.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Наследник">
+            <summary>
+            Наследник.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Наследник.Свойство">
+            <summary>
+            Свойство.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Наследник.Мастер">
+            <summary>
+            Наследник.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Наследник.Master">
+            <summary>
+            Наследник.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Перелом">
+            <summary>
+            Перелом.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Перелом.Дата">
+            <summary>
+            Дата.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Перелом.Тип">
+            <summary>
+            Тип.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Перелом.Лапа">
+            <summary>
+            мастеровая ссылка на шапку NewPlatform.Flexberry.ORM.ODataService.Tests.Лапа.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfПерелом">
+            <summary>
+            Detail array of Перелом.
+            </summary>
+        </member>
+        <member name="M:NewPlatform.Flexberry.ORM.ODataService.Tests.DetailArrayOfПерелом.#ctor(NewPlatform.Flexberry.ORM.ODataService.Tests.Лапа)">
+            <summary>
+            Construct detail array.
+            </summary>
+            <summary>
+            Returns object with type Перелом by index.
+            </summary>
+            <summary>
+            Adds object with type Перелом.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Порода">
+            <summary>
+            Порода.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Порода.Название">
+            <summary>
+            Название.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Порода.ТипПороды">
+            <summary>
+            Порода.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Порода.Иерархия">
+            <summary>
+            Порода.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.ПоставщикКниг">
+            <summary>
+            ПоставщикКниг.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.ПоставщикКниг.Ссылка">
+            <summary>
+            Ссылка.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.ПоставщикКниг.Мастер">
+            <summary>
+            ПоставщикКниг.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.ПоставщикКниг.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.ПоставщикКниг.Views.View">
+            <summary>
+            "View" view.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.ПоставщикКниг.Views.ViewFull">
+            <summary>
+            "ViewFull" view.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Сторона">
+            <summary>
+            Сторона.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Страна">
+            <summary>
+            Страна.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Страна.Название">
+            <summary>
+            Название.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Страна.Views">
+            <summary>
+            Class views container.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Страна.Views.СтранаE">
+            <summary>
+            "СтранаE" view.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.Страна.Views.СтранаL">
+            <summary>
+            "СтранаL" view.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.ТипКошки">
+            <summary>
+            ТипКошки.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.ТипЛапы">
+            <summary>
+            ТипЛапы.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.ТипЛапы.Название">
+            <summary>
+            Название.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.ТипЛапы.Актуально">
+            <summary>
+            Актуально.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.ТипПерелома">
+            <summary>
+            ТипПерелома.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.ТипПороды">
+            <summary>
+            ТипПороды.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.ТипПороды.Название">
+            <summary>
+            Название.
+            </summary>
+        </member>
+        <member name="P:NewPlatform.Flexberry.ORM.ODataService.Tests.ТипПороды.ДатаРегистрации">
+            <summary>
+            ДатаРегистрации.
+            </summary>
+        </member>
+        <member name="T:NewPlatform.Flexberry.ORM.ODataService.Tests.Цифра">
+            <summary>
+            Цифра.
+            </summary>
+        </member>
+    </members>
+</doc>
