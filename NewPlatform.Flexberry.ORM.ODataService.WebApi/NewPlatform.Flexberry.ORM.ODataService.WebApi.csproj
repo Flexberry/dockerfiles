@@ -1,174 +1,38 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D3EBD348-D0F8-4C1E-BDC0-6C77D9D443CB}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFrameworks>net45;net461</TargetFrameworks>
     <RootNamespace>NewPlatform.Flexberry.ORM.ODataService.WebApi</RootNamespace>
     <AssemblyName>NewPlatform.Flexberry.ORM.ODataService.WebApi</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\NewPlatform.Flexberry.ORM.ODataService.WebApi.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
     <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
+    <CodeAnalysisRuleSet>..\Flexberry.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=1.2.0.246, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpZipLib.1.2.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSSoft.STORMNET.Business, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c17bb360f7843f45, processorArchitecture=MSIL">
-      <HintPath>..\packages\NewPlatform.Flexberry.ORM.6.0.0-beta04\lib\net45\ICSSoft.STORMNET.Business.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSSoft.STORMNET.Business.ExternalLangDef, Version=1.0.0.0, Culture=neutral, PublicKeyToken=50dc27591ed591e6, processorArchitecture=MSIL">
-      <HintPath>..\packages\NewPlatform.Flexberry.ORM.6.0.0-beta04\lib\net45\ICSSoft.STORMNET.Business.ExternalLangDef.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSSoft.STORMNET.Business.LINQProvider, Version=1.0.0.0, Culture=neutral, PublicKeyToken=68e48bb6f6293778, processorArchitecture=MSIL">
-      <HintPath>..\packages\NewPlatform.Flexberry.ORM.6.0.0-beta04\lib\net45\ICSSoft.STORMNET.Business.LINQProvider.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSSoft.STORMNET.Business.LockService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=68ac0e47b5ef94d8, processorArchitecture=MSIL">
-      <HintPath>..\packages\NewPlatform.Flexberry.ORM.6.0.0-beta04\lib\net45\ICSSoft.STORMNET.Business.LockService.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSSoft.STORMNET.Collections, Version=1.0.0.1, Culture=neutral, PublicKeyToken=898f36b7a907d804, processorArchitecture=MSIL">
-      <HintPath>..\packages\NewPlatform.Flexberry.ORM.6.0.0-beta04\lib\net45\ICSSoft.STORMNET.Collections.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSSoft.STORMNET.DataObject, Version=1.0.0.1, Culture=neutral, PublicKeyToken=023a90c13b0ca8dc, processorArchitecture=MSIL">
-      <HintPath>..\packages\NewPlatform.Flexberry.ORM.6.0.0-beta04\lib\net45\ICSSoft.STORMNET.DataObject.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSSoft.STORMNET.FunctionalLanguage, Version=1.0.0.1, Culture=neutral, PublicKeyToken=88efc6f76e5cd161, processorArchitecture=MSIL">
-      <HintPath>..\packages\NewPlatform.Flexberry.ORM.6.0.0-beta04\lib\net45\ICSSoft.STORMNET.FunctionalLanguage.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSSoft.STORMNET.Tools, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c824f5305b237be9, processorArchitecture=MSIL">
-      <HintPath>..\packages\NewPlatform.Flexberry.ORM.6.0.0-beta04\lib\net45\ICSSoft.STORMNET.Tools.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSSoft.STORMNET.UserDataTypes, Version=1.0.0.1, Culture=neutral, PublicKeyToken=bc478021255def29, processorArchitecture=MSIL">
-      <HintPath>..\packages\NewPlatform.Flexberry.ORM.6.0.0-beta04\lib\net45\ICSSoft.STORMNET.UserDataTypes.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Spatial, Version=7.5.0.20627, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Spatial.7.5.0\lib\portable-net45+win8+wpa81\Microsoft.Spatial.dll</HintPath>
-    </Reference>
-    <Reference Include="NewPlatform.Flexberry.LockService, Version=1.0.0.0, Culture=neutral, PublicKeyToken=90cf813b4f0caf3c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NewPlatform.Flexberry.LockService.3.0.0-beta01\lib\net45\NewPlatform.Flexberry.LockService.dll</HintPath>
-    </Reference>
-    <Reference Include="NewPlatform.Flexberry.LogService, Version=2.0.0.0, Culture=neutral, PublicKeyToken=fd6943b998f5450d, processorArchitecture=MSIL">
-      <HintPath>..\packages\NewPlatform.Flexberry.LogService.2.0.0-beta01\lib\net45\NewPlatform.Flexberry.LogService.dll</HintPath>
-    </Reference>
-    <Reference Include="NewPlatform.Flexberry.ORM.CurrentUserService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=087bc7ccdc1b0bb4, processorArchitecture=MSIL">
-      <HintPath>..\packages\NewPlatform.Flexberry.ORM.6.0.0-beta04\lib\net45\NewPlatform.Flexberry.ORM.CurrentUserService.dll</HintPath>
-    </Reference>
-    <Reference Include="NewPlatform.Flexberry.ORM.UnityFactory, Version=1.0.0.1, Culture=neutral, PublicKeyToken=6389c2e26f4059bc, processorArchitecture=MSIL">
-      <HintPath>..\packages\NewPlatform.Flexberry.ORM.6.0.0-beta04\lib\net45\NewPlatform.Flexberry.ORM.UnityFactory.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Remotion.Linq, Version=2.2.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Remotion.Linq.2.2.0\lib\net45\Remotion.Linq.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Configuration.ConfigurationManager, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Configuration.ConfigurationManager.4.5.0\lib\net461\System.Configuration.ConfigurationManager.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.OracleClient" />
-    <Reference Include="System.DirectoryServices" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Runtime.Serialization.Formatters, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.Serialization.Formatters.4.3.0\lib\net46\System.Runtime.Serialization.Formatters.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization.Primitives, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.Serialization.Primitives.4.3.0\lib\net46\System.Runtime.Serialization.Primitives.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.AccessControl, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.AccessControl.4.5.0\lib\net461\System.Security.AccessControl.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Permissions, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Permissions.4.5.0\lib\net461\System.Security.Permissions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Principal.Windows, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Principal.Windows.4.5.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ServiceProcess" />
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.2\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Transactions" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
+    <PackageReference Include="NewPlatform.Flexberry.LockService" Version="3.0.0-beta01" />
+    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta08" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NewPlatform.Flexberry.ORM.ODataService.Files\NewPlatform.Flexberry.ORM.ODataService.Files.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Http, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.7\lib\net45\System.Web.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Unity.Abstractions, Version=5.11.1.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unity.Abstractions.5.11.1\lib\net46\Unity.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Configuration, Version=5.11.1.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unity.Configuration.5.11.1\lib\net46\Unity.Configuration.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Container, Version=5.11.1.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unity.Container.5.11.1\lib\net46\Unity.Container.dll</HintPath>
-    </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Controllers\BaseApiController.cs" />
-    <Compile Include="Controllers\FileController.cs" />
-    <Compile Include="Controllers\FileController.Download.cs" />
-    <Compile Include="Controllers\FileController.Upload.cs" />
-    <Compile Include="Controllers\LockController.cs" />
-    <Compile Include="Extensions\HttpConfigurationExtensions.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="key.snk" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NewPlatform.Flexberry.ORM.ODataService.Files\NewPlatform.Flexberry.ORM.ODataService.Files.csproj">
-      <Project>{22faa967-ea69-4ae9-9a07-ecee6c499bbb}</Project>
-      <Name>NewPlatform.Flexberry.ORM.ODataService.Files</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
 </Project>
