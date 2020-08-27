@@ -261,8 +261,8 @@
 
             return responses;
         }
-
 #endif
+
 #if NETSTANDARD
         /// <inheritdoc />
         public override async Task<IList<ODataBatchResponseItem>> ExecuteRequestMessagesAsync(IEnumerable<ODataBatchRequestItem> requests, RequestDelegate handler)
@@ -305,7 +305,6 @@
 
             return responses;
         }
-
 #endif
 
 #if NETFRAMEWORK

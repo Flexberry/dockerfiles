@@ -30,13 +30,13 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Batch
             this.requests = requests;
         }
 
-        ///<inherirdoc/>
+        /// <inherirdoc/>
         public IEnumerator<ODataBatchRequestItem> GetEnumerator()
         {
             return requests.GetEnumerator();
         }
 
-        ///<inherirdoc/>
+        /// <inherirdoc/>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return requests.GetEnumerator();
