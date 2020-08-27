@@ -1,14 +1,10 @@
-﻿#if NETFRAMEWORK
-namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
+﻿#if NETSTANDARD
+namespace NewPlatform.Flexberry.ORM.ODataService
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Net.Http;
-    using System.Text;
-    using System.Threading.Tasks;
     using Microsoft.AspNet.OData;
     using Microsoft.AspNet.OData.Query;
+    using Microsoft.AspNetCore.Http;
 
     /// <summary>
     /// This class defines an attribute that can be applied to an action to enable querying using the OData query
@@ -27,7 +23,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
         /// <param name="queryOptions">
         /// The <see cref="ODataQueryOptions"/> instance constructed based on the incoming request.
         /// </param>
-        public override void ValidateQuery(HttpRequestMessage request, ODataQueryOptions queryOptions)
+        public override void ValidateQuery(HttpRequest request, ODataQueryOptions queryOptions)
         {
         }
 
@@ -53,7 +49,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
         /// <param name="queryOptions">
         /// The <see cref="ODataQueryOptions"/> instance constructed based on the incoming request.
         /// </param>
-        /// <returns>The new entity after the $select and $expand query has been applied to.</returns>
+        /// <returns>entity</returns>
         public override object ApplyQuery(object entity, ODataQueryOptions queryOptions)
         {
             return entity;

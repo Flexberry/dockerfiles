@@ -44,10 +44,18 @@
         {
             var resourceSet = base.CreateResourceSet(resourceSetInstance, resourceSetType, writeContext);
 
+#if NETFRAMEWORK
             if (writeContext.Request.Properties.ContainsKey(Count))
             {
                 resourceSet.Count = (int)writeContext.Request.Properties[Count];
             }
+#endif
+#if NETSTANDARD
+            if (writeContext.Request.HttpContext.Items.ContainsKey(Count))
+            {
+                resourceSet.Count = (int)writeContext.Request.HttpContext.Items[Count];
+            }
+#endif
 
             return resourceSet;
         }

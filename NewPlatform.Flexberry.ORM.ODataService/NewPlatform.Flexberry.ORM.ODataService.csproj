@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;net461</TargetFrameworks>
+    <TargetFrameworks>net45;net461;netstandard2.0</TargetFrameworks>
     <AssemblyName>NewPlatform.Flexberry.ORM.ODataService</AssemblyName>
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
@@ -12,7 +12,15 @@
     <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
 
-  <ItemGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
+    <DefineConstants>$(DefineConstants);NETFRAMEWORK</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Web" />
@@ -20,16 +28,7 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.Cors" Version="5.2.7" />
-    <PackageReference Include="Microsoft.AspNet.OData" Version="7.1.0" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Cors" Version="5.2.7" />
-    <PackageReference Include="Microsoft.OData.Core" Version="7.5.0" />
-    <PackageReference Include="Microsoft.OData.Edm" Version="7.5.0" />
-    <PackageReference Include="Microsoft.Spatial" Version="7.5.0" />
     <PackageReference Include="NewPlatform.Flexberry.UserSettingsService" Version="4.0.0-beta01" />
-    <PackageReference Include="Newtonsoft.Json" Version="8.0.3" />
     <PackageReference Include="NewPlatform.Flexberry.LockService" Version="3.0.0-beta01" />
     <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta08" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
@@ -42,9 +41,32 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
+    <PackageReference Include="Microsoft.AspNet.Cors" Version="5.2.7" />
+    <PackageReference Include="Microsoft.AspNet.OData" Version="7.1.0" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Cors" Version="5.2.7" />
+    <PackageReference Include="Microsoft.OData.Core" Version="7.5.0" />
+    <PackageReference Include="Microsoft.OData.Edm" Version="7.5.0" />
+    <PackageReference Include="Microsoft.Spatial" Version="7.5.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="8.0.3" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="NewPlatform.Flexberry.AspNetCore.OData" Version="7.1.0-beta02" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
     <ProjectReference Include="..\NewPlatform.Flexberry.ORM.ODataService.Files\NewPlatform.Flexberry.ORM.ODataService.Files.csproj" />
     <ProjectReference Include="..\NewPlatform.Flexberry.ORM.ODataService.WebApi\NewPlatform.Flexberry.ORM.ODataService.WebApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <ProjectReference Include="..\NewPlatform.Flexberry.ORM.ODataServiceCore.Common\NewPlatform.Flexberry.ORM.ODataServiceCore.Common.csproj" />
+    <ProjectReference Include="..\NewPlatform.Flexberry.ORM.ODataServiceCore.Files\NewPlatform.Flexberry.ORM.ODataServiceCore.Files.csproj" />
+    <ProjectReference Include="..\NewPlatform.Flexberry.ORM.ODataServiceCore.WebApi\NewPlatform.Flexberry.ORM.ODataServiceCore.WebApi.csproj" />
   </ItemGroup>
 
 </Project>

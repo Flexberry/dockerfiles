@@ -1,4 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿#if NETFRAMEWORK
+// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
@@ -217,3 +218,4 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
         }
     }
 }
+#endif

@@ -1,4 +1,6 @@
-﻿namespace NewPlatform.Flexberry.ORM.ODataService.Controllers
+﻿#if NETFRAMEWORK
+
+namespace NewPlatform.Flexberry.ORM.ODataService.Controllers
 {
     using System.Web.Http.Controllers;
     using Microsoft.AspNet.OData;
@@ -29,3 +31,5 @@
         }
     }
 }
+
+#endif

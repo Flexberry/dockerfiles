@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Linq;
     using System.IO;
     using System.Linq;
     using System.Xml.Linq;
@@ -13,6 +12,10 @@
     using FileType = ICSSoft.STORMNET.FileType;
     using KeyGen = ICSSoft.STORMNET.KeyGen;
     using UserDataTypes = ICSSoft.STORMNET.UserDataTypes;
+
+#if NETFRAMEWORK
+    using System.Data.Linq;
+#endif
 
     /// <summary>
     /// Карта соответствия типов CLR и EDM.
@@ -82,7 +85,9 @@
             { typeof(TimeOfDay), GetEdmPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay) },
             { typeof(TimeOfDay?), GetEdmPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay) },
             { typeof(XElement), GetEdmPrimitiveType(EdmPrimitiveTypeKind.String) },
+#if NETFRAMEWORK
             { typeof(Binary), GetEdmPrimitiveType(EdmPrimitiveTypeKind.Binary) },
+#endif
             { typeof(ushort), GetEdmPrimitiveType(EdmPrimitiveTypeKind.Int32) },
             { typeof(ushort?), GetEdmPrimitiveType(EdmPrimitiveTypeKind.Int32) },
             { typeof(uint), GetEdmPrimitiveType(EdmPrimitiveTypeKind.Int64) },

@@ -6,14 +6,12 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Linq;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Runtime.CompilerServices;
-    using System.Web.Http.Dispatcher;
     using System.Xml.Linq;
     using ICSSoft.STORMNET.Business.LINQProvider;
     using Microsoft.AspNet.OData.Query;
@@ -22,6 +20,15 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
     using Microsoft.OData.UriParser;
     using Microsoft.Spatial;
     using NewPlatform.Flexberry.ORM.ODataService.Model;
+
+#if NETFRAMEWORK
+    using System.Data.Linq;
+    using System.Web.Http.Dispatcher;
+#endif
+#if NETSTANDARD
+    using Microsoft.AspNet.OData.Common;
+    using Microsoft.AspNet.OData.Interfaces;
+#endif
 
     /// <summary>
     /// Translates an OData $filter parse tree represented by <see cref="FilterClause"/> to
@@ -79,6 +86,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
         private Dictionary<string, ParameterExpression> _lambdaParameters;
 
         private ODataQuerySettings _querySettings;
+#if NETFRAMEWORK
         private IAssembliesResolver _assembliesResolver;
 
         private FilterBinder(IEdmModel model, IAssembliesResolver assembliesResolver, ODataQuerySettings querySettings)
@@ -86,6 +94,16 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
         {
             _assembliesResolver = assembliesResolver;
         }
+#endif
+#if NETSTANDARD
+        private IWebApiAssembliesResolver _assembliesResolver;
+
+        private FilterBinder(IEdmModel model, IWebApiAssembliesResolver assembliesResolver, ODataQuerySettings querySettings)
+            : this(model, querySettings)
+        {
+            _assembliesResolver = assembliesResolver;
+        }
+#endif
 
         private FilterBinder(IEdmModel model, ODataQuerySettings querySettings)
         {
@@ -150,7 +168,12 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
             FilterClause filterClause,
             Type filterType,
             IEdmModel model,
+#if NETFRAMEWORK
             IAssembliesResolver assembliesResolver,
+#endif
+#if NETSTANDARD
+            IWebApiAssembliesResolver assembliesResolver,
+#endif
             ODataQuerySettings querySettings)
         {
             if (filterClause == null)
@@ -1132,7 +1155,12 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
                     }
                     catch (ArgumentException e)
                     {
+#if NETFRAMEWORK
                         if (e.ParamName == null)
+#endif
+#if NETSTANDARD
+                        if (e.ParamName == "propertyName")
+#endif
                         {
                             PropertyInfo pi = source.Type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
                             if (pi == null)
@@ -2264,10 +2292,12 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
                             {
                                 convertedExpression = Expression.Call(source, "ToString", typeArguments: null, arguments: null);
                             }
+#if NETFRAMEWORK
                             else if (sourceType == typeof(Binary))
                             {
                                 convertedExpression = Expression.Call(source, "ToArray", typeArguments: null, arguments: null);
                             }
+#endif
                             else if (sourceType == typeof(ICSSoft.STORMNET.UserDataTypes.NullableDateTime)
                                 || sourceType == typeof(ICSSoft.STORMNET.UserDataTypes.NullableDecimal)
                                 || sourceType == typeof(ICSSoft.STORMNET.UserDataTypes.NullableInt))

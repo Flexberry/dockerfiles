@@ -9,6 +9,10 @@
     using Microsoft.AspNet.OData.Formatter.Serialization;
     using Microsoft.OData.Edm;
 
+#if NETSTANDARD
+    using Microsoft.AspNetCore.Http;
+#endif
+
     /// <summary>
     /// An CustomODataSerializerProvider is a factory for creating <see cref="T:System.Web.OData.Formatter.Serialization.ODataSerializer"/>s.
     ///
@@ -62,7 +66,14 @@
         /// <returns>
         /// The <see cref="T:System.Web.OData.Formatter.Serialization.ODataSerializer"/> for the given type.
         /// </returns>
-        public override ODataSerializer GetODataPayloadSerializer(Type type, HttpRequestMessage request)
+        public override ODataSerializer GetODataPayloadSerializer(Type type,
+#if NETFRAMEWORK
+            HttpRequestMessage request
+#endif
+#if NETSTANDARD
+            HttpRequest request
+#endif
+            )
         {
             if (type == typeof(EnumerableQuery<IEdmEntityObject>))
             {
