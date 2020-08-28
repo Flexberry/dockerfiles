@@ -218,7 +218,7 @@
 
             if (result is DataObject)
             {
-                var entityType = EdmModel.GetEdmEntityType(result.GetType());
+                var entityType = _model.GetEdmEntityType(result.GetType());
                 return Ok(GetEdmObject(entityType, result, 1, null));
             }
 

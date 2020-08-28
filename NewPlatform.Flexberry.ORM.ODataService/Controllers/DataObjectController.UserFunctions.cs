@@ -334,7 +334,7 @@
 
                     NameValueCollection queryParams = QueryHelpers.QueryToNameValueCollection(Request.Query);
 
-                    if ((EdmModel.ExportService != null || EdmModel.ODataExportService != null)
+                    if ((_model.ExportService != null || _model.ODataExportService != null)
                         && (Request.HttpContext.Items.ContainsKey(RequestHeadersHookMiddleware.AcceptApplicationMsExcel) || Convert.ToBoolean(queryParams["exportExcel"])))
                     {
                         _objs = (result as IEnumerable).Cast<DataObject>().ToArray();
@@ -358,7 +358,7 @@
 
                 this.type = result.GetType();
                 CreateDynamicView();
-                var entityType = EdmModel.GetEdmEntityType(this.type);
+                var entityType = _model.GetEdmEntityType(this.type);
                 return Ok(GetEdmObject(entityType, result, 1, null, _dynamicView));
             }
 
