@@ -1,4 +1,6 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿#if NETFRAMEWORK
+
+// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 // Branch of https://github.com/OData/WebApi/blob/7.1.0/src/Microsoft.AspNet.OData.Shared/Formatter/Deserialization/DeserializationHelpers.cs
 
@@ -464,3 +466,4 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
         }
     }
 }
+#endif

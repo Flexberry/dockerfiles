@@ -3,6 +3,7 @@
     using System;
     using Microsoft.AspNet.OData;
     using Microsoft.AspNet.OData.Formatter.Deserialization;
+    using Microsoft.OData.Edm;
 
     /// <inheritdoc/>
     public class ExtendedODataDeserializerProvider : DefaultODataDeserializerProvider
@@ -14,7 +15,7 @@
         }
 
         /// <inheritdoc/>
-        public override ODataEdmTypeDeserializer GetEdmTypeDeserializer(Microsoft.OData.Edm.IEdmTypeReference edmType)
+        public override ODataEdmTypeDeserializer GetEdmTypeDeserializer(IEdmTypeReference edmType)
         {
             return _instance.GetEdmTypeDeserializer(edmType);
         }
@@ -22,7 +23,13 @@
         /// <inheritdoc/>
         public override ODataDeserializer GetODataDeserializer(
              Type type,
-             System.Net.Http.HttpRequestMessage request)
+#if NETFRAMEWORK
+             System.Net.Http.HttpRequestMessage request
+#endif
+#if NETSTANDARD
+             Microsoft.AspNetCore.Http.HttpRequest request
+#endif
+            )
         {
             if (type == typeof(Uri))
             {

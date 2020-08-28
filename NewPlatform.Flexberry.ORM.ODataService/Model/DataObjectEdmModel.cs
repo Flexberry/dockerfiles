@@ -10,6 +10,7 @@
     using ICSSoft.STORMNET;
 
     using Microsoft.AspNet.OData;
+    using Microsoft.AspNet.OData.Formatter;
     using Microsoft.OData.Edm;
     using Microsoft.Spatial;
 

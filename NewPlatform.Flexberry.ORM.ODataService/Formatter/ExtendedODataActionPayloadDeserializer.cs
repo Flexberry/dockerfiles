@@ -11,6 +11,7 @@
     using System.Runtime.Serialization;
     using ICSSoft.STORMNET;
     using Microsoft.AspNet.OData;
+    using Microsoft.AspNet.OData.Common;
     using Microsoft.AspNet.OData.Formatter.Deserialization;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
@@ -19,6 +20,7 @@
     using NewPlatform.Flexberry.ORM.ODataService.Model;
 
     using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
+    using SRResources = Expressions.SRResources;
 
     /// <inheritdoc />
     public class ExtendedODataActionPayloadDeserializer : ODataDeserializer

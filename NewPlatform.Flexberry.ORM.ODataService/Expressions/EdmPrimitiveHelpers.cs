@@ -5,9 +5,14 @@
 namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 {
     using System;
-    using System.Data.Linq;
     using System.Globalization;
     using System.Xml.Linq;
+    using Microsoft.AspNet.OData.Common;
+
+#if NETFRAMEWORK
+    using System.Data.Linq;
+#endif
+
 
     using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
 
@@ -69,10 +74,12 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
 
                 return str.ToCharArray();
             }
+#if NETFRAMEWORK
             else if (type == typeof(Binary))
             {
                 return new Binary((byte[])value);
             }
+#endif
             else if (type == typeof(XElement))
             {
                 if (str == null)
