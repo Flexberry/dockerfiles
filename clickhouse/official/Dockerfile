@@ -1,10 +1,13 @@
-FROM yandex/clickhouse-server:20.4
+FROM yandex/clickhouse-server:20.7
 
 ENV LANG ru_RU.UTF-8
 
 MAINTAINER mail@flexberry.ru
 
+
+ENV TZ=Asia/Yekaterinburg
 RUN \
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone; \
     apt-get update; \
     apt-get install -y less vim psmisc telnet postgresql-client unixodbc odbcinst odbc-postgresql xsltproc libxml2-utils python3-pip; \
     pip3 install clickhouse-driver psycopg2-binary
