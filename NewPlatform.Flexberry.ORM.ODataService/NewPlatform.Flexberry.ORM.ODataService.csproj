@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45;net461;netstandard2.0</TargetFrameworks>
+    <Configurations>Debug;Release</Configurations>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>NewPlatform.Flexberry.ORM.ODataService</RootNamespace>
     <AssemblyName>NewPlatform.Flexberry.ORM.ODataService</AssemblyName>
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
@@ -12,29 +15,19 @@
     <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
-    <DefineConstants>$(DefineConstants);NETFRAMEWORK</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Web" />
   </ItemGroup>
 
-
   <ItemGroup>
-    <PackageReference Include="NewPlatform.Flexberry.UserSettingsService" Version="4.0.0-beta01" />
-    <PackageReference Include="NewPlatform.Flexberry.LockService" Version="3.0.0-beta01" />
-    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta08" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="NewPlatform.Flexberry.LockService" Version="3.0.0-beta02" />
+    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta10" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -42,11 +35,9 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
-    <PackageReference Include="Microsoft.AspNet.Cors" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNet.OData" Version="7.1.0" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Cors" Version="5.2.7" />
     <PackageReference Include="Microsoft.OData.Core" Version="7.5.0" />
     <PackageReference Include="Microsoft.OData.Edm" Version="7.5.0" />
     <PackageReference Include="Microsoft.Spatial" Version="7.5.0" />
