@@ -58,6 +58,21 @@ CREATE TABLE "Лес"
 ) ;
 
 
+CREATE TABLE "Son"
+(
+
+	"primaryKey" RAW(16) NOT NULL,
+
+	"SuspendersColor" NVARCHAR2(255) NULL,
+
+	"Name" NVARCHAR2(255) NULL,
+
+	"Parent" RAW(16) NOT NULL,
+
+	 PRIMARY KEY ("primaryKey")
+) ;
+
+
 CREATE TABLE "ТипПороды"
 (
 
@@ -96,6 +111,21 @@ CREATE TABLE "TestDetailWithCicle"
 	"Parent" RAW(16) NULL,
 
 	"TestMaster" RAW(16) NOT NULL,
+
+	 PRIMARY KEY ("primaryKey")
+) ;
+
+
+CREATE TABLE "Daughter"
+(
+
+	"primaryKey" RAW(16) NOT NULL,
+
+	"DressColor" NVARCHAR2(255) NULL,
+
+	"Name" NVARCHAR2(255) NULL,
+
+	"Parent" RAW(16) NOT NULL,
 
 	 PRIMARY KEY ("primaryKey")
 ) ;
@@ -283,6 +313,17 @@ CREATE TABLE "Книга"
 	"Автор1" RAW(16) NOT NULL,
 
 	"Библиотека1" RAW(16) NOT NULL,
+
+	 PRIMARY KEY ("primaryKey")
+) ;
+
+
+CREATE TABLE "Person"
+(
+
+	"primaryKey" RAW(16) NOT NULL,
+
+	"Name" NVARCHAR2(255) NULL,
 
 	 PRIMARY KEY ("primaryKey")
 ) ;
@@ -929,6 +970,11 @@ ALTER TABLE "Лес"
 
 CREATE INDEX "Лес_IСтрана" on "Лес" ("Страна");
 
+ALTER TABLE "Son"
+	ADD CONSTRAINT "Son_FPerson_0" FOREIGN KEY ("Parent") REFERENCES "Person" ("primaryKey");
+
+CREATE INDEX "Son_IParent" on "Son" ("Parent");
+
 ALTER TABLE "Порода"
 	ADD CONSTRAINT "Порода_FТипПо_7829" FOREIGN KEY ("ТипПороды_m0") REFERENCES "ТипПороды" ("primaryKey");
 
@@ -948,6 +994,11 @@ ALTER TABLE "TestDetailWithCicle"
 	ADD CONSTRAINT "TestDetailWithCicle_FTest_5002" FOREIGN KEY ("TestMaster") REFERENCES "TestMaster" ("primaryKey");
 
 CREATE INDEX "TestDetailWithCicle_ITest_3425" on "TestDetailWithCicle" ("TestMaster");
+
+ALTER TABLE "Daughter"
+	ADD CONSTRAINT "Daughter_FPerson_0" FOREIGN KEY ("Parent") REFERENCES "Person" ("primaryKey");
+
+CREATE INDEX "Daughter_IParent" on "Daughter" ("Parent");
 
 ALTER TABLE "Медведь"
 	ADD CONSTRAINT "Медведь_FСтрана_0" FOREIGN KEY ("Страна") REFERENCES "Страна" ("primaryKey");

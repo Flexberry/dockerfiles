@@ -50,6 +50,19 @@ CREATE TABLE [Лес] (
 	 PRIMARY KEY ([primaryKey]))
 
 
+CREATE TABLE [Son] (
+
+	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
+
+	 [SuspendersColor] VARCHAR(255)  NULL,
+
+	 [Name] VARCHAR(255)  NULL,
+
+	 [Parent] UNIQUEIDENTIFIER  NOT NULL,
+
+	 PRIMARY KEY ([primaryKey]))
+
+
 CREATE TABLE [ТипПороды] (
 
 	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
@@ -83,6 +96,19 @@ CREATE TABLE [TestDetailWithCicle] (
 	 [Parent] UNIQUEIDENTIFIER  NULL,
 
 	 [TestMaster] UNIQUEIDENTIFIER  NOT NULL,
+
+	 PRIMARY KEY ([primaryKey]))
+
+
+CREATE TABLE [Daughter] (
+
+	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
+
+	 [DressColor] VARCHAR(255)  NULL,
+
+	 [Name] VARCHAR(255)  NULL,
+
+	 [Parent] UNIQUEIDENTIFIER  NOT NULL,
 
 	 PRIMARY KEY ([primaryKey]))
 
@@ -260,6 +286,15 @@ CREATE TABLE [Книга] (
 	 [Автор1] UNIQUEIDENTIFIER  NOT NULL,
 
 	 [Библиотека1] UNIQUEIDENTIFIER  NOT NULL,
+
+	 PRIMARY KEY ([primaryKey]))
+
+
+CREATE TABLE [Person] (
+
+	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
+
+	 [Name] VARCHAR(255)  NULL,
 
 	 PRIMARY KEY ([primaryKey]))
 
@@ -834,6 +869,9 @@ CREATE TABLE [STORMAuField] (
  ALTER TABLE [Лес] ADD CONSTRAINT [Лес_FСтрана_0] FOREIGN KEY ([Страна]) REFERENCES [Страна]
 CREATE INDEX Лес_IСтрана on [Лес] ([Страна])
 
+ ALTER TABLE [Son] ADD CONSTRAINT [Son_FPerson_0] FOREIGN KEY ([Parent]) REFERENCES [Person]
+CREATE INDEX Son_IParent on [Son] ([Parent])
+
  ALTER TABLE [Порода] ADD CONSTRAINT [Порода_FТипПороды_0] FOREIGN KEY ([ТипПороды_m0]) REFERENCES [ТипПороды]
 CREATE INDEX Порода_IТипПороды_m0 on [Порода] ([ТипПороды_m0])
 
@@ -845,6 +883,9 @@ CREATE INDEX TestDetailWithCicle_IParent on [TestDetailWithCicle] ([Parent])
 
  ALTER TABLE [TestDetailWithCicle] ADD CONSTRAINT [TestDetailWithCicle_FTestMaster_0] FOREIGN KEY ([TestMaster]) REFERENCES [TestMaster]
 CREATE INDEX TestDetailWithCicle_ITestMaster on [TestDetailWithCicle] ([TestMaster])
+
+ ALTER TABLE [Daughter] ADD CONSTRAINT [Daughter_FPerson_0] FOREIGN KEY ([Parent]) REFERENCES [Person]
+CREATE INDEX Daughter_IParent on [Daughter] ([Parent])
 
  ALTER TABLE [Медведь] ADD CONSTRAINT [Медведь_FСтрана_0] FOREIGN KEY ([Страна]) REFERENCES [Страна]
 CREATE INDEX Медведь_IСтрана on [Медведь] ([Страна])
