@@ -1,4 +1,5 @@
-﻿namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
+﻿#if NETFRAMEWORK
+namespace NewPlatform.Flexberry.ORM.ODataService.Formatter
 {
     using System;
     using System.Collections.Generic;
@@ -59,3 +60,4 @@
         }
     }
 }
+#endif

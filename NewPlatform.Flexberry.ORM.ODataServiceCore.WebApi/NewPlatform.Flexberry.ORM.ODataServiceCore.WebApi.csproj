@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>NewPlatform.Flexberry.ORM.ODataService.WebApi</RootNamespace>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\NewPlatform.Flexberry.ORM.ODataServiceCore.WebApi.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
+    <PackageReference Include="NewPlatform.Flexberry.LockService" Version="3.0.0-beta01" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NewPlatform.Flexberry.ORM.ODataServiceCore.Common\NewPlatform.Flexberry.ORM.ODataServiceCore.Common.csproj" />
+    <ProjectReference Include="..\NewPlatform.Flexberry.ORM.ODataServiceCore.Files\NewPlatform.Flexberry.ORM.ODataServiceCore.Files.csproj" />
+  </ItemGroup>
+
+</Project>
