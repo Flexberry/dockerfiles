@@ -78,6 +78,7 @@
                 // Нужно гарантировать, что у загруженных детейлов будет проставлена ссылка на агрегатора, поэтому добавим свойство в представление (если уже есть, то второй раз не добавится).
                 detailView.AddProperty(agregatorPropertyName);
                 LoadingCustomizationStruct lcs = LoadingCustomizationStruct.GetSimpleStruct(detailView.DefineClassType, detailView);
+                lcs.LoadingTypes = TypeUsageProvider.TypeUsage.GetUsageTypes(view.DefineClassType, detailInView.Name);
                 Type agregatorKeyType = agregators[0].__PrimaryKey.GetType();
                 object[] keys = agregators.Select(d => d.__PrimaryKey).ToArray();
                 lcs.LimitFunction = FunctionBuilder.BuildIn(agregatorPropertyName, SQLWhereLanguageDef.LanguageDef.GetObjectTypeForNetType(agregatorKeyType), keys);

@@ -14,6 +14,8 @@
     using Microsoft.AspNet.OData.Extensions;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OData;
+    using NewPlatform.Flexberry.ORM.ODataService.Controllers;
+    using NewPlatform.Flexberry.ORM.ODataService.Events;
 
     /// <summary>
     /// Batch handler for DataService.
@@ -29,6 +31,11 @@
         /// Request Properties collection key for DataObjectCache instance.
         /// </summary>
         public const string DataObjectCachePropertyKey = "DataObjectCache";
+
+        /// <summary>
+        /// The container with registered events.
+        /// </summary>
+        private IEventHandlerContainer _events;
 
         /// <summary>
         /// if set to true then use synchronous mode for call subrequests.
@@ -52,6 +59,15 @@
             this.dataService = dataService;
 
             this.isSyncMode = isSyncMode ?? Type.GetType("Mono.Runtime") != null;
+        }
+
+        /// <summary>
+        /// Initializes the container with registered events.
+        /// </summary>
+        /// <param name="events">The container with registered events.</param>
+        public void InitializeEvents(IEventHandlerContainer events)
+        {
+            _events = events;
         }
 
         /// <inheritdoc />
@@ -83,7 +99,7 @@
             }
             catch (Exception ex)
             {
-                throw ex;
+                return DataObjectController.InternalServerErrorMessage(ex, _events, request);
             }
             finally
             {
@@ -241,7 +257,7 @@
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    throw;
                 }
             }
 

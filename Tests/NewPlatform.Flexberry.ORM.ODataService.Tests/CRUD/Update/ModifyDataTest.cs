@@ -1219,5 +1219,135 @@
                 }
             });
         }
+
+        /// <summary>
+        /// Test batch update error handling when business server throws exception.
+        /// </summary>
+        [Fact]
+        public void BatchUpdateErrorHandlingTest()
+        {
+            ActODataService(args =>
+            {
+                string[] лапаPropertiesNames =
+                {
+                    Information.ExtractPropertyPath<Лапа>(x => x.__PrimaryKey),
+                    Information.ExtractPropertyPath<Лапа>(x => x.Размер),
+                };
+                string[] кошкаPropertiesNames =
+                {
+                    Information.ExtractPropertyPath<Кошка>(x => x.__PrimaryKey),
+                    Information.ExtractPropertyPath<Кошка>(x => x.Кличка),
+                    Information.ExtractPropertyPath<Кошка>(x => x.Тип),
+                    Information.ExtractPropertyPath<Кошка>(x => x.КошкаСтрокой),
+                };
+                var лапаDynamicView = new View(new ViewAttribute("лапаDynamicView", лапаPropertiesNames), typeof(Лапа));
+                var кошкаDynamicView = new View(new ViewAttribute("кошкаDynamicView", кошкаPropertiesNames), typeof(Кошка));
+
+                var порода = new Порода() { Название = "Первая" };
+                var кошка = new Кошка() { Кличка = "50", Порода = порода, Тип = ТипКошки.Домашняя };
+                var лапа = new Лапа() { Размер = 50 };
+                кошка.Лапа.Add(лапа);
+
+                args.DataService.UpdateObject(кошка);
+
+                кошка.Кличка = "100";
+                кошка.Тип = ТипКошки.Дикая;
+
+                // Этот размер лапы указан в CatsBS как недопустимый размер, будет сгенерировано исключение.
+                лапа.Размер = 100899;
+
+                const string baseUrl = "http://localhost/odata";
+
+                string requestJsonDataЛапа = лапа.ToJson(лапаDynamicView, args.Token.Model);
+                DataObjectDictionary objJsonЛапа = DataObjectDictionary.Parse(requestJsonDataЛапа, лапаDynamicView, args.Token.Model);
+
+                objJsonЛапа.Add(
+                    $"{nameof(Лапа.Кошка)}@odata.bind",
+                    string.Format(
+                        "{0}({1})",
+                        args.Token.Model.GetEdmEntitySet(typeof(Кошка)).Name,
+                        ((KeyGuid)кошка.__PrimaryKey).Guid.ToString("D")));
+
+                requestJsonDataЛапа = objJsonЛапа.Serialize();
+
+                string[] changesets = new[]
+                {
+                    CreateChangeset(
+                        $"{baseUrl}/{args.Token.Model.GetEdmEntitySet(typeof(Кошка)).Name}",
+                        кошка.ToJson(кошкаDynamicView, args.Token.Model),
+                        кошка),
+                    CreateChangeset(
+                        $"{baseUrl}/{args.Token.Model.GetEdmEntitySet(typeof(Лапа)).Name}",
+                        requestJsonDataЛапа,
+                        лапа),
+                };
+
+                int exceptionHandled = 0;
+
+                args.Token.Events.CallbackAfterInternalServerError = (Exception exception, ref HttpStatusCode code) =>
+                {
+                    Exception currentException = exception;
+
+                    while (currentException != null)
+                    {
+                        if (currentException.Message == "Недопустимый размер кошачьей лапы!")
+                        {
+                            exceptionHandled++;
+                        }
+
+                        currentException = currentException.InnerException;
+                    }
+
+                    return exception;
+                };
+
+                HttpRequestMessage batchRequest = CreateBatchRequest(baseUrl, changesets);
+                using (HttpResponseMessage response = args.HttpClient.SendAsync(batchRequest).Result)
+                {
+                    Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+                    Assert.Equal(1, exceptionHandled);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Test update agregator with inheritance details.
+        /// </summary>
+        [Fact]
+        public void UpdateAgregatorWithInheritanceDetailsTest()
+        {
+            ActODataService(args =>
+            {
+                var son = new Son() { Name = "Yakov", SuspendersColor = "Brown" };
+                var daughter = new Daughter() { Name = "Yana", DressColor = "Red" };
+                var person = new Person() { Name = "Yan" };
+                person.Childrens.AddRange(son, daughter);
+
+                args.DataService.UpdateObject(person);
+
+                person.Name = "Yan Yakovlevich";
+
+                // Преобразуем объект данных в JSON-строку.
+                string[] personPropertiesNames =
+                {
+                    Information.ExtractPropertyPath<Person>(x => x.__PrimaryKey),
+                    Information.ExtractPropertyPath<Person>(x => x.Name)
+                };
+
+                var personDynamicView = new View(new ViewAttribute("personDynamicView", personPropertiesNames), typeof(Person));
+
+                string requestJsonData = person.ToJson(personDynamicView, args.Token.Model);
+
+                // Формируем URL запроса к OData-сервису.
+                string requestUrl = string.Format("http://localhost/odata/{0}", args.Token.Model.GetEdmEntitySet(typeof(Person)).Name);
+
+                // Обращаемся к OData-сервису и обрабатываем ответ, в теле запроса передаем создаваемый объект в формате JSON.
+                using (HttpResponseMessage response = args.HttpClient.PostAsJsonStringAsync(requestUrl, requestJsonData).Result)
+                {
+                    // Убедимся, что запрос завершился успешно.
+                    Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+                }
+            });
+        }
     }
 }

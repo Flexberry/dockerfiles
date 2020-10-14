@@ -35,6 +35,8 @@
         /// <param name="routePrefix">The route prefix (<see cref="DataObjectRoutingConventions.DefaultRoutePrefix"/> to be default).</param>
         /// <param name="isSyncBatchUpdate">Use synchronous mode for call subrequests in batch query.</param>
         /// <param name="messageQuotasMaxPartsPerBatch">The maximum number of top level query operations and changesets allowed in a single batch.</param>
+        /// <param name="messageQuotasMaxOperationsPerChangeset">The maximum number of operations allowed in a single changeset in a batch. Default is 1000.</param>
+        /// <param name="messageQuotasMaxReceivedMessageSize">The maximum number of bytes that should be read from the message in a batch. Default is 10485760.</param>
         /// <returns>A <see cref="ManagementToken"/> instance.</returns>
         public static ManagementToken MapDataObjectRoute(
             this HttpConfiguration config,
@@ -43,7 +45,9 @@
             string routeName = DataObjectRoutingConventions.DefaultRouteName,
             string routePrefix = DataObjectRoutingConventions.DefaultRoutePrefix,
             bool? isSyncBatchUpdate = null,
-            int messageQuotasMaxPartsPerBatch = 1000)
+            int messageQuotasMaxPartsPerBatch = 1000,
+            int messageQuotasMaxOperationsPerChangeset = 1000,
+            int messageQuotasMaxReceivedMessageSize = 10485760)
         {
             if (config == null)
             {
@@ -90,6 +94,8 @@
             List<IODataRoutingConvention> routingConventions = DataObjectRoutingConventions.CreateDefault();
             var batchHandler = new DataObjectODataBatchHandler(dataService, httpServer, isSyncBatchUpdate);
             batchHandler.MessageQuotas.MaxPartsPerBatch = messageQuotasMaxPartsPerBatch;
+            batchHandler.MessageQuotas.MaxOperationsPerChangeset = messageQuotasMaxOperationsPerChangeset;
+            batchHandler.MessageQuotas.MaxReceivedMessageSize = messageQuotasMaxReceivedMessageSize;
             ODataRoute route = config.MapODataServiceRoute(routeName, routePrefix, cb => cb
                 .AddService(ServiceLifetime.Singleton, typeof(IEdmModel), sp => model)
                 .AddService(ServiceLifetime.Singleton, typeof(IODataPathHandler), sp => pathHandler)
@@ -100,6 +106,9 @@
 
             // Token.
             ManagementToken token = route.CreateManagementToken(model);
+
+            // Initialize events for batchHandler.
+            batchHandler.InitializeEvents(token.Events);
 
             // Controllers.
             var registeredActivator = (IHttpControllerActivator)config.Services.GetService(typeof(IHttpControllerActivator));
