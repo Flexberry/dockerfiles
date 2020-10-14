@@ -12,6 +12,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
 {
     using System;
     using System.Xml;
+    using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET;
     
     
@@ -26,6 +27,8 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
     // *** Start programmer edit section *** (Кошка CustomAttributes)
 
     // *** End programmer edit section *** (Кошка CustomAttributes)
+    [BusinessServer("NewPlatform.Flexberry.ORM.ODataService.Tests.CatsBS, NewPlatform.Flexberry.ORM.OD" +
+        "ataService.Tests.BusinessServers", ICSSoft.STORMNET.Business.DataServiceObjectEvents.OnAllEvents)]
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.none)]
     [View("КошкаE", new string[] {

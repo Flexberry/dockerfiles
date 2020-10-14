@@ -2,6 +2,7 @@
 
 
 
+
 CREATE TABLE Driver (
 
  primaryKey UUID NOT NULL,
@@ -15,6 +16,7 @@ CREATE TABLE Driver (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE Страна (
 
  primaryKey UUID NOT NULL,
@@ -24,6 +26,7 @@ CREATE TABLE Страна (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE Master (
 
  primaryKey UUID NOT NULL,
@@ -31,6 +34,7 @@ CREATE TABLE Master (
  property VARCHAR(255) NULL,
 
  PRIMARY KEY (primaryKey));
+
 
 
 CREATE TABLE Лес (
@@ -50,6 +54,21 @@ CREATE TABLE Лес (
  PRIMARY KEY (primaryKey));
 
 
+
+CREATE TABLE Son (
+
+ primaryKey UUID NOT NULL,
+
+ SuspendersColor VARCHAR(255) NULL,
+
+ Name VARCHAR(255) NULL,
+
+ Parent UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+
 CREATE TABLE ТипПороды (
 
  primaryKey UUID NOT NULL,
@@ -59,6 +78,7 @@ CREATE TABLE ТипПороды (
  ДатаРегистрации TIMESTAMP(3) NULL,
 
  PRIMARY KEY (primaryKey));
+
 
 
 CREATE TABLE Порода (
@@ -74,6 +94,7 @@ CREATE TABLE Порода (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE TestDetailWithCicle (
 
  primaryKey UUID NOT NULL,
@@ -85,6 +106,21 @@ CREATE TABLE TestDetailWithCicle (
  TestMaster UUID NOT NULL,
 
  PRIMARY KEY (primaryKey));
+
+
+
+CREATE TABLE Daughter (
+
+ primaryKey UUID NOT NULL,
+
+ DressColor VARCHAR(255) NULL,
+
+ Name VARCHAR(255) NULL,
+
+ Parent UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
 
 
 CREATE TABLE КлассСМножТипов (
@@ -144,6 +180,7 @@ CREATE TABLE КлассСМножТипов (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE Медведь (
 
  primaryKey UUID NOT NULL,
@@ -179,6 +216,7 @@ CREATE TABLE Медведь (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE Детейл (
 
  primaryKey UUID NOT NULL,
@@ -190,6 +228,7 @@ CREATE TABLE Детейл (
  БазовыйКласс_m1 UUID NULL,
 
  PRIMARY KEY (primaryKey));
+
 
 
 CREATE TABLE ДочернийКласс (
@@ -251,6 +290,7 @@ CREATE TABLE ДочернийКласс (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE Книга (
 
  primaryKey UUID NOT NULL,
@@ -262,6 +302,17 @@ CREATE TABLE Книга (
  Библиотека1 UUID NOT NULL,
 
  PRIMARY KEY (primaryKey));
+
+
+
+CREATE TABLE Person (
+
+ primaryKey UUID NOT NULL,
+
+ Name VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
 
 
 CREATE TABLE Перелом (
@@ -277,6 +328,7 @@ CREATE TABLE Перелом (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE БазовыйКласс (
 
  primaryKey UUID NOT NULL,
@@ -288,6 +340,7 @@ CREATE TABLE БазовыйКласс (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE ПоставщикКниг (
 
  primaryKey UUID NOT NULL,
@@ -297,6 +350,7 @@ CREATE TABLE ПоставщикКниг (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE Мастер2 (
 
  primaryKey UUID NOT NULL,
@@ -304,6 +358,7 @@ CREATE TABLE Мастер2 (
  свойство2 INT NULL,
 
  PRIMARY KEY (primaryKey));
+
 
 
 CREATE TABLE Наследник (
@@ -323,6 +378,7 @@ CREATE TABLE Наследник (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE Car (
 
  primaryKey UUID NOT NULL,
@@ -338,6 +394,7 @@ CREATE TABLE Car (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE Мастер (
 
  primaryKey UUID NOT NULL,
@@ -349,6 +406,7 @@ CREATE TABLE Мастер (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE Блоха (
 
  primaryKey UUID NOT NULL,
@@ -358,6 +416,7 @@ CREATE TABLE Блоха (
  МедведьОбитания UUID NULL,
 
  PRIMARY KEY (primaryKey));
+
 
 
 CREATE TABLE Лапа (
@@ -389,11 +448,13 @@ CREATE TABLE Лапа (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE КлассСоСтрокКл (
 
  StoragePrimaryKey VARCHAR(255) NOT NULL,
 
  PRIMARY KEY (StoragePrimaryKey));
+
 
 
 CREATE TABLE Берлога (
@@ -419,6 +480,7 @@ CREATE TABLE Берлога (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE Автор (
 
  primaryKey UUID NOT NULL,
@@ -428,6 +490,7 @@ CREATE TABLE Автор (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE TestMaster (
 
  primaryKey UUID NOT NULL,
@@ -435,6 +498,7 @@ CREATE TABLE TestMaster (
  TestMasterName VARCHAR(255) NULL,
 
  PRIMARY KEY (primaryKey));
+
 
 
 CREATE TABLE Котенок (
@@ -450,6 +514,7 @@ CREATE TABLE Котенок (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE Библиотека (
 
  primaryKey UUID NOT NULL,
@@ -457,6 +522,7 @@ CREATE TABLE Библиотека (
  Адрес VARCHAR(255) NULL,
 
  PRIMARY KEY (primaryKey));
+
 
 
 CREATE TABLE Детейл2 (
@@ -470,6 +536,7 @@ CREATE TABLE Детейл2 (
  Детейл_m1 UUID NULL,
 
  PRIMARY KEY (primaryKey));
+
 
 
 CREATE TABLE Журнал (
@@ -487,6 +554,7 @@ CREATE TABLE Журнал (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE ТипЛапы (
 
  primaryKey UUID NOT NULL,
@@ -498,6 +566,7 @@ CREATE TABLE ТипЛапы (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE КлассStoredDerived (
 
  primaryKey UUID NOT NULL,
@@ -507,6 +576,7 @@ CREATE TABLE КлассStoredDerived (
  StrAttr VARCHAR(255) NULL,
 
  PRIMARY KEY (primaryKey));
+
 
 
 CREATE TABLE Кошка (
@@ -532,6 +602,7 @@ CREATE TABLE Кошка (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE ДетейлНаследник (
 
  primaryKey UUID NOT NULL,
@@ -547,6 +618,7 @@ CREATE TABLE ДетейлНаследник (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE STORMNETLOCKDATA (
 
  LockKey VARCHAR(300) NOT NULL,
@@ -556,6 +628,7 @@ CREATE TABLE STORMNETLOCKDATA (
  LockDate TIMESTAMP(3) NULL,
 
  PRIMARY KEY (LockKey));
+
 
 
 CREATE TABLE STORMSETTINGS (
@@ -571,6 +644,7 @@ CREATE TABLE STORMSETTINGS (
  "User" VARCHAR(255) NULL,
 
  PRIMARY KEY (primaryKey));
+
 
 
 CREATE TABLE STORMAdvLimit (
@@ -592,6 +666,7 @@ CREATE TABLE STORMAdvLimit (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE STORMFILTERSETTING (
 
  primaryKey UUID NOT NULL,
@@ -601,6 +676,7 @@ CREATE TABLE STORMFILTERSETTING (
  DataObjectView VARCHAR(255) NOT NULL,
 
  PRIMARY KEY (primaryKey));
+
 
 
 CREATE TABLE STORMWEBSEARCH (
@@ -620,6 +696,7 @@ CREATE TABLE STORMWEBSEARCH (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE STORMFILTERDETAIL (
 
  primaryKey UUID NOT NULL,
@@ -637,6 +714,7 @@ CREATE TABLE STORMFILTERDETAIL (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE STORMFILTERLOOKUP (
 
  primaryKey UUID NOT NULL,
@@ -652,6 +730,7 @@ CREATE TABLE STORMFILTERLOOKUP (
  FilterSetting_m0 UUID NOT NULL,
 
  PRIMARY KEY (primaryKey));
+
 
 
 CREATE TABLE UserSetting (
@@ -691,6 +770,7 @@ CREATE TABLE UserSetting (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE ApplicationLog (
 
  primaryKey UUID NOT NULL,
@@ -726,6 +806,7 @@ CREATE TABLE ApplicationLog (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE STORMAuObjType (
 
  primaryKey UUID NOT NULL,
@@ -733,6 +814,7 @@ CREATE TABLE STORMAuObjType (
  Name VARCHAR(255) NOT NULL,
 
  PRIMARY KEY (primaryKey));
+
 
 
 CREATE TABLE STORMAuEntity (
@@ -758,6 +840,7 @@ CREATE TABLE STORMAuEntity (
  PRIMARY KEY (primaryKey));
 
 
+
 CREATE TABLE STORMAuField (
 
  primaryKey UUID NOT NULL,
@@ -777,108 +860,116 @@ CREATE TABLE STORMAuField (
 
 
 
- ALTER TABLE Лес ADD CONSTRAINT FK4da24bbb5b38442d825480a84098f7ec FOREIGN KEY (Страна) REFERENCES Страна; 
-CREATE INDEX Index72569b2046d54858bcf72761570686dd on Лес (Страна); 
+ ALTER TABLE Лес ADD CONSTRAINT FKaa1794af2f6142a48961b0e4ccc51848 FOREIGN KEY (Страна) REFERENCES Страна; 
+CREATE INDEX Indexd3bd1222072f531605e73e66656fe58296c8bfd2 on Лес (Страна); 
 
- ALTER TABLE Порода ADD CONSTRAINT FK77c6fe16cdb04a4f86223532810961f8 FOREIGN KEY (ТипПороды_m0) REFERENCES ТипПороды; 
-CREATE INDEX Index8136adc2c49c477ea0408552980d0015 on Порода (ТипПороды_m0); 
+ ALTER TABLE Son ADD CONSTRAINT FK0282df1d47e64c058705a0e620830a3e FOREIGN KEY (Parent) REFERENCES Person; 
+CREATE INDEX Indexdabfac99e0885f846c9da12b79c4cbd7894842d3 on Son (Parent); 
 
- ALTER TABLE Порода ADD CONSTRAINT FK163f2689520e4012bde8f8fc9e6b25b2 FOREIGN KEY (Иерархия_m0) REFERENCES Порода; 
-CREATE INDEX Index2dc361dcaabc421e8f62bdd5beea62dc on Порода (Иерархия_m0); 
+ ALTER TABLE Порода ADD CONSTRAINT FKb4bd82bca1c64c15bd1b08943ca188f2 FOREIGN KEY (ТипПороды_m0) REFERENCES ТипПороды; 
+CREATE INDEX Index2b114b4677a6ea52b53a26c9a20bbaad606eff78 on Порода (ТипПороды_m0); 
 
- ALTER TABLE TestDetailWithCicle ADD CONSTRAINT FKd66b1280585c4fe99df7ae5724a4168a FOREIGN KEY (Parent) REFERENCES TestDetailWithCicle; 
-CREATE INDEX Indexe28f9633f98a465e8e583502b63350d4 on TestDetailWithCicle (Parent); 
+ ALTER TABLE Порода ADD CONSTRAINT FK5e45425b97064918a11bf967618b5601 FOREIGN KEY (Иерархия_m0) REFERENCES Порода; 
+CREATE INDEX Index14420958a87702decd2090afa109ad90292eb458 on Порода (Иерархия_m0); 
 
- ALTER TABLE TestDetailWithCicle ADD CONSTRAINT FKba0687c86be74a6284b51993a644fe65 FOREIGN KEY (TestMaster) REFERENCES TestMaster; 
-CREATE INDEX Index30d2404cc9e746dea53110e212563b9a on TestDetailWithCicle (TestMaster); 
+ ALTER TABLE TestDetailWithCicle ADD CONSTRAINT FK386444132661465f826379a25ff07eb9 FOREIGN KEY (Parent) REFERENCES TestDetailWithCicle; 
+CREATE INDEX Index04dbb0ac2005483472591018ab7522c499fe5b38 on TestDetailWithCicle (Parent); 
 
- ALTER TABLE Медведь ADD CONSTRAINT FK07623ec1badd46df92950633a2e1cfa4 FOREIGN KEY (Страна) REFERENCES Страна; 
-CREATE INDEX Indexc7c86a0b21ed46e7903d19f9b4fd1bbb on Медведь (Страна); 
+ ALTER TABLE TestDetailWithCicle ADD CONSTRAINT FK07792305977b467e91c94f4bcaf529a1 FOREIGN KEY (TestMaster) REFERENCES TestMaster; 
+CREATE INDEX Indexf8067bbec7353839c222df5b7aeba4ce65c1655f on TestDetailWithCicle (TestMaster); 
 
- ALTER TABLE Медведь ADD CONSTRAINT FK2bb7da89de9f4b8fa2c458139ae0b02c FOREIGN KEY (ЛесОбитания) REFERENCES Лес; 
-CREATE INDEX Index349fe19fbefe4809920d58cea698a959 on Медведь (ЛесОбитания); 
+ ALTER TABLE Daughter ADD CONSTRAINT FK54747311190e456492def3369e8d6f04 FOREIGN KEY (Parent) REFERENCES Person; 
+CREATE INDEX Index743208308d3826e12250804dbe77e02601e27402 on Daughter (Parent); 
+CREATE INDEX Indexc5f9d71c0704ea7b966afcfdc89dc7eabe2d0c43 on КлассСМножТипов USING gist (PropertyGeography); 
 
- ALTER TABLE Медведь ADD CONSTRAINT FKf746ff2af5e0405f82b89838bfa08b9c FOREIGN KEY (Мама) REFERENCES Медведь; 
-CREATE INDEX Index434397ba87784392b3ccf9403b278fa1 on Медведь (Мама); 
+ ALTER TABLE Медведь ADD CONSTRAINT FKf75c86f57d4545439dd2ef3b39079132 FOREIGN KEY (Страна) REFERENCES Страна; 
+CREATE INDEX Index6d8033494746b0bb87ba367c83d273dfa11b8f59 on Медведь (Страна); 
 
- ALTER TABLE Медведь ADD CONSTRAINT FKa08a22d20e2a47d79d504545d997243a FOREIGN KEY (Папа) REFERENCES Медведь; 
-CREATE INDEX Index0c64660225ce46ffbf702caca951a852 on Медведь (Папа); 
+ ALTER TABLE Медведь ADD CONSTRAINT FKf9df524b91e84978a3a43ffed8b21348 FOREIGN KEY (ЛесОбитания) REFERENCES Лес; 
+CREATE INDEX Index93be01a32cae64dc4b18705ade6683f41a32c367 on Медведь (ЛесОбитания); 
 
- ALTER TABLE Детейл ADD CONSTRAINT FKc4ca2f302d5c444ca0ef54ddbf48b280 FOREIGN KEY (БазовыйКласс_m0) REFERENCES БазовыйКласс; 
-CREATE INDEX Indexcf605f3317314f5d9f8ede16909eaa2f on Детейл (БазовыйКласс_m0); 
+ ALTER TABLE Медведь ADD CONSTRAINT FK068b3bc688e74155bb19cf90887b75c9 FOREIGN KEY (Мама) REFERENCES Медведь; 
+CREATE INDEX Index0b9f6ad0caded1971696ef6602e8a2831fa941b1 on Медведь (Мама); 
 
- ALTER TABLE Детейл ADD CONSTRAINT FK90282e34d7a04e30a22856ead30729b7 FOREIGN KEY (БазовыйКласс_m1) REFERENCES Наследник; 
-CREATE INDEX Index591ab09451e644bea3de54d92875d679 on Детейл (БазовыйКласс_m1); 
+ ALTER TABLE Медведь ADD CONSTRAINT FK2ed0032a856e4ebc9545e9c7970bb9f3 FOREIGN KEY (Папа) REFERENCES Медведь; 
+CREATE INDEX Index0ca403a899ac5a709a19bbb9ada47b0060e5b819 on Медведь (Папа); 
 
- ALTER TABLE Книга ADD CONSTRAINT FK6ab4a749b42d4156b21d50d1550a889d FOREIGN KEY (Автор1) REFERENCES Автор; 
-CREATE INDEX Index87d2f389dddb4c90879cca877e93c46a on Книга (Автор1); 
+ ALTER TABLE Детейл ADD CONSTRAINT FK6a1f82585ccb45feaf909dcb0ebe5be9 FOREIGN KEY (БазовыйКласс_m0) REFERENCES БазовыйКласс; 
+CREATE INDEX Indexffdec7cb63189ed3e206c50c005f7daa0fe24f75 on Детейл (БазовыйКласс_m0); 
 
- ALTER TABLE Книга ADD CONSTRAINT FKd7fa44624b4d46bd874215f0901d8885 FOREIGN KEY (Библиотека1) REFERENCES Библиотека; 
-CREATE INDEX Indexe775dae77f6d4863b9f2dbe1c3462466 on Книга (Библиотека1); 
+ ALTER TABLE Детейл ADD CONSTRAINT FKd402e42b92c84a289ad44cdcea5ae205 FOREIGN KEY (БазовыйКласс_m1) REFERENCES Наследник; 
+CREATE INDEX Indexafd5bc7b595e3649b3c31ff899c0c8d3bd2219cc on Детейл (БазовыйКласс_m1); 
+CREATE INDEX Index10d981ac5288ea278311b6a711b43fa954b635a8 on ДочернийКласс USING gist (PropertyGeography); 
 
- ALTER TABLE Перелом ADD CONSTRAINT FK98812f4509f54b07965492bf7eb261d9 FOREIGN KEY (Лапа_m0) REFERENCES Лапа; 
-CREATE INDEX Indexb200082f1ec24c03a9db8ea2158589bc on Перелом (Лапа_m0); 
+ ALTER TABLE Книга ADD CONSTRAINT FK32d5cd8424c24e718538c5d6bf3f328f FOREIGN KEY (Автор1) REFERENCES Автор; 
+CREATE INDEX Index899896abd3f04413fb054cc8507b69f51489a8bc on Книга (Автор1); 
 
- ALTER TABLE Наследник ADD CONSTRAINT FKee2a88c9856e4a3ca73d3de622227d99 FOREIGN KEY (Мастер) REFERENCES Мастер; 
-CREATE INDEX Index8acd8b00d11148f7b6b45babfcd52cff on Наследник (Мастер); 
+ ALTER TABLE Книга ADD CONSTRAINT FKb31ab26ac04b4306a5b4b7509d12f949 FOREIGN KEY (Библиотека1) REFERENCES Библиотека; 
+CREATE INDEX Index84e4d9d5b6adc4bec48541216f15f396dd2b602c on Книга (Библиотека1); 
 
- ALTER TABLE Наследник ADD CONSTRAINT FKff62560444e7427f9cc8d9b1a29fc09e FOREIGN KEY (Master) REFERENCES Master; 
-CREATE INDEX Index5c4d2ece8e1448d99e3d66833b5f8ee2 on Наследник (Master); 
+ ALTER TABLE Перелом ADD CONSTRAINT FKdc74d74cfdc74d1a86e598a1e91e78b6 FOREIGN KEY (Лапа_m0) REFERENCES Лапа; 
+CREATE INDEX Index6dee404d2bb9702d8d72537c5ae42a7c97dfb5fa on Перелом (Лапа_m0); 
 
- ALTER TABLE Car ADD CONSTRAINT FKff9365be79084af4a04b4f8474018fb4 FOREIGN KEY (driver) REFERENCES Driver; 
-CREATE INDEX Indexae894f86e82443909180062f782bd992 on Car (driver); 
+ ALTER TABLE Наследник ADD CONSTRAINT FK243d02e7397b47f5ad06ca9515451fc7 FOREIGN KEY (Мастер) REFERENCES Мастер; 
+CREATE INDEX Index28ac1d61524a43a59e67af57a855ad487d1f8141 on Наследник (Мастер); 
 
- ALTER TABLE Мастер ADD CONSTRAINT FKb71735bc3e6f49ffaecee348ba8c8d7f FOREIGN KEY (Мастер2) REFERENCES Мастер2; 
-CREATE INDEX Index10b437048ca64677af4e0881c6b91b10 on Мастер (Мастер2); 
+ ALTER TABLE Наследник ADD CONSTRAINT FKfd65a736432840818ac1df1abe548b5f FOREIGN KEY (Master) REFERENCES Master; 
+CREATE INDEX Index0cb9ac2b0e7896223ed63c0c888c23aa86682b1e on Наследник (Master); 
 
- ALTER TABLE Блоха ADD CONSTRAINT FK4bee02061156472599f3c9a9c1bd9f8a FOREIGN KEY (МедведьОбитания) REFERENCES Медведь; 
-CREATE INDEX Index74d7077783774d21bf48c077c268290e on Блоха (МедведьОбитания); 
+ ALTER TABLE Car ADD CONSTRAINT FK7855a291865545d39880b82dc9ecf0c2 FOREIGN KEY (driver) REFERENCES Driver; 
+CREATE INDEX Indexe86a1d047f4df342bf39a5af864aec2b40a3547a on Car (driver); 
 
- ALTER TABLE Лапа ADD CONSTRAINT FK63f23c14474f4c81a30420a740c11d04 FOREIGN KEY (ТипЛапы_m0) REFERENCES ТипЛапы; 
-CREATE INDEX Indexcca4fd3396744230969127b18eac55ca on Лапа (ТипЛапы_m0); 
+ ALTER TABLE Мастер ADD CONSTRAINT FKb86082afa25847a4ad1854d2212eef75 FOREIGN KEY (Мастер2) REFERENCES Мастер2; 
+CREATE INDEX Index0053148ab4597a6e8d749a7201b40246de6bba66 on Мастер (Мастер2); 
 
- ALTER TABLE Лапа ADD CONSTRAINT FKbca1ee847fb84cc79b3a120850abd0e5 FOREIGN KEY (Кошка_m0) REFERENCES Кошка; 
-CREATE INDEX Index07c53f58959d4135b121d54ae4d93552 on Лапа (Кошка_m0); 
+ ALTER TABLE Блоха ADD CONSTRAINT FK0638c0ac26ee42988e88a96a7184efda FOREIGN KEY (МедведьОбитания) REFERENCES Медведь; 
+CREATE INDEX Indexb43131b348ee335105dd990a690720791b5dcba6 on Блоха (МедведьОбитания); 
 
- ALTER TABLE Берлога ADD CONSTRAINT FK0be1b0c03ce44dd7bc9da8bd2ee85932 FOREIGN KEY (ЛесРасположения) REFERENCES Лес; 
-CREATE INDEX Index246fde73dc354b4c8060dc273f74dfa0 on Берлога (ЛесРасположения); 
+ ALTER TABLE Лапа ADD CONSTRAINT FKfa2eb2f3faef4ed28fb7373bbb3f4949 FOREIGN KEY (ТипЛапы_m0) REFERENCES ТипЛапы; 
+CREATE INDEX Index801cdef07db8852f60bd68a5a1fc42341cd641fa on Лапа (ТипЛапы_m0); 
 
- ALTER TABLE Берлога ADD CONSTRAINT FKa40ec62909484dbe82a9d17b0f3988ca FOREIGN KEY (Медведь) REFERENCES Медведь; 
-CREATE INDEX Index11ee66d9ca864dd1bae8c3c13a3a4e25 on Берлога (Медведь); 
+ ALTER TABLE Лапа ADD CONSTRAINT FKdde6747e278e48578a74941439d3aabb FOREIGN KEY (Кошка_m0) REFERENCES Кошка; 
+CREATE INDEX Indexd2c2995f4deb3767b25fa4ca17d61bf9bff3d562 on Лапа (Кошка_m0); 
 
- ALTER TABLE Котенок ADD CONSTRAINT FK239ec541c45146bf960215232bee375a FOREIGN KEY (Кошка_m0) REFERENCES Кошка; 
-CREATE INDEX Indexff61f752a19743899b4352e5ad5bde23 on Котенок (Кошка_m0); 
+ ALTER TABLE Берлога ADD CONSTRAINT FKbba506b76841489b8399936d7bd3dee6 FOREIGN KEY (ЛесРасположения) REFERENCES Лес; 
+CREATE INDEX Indexa74603e81cb82d318a92d5d3e374895fe242d80e on Берлога (ЛесРасположения); 
 
- ALTER TABLE Детейл2 ADD CONSTRAINT FK30a932c9a4a243ad9887bc448ae881ee FOREIGN KEY (Детейл_m0) REFERENCES Детейл; 
-CREATE INDEX Indexf64ed07aa8bd4d14ab7602bbec39873e on Детейл2 (Детейл_m0); 
+ ALTER TABLE Берлога ADD CONSTRAINT FK0ab82e8264b54c1caa6aaa19afe02564 FOREIGN KEY (Медведь) REFERENCES Медведь; 
+CREATE INDEX Index838e30a686c4f1dcfbb02e55d47218e48ddbe7a2 on Берлога (Медведь); 
 
- ALTER TABLE Детейл2 ADD CONSTRAINT FKf339385b8b7f42dfb42b7597a586df5c FOREIGN KEY (Детейл_m1) REFERENCES ДетейлНаследник; 
-CREATE INDEX Indexd98a815802774a899ffc542504a52b44 on Детейл2 (Детейл_m1); 
+ ALTER TABLE Котенок ADD CONSTRAINT FK5e746611eb774f7488e9e2b6ad0b6a6a FOREIGN KEY (Кошка_m0) REFERENCES Кошка; 
+CREATE INDEX Index79a0f583830fea7f95d716cc96a27d0967a2d537 on Котенок (Кошка_m0); 
 
- ALTER TABLE Журнал ADD CONSTRAINT FKac2e4bda701b40738c2b8e1ddcd118d7 FOREIGN KEY (Автор2) REFERENCES Автор; 
-CREATE INDEX Indexe273cbeca581404c985de7e5835fa160 on Журнал (Автор2); 
+ ALTER TABLE Детейл2 ADD CONSTRAINT FK08a6b565f9d44645bc248a3e0be63ca2 FOREIGN KEY (Детейл_m0) REFERENCES Детейл; 
+CREATE INDEX Indexf07848a075b735870c7821349481da65acdab1ac on Детейл2 (Детейл_m0); 
 
- ALTER TABLE Журнал ADD CONSTRAINT FKfd405010f62843e7b814b38ff533d7b7 FOREIGN KEY (Библиотека2) REFERENCES Библиотека; 
-CREATE INDEX Indexe267229a2c59487cb329d23afe175d8e on Журнал (Библиотека2); 
+ ALTER TABLE Детейл2 ADD CONSTRAINT FK7644deb6a3644b2083fb521c3a0c1acc FOREIGN KEY (Детейл_m1) REFERENCES ДетейлНаследник; 
+CREATE INDEX Indexcf374070a402ac74a423ee1902b2348b95969951 on Детейл2 (Детейл_m1); 
 
- ALTER TABLE Кошка ADD CONSTRAINT FKdc5b85b998e94db4a60bbee5aa19aec2 FOREIGN KEY (Порода_m0) REFERENCES Порода; 
-CREATE INDEX Indexe7b50c7fd95d46e8b2fdd3ed1108add7 on Кошка (Порода_m0); 
+ ALTER TABLE Журнал ADD CONSTRAINT FK4ed877feb1094fe292e4fa5c1970a3ab FOREIGN KEY (Автор2) REFERENCES Автор; 
+CREATE INDEX Index51fce8ede8f7716be28b6975505b1f9e738cc71c on Журнал (Автор2); 
 
- ALTER TABLE ДетейлНаследник ADD CONSTRAINT FK7dd68e3e24544a019c18f7cb6757ef4d FOREIGN KEY (БазовыйКласс_m0) REFERENCES БазовыйКласс; 
-CREATE INDEX Index85a196bb63944249aae52511a75b47aa on ДетейлНаследник (БазовыйКласс_m0); 
+ ALTER TABLE Журнал ADD CONSTRAINT FK08686fae9b124e03970dac738821388a FOREIGN KEY (Библиотека2) REFERENCES Библиотека; 
+CREATE INDEX Index93c8f6bdc15c74cea64c3d56754d8263c4f0ceb5 on Журнал (Библиотека2); 
 
- ALTER TABLE ДетейлНаследник ADD CONSTRAINT FK972130f9811a4f6ebfd1bcae2da440d5 FOREIGN KEY (БазовыйКласс_m1) REFERENCES Наследник; 
-CREATE INDEX Index7f49f0c246684445800f2cd47253ef62 on ДетейлНаследник (БазовыйКласс_m1); 
+ ALTER TABLE Кошка ADD CONSTRAINT FKb6d1bff256384e47a701e85305c4b3bd FOREIGN KEY (Порода_m0) REFERENCES Порода; 
+CREATE INDEX Index271599c8f6730bbff77fe5e9bf61dbfd89e661c6 on Кошка (Порода_m0); 
 
- ALTER TABLE STORMWEBSEARCH ADD CONSTRAINT FKbf4186317c44448b9130f832473af3bd FOREIGN KEY (FilterSetting_m0) REFERENCES STORMFILTERSETTING; 
+ ALTER TABLE ДетейлНаследник ADD CONSTRAINT FKfd6ed81ae53f48c18104c1d7c416716e FOREIGN KEY (БазовыйКласс_m0) REFERENCES БазовыйКласс; 
+CREATE INDEX Index5f71c50187d44a2fbbee65273ce3d50bdf1e0311 on ДетейлНаследник (БазовыйКласс_m0); 
 
- ALTER TABLE STORMFILTERDETAIL ADD CONSTRAINT FK6271258ea9464251a14e004f4e287ba0 FOREIGN KEY (FilterSetting_m0) REFERENCES STORMFILTERSETTING; 
+ ALTER TABLE ДетейлНаследник ADD CONSTRAINT FKb26ccd17873c4a2186dabe9e4dc6f838 FOREIGN KEY (БазовыйКласс_m1) REFERENCES Наследник; 
+CREATE INDEX Index4c265a3e468425e25ea55c8344c1110b7cb4bde6 on ДетейлНаследник (БазовыйКласс_m1); 
 
- ALTER TABLE STORMFILTERLOOKUP ADD CONSTRAINT FKbb3680bb62454a4f8af432b8357c6764 FOREIGN KEY (FilterSetting_m0) REFERENCES STORMFILTERSETTING; 
+ ALTER TABLE STORMWEBSEARCH ADD CONSTRAINT FKb19599c08b164ff99e7f8b61312b8199 FOREIGN KEY (FilterSetting_m0) REFERENCES STORMFILTERSETTING; 
 
- ALTER TABLE STORMAuEntity ADD CONSTRAINT FKd57747db77b14114beb64e1064031565 FOREIGN KEY (ObjectType_m0) REFERENCES STORMAuObjType; 
+ ALTER TABLE STORMFILTERDETAIL ADD CONSTRAINT FKcb09966a024c41fdb2e4cecdaee24fc6 FOREIGN KEY (FilterSetting_m0) REFERENCES STORMFILTERSETTING; 
 
- ALTER TABLE STORMAuField ADD CONSTRAINT FK451e5346b00146a7a2da8250c964bab3 FOREIGN KEY (MainChange_m0) REFERENCES STORMAuField; 
+ ALTER TABLE STORMFILTERLOOKUP ADD CONSTRAINT FK0aa2aea96f9f43ff93cc316246499caa FOREIGN KEY (FilterSetting_m0) REFERENCES STORMFILTERSETTING; 
 
- ALTER TABLE STORMAuField ADD CONSTRAINT FK45d4013bd04f4732bb0b5c994b490a2c FOREIGN KEY (AuditEntity_m0) REFERENCES STORMAuEntity; 
+ ALTER TABLE STORMAuEntity ADD CONSTRAINT FK2948d08746e3459e93996bfb420c290c FOREIGN KEY (ObjectType_m0) REFERENCES STORMAuObjType; 
+
+ ALTER TABLE STORMAuField ADD CONSTRAINT FKfc699ad6c15845029a2bb89d37e718ed FOREIGN KEY (MainChange_m0) REFERENCES STORMAuField; 
+
+ ALTER TABLE STORMAuField ADD CONSTRAINT FK87a244a89bcb4517964b09114cca49a4 FOREIGN KEY (AuditEntity_m0) REFERENCES STORMAuEntity; 
 

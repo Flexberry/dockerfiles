@@ -15,6 +15,7 @@
     using Microsoft.AspNet.OData.Routing;
     using Microsoft.OData.Edm;
     using NewPlatform.Flexberry.ORM.ODataService.Batch;
+    using NewPlatform.Flexberry.ORM.ODataService.Events;
     using NewPlatform.Flexberry.ORM.ODataService.Extensions;
     using NewPlatform.Flexberry.ORM.ODataService.Files;
     using NewPlatform.Flexberry.ORM.ODataService.Files.Providers;
@@ -270,9 +271,26 @@
         /// <returns>Http-ответ.</returns>
         private HttpResponseMessage InternalServerErrorMessage(Exception ex)
         {
+            return InternalServerErrorMessage(ex, _events, Request);
+        }
+
+        /// <summary>
+        /// Создаётся http-ответ с кодом 500 по-умолчанию, на возникшую в сервисе ошибку.
+        /// Для изменения возвращаемого кода необходимо реализовать обработчик CallbackAfterInternalServerError.
+        /// </summary>
+        /// <param name="ex">Ошибка сервиса.</param>
+        /// <param name="events">The container with registered events.</param>
+        /// <param name="request">Original HTTP request message for create a response.</param>
+        /// <returns>Http-ответ.</returns>
+        public static HttpResponseMessage InternalServerErrorMessage(Exception ex, IEventHandlerContainer events, HttpRequestMessage request)
+        {
             HttpStatusCode code = HttpStatusCode.InternalServerError;
             Exception originalEx = ex;
-            ex = ExecuteCallbackAfterInternalServerError(ex, ref code);
+
+            if (events?.CallbackAfterInternalServerError != null)
+            {
+                ex = events?.CallbackAfterInternalServerError(ex, ref code);
+            }
 
             if (ex == null)
             {
@@ -313,7 +331,7 @@
             details.Insert(0, "[").Append("]");
             trace.Insert(0, $"{{{JsonConvert.ToString("trace")}: [").Append("]}");
 
-            HttpResponseMessage msg = Request.CreateResponse(code);
+            HttpResponseMessage msg = request.CreateResponse(code);
             msg.Content = new StringContent(
                 "{" +
                 $"{JsonConvert.ToString("error")}: " +

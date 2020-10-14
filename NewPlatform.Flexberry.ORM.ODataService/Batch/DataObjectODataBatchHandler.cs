@@ -12,6 +12,8 @@
     using Microsoft.AspNet.OData.Extensions;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OData;
+    using NewPlatform.Flexberry.ORM.ODataService.Controllers;
+    using NewPlatform.Flexberry.ORM.ODataService.Events;
 
 #if NETFRAMEWORK
     using System.Web.Http;
@@ -40,6 +42,20 @@
         /// Request Properties collection key for DataObjectCache instance.
         /// </summary>
         public const string DataObjectCachePropertyKey = "DataObjectCache";
+
+        /// <summary>
+        /// The container with registered events.
+        /// </summary>
+        private IEventHandlerContainer _events;
+
+        /// <summary>
+        /// Initializes the container with registered events.
+        /// </summary>
+        /// <param name="events">The container with registered events.</param>
+        public void InitializeEvents(IEventHandlerContainer events)
+        {
+            _events = events;
+        }
 
 #if NETFRAMEWORK
         /// <summary>
@@ -82,6 +98,7 @@
 #endif
 
 #if NETFRAMEWORK
+
         /// <inheritdoc />
         public override async Task<HttpResponseMessage> ProcessBatchAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
@@ -111,7 +128,7 @@
             }
             catch (Exception ex)
             {
-                throw ex;
+                return DataObjectController.InternalServerErrorMessage(ex, _events, request);
             }
             finally
             {
@@ -351,7 +368,7 @@
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    throw;
                 }
             }
 
@@ -403,7 +420,7 @@
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    throw;
                 }
             }
 
