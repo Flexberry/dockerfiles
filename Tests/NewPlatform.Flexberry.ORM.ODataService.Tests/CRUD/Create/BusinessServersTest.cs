@@ -3,11 +3,9 @@
     using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
-
+    using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
-
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
-
     using Newtonsoft.Json;
 
     using Xunit;
@@ -15,15 +13,43 @@
     /// <summary>
     /// Класс тестов для тестирования бизнес-серверов.
     /// </summary>
-
     public class BusinessServersTest : BaseODataServiceIntegratedTest
     {
+#if NETCOREAPP
+        /// <summary>
+        /// Конструктор по-умолчанию.
+        /// </summary>
+        /// <param name="factory">Фабрика для приложения.</param>
+        public BusinessServersTest(CustomWebApplicationFactory<ODataServiceSample.AspNetCore.Startup> factory)
+            : base(factory)
+        {
+        }
+#endif
+
         /// <summary>
         /// Осуществляет проверку того, что при POST запросах происходит вызов бизнес-сервера.
         /// </summary>
         [Fact]
-        public void BSTest()
+        public void CallBSWhenCreateTest()
         {
+            string[] берлогаPropertiesNames =
+                {
+                    Information.ExtractPropertyPath<Берлога>(x => x.__PrimaryKey),
+                    Information.ExtractPropertyPath<Берлога>(x => x.Наименование),
+                    Information.ExtractPropertyPath<Берлога>(x => x.ЛесРасположения),
+                    Information.ExtractPropertyPath<Берлога>(x => x.ЛесРасположения.Название),
+                };
+            string[] медвPropertiesNames =
+                {
+                    Information.ExtractPropertyPath<Медведь>(x => x.__PrimaryKey),
+                    Information.ExtractPropertyPath<Медведь>(x => x.Вес),
+                    Information.ExtractPropertyPath<Медведь>(x => x.ЛесОбитания),
+                    Information.ExtractPropertyPath<Медведь>(x => x.ЛесОбитания.Название),
+                };
+            var берлогаDynamicView = new View(new ViewAttribute("берлогаDynamicView", берлогаPropertiesNames), typeof(Берлога));
+            var медвDynamicView = new View(new ViewAttribute("медвDynamicView", медвPropertiesNames), typeof(Медведь));
+            медвDynamicView.AddDetailInView(Information.ExtractPropertyPath<Медведь>(x => x.Берлога), берлогаDynamicView, true);
+
             // Объекты для тестирования создания.
             Медведь медв = new Медведь { Вес = 48 };
             Лес лес1 = new Лес { Название = "Бор" };
@@ -42,24 +68,13 @@
             ActODataService(args =>
             {
                 // ------------------ Только создания объектов ------------------
-                // Подготовка тестовых данных в формате OData.
-                var controller = new Controllers.DataObjectController(args.DataService, null, args.Token.Model, args.Token.Events, args.Token.Functions);
-                Microsoft.AspNet.OData.EdmEntityObject edmObj = controller.GetEdmObject(args.Token.Model.GetEdmEntityType(typeof(Медведь)), медв, 1, null);
-                var edmЛес1 = controller.GetEdmObject(args.Token.Model.GetEdmEntityType(typeof(Лес)), лес1, 1, null);
-                var edmЛес2 = controller.GetEdmObject(args.Token.Model.GetEdmEntityType(typeof(Лес)), лес2, 1, null);
-                edmObj.TrySetPropertyValue("ЛесОбитания", edmЛес1);
-                var coll = controller.GetEdmCollection(медв.Берлога, typeof(Берлога), 1, null);
-                edmObj.TrySetPropertyValue("Берлога", coll);
-                Microsoft.AspNet.OData.EdmEntityObject edmБерлога1 = (Microsoft.AspNet.OData.EdmEntityObject)coll[0];
-                Microsoft.AspNet.OData.EdmEntityObject edmБерлога2 = (Microsoft.AspNet.OData.EdmEntityObject)coll[1];
-                edmБерлога1.TrySetPropertyValue("ЛесРасположения", edmЛес1);
-                edmБерлога2.TrySetPropertyValue("ЛесРасположения", edmЛес2);
-
                 // Формируем URL запроса к OData-сервису.
                 string requestUrl = string.Format("http://localhost/odata/{0}", args.Token.Model.GetEdmEntitySet(typeof(Медведь)).Name);
 
+                string json = медв.ToJson(медвDynamicView, args.Token.Model);
+
                 // Обращаемся к OData-сервису и обрабатываем ответ, в теле запроса передаем создаваемый объект в формате JSON.
-                HttpResponseMessage response = args.HttpClient.PostAsJsonAsync(requestUrl, edmObj).Result;
+                HttpResponseMessage response = args.HttpClient.PostAsJsonStringAsync(requestUrl, json).Result;
 
                 // Убедимся, что запрос завершился успешно.
                 Assert.Equal(HttpStatusCode.Created, response.StatusCode);
@@ -73,7 +88,7 @@
                 Assert.Equal("Object created.", receivedObjs["ПолеБС"]);
 
                 // Проверяем что созданы зависимые объекты, вычитав с помощью args.DataService
-                var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Берлога), "БерлогаE");
+                var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Берлога), Берлога.Views.БерлогаE);
                 lcs.LoadingTypes = new[] { typeof(Берлога) };
 
                 var dobjs = args.DataService.LoadObjects(lcs);

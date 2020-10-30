@@ -1,4 +1,5 @@
-﻿namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
+﻿#if NETFRAMEWORK
+namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
 {
     using System;
     using System.Collections.Generic;
@@ -668,3 +669,4 @@
         }
     }
 }
+#endif

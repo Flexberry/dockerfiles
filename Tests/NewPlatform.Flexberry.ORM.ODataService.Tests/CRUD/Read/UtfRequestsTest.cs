@@ -20,6 +20,17 @@
     /// </summary>
     public class UtfRequestsTest : BaseODataServiceIntegratedTest
     {
+#if NETCOREAPP
+        /// <summary>
+        /// Конструктор по-умолчанию.
+        /// </summary>
+        /// <param name="factory">Фабрика для приложения.</param>
+        public UtfRequestsTest(CustomWebApplicationFactory<ODataServiceSample.AspNetCore.Startup> factory)
+            : base(factory)
+        {
+        }
+#endif
+
         /// <summary>
         /// Using UTF-8 requests.
         /// </summary>

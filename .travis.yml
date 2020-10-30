@@ -1,8 +1,15 @@
 language: csharp
 solution: NewPlatform.Flexberry.ORM.ODataService.sln
+dotnet: 3.1
+mono: latest
+env:
+  global:
+    - CONFIGURATION: Debug
+    - DOTNET_CLI_TELEMETRY_OPTOUT: 1
+    - DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
 install:
-  - nuget restore NewPlatform.Flexberry.ORM.ODataService.sln
-  - nuget install xunit.runner.console -Version 2.1.0 -OutputDirectory testrunner
+  - nuget restore NewPlatform.Flexberry.ORM.ODataService.sln -NonInteractive
+  - nuget install xunit.runner.console -Version 2.4.1 -OutputDirectory testrunner
 addons:
   postgresql: 9.6
   apt:
@@ -14,8 +21,8 @@ services:
 before_script:
   - psql -U postgres -c "create extension postgis"
 script:
-  - msbuild /p:Configuration=Debug NewPlatform.Flexberry.ORM.ODataService.sln
-  - mono ./testrunner/xunit.runner.console.2.1.0/tools/xunit.console.exe ./Tests/NewPlatform.Flexberry.ORM.ODataService.Tests/bin/Debug/NewPlatform.Flexberry.ORM.ODataService.Tests.dll
+  - msbuild /verbosity:quiet /p:WarningLevel=0 /p:Configuration=$CONFIGURATION NewPlatform.Flexberry.ORM.ODataService.sln
+  - mono ./testrunner/xunit.runner.console.2.4.1/tools/net461/xunit.console.exe ./Tests/NewPlatform.Flexberry.ORM.ODataService.Tests/bin/$CONFIGURATION/net461/NewPlatform.Flexberry.ORM.ODataService.Tests.dll
 after_success:
   - test $TRAVIS_PULL_REQUEST == "false"
     && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_BRANCH == "develop")

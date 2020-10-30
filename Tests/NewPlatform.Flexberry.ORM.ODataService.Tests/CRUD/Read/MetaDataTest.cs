@@ -18,6 +18,17 @@
     /// </summary>
     public class MetaDataTest : BaseODataServiceIntegratedTest
     {
+#if NETCOREAPP
+        /// <summary>
+        /// Конструктор по-умолчанию.
+        /// </summary>
+        /// <param name="factory">Фабрика для приложения.</param>
+        public MetaDataTest(CustomWebApplicationFactory<ODataServiceSample.AspNetCore.Startup> factory)
+            : base(factory)
+        {
+        }
+#endif
+
         /// <summary>
         /// Осуществляет проверку того, что при запросах с параметром $count=true, возвращаются метаданные с количеством присланных объектов.
         /// </summary>

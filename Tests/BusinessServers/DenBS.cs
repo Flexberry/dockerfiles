@@ -21,20 +21,20 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
 
 
     /// <summary>
-    /// БерлогаБС.
+    /// DenBS.
     /// </summary>
-    // *** Start programmer edit section *** (БерлогаБС CustomAttributes)
+    // *** Start programmer edit section *** (DenBS CustomAttributes)
 
-    // *** End programmer edit section *** (БерлогаБС CustomAttributes)
+    // *** End programmer edit section *** (DenBS CustomAttributes)
     [ICSSoft.STORMNET.AccessType(ICSSoft.STORMNET.AccessType.none)]
-    public class БерлогаБС : ICSSoft.STORMNET.Business.BusinessServer
+    public class DenBS : ICSSoft.STORMNET.Business.BusinessServer
     {
-        
-        // *** Start programmer edit section *** (БерлогаБС CustomMembers)
 
-        // *** End programmer edit section *** (БерлогаБС CustomMembers)
+        // *** Start programmer edit section *** (DenBS CustomMembers)
 
-        
+        // *** End programmer edit section *** (DenBS CustomMembers)
+
+
         // *** Start programmer edit section *** (OnUpdateБерлога CustomAttributes)
 
         // *** End programmer edit section *** (OnUpdateБерлога CustomAttributes)

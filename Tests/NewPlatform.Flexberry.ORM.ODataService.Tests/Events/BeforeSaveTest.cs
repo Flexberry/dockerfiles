@@ -8,7 +8,6 @@
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Exceptions;
-
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
 
     using Newtonsoft.Json;
@@ -20,6 +19,17 @@
     /// </summary>
     public class BeforeSaveTest : BaseODataServiceIntegratedTest
     {
+#if NETCOREAPP
+        /// <summary>
+        /// Конструктор по-умолчанию.
+        /// </summary>
+        /// <param name="factory">Фабрика для приложения.</param>
+        public BeforeSaveTest(CustomWebApplicationFactory<ODataServiceSample.AspNetCore.Startup> factory)
+            : base(factory)
+        {
+        }
+#endif
+
         /// <summary>
         /// Содержит DataObject, который является параметром в методах BeforeCreate, BeforeUpdate и BeforeDelete.
         /// </summary>
@@ -62,41 +72,43 @@
         [Fact]
         public void BeforeSavePostComplexObjectTest()
         {
-            // TODO: переписать тест с корректным формированием параметра - передаваемой сущности - для Post.
-            // Объекты для тестирования создания.
-            Медведь медв = new Медведь { Вес = 48 };
-            Лес лес1 = new Лес { Название = "Бор" };
-            Лес лес2 = new Лес { Название = "Березовая роща" };
-            медв.ЛесОбитания = лес1;
-            var берлога1 = new Берлога { Наименование = "Для хорошего настроения", ЛесРасположения = лес1 };
-            var берлога2 = new Берлога { Наименование = "Для плохого настроения", ЛесРасположения = лес2 };
-            медв.Берлога.Add(берлога1);
-            медв.Берлога.Add(берлога2);
-
-            // Объекты для тестирования создания с обновлением.
-            Медведь медвежонок = new Медведь { Вес = 12 };
-            var берлога3 = new Берлога { Наименование = "Для хорошего настроения", ЛесРасположения = лес1 };
-            медвежонок.Берлога.Add(берлога3);
-
             ActODataService(args =>
             {
                 args.Token.Events.CallbackBeforeCreate = BeforeCreate;
                 args.Token.Events.CallbackBeforeUpdate = BeforeUpdate;
                 args.Token.Events.CallbackBeforeDelete = BeforeDelete;
 
-                // ------------------ Только создания объектов ------------------
+                string[] берлогаPropertiesNames =
+                    {
+                        Information.ExtractPropertyPath<Берлога>(x => x.__PrimaryKey),
+                        Information.ExtractPropertyPath<Берлога>(x => x.Наименование),
+                        Information.ExtractPropertyPath<Берлога>(x => x.ЛесРасположения),
+                        Information.ExtractPropertyPath<Берлога>(x => x.ЛесРасположения.Название),
+                    };
+                string[] медвPropertiesNames =
+                    {
+                        Information.ExtractPropertyPath<Медведь>(x => x.__PrimaryKey),
+                        Information.ExtractPropertyPath<Медведь>(x => x.Вес),
+                        Information.ExtractPropertyPath<Медведь>(x => x.ЛесОбитания),
+                        Information.ExtractPropertyPath<Медведь>(x => x.ЛесОбитания.Название),
+                    };
+                var берлогаDynamicView = new View(new ViewAttribute("берлогаDynamicView", берлогаPropertiesNames), typeof(Берлога));
+                var медвDynamicView = new View(new ViewAttribute("медвDynamicView", медвPropertiesNames), typeof(Медведь));
+                медвDynamicView.AddDetailInView(Information.ExtractPropertyPath<Медведь>(x => x.Берлога), берлогаDynamicView, true);
+
+                // Объекты для тестирования создания.
+                Медведь медв = new Медведь { Вес = 48 };
+                Лес лес1 = new Лес { Название = "Бор" };
+                Лес лес2 = new Лес { Название = "Березовая роща" };
+                медв.ЛесОбитания = лес1;
+                var берлога1 = new Берлога { Наименование = "Для хорошего настроения", ЛесРасположения = лес1 };
+                var берлога2 = new Берлога { Наименование = "Для плохого настроения", ЛесРасположения = лес2 };
+                медв.Берлога.Add(берлога1);
+                медв.Берлога.Add(берлога2);
+
+                // Только создание объектов.
                 // Подготовка тестовых данных в формате OData.
-                var controller = new Controllers.DataObjectController(args.DataService, null, args.Token.Model, args.Token.Events, args.Token.Functions);
-                Microsoft.AspNet.OData.EdmEntityObject edmObj = controller.GetEdmObject(args.Token.Model.GetEdmEntityType(typeof(Медведь)), медв, 1, null);
-                var edmЛес1 = controller.GetEdmObject(args.Token.Model.GetEdmEntityType(typeof(Лес)), лес1, 1, null);
-                var edmЛес2 = controller.GetEdmObject(args.Token.Model.GetEdmEntityType(typeof(Лес)), лес2, 1, null);
-                edmObj.TrySetPropertyValue("ЛесОбитания", edmЛес1);
-                var coll = controller.GetEdmCollection(медв.Берлога, typeof(Берлога), 1, null);
-                edmObj.TrySetPropertyValue("Берлога", coll);
-                Microsoft.AspNet.OData.EdmEntityObject edmБерлога1 = (Microsoft.AspNet.OData.EdmEntityObject)coll[0]; // controller.GetEdmObject(args.ODataService.Model.GetEdmEntityType(typeof(Берлога)), берлога1, 1, null);
-                Microsoft.AspNet.OData.EdmEntityObject edmБерлога2 = (Microsoft.AspNet.OData.EdmEntityObject)coll[1]; // controller.GetEdmObject(args.ODataService.Model.GetEdmEntityType(typeof(Берлога)), берлога2, 1, null);
-                edmБерлога1.TrySetPropertyValue("ЛесРасположения", edmЛес1);
-                edmБерлога2.TrySetPropertyValue("ЛесРасположения", edmЛес2);
+                string json = медв.ToJson(медвDynamicView, args.Token.Model);
 
                 // Формируем URL запроса к OData-сервису.
                 string requestUrl = string.Format("http://localhost/odata/{0}", args.Token.Model.GetEdmEntitySet(typeof(Медведь)).Name);
@@ -104,7 +116,8 @@
                 ParamObj = null;
 
                 // Обращаемся к OData-сервису и обрабатываем ответ, в теле запроса передаем создаваемый объект в формате JSON.
-                HttpResponseMessage response = args.HttpClient.PostAsJsonAsync(requestUrl, edmObj).Result;
+                HttpResponseMessage response = args.HttpClient.PostAsJsonStringAsync(requestUrl, json).Result;
+
                 Assert.NotNull(ParamObj);
 
                 // Убедимся, что запрос завершился успешно.
@@ -126,39 +139,37 @@
 
                 // Проверяем что созданы все зависимые объекты, вычитав с помощью DataService
                 var ldef = ICSSoft.STORMNET.FunctionalLanguage.SQLWhere.SQLWhereLanguageDef.LanguageDef;
-                var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Лес), "ЛесE");
+                var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Лес), Лес.Views.ЛесE);
                 lcs.LoadingTypes = new[] { typeof(Лес) };
                 var dobjs = args.DataService.LoadObjects(lcs);
 
                 Assert.Equal(2, dobjs.Length);
 
-                lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Берлога), "БерлогаE");
+                lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Берлога), Берлога.Views.БерлогаE);
                 lcs.LoadingTypes = new[] { typeof(Берлога) };
 
-                // lcs.LimitFunction = ldef.GetFunction(ldef.funcEQ, new VariableDef(ldef.GuidType, SQLWhereLanguageDef.StormMainObjectKey), keyValue);
                 dobjs = args.DataService.LoadObjects(lcs);
                 Assert.Equal(2, dobjs.Length);
 
-                // ------------------ Создание объекта и обновление связанных ------------------
+                // Создание объекта и обновление связанных.
                 // Создаем нового медведя: в его мастере ЛесОбитания - лес1, но в нём изменим Название; в детейлы заберем от первого медведя  детейл2, изменив Название в мастере детейла.
                 // Подготовка тестовых данных в формате OData.
-                edmObj = controller.GetEdmObject(args.Token.Model.GetEdmEntityType(typeof(Медведь)), медвежонок, 1, null);
-                edmObj.TrySetPropertyValue("ЛесОбитания", edmЛес1);
-                edmЛес1.TrySetPropertyValue("Название", лес1.Название + "(обновл)");
-                edmЛес2.TrySetPropertyValue("Название", лес2.Название + "(обновл)");
+                // Объекты для тестирования создания с обновлением.
+                Медведь медвежонок = new Медведь { Вес = 12 };
+                var берлога3 = new Берлога { Наименование = "Для хорошего настроения", ЛесРасположения = лес1 };
+                медвежонок.Берлога.Add(берлога3);
                 медв.Берлога.Remove(берлога2);
                 медвежонок.Берлога.Add(берлога2);
-                coll = controller.GetEdmCollection(медвежонок.Берлога, typeof(Берлога), 1, null);
-                edmObj.TrySetPropertyValue("Берлога", coll);
-                edmБерлога1 = (Microsoft.AspNet.OData.EdmEntityObject)coll[0];
-                edmБерлога2 = (Microsoft.AspNet.OData.EdmEntityObject)coll[1];
-                edmБерлога1.TrySetPropertyValue("ЛесРасположения", edmЛес2);
-                edmБерлога2.TrySetPropertyValue("ЛесРасположения", edmЛес1);
+
+                лес1.Название = лес1.Название + "(обновл)";
+                лес2.Название = лес2.Название + "(обновл)";
+
+                json = медвежонок.ToJson(медвDynamicView, args.Token.Model);
 
                 ParamObj = null;
 
                 // Обращаемся к OData-сервису и обрабатываем ответ, в теле запроса передаем создаваемый объект в формате JSON.
-                response = args.HttpClient.PostAsJsonAsync(requestUrl, edmObj).Result;
+                response = args.HttpClient.PostAsJsonStringAsync(requestUrl, json).Result;
                 Assert.NotNull(ParamObj);
 
                 // Убедимся, что запрос завершился успешно.
@@ -173,7 +184,7 @@
 
                 // Проверяем что созданы все зависимые объекты, вычитав с помощью DataService
                 ldef = ICSSoft.STORMNET.FunctionalLanguage.SQLWhere.SQLWhereLanguageDef.LanguageDef;
-                lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Лес), "ЛесE");
+                lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Лес), Лес.Views.ЛесE);
                 lcs.LoadingTypes = new[] { typeof(Лес) };
                 lcs.LimitFunction = ldef.GetFunction(
                     ldef.funcEQ,
@@ -181,8 +192,8 @@
                     лес1.__PrimaryKey);
                 dobjs = args.DataService.LoadObjects(lcs);
 
-                Assert.Equal(1, dobjs.Length);
-                Assert.True(((Лес)dobjs[0]).Название.EndsWith("(обновл)"));
+                Assert.Single(dobjs);
+                Assert.EndsWith("(обновл)", ((Лес)dobjs[0]).Название);
 
                 lcs.LimitFunction = ldef.GetFunction(
                     ldef.funcEQ,
@@ -190,10 +201,10 @@
                     лес2.__PrimaryKey);
                 dobjs = args.DataService.LoadObjects(lcs);
 
-                Assert.Equal(1, dobjs.Length);
-                Assert.True(((Лес)dobjs[0]).Название.EndsWith("(обновл)"));
+                Assert.Single(dobjs);
+                Assert.EndsWith("(обновл)", ((Лес)dobjs[0]).Название);
 
-                lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Берлога), "БерлогаE");
+                lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Берлога), Берлога.Views.БерлогаE);
                 lcs.LoadingTypes = new[] { typeof(Берлога) };
                 lcs.LimitFunction = ldef.GetFunction(
                     ldef.funcEQ,
@@ -201,7 +212,7 @@
                     медв.__PrimaryKey);
                 dobjs = args.DataService.LoadObjects(lcs);
 
-                Assert.Equal(1, dobjs.Length);
+                Assert.Single(dobjs);
 
                 lcs.LimitFunction = ldef.GetFunction(
                     ldef.funcEQ,
@@ -210,10 +221,6 @@
                 dobjs = args.DataService.LoadObjects(lcs);
 
                 Assert.Equal(2, dobjs.Length);
-
-                // Вернем детейл для того, чтобы тест работал со следующими СУБД.
-                медвежонок.Берлога.Remove(берлога2);
-                медв.Берлога.Add(берлога2);
             });
         }
 

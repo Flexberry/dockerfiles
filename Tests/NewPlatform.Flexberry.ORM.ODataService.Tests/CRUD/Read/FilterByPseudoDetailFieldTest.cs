@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Net;
+    using ICSSoft.Services;
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Windows.Forms;
     using NewPlatform.Flexberry.ORM.ODataService.Model;
@@ -9,7 +10,7 @@
 
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
-
+    using Unity;
     using Xunit;
 
     /// <summary>
@@ -29,9 +30,19 @@
             return pseudoDetailDefinitions;
         }
 
+#if NETFRAMEWORK
         public FilterByPseudoDetailFieldTest() : base(pseudoDetailDefinitions: GetPseudoDetailDefinitions())
         {
         }
+#endif
+#if NETCOREAPP
+        public FilterByPseudoDetailFieldTest(CustomWebApplicationFactory<ODataServiceSample.AspNetCore.Startup> factory)
+            : base(factory, pseudoDetailDefinitions: GetPseudoDetailDefinitions())
+        {
+            IUnityContainer container = UnityFactory.GetContainer();
+            container.RegisterInstance(GetPseudoDetailDefinitions());
+        }
+#endif
 
         /// <summary>
         /// Tests filtering data by pseudodetail field with EmptyAny.

@@ -23,20 +23,20 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
 
 
     /// <summary>
-    /// МедведьБС.
+    /// BearBS.
     /// </summary>
-    // *** Start programmer edit section *** (МедведьБС CustomAttributes)
+    // *** Start programmer edit section *** (BearBS CustomAttributes)
 
-    // *** End programmer edit section *** (МедведьБС CustomAttributes)
+    // *** End programmer edit section *** (BearBS CustomAttributes)
     [ICSSoft.STORMNET.AccessType(ICSSoft.STORMNET.AccessType.none)]
-    public class МедведьБС : ICSSoft.STORMNET.Business.BusinessServer
+    public class BearBS : ICSSoft.STORMNET.Business.BusinessServer
     {
-        
-        // *** Start programmer edit section *** (МедведьБС CustomMembers)
 
-        // *** End programmer edit section *** (МедведьБС CustomMembers)
+        // *** Start programmer edit section *** (BearBS CustomMembers)
 
-        
+        // *** End programmer edit section *** (BearBS CustomMembers)
+
+
         // *** Start programmer edit section *** (OnUpdateМедведь CustomAttributes)
 
         // *** End programmer edit section *** (OnUpdateМедведь CustomAttributes)

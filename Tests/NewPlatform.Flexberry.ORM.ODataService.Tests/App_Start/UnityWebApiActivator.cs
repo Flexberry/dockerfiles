@@ -1,3 +1,5 @@
+#if NETFRAMEWORK
+
 using System.Web.Http;
 
 using Unity.AspNet.WebApi;
@@ -34,3 +36,4 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
         }
     }
 }
+#endif

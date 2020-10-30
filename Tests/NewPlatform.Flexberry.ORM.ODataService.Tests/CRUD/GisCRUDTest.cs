@@ -16,18 +16,32 @@
     using Newtonsoft.Json.Linq;
 
     using Xunit;
+    using Xunit.Abstractions;
 
     /// <summary>
     /// Класс тестов для тестирования работы с гео-данными.
     /// </summary>
     public class GisCRUDTest : BaseODataServiceIntegratedTest
     {
+#if NETFRAMEWORK
         /// <summary>
         /// Конструктор по-умолчанию.
         /// </summary>
         public GisCRUDTest()
             : base("ODataGis", false, true)
         { }
+#endif
+#if NETCOREAPP
+        /// <summary>
+        /// Конструктор по-умолчанию.
+        /// </summary>
+        /// <param name="factory">Фабрика для приложения.</param>
+        /// <param name="output">Вывод диагностической информации по тестам.</param>
+        public GisCRUDTest(CustomWebApplicationFactory<ODataServiceSample.AspNetCore.Startup> factory, ITestOutputHelper output)
+            : base(factory, output, false, true)
+        {
+        }
+#endif
 
         /// <summary>
         /// Осуществляет проверку фильтрации с использованием функции geo.intersects

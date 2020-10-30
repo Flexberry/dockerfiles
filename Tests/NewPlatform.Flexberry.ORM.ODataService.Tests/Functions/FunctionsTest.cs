@@ -5,8 +5,7 @@
     using System.Linq;
     using System.Net;
     using System.Net.Http;
-    using System.Web.Http;
-
+    using ICSSoft.Services;
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Business.LINQProvider;
@@ -19,14 +18,29 @@
 
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
-
+    using Unity;
     using Xunit;
+
+#if NETFRAMEWORK
+    using System.Web.Http;
+#endif
 
     /// <summary>
     /// Класс тестов для тестирования метаданных, получаемых от OData-сервиса.
     /// </summary>
     public class FunctionsTest : BaseODataServiceIntegratedTest
     {
+#if NETCOREAPP
+        /// <summary>
+        /// Конструктор по-умолчанию.
+        /// </summary>
+        /// <param name="factory">Фабрика для приложения.</param>
+        public FunctionsTest(CustomWebApplicationFactory<ODataServiceSample.AspNetCore.Startup> factory)
+            : base(factory)
+        {
+        }
+#endif
+
         /// <summary>
         /// Осуществляет регистрацию пользовательских OData-функций.
         /// </summary>
@@ -45,6 +59,10 @@
                     {
                         var type = queryParameters.GetDataObjectType(parameters["entitySet"] as string);
                         var lcs = queryParameters.CreateLcs(type);
+#if NETCOREAPP
+                        IUnityContainer container = UnityFactory.GetContainer();
+                        dataService = container.Resolve<IDataService>();
+#endif
                         var dobjs = dataService.LoadObjects(lcs);
                         return dobjs.AsEnumerable();
                     },
@@ -62,6 +80,10 @@
                         var type = queryParameters.GetDataObjectType(parameters["entitySet"] as string);
                         var uri = $"http://a/b/c?{parameters["query"]}";
                         var lcs = queryParameters.CreateLcs(type, uri);
+#if NETCOREAPP
+                        IUnityContainer container = UnityFactory.GetContainer();
+                        dataService = container.Resolve<IDataService>();
+#endif
                         var dobjs = dataService.LoadObjects(lcs);
                         return dobjs.Length;
                     },
@@ -96,6 +118,10 @@
                     "FunctionEntity",
                     (queryParameters, parameters) =>
                     {
+#if NETCOREAPP
+                        IUnityContainer container = UnityFactory.GetContainer();
+                        dataService = container.Resolve<IDataService>();
+#endif
                         var result = (dataService as SQLDataService).Query<Страна>(Страна.Views.СтранаE).ToArray();
                         return result[(int)parameters["intParam"]];
                     },
@@ -111,6 +137,10 @@
                     (queryParameters, parameters) =>
                     {
                         var top = (int)parameters["intParam"];
+#if NETCOREAPP
+                        IUnityContainer container = UnityFactory.GetContainer();
+                        dataService = container.Resolve<IDataService>();
+#endif
                         var result = (dataService as SQLDataService).Query<Страна>(Страна.Views.СтранаE).Take(top).ToArray();
                         queryParameters.Count = result.Length;
                         return result;
@@ -126,6 +156,10 @@
                     "FunctionSelectExpandEntity",
                     (queryParameters, parameters) =>
                     {
+#if NETCOREAPP
+                        IUnityContainer container = UnityFactory.GetContainer();
+                        dataService = container.Resolve<IDataService>();
+#endif
                         var result = (dataService as SQLDataService).Query<Медведь>(Медведь.Views.МедведьE).ToArray();
                         return result[(int)parameters["intParam"]];
                     },
@@ -153,13 +187,16 @@
                     "FunctionHttpResponseException",
                     (queryParameters, parameters) =>
                     {
+#if NETFRAMEWORK
                         throw new HttpResponseException(queryParameters.Request.CreateErrorResponse(HttpStatusCode.BadRequest,
                             new ODataError() { ErrorCode = "400", Message = "Сообщение об ошибке" }));
+#else
+                        throw new ODataException("Сообщение об ошибке");
+#endif
                     },
                     typeof(IEnumerable<DataObject>),
                     parametersTypes));
             }
-
         }
 
         /// <summary>
@@ -513,8 +550,21 @@
                     // Проверим, что возвращается код ошибки, указанный в функции.
                     Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
+#if NETFRAMEWORK
                     // Проверим сообщение об ошибке.
                     Assert.Equal("Сообщение об ошибке", ((ODataError)((ObjectContent)response.Content).Value).Message);
+#else
+                    // Получим строку с ответом.
+                    string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
+
+                    JObject jObject = JObject.Parse(receivedStr);
+                    var error = jObject["error"];
+
+                    Assert.NotNull(error);
+                    string errorMessage = error["message"].ToString();
+
+                    Assert.Equal("Сообщение об ошибке", errorMessage);
+#endif
                 }
             });
         }

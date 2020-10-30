@@ -4,18 +4,27 @@
     using System.IO;
     using System.Linq;
     using System.Net;
-    using System.Net.Http;
-    using System.Runtime.Remoting.Messaging;
-
+    using ICSSoft.Services;
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.UserDataTypes;
 
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
-
+    using Unity;
     using Xunit;
 
     public class WebFileTest: BaseODataServiceIntegratedTest
     {
+#if NETCOREAPP
+        /// <summary>
+        /// Конструктор по-умолчанию.
+        /// </summary>
+        /// <param name="factory">Фабрика для приложения.</param>
+        public WebFileTest(CustomWebApplicationFactory<ODataServiceSample.AspNetCore.Startup> factory)
+            : base(factory)
+        {
+        }
+#endif
+
         [Fact]
         public void WebFileAsStringShouldSave()
         {
@@ -80,7 +89,17 @@
                 string key = Guid.NewGuid().ToString("D");
                 Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), key));
                 const string fileName = "cert.txt";
-                string filePath = Path.Combine(Path.GetTempPath(), key, fileName);
+                string basePath = Path.GetTempPath();
+#if NETCOREAPP
+                Unity.IUnityContainer container = UnityFactory.GetContainer();
+                var env = container.Resolve<Microsoft.AspNetCore.Hosting.IHostingEnvironment>();
+                basePath = Path.Combine(env.WebRootPath, "Uploads");
+                if (!Directory.Exists(Path.Combine(basePath, key)))
+                {
+                    Directory.CreateDirectory(Path.Combine(basePath, key));
+                }
+#endif
+                string filePath = Path.Combine(basePath, key, fileName);
                 using (var fs = new FileStream(filePath, FileMode.Create))
                 {
                     fs.SetLength(100);

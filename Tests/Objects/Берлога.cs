@@ -14,8 +14,8 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
     using System.Xml;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET;
-    
-    
+
+
     // *** Start programmer edit section *** (Using statements)
 
     // *** End programmer edit section *** (Using statements)
@@ -27,8 +27,8 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
     // *** Start programmer edit section *** (Берлога CustomAttributes)
 
     // *** End programmer edit section *** (Берлога CustomAttributes)
-    [BusinessServer("NewPlatform.Flexberry.ORM.ODataService.Tests.БерлогаБС, NewPlatform.Flexberry.ORM" +
-        ".ODataService.Tests.BusinessServers", ICSSoft.STORMNET.Business.DataServiceObjectEvents.OnAllEvents)]
+    [BusinessServer("NewPlatform.Flexberry.ORM.ODataService.Tests.DenBS, NewPlatform.Flexberry.ORM.ODa" +
+        "taService.Tests.BusinessServers", ICSSoft.STORMNET.Business.DataServiceObjectEvents.OnAllEvents)]
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.none)]
     [View("LoadTestView", new string[] {

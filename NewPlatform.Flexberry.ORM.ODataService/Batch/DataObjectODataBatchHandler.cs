@@ -160,17 +160,30 @@
                 return;
             }
 
-            IList<ODataBatchRequestItem> subRequests = await ParseBatchRequestsAsync(context);
+            try
+            {
+                IList<ODataBatchRequestItem> subRequests = await ParseBatchRequestsAsync(context);
 
-            ODataOptions options = context.RequestServices.GetRequiredService<ODataOptions>();
-            bool enableContinueOnErrorHeader = (options != null)
-                ? options.EnableContinueOnErrorHeader
-                : false;
+                ODataOptions options = context.RequestServices.GetRequiredService<ODataOptions>();
+                bool enableContinueOnErrorHeader = (options != null)
+                    ? options.EnableContinueOnErrorHeader
+                    : false;
 
-            SetContinueOnError(new WebApiRequestHeaders(context.Request.Headers), enableContinueOnErrorHeader);
+                SetContinueOnError(new WebApiRequestHeaders(context.Request.Headers), enableContinueOnErrorHeader);
 
-            IList<ODataBatchResponseItem> responses = await ExecuteRequestMessagesAsync(new ODataBatchRequestsWrapper(context, subRequests), nextHandler);
-            await CreateResponseMessageAsync(responses, context.Request);
+                IList<ODataBatchResponseItem> responses = await ExecuteRequestMessagesAsync(new ODataBatchRequestsWrapper(context, subRequests), nextHandler);
+                await CreateResponseMessageAsync(responses, context.Request);
+            }
+            catch (Exception ex)
+            {
+                if (_events?.CallbackAfterInternalServerError != null)
+                {
+                    var statusCode = System.Net.HttpStatusCode.InternalServerError;
+                    _events.CallbackAfterInternalServerError(ex, ref statusCode);
+                }
+
+                throw;
+            }
         }
 
 #endif

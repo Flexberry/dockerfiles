@@ -4,7 +4,7 @@
     using System.Linq;
     using System.Net;
     using System.Net.Http;
-    
+
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.KeyGen;
     using ICSSoft.STORMNET.Windows.Forms;
@@ -21,6 +21,17 @@
     /// </summary>
     public class BusinessServersTest : BaseODataServiceIntegratedTest
     {
+#if NETCOREAPP
+        /// <summary>
+        /// Конструктор по-умолчанию.
+        /// </summary>
+        /// <param name="factory">Фабрика для приложения.</param>
+        public BusinessServersTest(CustomWebApplicationFactory<ODataServiceSample.AspNetCore.Startup> factory)
+            : base(factory)
+        {
+        }
+#endif
+
         /// <summary>
         /// Осуществляет проверку того, что при POST запросах происходит вызов бизнес-сервера.
         /// </summary>
