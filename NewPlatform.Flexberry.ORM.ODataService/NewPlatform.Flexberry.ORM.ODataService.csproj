@@ -21,17 +21,17 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.Cors" Version="5.2.7" />
-    <PackageReference Include="Microsoft.AspNet.OData" Version="7.1.0" />
+    <PackageReference Include="Microsoft.AspNet.OData" Version="7.5.1" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Cors" Version="5.2.7" />
-    <PackageReference Include="Microsoft.OData.Core" Version="7.5.0" />
-    <PackageReference Include="Microsoft.OData.Edm" Version="7.5.0" />
-    <PackageReference Include="Microsoft.Spatial" Version="7.5.0" />
-    <PackageReference Include="NewPlatform.Flexberry.UserSettingsService" Version="4.0.0-beta01" />
+    <PackageReference Include="Microsoft.OData.Core" Version="7.7.2" />
+    <PackageReference Include="Microsoft.OData.Edm" Version="7.7.2" />
+    <PackageReference Include="Microsoft.Spatial" Version="7.7.2" />
+    <PackageReference Include="NewPlatform.Flexberry.UserSettingsService" Version="4.0.0-beta02" />
     <PackageReference Include="Newtonsoft.Json" Version="8.0.3" />
-    <PackageReference Include="NewPlatform.Flexberry.LockService" Version="3.0.0-beta01" />
-    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta08" />
+    <PackageReference Include="NewPlatform.Flexberry.LockService" Version="3.0.0-beta02" />
+    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta11" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
