@@ -116,7 +116,7 @@
       <HintPath>..\..\packages\NewPlatform.Flexberry.AspNet.WebApi.Cors.1.1.1\lib\net45\NewPlatform.Flexberry.AspNet.WebApi.Cors.dll</HintPath>
     </Reference>
     <Reference Include="NewPlatform.Flexberry.LockService, Version=1.0.0.0, Culture=neutral, PublicKeyToken=90cf813b4f0caf3c, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.LockService.3.0.0-beta01\lib\net45\NewPlatform.Flexberry.LockService.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.LockService.3.0.0-beta02\lib\net45\NewPlatform.Flexberry.LockService.dll</HintPath>
     </Reference>
     <Reference Include="NewPlatform.Flexberry.LogService, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fd6943b998f5450d, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NewPlatform.Flexberry.LogService.2.0.0-beta03\lib\net45\NewPlatform.Flexberry.LogService.dll</HintPath>
@@ -128,7 +128,7 @@
       <HintPath>..\..\packages\NewPlatform.Flexberry.ORM.6.0.0-beta11\lib\net45\NewPlatform.Flexberry.ORM.UnityFactory.dll</HintPath>
     </Reference>
     <Reference Include="NewPlatform.Flexberry.UserSettingsService, Version=1.1.0.0, Culture=neutral, PublicKeyToken=2169f05da5d7fddc, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewPlatform.Flexberry.UserSettingsService.4.0.0-beta01\lib\net45\NewPlatform.Flexberry.UserSettingsService.dll</HintPath>
+      <HintPath>..\..\packages\NewPlatform.Flexberry.UserSettingsService.4.0.0-beta02\lib\net45\NewPlatform.Flexberry.UserSettingsService.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
