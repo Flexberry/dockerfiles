@@ -21,8 +21,8 @@
         /// <summary>
         /// Конструктор по-умолчанию.
         /// </summary>
-        public DefaultOfflineManagerIntegratedTest(CustomWebApplicationFactory<ODataServiceSample.AspNetCore.Startup> factory)
-            : base(factory)
+        public DefaultOfflineManagerIntegratedTest(CustomWebApplicationFactory<ODataServiceSample.AspNetCore.Startup> factory, Xunit.Abstractions.ITestOutputHelper output)
+            : base(factory, output)
         { }
 #endif
 

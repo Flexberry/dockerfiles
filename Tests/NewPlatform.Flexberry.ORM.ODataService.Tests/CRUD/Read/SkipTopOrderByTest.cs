@@ -27,7 +27,7 @@
         /// Конструктор по-умолчанию.
         /// </summary>
         /// <param name="factory">Фабрика для приложения.</param>
-        /// <param name="output">Выходной поток для отладочной информации.</param>
+        /// <param name="output">Вывод отладочной информации.</param>
         public SkipTopOrderByTest(CustomWebApplicationFactory<ODataServiceSample.AspNetCore.Startup> factory, ITestOutputHelper output)
             : base(factory, output)
         {

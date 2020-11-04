@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
@@ -11,10 +11,18 @@
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\NewPlatform.Flexberry.ORM.ODataServiceCore.Common.xml</DocumentationFile>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1' ">
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta10" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta11" />
   </ItemGroup>
 
 </Project>

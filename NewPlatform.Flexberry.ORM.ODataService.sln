@@ -12,7 +12,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet Package Properties", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A94D831A-7B5D-40C6-B76B-2B8B6335DB3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewPlatform.Flexberry.ORM.ODataService.Tests", "Tests\NewPlatform.Flexberry.ORM.ODataService.Tests\NewPlatform.Flexberry.ORM.ODataService.Tests.csproj", "{8E43819E-6643-4E5F-A3A2-B1C212033DE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewPlatform.Flexberry.ORM.ODataService.Tests", "Tests\NewPlatform.Flexberry.ORM.ODataService.Tests\NewPlatform.Flexberry.ORM.ODataService.Tests.csproj", "{8E43819E-6643-4E5F-A3A2-B1C212033DE6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5090ACBA-7CD6-4AA7-88A2-15D541573988} = {5090ACBA-7CD6-4AA7-88A2-15D541573988}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewPlatform.Flexberry.ORM.ODataService.Tests.Objects", "Tests\Objects\NewPlatform.Flexberry.ORM.ODataService.Tests.Objects.csproj", "{10CE2502-3EEF-4285-935F-E18F5F623C6D}"
 EndProject
@@ -114,7 +117,7 @@ Global
 		{BFB771C3-51D8-4804-BB0F-A0B4BD7981D9} = {A94D831A-7B5D-40C6-B76B-2B8B6335DB3E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {611B715C-AD46-45B1-BA4E-36C8F1A1896E}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.Interception.2.1.505.0\lib\NET35;packages\EnterpriseLibrary.Common.5.0.505.0\lib\NET35;packages\EnterpriseLibrary.Data.5.0.505.0\lib\NET35;packages\EnterpriseLibrary.Logging.5.0.505.0\lib\NET35;packages\EnterpriseLibrary.Logging.Database.5.0.505.0\lib\NET35
+		SolutionGuid = {611B715C-AD46-45B1-BA4E-36C8F1A1896E}
 	EndGlobalSection
 EndGlobal

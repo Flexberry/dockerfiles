@@ -30,7 +30,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
     /// <summary>
     /// Base class for integration tests.
     /// </summary>
-    public abstract class BaseIntegratedTest : IClassFixture<CustomWebApplicationFactory<Startup>>
+    public abstract class BaseIntegratedTest : IClassFixture<CustomWebApplicationFactory<Startup>>, IDisposable
     {
         protected readonly WebApplicationFactory<Startup> _factory;
 #endif

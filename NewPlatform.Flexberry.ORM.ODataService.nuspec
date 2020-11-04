@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>NewPlatform.Flexberry.ORM.ODataService</id>
-    <version>6.1.0-beta06</version>
+    <version>6.1.0-beta07</version>
     <title>Flexberry ORM ODataService</title>
     <authors>New Platform Ltd.</authors>
     <owners>New Platform Ltd.</owners>
@@ -20,26 +20,21 @@
     <dependencies>
       <group targetFramework=".NETFramework4.5">
         <dependency id="Microsoft.AspNet.Cors" version="5.2.7" />
-        <dependency id="Microsoft.AspNet.OData" version="7.1.0" />
+        <dependency id="Microsoft.AspNet.OData" version="7.5.1" />
         <dependency id="Microsoft.AspNet.WebApi.Client" version="5.2.7" />
         <dependency id="Microsoft.AspNet.WebApi.Core" version="5.2.7" />
         <dependency id="Microsoft.AspNet.WebApi.Cors" version="5.2.7" />
-        <dependency id="Microsoft.OData.Core" version="7.5.0" />
-        <dependency id="Microsoft.OData.Edm" version="7.5.0" />
-        <dependency id="Microsoft.Spatial" version="7.5.0" />
+        <dependency id="Microsoft.OData.Core" version="7.7.2" />
+        <dependency id="Microsoft.OData.Edm" version="7.7.2" />
+        <dependency id="Microsoft.Spatial" version="7.7.2" />
         <dependency id="NewPlatform.Flexberry.LockService" version="3.0.0-beta02" />
-        <dependency id="NewPlatform.Flexberry.ORM" version="6.0.0-beta10" />
+        <dependency id="NewPlatform.Flexberry.ORM" version="6.0.0-beta11" />
         <dependency id="Newtonsoft.Json" version="12.0.3" />
       </group>
       <group targetFramework=".NETStandard2.0">
-        <dependency id="Microsoft.AspNetCore.Http.Abstractions" version="2.2.0" />
-        <dependency id="Microsoft.AspNetCore.Mvc.Abstractions" version="2.2.0" />
-        <dependency id="Microsoft.AspNetCore.Mvc.Core" version="2.2.5" />
-        <dependency id="Microsoft.AspNetCore.Mvc.Formatters.Json" version="2.2.0" />
-        <dependency id="Microsoft.AspNetCore.StaticFiles" version="2.2.0" />
-        <dependency id="NewPlatform.Flexberry.AspNetCore.OData" version="7.1.0-beta01" />
+        <dependency id="NewPlatform.Flexberry.AspNetCore.OData" version="7.5.1-beta01" />
         <dependency id="NewPlatform.Flexberry.LockService" version="3.0.0-beta02" />
-        <dependency id="NewPlatform.Flexberry.ORM" version="6.0.0-beta10" />
+        <dependency id="NewPlatform.Flexberry.ORM" version="6.0.0-beta11" />
         <dependency id="Newtonsoft.Json" version="12.0.3" />
       </group>
     </dependencies>

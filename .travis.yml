@@ -23,6 +23,7 @@ before_script:
 script:
   - msbuild /verbosity:quiet /p:WarningLevel=0 /p:Configuration=$CONFIGURATION NewPlatform.Flexberry.ORM.ODataService.sln
   - mono ./testrunner/xunit.runner.console.2.4.1/tools/net461/xunit.console.exe ./Tests/NewPlatform.Flexberry.ORM.ODataService.Tests/bin/$CONFIGURATION/net461/NewPlatform.Flexberry.ORM.ODataService.Tests.dll
+  - dotnet test ./Tests/NewPlatform.Flexberry.ORM.ODataService.Tests/bin/$CONFIGURATION/netcoreapp3.1/NewPlatform.Flexberry.ORM.ODataService.Tests.dll
 after_success:
   - test $TRAVIS_PULL_REQUEST == "false"
     && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_BRANCH == "develop")

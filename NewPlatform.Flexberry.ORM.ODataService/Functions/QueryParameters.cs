@@ -201,7 +201,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Functions
                     httpContext.RequestServices = request.HttpContext.RequestServices;
                     httpContext.Features.Set<IODataFeature>(odataFeature);
 
-                    request = new DefaultHttpRequest(httpContext);
+                    request = httpContext.Request;
                     request.QueryString = new QueryString(queryPart);
                 }
             }

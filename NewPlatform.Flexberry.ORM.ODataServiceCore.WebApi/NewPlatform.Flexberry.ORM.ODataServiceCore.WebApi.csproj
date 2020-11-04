@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
     <RootNamespace>NewPlatform.Flexberry.ORM.ODataService.WebApi</RootNamespace>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
@@ -12,9 +12,16 @@
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\NewPlatform.Flexberry.ORM.ODataServiceCore.WebApi.xml</DocumentationFile>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1' ">
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <PackageReference Include="NewPlatform.Flexberry.LockService" Version="3.0.0-beta02" />
   </ItemGroup>
 

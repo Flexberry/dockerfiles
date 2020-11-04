@@ -36,8 +36,8 @@
         }
 #endif
 #if NETCOREAPP
-        public FilterByPseudoDetailFieldTest(CustomWebApplicationFactory<ODataServiceSample.AspNetCore.Startup> factory)
-            : base(factory, pseudoDetailDefinitions: GetPseudoDetailDefinitions())
+        public FilterByPseudoDetailFieldTest(CustomWebApplicationFactory<ODataServiceSample.AspNetCore.Startup> factory, Xunit.Abstractions.ITestOutputHelper output)
+            : base(factory, output, pseudoDetailDefinitions: GetPseudoDetailDefinitions())
         {
             IUnityContainer container = UnityFactory.GetContainer();
             container.RegisterInstance(GetPseudoDetailDefinitions());

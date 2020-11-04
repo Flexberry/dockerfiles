@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta10" />
+    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta11" />
     <PackageReference Include="NewPlatform.Flexberry.ORM.GisMSSQLDataService" Version="2.0.0-beta01" />
     <PackageReference Include="NewPlatform.Flexberry.ORM.GisPostgresDataService" Version="2.0.0-beta01" />
     <PackageReference Include="NewPlatform.Flexberry.ORM.MSSQLDataService" Version="6.0.0-beta10" />

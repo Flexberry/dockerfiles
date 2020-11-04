@@ -25,8 +25,9 @@
         /// Конструктор по-умолчанию.
         /// </summary>
         /// <param name="factory">Фабрика для приложения.</param>
-        public ReferenceToMasterTest(CustomWebApplicationFactory<ODataServiceSample.AspNetCore.Startup> factory)
-            : base(factory)
+        /// <param name="output">Вывод отладочной информации.</param>
+        public ReferenceToMasterTest(CustomWebApplicationFactory<ODataServiceSample.AspNetCore.Startup> factory, Xunit.Abstractions.ITestOutputHelper output)
+            : base(factory, output)
         {
         }
 #endif

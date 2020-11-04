@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
     <RootNamespace>NewPlatform.Flexberry.ORM.ODataService.Files</RootNamespace>
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
@@ -12,11 +12,18 @@
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\NewPlatform.Flexberry.ORM.ODataServiceCore.Files.xml</DocumentationFile>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1' ">
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
-    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta10" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta11" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 

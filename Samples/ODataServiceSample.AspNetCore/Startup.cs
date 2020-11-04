@@ -78,9 +78,9 @@
             services.AddMvcCore(options =>
             {
                 options.Filters.Add<CustomExceptionFilter>();
+                options.EnableEndpointRouting = false;
             })
-                .AddFormatterMappings()
-                .AddJsonFormatters();
+                .AddFormatterMappings();
 
             services.AddOData();
 

@@ -1,17 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="NewPlatform.Flexberry.LockService" Version="3.0.0-beta02" />
     <PackageReference Include="NewPlatform.Flexberry.LogService.Objects" Version="4.0.0-beta02" />
-    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta10" />
+    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta11" />
     <PackageReference Include="NewPlatform.Flexberry.ORM.PostgresDataService" Version="6.0.0-beta10" />
     <PackageReference Include="NewPlatform.Flexberry.UserSettingsService" Version="4.0.0-beta02" />
   </ItemGroup>
@@ -24,10 +22,5 @@
     <ProjectReference Include="..\..\Tests\BusinessServers\NewPlatform.Flexberry.ORM.ODataService.Tests.BusinessServers.csproj" />
     <ProjectReference Include="..\..\Tests\Objects\NewPlatform.Flexberry.ORM.ODataService.Tests.Objects.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
-
 
 </Project>
