@@ -319,5 +319,45 @@
                 }
             });
         }
+
+        /// <summary>
+        /// Осуществляет проверку применения $filter на равенство дат в запросах OData.
+        /// </summary>
+        [Fact]
+        public void TestFilterEqualDates()
+        {
+            ActODataService(args =>
+            {
+                DataObject класс = new КлассСМножествомТипов
+                {
+                    PropertyDateTime = DateTime.UtcNow,
+                    PropertySystemNullableDateTime = DateTime.UtcNow,
+                    PropertyStormnetNullableDateTime = NullableDateTime.UtcNow,
+                };
+                args.DataService.UpdateObject(ref класс);
+
+                string datetimeNowString = DateTime.UtcNow.ToString("yyyy-MM-dd");
+                string filter = $"date({nameof(КлассСМножествомТипов.PropertyDateTime)}) eq {datetimeNowString} and date({nameof(КлассСМножествомТипов.PropertySystemNullableDateTime)}) eq {datetimeNowString} and date({nameof(КлассСМножествомТипов.PropertyStormnetNullableDateTime)}) eq {datetimeNowString}";
+                string requestUrl = string.Format(
+                    "http://localhost/odata/{0}?$filter={1}",
+                    args.Token.Model.GetEdmEntitySet(typeof(КлассСМножествомТипов)).Name,
+                    filter);
+
+                // Обращаемся к OData-сервису и обрабатываем ответ.
+                using (HttpResponseMessage response = args.HttpClient.GetAsync(requestUrl).Result)
+                {
+                    // Убедимся, что запрос завершился успешно.
+                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                    // Получим строку с ответом.
+                    string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
+
+                    // Преобразуем полученный объект в словарь.
+                    Dictionary<string, object> receivedDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(receivedStr);
+
+                    Assert.Equal(1, ((JArray)receivedDict["value"]).Count);
+                }
+            });
+        }
     }
 }
