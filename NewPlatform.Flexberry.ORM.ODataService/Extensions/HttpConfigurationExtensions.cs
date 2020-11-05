@@ -1,4 +1,5 @@
-﻿namespace NewPlatform.Flexberry.ORM.ODataService.Extensions
+﻿#if NETFRAMEWORK
+namespace NewPlatform.Flexberry.ORM.ODataService.Extensions
 {
     using System;
     using System.Collections.Generic;
@@ -149,3 +150,4 @@
         }
     }
 }
+#endif

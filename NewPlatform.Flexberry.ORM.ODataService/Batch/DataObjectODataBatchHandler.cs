@@ -6,8 +6,6 @@
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Web.Http;
-    using System.Web.Http.Batch;
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using Microsoft.AspNet.OData.Batch;
@@ -16,6 +14,19 @@
     using Microsoft.OData;
     using NewPlatform.Flexberry.ORM.ODataService.Controllers;
     using NewPlatform.Flexberry.ORM.ODataService.Events;
+
+#if NETFRAMEWORK
+    using System.Web.Http;
+    using System.Web.Http.Batch;
+#endif
+
+#if NETSTANDARD
+    using ICSSoft.Services;
+    using Microsoft.AspNet.OData;
+    using Microsoft.AspNet.OData.Adapters;
+    using Microsoft.AspNet.OData.Common;
+    using Microsoft.AspNetCore.Http;
+#endif
 
     /// <summary>
     /// Batch handler for DataService.
@@ -38,9 +49,20 @@
         private IEventHandlerContainer _events;
 
         /// <summary>
+        /// Initializes the container with registered events.
+        /// </summary>
+        /// <param name="events">The container with registered events.</param>
+        public void InitializeEvents(IEventHandlerContainer events)
+        {
+            _events = events;
+        }
+
+#if NETFRAMEWORK
+        /// <summary>
         /// if set to true then use synchronous mode for call subrequests.
         /// </summary>
         private readonly bool isSyncMode;
+
 
         /// <summary>
         /// DataService instance for execute queries.
@@ -61,14 +83,21 @@
             this.isSyncMode = isSyncMode ?? Type.GetType("Mono.Runtime") != null;
         }
 
+#endif
+
+#if NETSTANDARD
+
         /// <summary>
-        /// Initializes the container with registered events.
+        /// Initializes a new instance of the <see cref="DataObjectODataBatchHandler"/> class.
         /// </summary>
-        /// <param name="events">The container with registered events.</param>
-        public void InitializeEvents(IEventHandlerContainer events)
+        public DataObjectODataBatchHandler()
+            : base()
         {
-            _events = events;
         }
+
+#endif
+
+#if NETFRAMEWORK
 
         /// <inheritdoc />
         public override async Task<HttpResponseMessage> ProcessBatchAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -110,7 +139,56 @@
                 }
             }
         }
+#endif
 
+#if NETSTANDARD
+        /// <inheritdoc />
+        public override async Task ProcessBatchAsync(HttpContext context, RequestDelegate nextHandler)
+        {
+            if (context == null)
+            {
+                throw Error.ArgumentNull(nameof(context));
+            }
+
+            if (nextHandler == null)
+            {
+                throw Error.ArgumentNull(nameof(nextHandler));
+            }
+
+            if (!await ValidateRequest(context.Request))
+            {
+                return;
+            }
+
+            try
+            {
+                IList<ODataBatchRequestItem> subRequests = await ParseBatchRequestsAsync(context);
+
+                ODataOptions options = context.RequestServices.GetRequiredService<ODataOptions>();
+                bool enableContinueOnErrorHeader = (options != null)
+                    ? options.EnableContinueOnErrorHeader
+                    : false;
+
+                SetContinueOnError(new WebApiRequestHeaders(context.Request.Headers), enableContinueOnErrorHeader);
+
+                IList<ODataBatchResponseItem> responses = await ExecuteRequestMessagesAsync(new ODataBatchRequestsWrapper(context, subRequests), nextHandler);
+                await CreateResponseMessageAsync(responses, context.Request);
+            }
+            catch (Exception ex)
+            {
+                if (_events?.CallbackAfterInternalServerError != null)
+                {
+                    var statusCode = System.Net.HttpStatusCode.InternalServerError;
+                    _events.CallbackAfterInternalServerError(ex, ref statusCode);
+                }
+
+                throw;
+            }
+        }
+
+#endif
+
+#if NETFRAMEWORK
         /// <inheritdoc />
         public override async Task<IList<ODataBatchRequestItem>> ParseBatchRequestsAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
@@ -165,11 +243,11 @@
 
             return requests;
         }
+#endif
 
+#if NETFRAMEWORK
         /// <inheritdoc />
-        public override async Task<IList<ODataBatchResponseItem>> ExecuteRequestMessagesAsync(
-                   IEnumerable<ODataBatchRequestItem> requests,
-                   CancellationToken cancellation)
+        public override async Task<IList<ODataBatchResponseItem>> ExecuteRequestMessagesAsync(IEnumerable<ODataBatchRequestItem> requests, CancellationToken cancellation)
         {
             if (requests == null)
             {
@@ -213,7 +291,53 @@
 
             return responses;
         }
+#endif
 
+#if NETSTANDARD
+        /// <inheritdoc />
+        public override async Task<IList<ODataBatchResponseItem>> ExecuteRequestMessagesAsync(IEnumerable<ODataBatchRequestItem> requests, RequestDelegate handler)
+        {
+            if (requests == null)
+            {
+                throw Error.ArgumentNull(nameof(requests));
+            }
+
+            if (handler == null)
+            {
+                throw Error.ArgumentNull(nameof(handler));
+            }
+
+            IList<ODataBatchResponseItem> responses = new List<ODataBatchResponseItem>();
+
+            HttpContext batchContext = (requests as ODataBatchRequestsWrapper).BatchContext;
+            foreach (ODataBatchRequestItem request in requests)
+            {
+                ODataBatchResponseItem responseItem;
+                switch (request)
+                {
+                    case OperationRequestItem operation:
+                        responseItem = await request.SendRequestAsync(handler);
+                        break;
+                    case ChangeSetRequestItem changeSet:
+                        responseItem = await ExecuteChangeSet(batchContext, changeSet, handler);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException($"Unsupported request of type `{request.GetType()}`");
+                }
+
+                responses.Add(responseItem);
+
+                if (responseItem != null && responseItem.IsResponseSuccessful() == false && ContinueOnError == false)
+                {
+                    break;
+                }
+            }
+
+            return responses;
+        }
+#endif
+
+#if NETFRAMEWORK
         /// <summary>
         /// Execute changeset processing.
         /// </summary>
@@ -263,5 +387,58 @@
 
             return changeSetResponse;
         }
+#endif
+
+#if NETSTANDARD
+        /// <summary>
+        /// Execute changeset processing.
+        /// </summary>
+        /// <param name="batchContext">The http context of a batch request.</param>
+        /// <param name="changeSet">The changeset for processing.</param>
+        /// <param name="handler">The handler for processing a message.</param>
+        /// <returns>Task for changeset processing.</returns>
+        private async Task<ODataBatchResponseItem> ExecuteChangeSet(HttpContext batchContext, ChangeSetRequestItem changeSet, RequestDelegate handler)
+        {
+            if (changeSet == null)
+            {
+                throw new ArgumentNullException(nameof(changeSet));
+            }
+
+            List<DataObject> dataObjectsToUpdate = new List<DataObject>();
+            DataObjectCache dataObjectCache = new DataObjectCache();
+            dataObjectCache.StartCaching(false);
+
+            foreach (HttpContext context in changeSet.Contexts)
+            {
+                if (!context.Items.ContainsKey(DataObjectsToUpdatePropertyKey))
+                {
+                    context.Items.Add(DataObjectsToUpdatePropertyKey, dataObjectsToUpdate);
+                }
+
+                if (!context.Items.ContainsKey(DataObjectCachePropertyKey))
+                {
+                    context.Items.Add(DataObjectCachePropertyKey, dataObjectCache);
+                }
+            }
+
+            ChangeSetResponseItem changeSetResponse = (ChangeSetResponseItem)await changeSet.SendRequestAsync(handler);
+
+            if (changeSetResponse.Contexts.All(x => x.Response.IsSuccessStatusCode()))
+            {
+                try
+                {
+                    IDataService dataService = UnityFactoryHelper.ResolveRequiredIfNull(batchContext.RequestServices.GetService<IDataService>());
+                    DataObject[] dataObjects = dataObjectsToUpdate.ToArray();
+                    dataService.UpdateObjects(ref dataObjects);
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+
+            return changeSetResponse;
+        }
+#endif
     }
 }

@@ -1,0 +1,67 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ODataServiceSample.AspNetCore", "Samples\ODataServiceSample.AspNetCore\ODataServiceSample.AspNetCore.csproj", "{4A4E84F0-C200-4C9B-B24E-504B4C02E7E7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewPlatform.Flexberry.ORM.ODataServiceCore.Common", "NewPlatform.Flexberry.ORM.ODataServiceCore.Common\NewPlatform.Flexberry.ORM.ODataServiceCore.Common.csproj", "{8D1DF99B-0F21-4194-A4F3-CDAD1A4B2F0F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewPlatform.Flexberry.ORM.ODataServiceCore.Files", "NewPlatform.Flexberry.ORM.ODataServiceCore.Files\NewPlatform.Flexberry.ORM.ODataServiceCore.Files.csproj", "{294CA4CD-0F92-41CA-A802-D10CBCBA53CA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewPlatform.Flexberry.ORM.ODataServiceCore.WebApi", "NewPlatform.Flexberry.ORM.ODataServiceCore.WebApi\NewPlatform.Flexberry.ORM.ODataServiceCore.WebApi.csproj", "{8F5EC8C0-1603-4CE7-B748-8408460548FD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewPlatform.Flexberry.ORM.ODataService", "NewPlatform.Flexberry.ORM.ODataService\NewPlatform.Flexberry.ORM.ODataService.csproj", "{2BC99841-E742-4292-AC78-E81712C051A0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewPlatform.Flexberry.ORM.ODataService.Tests.Objects", "Tests\Objects\NewPlatform.Flexberry.ORM.ODataService.Tests.Objects.csproj", "{10421EC7-5355-414B-96F1-A3D8F3BDAE05}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewPlatform.Flexberry.ORM.ODataService.Tests.BusinessServers", "Tests\BusinessServers\NewPlatform.Flexberry.ORM.ODataService.Tests.BusinessServers.csproj", "{77F5DF55-2FE9-460F-9F04-933B33E36ABC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewPlatform.Flexberry.ORM.ODataService.Tests", "Tests\NewPlatform.Flexberry.ORM.ODataService.Tests\NewPlatform.Flexberry.ORM.ODataService.Tests.csproj", "{59DE2C97-C1EA-43E0-8601-6E20D00D73AE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4A4E84F0-C200-4C9B-B24E-504B4C02E7E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A4E84F0-C200-4C9B-B24E-504B4C02E7E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A4E84F0-C200-4C9B-B24E-504B4C02E7E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A4E84F0-C200-4C9B-B24E-504B4C02E7E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D1DF99B-0F21-4194-A4F3-CDAD1A4B2F0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D1DF99B-0F21-4194-A4F3-CDAD1A4B2F0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D1DF99B-0F21-4194-A4F3-CDAD1A4B2F0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D1DF99B-0F21-4194-A4F3-CDAD1A4B2F0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{294CA4CD-0F92-41CA-A802-D10CBCBA53CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{294CA4CD-0F92-41CA-A802-D10CBCBA53CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{294CA4CD-0F92-41CA-A802-D10CBCBA53CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{294CA4CD-0F92-41CA-A802-D10CBCBA53CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F5EC8C0-1603-4CE7-B748-8408460548FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F5EC8C0-1603-4CE7-B748-8408460548FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F5EC8C0-1603-4CE7-B748-8408460548FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F5EC8C0-1603-4CE7-B748-8408460548FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BC99841-E742-4292-AC78-E81712C051A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BC99841-E742-4292-AC78-E81712C051A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BC99841-E742-4292-AC78-E81712C051A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BC99841-E742-4292-AC78-E81712C051A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10421EC7-5355-414B-96F1-A3D8F3BDAE05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10421EC7-5355-414B-96F1-A3D8F3BDAE05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10421EC7-5355-414B-96F1-A3D8F3BDAE05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10421EC7-5355-414B-96F1-A3D8F3BDAE05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77F5DF55-2FE9-460F-9F04-933B33E36ABC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77F5DF55-2FE9-460F-9F04-933B33E36ABC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77F5DF55-2FE9-460F-9F04-933B33E36ABC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77F5DF55-2FE9-460F-9F04-933B33E36ABC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59DE2C97-C1EA-43E0-8601-6E20D00D73AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59DE2C97-C1EA-43E0-8601-6E20D00D73AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59DE2C97-C1EA-43E0-8601-6E20D00D73AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59DE2C97-C1EA-43E0-8601-6E20D00D73AE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A5517B10-C731-4F6C-BACE-08A0D672F266}
+	EndGlobalSection
+EndGlobal

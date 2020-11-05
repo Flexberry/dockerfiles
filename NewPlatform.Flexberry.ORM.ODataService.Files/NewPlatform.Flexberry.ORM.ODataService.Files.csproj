@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45;net461</TargetFrameworks>
+    <Configurations>Debug;Release</Configurations>
+    <LangVersion>latest</LangVersion>
     <RootNamespace>NewPlatform.Flexberry.ORM.ODataService.Files</RootNamespace>
     <AssemblyName>NewPlatform.Flexberry.ORM.ODataService.Files</AssemblyName>
     <SignAssembly>true</SignAssembly>

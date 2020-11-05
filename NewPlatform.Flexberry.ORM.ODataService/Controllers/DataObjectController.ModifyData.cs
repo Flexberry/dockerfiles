@@ -6,11 +6,7 @@
     using System.Linq;
     using System.Net;
     using System.Net.Http;
-    using System.Net.Http.Formatting;
     using System.Text;
-    using System.Web.Http;
-    using System.Web.Http.Results;
-    using System.Web.Http.Validation;
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.FunctionalLanguage;
@@ -24,18 +20,33 @@
     using NewPlatform.Flexberry.ORM.ODataService.Files;
     using NewPlatform.Flexberry.ORM.ODataService.Files.Providers;
     using NewPlatform.Flexberry.ORM.ODataService.Formatter;
-    using NewPlatform.Flexberry.ORM.ODataService.Handlers;
-    using NewPlatform.Flexberry.ORM.ODataService.WebApi.Controllers;
     using Newtonsoft.Json;
-
     using File = ICSSoft.STORMNET.FileType.File;
     using KeySegment = Microsoft.OData.UriParser.KeySegment;
+
+#if NETFRAMEWORK
+    using System.Net.Http.Formatting;
+    using System.Web.Http;
+    using System.Web.Http.Results;
+    using System.Web.Http.Validation;
+    using NewPlatform.Flexberry.ORM.ODataService.Handlers;
+    using NewPlatform.Flexberry.ORM.ODataService.WebApi.Controllers;
+#endif
+#if NETSTANDARD
+    using Microsoft.AspNet.OData.Formatter;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Formatters;
+    using Microsoft.Extensions.Primitives;
+    using NewPlatform.Flexberry.ORM.ODataService.Middleware;
+#endif
 
     /// <summary>
     /// Определяет класс контроллера OData, который поддерживает запись и чтение данных с использованием OData формата.
     /// </summary>
     public partial class DataObjectController
     {
+#if NETFRAMEWORK
         /// <summary>
         /// Метаданные файлов, загруженных во временную папку <see cref="FileController.UploadsDirectoryPath"/>,
         /// и привязанных к свойствам обрабатываемых объектов данных.
@@ -192,7 +203,7 @@
 
                 Init();
 
-                var obj = _dataObjectCache.CreateDataObject(type, key);
+                var obj = DataObjectCache.CreateDataObject(type, key);
 
                 // Удаляем объект с заданным ключем.
                 // Детейлы удалятся вместе с агрегатором автоматически.
@@ -440,6 +451,356 @@
             return edmEntity;
         }
 
+#endif
+#if NETSTANDARD
+
+        /// <summary>
+        /// Метаданные файлов, временно загруженных в каталог файлового хранилища и привязанных к свойствам обрабатываемых объектов данных.
+        /// Файлы будут удалены из файловой системы <see cref="IDataObjectFileAccessor.RemoveFileUploadDirectories"/>
+        /// в случае успешного сохранения объектов данных.
+        /// </summary>
+        private List<FileDescription> _removingFileDescriptions = new List<FileDescription>();
+
+        /// <summary>
+        /// Осуществляет удаление сущности.
+        /// </summary>
+        /// <returns>
+        /// Результат выполнения запроса типа <see cref="StatusCodeResult"/>, соответствующий статусу <see cref="HttpStatusCode.NoContent"/>.
+        /// </returns>
+        public NoContentResult DeleteGuid()
+        {
+            ODataPath odataPath = HttpContext.ODataFeature().Path;
+            var keySegment = odataPath.Segments[1] as KeySegment;
+            Guid key = new Guid(keySegment.Keys.First().Value.ToString());
+            return DeleteEntity(key);
+        }
+
+        /// <summary>
+        /// Осуществляет удаление сущности.
+        /// </summary>
+        /// <returns>
+        /// Результат выполнения запроса типа <see cref="StatusCodeResult"/>, соответствующий статусу <see cref="HttpStatusCode.NoContent"/>.
+        /// </returns>
+        public NoContentResult DeleteString()
+        {
+            ODataPath odataPath = HttpContext.ODataFeature().Path;
+            var keySegment = odataPath.Segments[1] as KeySegment;
+            string key = keySegment.Keys.First().Value.ToString().Trim().Replace("'", string.Empty);
+            return DeleteEntity(key);
+        }
+
+        /// <summary>
+        /// Обновление сущности (свойства могут быть заданы частично, т.е. указывать можно значения только измененных свойств).
+        /// Если сущности с заданным ключом нет в БД происходит Upsert (в соответствии со стандартом).
+        /// </summary>
+        /// <param name="key"> Ключ обновляемой сущности. </param>
+        /// <param name="edmEntity">Обновляемая сущность. </param>
+        /// <returns>Обновлённая сущность.</returns>
+        public IActionResult Patch([FromODataUri] Guid key, [FromBody] EdmEntityObject edmEntity)
+        {
+            try
+            {
+                if (key == null)
+                {
+                    throw new ArgumentNullException("key");
+                }
+
+                if (edmEntity == null)
+                {
+                    edmEntity = ReplaceOdataBindNull();
+                }
+
+                IEdmEntityType entityType = (IEdmEntityType)edmEntity.ActualEdmType;
+
+                var dictionary = Request.HttpContext.Items.ContainsKey(ExtendedODataEntityDeserializer.Dictionary) ?
+                    (Dictionary<string, object>)Request.HttpContext.Items[ExtendedODataEntityDeserializer.Dictionary] :
+                    new Dictionary<string, object>();
+
+                foreach (var prop in entityType.Properties())
+                {
+                    if (!dictionary.ContainsKey(prop.Name) && edmEntity.GetChangedPropertyNames().Contains(prop.Name) && prop is EdmNavigationProperty)
+                    {
+                        return BadRequest("Error processing request stream. Deep updates are not supported in PUT or PATCH operations.");
+                    }
+
+                    if (dictionary.ContainsKey(prop.Name) && dictionary[prop.Name] == null &&
+                        (!prop.Type.IsNullable || prop.Type.IsCollection()))
+                    {
+                        return BadRequest($"The property {prop.Name} can not be null.");
+                    }
+                }
+
+                DataObject obj = UpdateObject(edmEntity, key);
+                ExecuteCallbackAfterUpdate(obj);
+
+                var resultForPreferMinimal = TestPreferMinimal();
+                if (resultForPreferMinimal != null)
+                {
+                    return resultForPreferMinimal;
+                }
+
+                if (!Request.Headers.ContainsKey("Prefer"))
+                {
+                    return NoContent();
+                }
+
+                edmEntity = GetEdmObject(_model.GetEdmEntityType(type), obj, 1, null, null);
+                var result = Ok(edmEntity);
+                Response.Headers.Add("Preference-Applied", "return=representation");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Создание сущности и всех связанных. При существовании в БД произойдёт обновление.
+        /// </summary>
+        /// <param name="edmEntity"> Создаваемая сущность. </param>
+        /// <returns> Созданная сущность. </returns>
+        public IActionResult Post([FromBody] EdmEntityObject edmEntity)
+        {
+            try
+            {
+                if (edmEntity == null)
+                {
+                    edmEntity = ReplaceOdataBindNull();
+                }
+
+                DataObject obj = UpdateObject(edmEntity, null);
+                ExecuteCallbackAfterCreate(obj);
+
+                edmEntity = GetEdmObject(_model.GetEdmEntityType(type), obj, 1, null, null);
+                var resultForPreferMinimal = TestPreferMinimal();
+                if (resultForPreferMinimal != null)
+                {
+                    return resultForPreferMinimal;
+                }
+
+                var result = new ObjectResult(edmEntity) { StatusCode = StatusCodes.Status201Created };
+                /*
+                //Для вставки произвольных метаданых в JSON-ответ сервера OData можно использовать следующий алгоритм:
+                var taskResult = ...; // Сериализовать значение edmEntity в string JSON. TODO: Как сделать это правильно???
+                ... // Выполнить необходимые действия с JSON.
+                var result = new ContenResult() // Создать окончательный JSON-ответ.
+                    {
+                        Content = taskResult,
+                        ContentType = "application/json",
+                        StatusCode = StatusCodes.Status201Created
+                    }
+                */
+                if (Request.Headers.ContainsKey("Prefer"))
+                {
+                    Response.Headers.Add("Preference-Applied", "return=representation");
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException(ex);
+            }
+        }
+
+        private NoContentResult TestPreferMinimal()
+        {
+            if (Request.Headers.ContainsKey("Prefer"))
+            {
+                KeyValuePair<string, StringValues> header = Request.Headers.FirstOrDefault(h => h.Key.ToLower() == "prefer");
+                if (header.Value.ToString() != null && header.Value.ToString().ToLower().Contains("return=minimal"))
+                {
+                    NoContentResult result = NoContent();
+                    Request.Headers.Add("Preference-Applied", "return=minimal");
+
+                    return result;
+                }
+            }
+
+            return null;
+        }
+
+        private NoContentResult DeleteEntity(object key)
+        {
+            try
+            {
+                if (key == null)
+                {
+                    throw new ArgumentNullException(nameof(key));
+                }
+
+                Init();
+
+                var obj = DataObjectCache.CreateDataObject(type, key);
+
+                // Раз объект данных удаляется, то и все ассоциированные с ним файлы должны быть удалены.
+                // Запоминаем метаданные всех ассоциированных файлов, кроме файлов соответствующих файловым свойствам типа File
+                // (файлы соответствующие свойствам типа File хранятся в БД, и из файловой системы просто нечего удалять).
+                // TODO: подумать как быть с детейлами, детейлами детейлов, и т д.
+                _removingFileDescriptions.AddRange(GetDataObjectFileDescriptions(obj, new List<Type> { typeof(File) }));
+
+                // Удаляем объект с заданным ключем.
+                // Детейлы удалятся вместе с агрегатором автоматически.
+                // Если удаляемый объект является мастером для какого-либо объекта, то
+                // спецификация предполагает, что зависимые объекты будут каскадно удалены либо ссылки в них заменены
+                // на null/значению по умолчанию, если это задано в модели через ReferentialConstraints.
+                // Но если это задано в модели, то соответвующие объекты данных реализуют интерфейсы
+                // IReferencesCascadeDelete/IReferencesNullDelete и требуемые действия будут выполнены автоматически.
+                // В данный момент ReferentialConstraints не создаются в модели.
+                obj.SetStatus(ObjectStatus.Deleted);
+
+                List<DataObject> objs = new List<DataObject>();
+
+                if (ExecuteCallbackBeforeDelete(obj))
+                {
+                    string agregatorPropertyName = Information.GetAgregatePropertyName(type);
+                    if (!string.IsNullOrEmpty(agregatorPropertyName))
+                    {
+                        DataObject agregator = (DataObject)Information.GetPropValueByName(obj, agregatorPropertyName);
+
+                        if (agregator != null)
+                        {
+                            objs.Add(agregator);
+                        }
+                    }
+
+                    objs.Add(obj);
+
+                    if (IsBatchChangeSetRequest)
+                    {
+                        List<DataObject> dataObjectsToUpdate = (List<DataObject>)HttpContext.Items[DataObjectODataBatchHandler.DataObjectsToUpdatePropertyKey];
+                        dataObjectsToUpdate.AddRange(objs);
+                    }
+                    else
+                    {
+                        DataObject[] dataObjects = objs.ToArray();
+                        _dataService.UpdateObjects(ref dataObjects);
+                    }
+                }
+
+                // При успешном удалении вычищаем из файловой системы файлы подлежащие удалению.
+                _dataObjectFileAccessor.RemoveFileUploadDirectories(_removingFileDescriptions);
+                ExecuteCallbackAfterDelete(obj);
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _removingFileDescriptions.Clear();
+                throw CustomException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Осуществляет получение списка метаданных с описанием файловых свойств объекта данных,
+        /// соответствующих всем типам файловых свойств, для которых есть зарегистрированные провайдеры.
+        /// </summary>
+        /// <remarks>
+        /// При необходимости будет произведена дочитка объекта данных.
+        /// </remarks>
+        /// <param name="dataObject">Объект данных, содержащий файловые свойства.</param>
+        /// <param name="excludedFilePropertiesTypes">Список типов файловых свойств объекта данных, для которых не требуется получение метаданных.</param>
+        /// <returns>
+        /// Список метаданных с описанием файловых свойств объекта данных,
+        /// соответствующих всем типам файловых свойств, для которых есть зарегистрированные провайдеры.
+        /// </returns>
+        private List<FileDescription> GetDataObjectFileDescriptions(DataObject dataObject, List<Type> excludedFilePropertiesTypes = null)
+        {
+            List<FileDescription> fileDescriptions = new List<FileDescription>();
+
+            if (dataObject != null)
+            {
+                excludedFilePropertiesTypes = excludedFilePropertiesTypes ?? new List<Type>();
+                List<IDataObjectFileProvider> includedDataObjectFileProviders = _dataObjectFileAccessor.DataObjectFileProviders
+                    .Where(x => !excludedFilePropertiesTypes.Contains(x.FilePropertyType))
+                    .ToList();
+
+                foreach (IDataObjectFileProvider dataObjectFileProvider in includedDataObjectFileProviders)
+                {
+                    fileDescriptions.AddRange(dataObjectFileProvider.GetFileDescriptions(_dataService, dataObject));
+                }
+            }
+
+            return fileDescriptions;
+        }
+
+        /// <summary>
+        /// Заменяет в теле запроса представление навигационных свойств с Имя_Связи@odata.bind:null на представление Имя_Связи:null.
+        /// </summary>
+        /// <returns>Возвращается EdmEntityObject преобразованный из JSON-строки.</returns>
+        private EdmEntityObject ReplaceOdataBindNull()
+        {
+            if (!Request.HttpContext.Items.ContainsKey(ExtendedODataEntityDeserializer.OdataBindNull))
+            {
+                if (Request.HttpContext.Items.ContainsKey(ExtendedODataEntityDeserializer.ReadException))
+                    throw (Exception)Request.HttpContext.Items[ExtendedODataEntityDeserializer.ReadException];
+                throw new Exception("ReplaceOdataBindNull: edmEntity is null.");
+            }
+
+            string json = (string)Request.HttpContext.Items[RequestHeadersHookMiddleware.PropertyKeyRequestContent];
+
+            Dictionary<string, object> props = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+            var keys = props.Keys.ToArray();
+            var odataBindNullList = new List<string>();
+            foreach (var key in keys)
+            {
+                var p = key.IndexOf("@odata.bind");
+                if (p != -1 && props[key] == null)
+                {
+                    props.Remove(key);
+                    var newKey = key.Substring(0, p);
+                    if (props.ContainsKey(newKey))
+                    {
+                        props.Remove(newKey);
+                    }
+
+                    var type = (EdmEntityTypeReference)Request.HttpContext.Items[ExtendedODataEntityDeserializer.OdataBindNull];
+
+                    var prop = type.FindNavigationProperty(newKey);
+                    if (prop.Type.IsCollection())
+                    {
+                        odataBindNullList.Add(newKey);
+                    }
+                    else
+                    {
+                        props.Add(newKey, null);
+                    }
+                }
+            }
+
+            json = JsonConvert.SerializeObject(props);
+            Request.Body = new StringContent(json, Encoding.UTF8, "application/json").ReadAsStreamAsync().Result;
+
+            var ictx = new InputFormatterContext(
+                HttpContext,
+                string.Empty,
+                ModelState,
+                MetadataProvider.GetMetadataForType(typeof(EdmEntityObject)),
+                (x, y) => new StreamReader(x, y));
+
+            IList<ODataInputFormatter> formatters = ODataInputFormatterFactory.Create();
+
+            // The JSON input formatter is the first formatter in the OData input formatters list.
+            InputFormatterResult formatterResult = formatters.First().ReadRequestBodyAsync(ictx, Encoding.UTF8).Result;
+
+            var edmEntity = (EdmEntityObject)formatterResult.Model;
+
+            if (edmEntity == null && Request.HttpContext.Items.ContainsKey(ExtendedODataEntityDeserializer.ReadException))
+            {
+                throw (Exception)Request.HttpContext.Items[ExtendedODataEntityDeserializer.ReadException];
+            }
+
+            foreach (var prop in odataBindNullList)
+            {
+                edmEntity.TrySetPropertyValue(prop, null);
+            }
+
+            return edmEntity;
+        }
+#endif
+
         /// <summary>
         /// Общая логика модификации данных: вставка и обновление в зависимости от статуса.
         /// Используется в Post (вставка) и Patch (обновление).
@@ -491,18 +852,32 @@
 
                 // Список объектов для обновления без UnAltered.
                 var objsArrSmall = objsArr.Where(t => t.GetStatus() != ObjectStatus.UnAltered).ToArray();
+#if NETFRAMEWORK
                 if (Request.Properties.ContainsKey(DataObjectODataBatchHandler.DataObjectsToUpdatePropertyKey))
                 {
                     List<DataObject> dataObjectsToUpdate = (List<DataObject>)Request.Properties[DataObjectODataBatchHandler.DataObjectsToUpdatePropertyKey];
                     dataObjectsToUpdate.AddRange(objsArrSmall);
                 }
+#endif
+#if NETSTANDARD
+                if (IsBatchChangeSetRequest)
+                {
+                    List<DataObject> dataObjectsToUpdate = (List<DataObject>)Request.HttpContext.Items[DataObjectODataBatchHandler.DataObjectsToUpdatePropertyKey];
+                    dataObjectsToUpdate.AddRange(objsArrSmall);
+                }
+#endif
                 else
                 {
                     _dataService.UpdateObjects(ref objsArrSmall);
                 }
 
                 // При успешном обновлении вычищаем из файловой системы, файлы подлежащие удалению.
+#if NETFRAMEWORK
                 FileController.RemoveFileUploadDirectories(_removingFileDescriptions);
+#endif
+#if NETSTANDARD
+                _dataObjectFileAccessor.RemoveFileUploadDirectories(_removingFileDescriptions);
+#endif
                 return obj;
             }
             catch (Exception)
@@ -527,7 +902,7 @@
 
             if (keyValue != null)
             {
-                DataObject dataObjectFromCache = _dataObjectCache.GetLivingDataObject(objType, keyValue);
+                DataObject dataObjectFromCache = DataObjectCache.GetLivingDataObject(objType, keyValue);
                 View view = _model.GetDataObjectDefaultView(objType);
 
                 if (dataObjectFromCache != null)
@@ -542,7 +917,7 @@
                         IEnumerable<PropertyInView> ownProps = view.Properties.Where(p => !p.Name.Contains('.'));
                         if (!ownProps.All(p => loadedProps.Contains(p.Name)))
                         {
-                            _dataService.LoadObject(view, dataObjectFromCache, true, true, _dataObjectCache);
+                            _dataService.LoadObject(view, dataObjectFromCache, true, true, DataObjectCache);
                         }
                     }
 
@@ -561,14 +936,14 @@
                 LoadingCustomizationStruct lcs = LoadingCustomizationStruct.GetSimpleStruct(objType, lightView);
                 lcs.LimitFunction = FunctionBuilder.BuildEquals(keyValue);
                 lcs.ReturnTop = 2;
-                DataObject[] dobjs = _dataService.LoadObjects(lcs, _dataObjectCache);
+                DataObject[] dobjs = _dataService.LoadObjects(lcs, DataObjectCache);
                 if (dobjs.Length == 1)
                 {
                     DataObject dataObject = dobjs[0];
                     if (lightViewDetails.Any())
                     {
                         // Дочитаем детейлы, чтобы в бизнес-серверах эти данные уже были. Детейлы с изменёнными состояниями будут пропущены из зачитки.
-                        _dataService.SafeLoadDetails(view, new DataObject[] { dataObject }, _dataObjectCache);
+                        _dataService.SafeLoadDetails(view, new DataObject[] { dataObject }, DataObjectCache);
                     }
 
                     return dataObject;
@@ -580,12 +955,12 @@
 
             if (keyValue != null)
             {
-                obj = _dataObjectCache.CreateDataObject(objType, keyValue);
+                obj = DataObjectCache.CreateDataObject(objType, keyValue);
             }
             else
             {
                 obj = (DataObject)Activator.CreateInstance(objType);
-                _dataObjectCache.AddDataObject(obj);
+                DataObjectCache.AddDataObject(obj);
             }
 
             return obj;
@@ -744,9 +1119,16 @@
 
                         // Если тип свойства относится к одному из зарегистрированных провайдеров файловых свойств,
                         // значит свойство файловое, и его нужно обработать особым образом.
+#if NETFRAMEWORK
                         if (FileController.HasDataObjectFileProvider(dataObjectPropertyType))
                         {
                             IDataObjectFileProvider dataObjectFileProvider = FileController.GetDataObjectFileProvider(dataObjectPropertyType);
+#endif
+#if NETSTANDARD
+                        if (_dataObjectFileAccessor.HasDataObjectFileProvider(dataObjectPropertyType))
+                        {
+                            IDataObjectFileProvider dataObjectFileProvider = _dataObjectFileAccessor.GetDataObjectFileProvider(dataObjectPropertyType);
+#endif
 
                             // Обработка файловых свойств объектов данных.
                             string serializedFileDescription = value as string;
@@ -761,7 +1143,12 @@
                                 // поэтому обходим его стороной, чтобы избежать лишных вычиток файлов из БД.
                                 if (dataObjectPropertyType != typeof(File))
                                 {
+#if NETFRAMEWORK
                                     _removingFileDescriptions.Add(dataObjectFileProvider.GetFileDescription(obj, dataObjectPropName));
+#endif
+#if NETSTANDARD
+                                    _removingFileDescriptions.Add(dataObjectFileProvider.GetFileDescription(_dataService, obj, dataObjectPropName));
+#endif
                                 }
 
                                 // Сбрасываем файловое свойство в изменяемом объекте данных.
@@ -773,10 +1160,17 @@
                                 // Если в метаданных файла присутствует FileUploadKey значит файл был загружен на сервер,
                                 // но еще не был ассоциирован с объектом данных, и это нужно сделать.
                                 FileDescription fileDescription = FileDescription.FromJson(serializedFileDescription);
+#if NETFRAMEWORK
                                 fileDescription.FilePropertyType = dataObjectPropertyType;
                                 if (!(string.IsNullOrEmpty(fileDescription.FileUploadKey) || string.IsNullOrEmpty(fileDescription.FileName)))
                                 {
                                     Information.SetPropValueByName(obj, dataObjectPropName, dataObjectFileProvider.GetFileProperty(fileDescription));
+#endif
+#if NETSTANDARD
+                                if (!(string.IsNullOrEmpty(fileDescription.FileUploadKey) || string.IsNullOrEmpty(fileDescription.FileName)))
+                                {
+                                    Information.SetPropValueByName(obj, dataObjectPropName, dataObjectFileProvider.GetFileProperty(_dataService, fileDescription));
+#endif
 
                                     // Файловое свойство типа File хранит данные ассоциированного файла прямо в БД,
                                     // поэтому после успешного сохранения объекта данных, оссоциированный с ним файл должен быть удален из файловой системы.

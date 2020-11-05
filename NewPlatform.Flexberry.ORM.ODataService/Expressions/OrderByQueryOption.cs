@@ -9,6 +9,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Expressions
     using System.Linq;
     using System.Linq.Expressions;
     using Microsoft.AspNet.OData;
+    using Microsoft.AspNet.OData.Common;
     using Microsoft.AspNet.OData.Query;
     using Microsoft.OData;
     using Microsoft.OData.Edm;

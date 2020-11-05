@@ -18,6 +18,18 @@
     /// </summary>
     public class FilterByMasterDetailFieldTest : BaseODataServiceIntegratedTest
     {
+#if NETCOREAPP
+        /// <summary>
+        /// Конструктор по-умолчанию.
+        /// </summary>
+        /// <param name="factory">Фабрика для приложения.</param>
+        /// <param name="output">Вывод отладочной информации.</param>
+        public FilterByMasterDetailFieldTest(CustomWebApplicationFactory<ODataServiceSample.AspNetCore.Startup> factory, Xunit.Abstractions.ITestOutputHelper output)
+            : base(factory, output)
+        {
+        }
+#endif
+
         /// <summary>
         /// Tests filtering data by master field.
         /// </summary>

@@ -1,24 +1,21 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Offline
 {
     using System;
-
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Business.Audit;
     using ICSSoft.STORMNET.Business.Audit.Objects;
     using ICSSoft.STORMNET.Security;
-
-    using Xunit;
-
     using NewPlatform.Flexberry.ORM.ODataService.Offline;
-    
+    using Xunit;
+    using Xunit.Abstractions;
 
     /// <summary>
     /// ORM-integrated unit test for <see cref="OfflineAuditService"/>.
     /// </summary>
-    /// <seealso cref="BaseOrmIntegratedTest" />
-    
+    /// <seealso cref="BaseIntegratedTest" />
     public class OfflineAuditServiceIntegratedTest : BaseIntegratedTest
     {
+#if NETFRAMEWORK
         /// <summary>
         /// Initializes a new instance of the <see cref="OfflineAuditServiceIntegratedTest"/> class.
         /// </summary>
@@ -26,6 +23,16 @@
             : base("offline")
         {
         }
+#endif
+#if NETCOREAPP
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OfflineAuditServiceIntegratedTest"/> class.
+        /// </summary>
+        public OfflineAuditServiceIntegratedTest(CustomWebApplicationFactory<ODataServiceSample.AspNetCore.Startup> factory, ITestOutputHelper output)
+            : base(factory, output, "offline")
+        {
+        }
+#endif
 
         /// <summary>
         /// Unit test for <see cref="AuditService.AddCreateAuditInformation"/> and <see cref="AuditService.AddEditAuditInformation"/>.

@@ -1,4 +1,5 @@
-﻿namespace NewPlatform.Flexberry.ORM.ODataService.Tests
+﻿#if NETFRAMEWORK
+namespace NewPlatform.Flexberry.ORM.ODataService.Tests
 {
     using System;
     using System.Net;
@@ -11,20 +12,16 @@
     using System.Web.Http.SelfHost;
     using System.Web.Http.SelfHost.Channels;
 
-    using Microsoft.Practices.Unity;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-    using NewPlatform.Flexberry.ORM.ODataService.Controllers;
-    using NewPlatform.Flexberry.ORM.TestingTools;
     using NewPlatform.Flexberry.Services;
-
+    using Unity;
+    using Unity.AspNet.WebApi;
+    using Xunit;
     using LockService = NewPlatform.Flexberry.Services.LockService;
 
     /// <summary>
     /// Unit-test class for <see cref="LockController"/>.
     /// </summary>
-    [TestClass]
-    public class LockControllerTest : BaseOrmIntegratedTest
+    public class LockControllerTest : BaseIntegratedTest
     {
         /// <summary>
         /// Configuration for WebAPI self host for NTLM authentication.
@@ -60,7 +57,7 @@
         /// Initializes a new instance of the <see cref="LockControllerTest"/> class.
         /// </summary>
         public LockControllerTest()
-            : base("ODataLck", @"РТЦ Тестирование и документирование\Модели для юнит-тестов\Flexberry ORM\NewPlatform.Flexberry.ORM.ODataService.Tests\")
+            : base("ODataLck")
         {
         }
 
@@ -68,7 +65,7 @@
         /// Integrated unit test for <see cref="LockController"/>.
         /// Starts and stops self-hosted WebAPI server with locks.
         /// </summary>
-        [TestMethod]
+        [Fact(Skip = "Разобраться что это за тест и насколько он нужен.")]
         public void TestStartStop()
         {
             foreach (var dataService in DataServices)
@@ -98,20 +95,20 @@
 
                                 using (HttpResponseMessage response = client.GetAsync("lock/1").Result)
                                 {
-                                    Assert.IsTrue(response.IsSuccessStatusCode);
-                                    Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+                                    Assert.True(response.IsSuccessStatusCode);
+                                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
                                 }
 
                                 using (HttpResponseMessage response = client.GetAsync("unlock/1").Result)
                                 {
-                                    Assert.IsTrue(response.IsSuccessStatusCode);
-                                    Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+                                    Assert.True(response.IsSuccessStatusCode);
+                                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
                                 }
 
                                 using (HttpResponseMessage response = client.GetAsync("unlock/2").Result)
                                 {
-                                    Assert.IsFalse(response.IsSuccessStatusCode);
-                                    Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+                                    Assert.False(response.IsSuccessStatusCode);
+                                    Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
                                 }
                             }
                         }
@@ -121,3 +118,4 @@
         }
     }
 }
+#endif

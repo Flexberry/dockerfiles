@@ -11,9 +11,31 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
     using ICSSoft.STORMNET.Business;
     using Npgsql;
     using Oracle.ManagedDataAccess.Client;
+    using Xunit;
+    using Xunit.Abstractions;
 
+#if NETFRAMEWORK
+    /// <summary>
+    /// Base class for integration tests.
+    /// </summary>
     public abstract class BaseIntegratedTest : IDisposable
     {
+#endif
+#if NETCOREAPP
+    using Microsoft.AspNetCore.Mvc.Testing;
+    using ODataServiceSample.AspNetCore;
+    using ICSSoft.Services;
+    using Unity;
+
+    /// <summary>
+    /// Base class for integration tests.
+    /// </summary>
+    public abstract class BaseIntegratedTest : IClassFixture<CustomWebApplicationFactory<Startup>>, IDisposable
+    {
+        protected readonly WebApplicationFactory<Startup> _factory;
+#endif
+        protected ITestOutputHelper _output;
+
         private const string PoolingFalseConst = "Pooling=false;";
 
         private static string connectionStringOracle;
@@ -98,6 +120,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
             Dispose(true);
         }
 
+#if NETFRAMEWORK
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseIntegratedTest" /> class.
         /// </summary>
@@ -105,6 +128,26 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
         /// <param name="useGisDataService">Use DataService with Gis support.</param>
         protected BaseIntegratedTest(string tempDbNamePrefix, bool useGisDataService = false)
         {
+#endif
+#if NETCOREAPP
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseIntegratedTest" /> class.
+        /// </summary>
+        /// <param name="factory">Web application factory.</param>
+        /// <param name="output">Unit tests debug output.</param>
+        /// <param name="tempDbNamePrefix">Prefix for temp database name.</param>
+        /// <param name="useGisDataService">Use DataService with Gis support.</param>
+        protected BaseIntegratedTest(CustomWebApplicationFactory<Startup> factory, ITestOutputHelper output, string tempDbNamePrefix, bool useGisDataService = false)
+        {
+            _factory = factory;
+            _output = output;
+
+            if (output != null)
+            {
+                IUnityContainer container = UnityFactory.GetContainer();
+                container.RegisterInstance(_output);
+            }
+#endif
             _useGisDataService = useGisDataService;
             if (!(tempDbNamePrefix != null))
                 throw new ArgumentNullException();
@@ -114,13 +157,18 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
                 throw new ArgumentException();
             _tempDbNamePrefix = tempDbNamePrefix;
             _databaseName = _tempDbNamePrefix + "_" + DateTime.Now.ToString("yyyyMMddHHmmssff") + "_" + Guid.NewGuid().ToString("N");
+            bool watchdogEmptyTest = false;
 
             if (!string.IsNullOrWhiteSpace(PostgresScript) && connectionStringPostgres != PoolingFalseConst)
             {
                 if (!(tempDbNamePrefix.Length <= 12)) // Max length is 63 (-18 -32).
                     throw new ArgumentException();
+
                 if (!char.IsLetter(tempDbNamePrefix[0])) // Database names must have an alphabetic first character.
-                    throw new ArgumentException();                
+                    throw new ArgumentException();
+
+                watchdogEmptyTest = true;
+
                 using (var conn = new NpgsqlConnection(connectionStringPostgres))
                 {
                     conn.Open();
@@ -143,6 +191,9 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
             {
                 if (!(tempDbNamePrefix.Length <= 64))// Max is 128.
                     throw new ArgumentException();
+
+                watchdogEmptyTest = true;
+
                 using (var connection = new SqlConnection(connectionStringMssql))
                 {
                     connection.Open();
@@ -167,6 +218,8 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
             {
                 if (!(tempDbNamePrefix.Length <= 8)) // Max length is 30 (-18 -4).
                     throw new ArgumentException();
+
+                watchdogEmptyTest = true;
 
                 using (var connection = new OracleConnection(connectionStringOracle))
                 {
@@ -218,6 +271,8 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests
                     }
                 }
             }
+
+            Assert.True(watchdogEmptyTest);
         }
 
         /// <summary>

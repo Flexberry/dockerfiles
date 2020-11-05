@@ -15,12 +15,25 @@
     using Newtonsoft.Json.Linq;
 
     using Xunit;
+    using Xunit.Abstractions;
 
     /// <summary>
     /// Класс тестов для тестирования $skip, $top, $orderby.
     /// </summary>
     public class SkipTopOrderByTest : BaseODataServiceIntegratedTest
     {
+#if NETCOREAPP
+        /// <summary>
+        /// Конструктор по-умолчанию.
+        /// </summary>
+        /// <param name="factory">Фабрика для приложения.</param>
+        /// <param name="output">Вывод отладочной информации.</param>
+        public SkipTopOrderByTest(CustomWebApplicationFactory<ODataServiceSample.AspNetCore.Startup> factory, ITestOutputHelper output)
+            : base(factory, output)
+        {
+        }
+#endif
+
         /// <summary>
         /// Осуществляет проверку поиска с использованием $skip, $top, $orderby.
         /// </summary>

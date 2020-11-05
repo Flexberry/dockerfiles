@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45;net461</TargetFrameworks>
+    <Configurations>Debug;Release</Configurations>
+    <LangVersion>latest</LangVersion>
     <RootNamespace>NewPlatform.Flexberry.ORM.ODataService.WebApi</RootNamespace>
     <AssemblyName>NewPlatform.Flexberry.ORM.ODataService.WebApi</AssemblyName>
     <SignAssembly>true</SignAssembly>
@@ -15,12 +17,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
-    <PackageReference Include="NewPlatform.Flexberry.LockService" Version="3.0.0-beta02" />
-    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta11" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="NewPlatform.Flexberry.LockService" Version="3.0.0-beta02" />
+    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta11" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Net;
     using System.Net.Http;
-    using System.Web.Http;
 
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
@@ -23,11 +22,27 @@
 
     using Action = ODataService.Functions.Action;
 
+#if NETFRAMEWORK
+    using System.Web.Http;
+#endif
+
     /// <summary>
     /// Класс тестов для тестирования метаданных, получаемых от OData-сервиса.
     /// </summary>
     public class ActionsTest : BaseODataServiceIntegratedTest
     {
+#if NETCOREAPP
+        /// <summary>
+        /// Конструктор по-умолчанию.
+        /// </summary>
+        /// <param name="factory">Фабрика для приложения.</param>
+        /// <param name="output">Вывод отладочной информации.</param>
+        public ActionsTest(CustomWebApplicationFactory<ODataServiceSample.AspNetCore.Startup> factory, Xunit.Abstractions.ITestOutputHelper output)
+            : base(factory, output)
+        {
+        }
+#endif
+
         /// <summary>
         /// Осуществляет регистрацию пользовательских OData-actions.
         /// </summary>
@@ -105,8 +120,12 @@
                     "ActionODataHttpResponseException",
                     (queryParameters, parameters) =>
                     {
+#if NETFRAMEWORK
                         throw new HttpResponseException(queryParameters.Request.CreateErrorResponse(HttpStatusCode.BadRequest,
                             new ODataError() { ErrorCode = "400", Message = "Сообщение об ошибке" }));
+#else
+                        throw new ODataException("Сообщение об ошибке");
+#endif
                     },
                     typeof(IEnumerable<DataObject>),
                     parametersTypes));
@@ -268,8 +287,21 @@
                     // Проверим, что возвращается код ошибки, указанный в функции.
                     Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
+#if NETFRAMEWORK
                     // Проверим сообщение об ошибке.
                     Assert.Equal("Сообщение об ошибке", ((ODataError)((ObjectContent)response.Content).Value).Message);
+#else
+                    // Получим строку с ответом.
+                    string receivedStr = response.Content.ReadAsStringAsync().Result.Beautify();
+
+                    JObject jObject = JObject.Parse(receivedStr);
+                    var error = jObject["error"];
+
+                    Assert.NotNull(error);
+                    string errorMessage = error["message"].ToString();
+
+                    Assert.Equal("Сообщение об ошибке", errorMessage);
+#endif
                 }
             });
         }

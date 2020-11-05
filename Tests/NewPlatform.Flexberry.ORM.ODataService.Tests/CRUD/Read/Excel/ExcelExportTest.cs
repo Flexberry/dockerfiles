@@ -15,6 +15,18 @@
     /// </summary>
     public class ExcelExportTest : BaseODataServiceIntegratedTest
     {
+#if NETCOREAPP
+        /// <summary>
+        /// Конструктор по-умолчанию.
+        /// </summary>
+        /// <param name="factory">Фабрика для приложения.</param>
+        /// <param name="output">Вывод отладочной информации.</param>
+        public ExcelExportTest(CustomWebApplicationFactory<ODataServiceSample.AspNetCore.Startup> factory, Xunit.Abstractions.ITestOutputHelper output)
+            : base(factory, output)
+        {
+        }
+#endif
+
         /// <summary>
         /// Performs export testing from Excel.
         /// </summary>

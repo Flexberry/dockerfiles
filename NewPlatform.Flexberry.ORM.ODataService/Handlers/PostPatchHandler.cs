@@ -1,5 +1,4 @@
-﻿using System.Linq;
-
+﻿#if NETFRAMEWORK
 namespace NewPlatform.Flexberry.ORM.ODataService.Handlers
 {
     using System.Net.Http;
@@ -69,3 +68,4 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Handlers
         }
     }
 }
+#endif

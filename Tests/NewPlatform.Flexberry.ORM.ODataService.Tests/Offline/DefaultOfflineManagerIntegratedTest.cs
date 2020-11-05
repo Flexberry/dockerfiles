@@ -15,9 +15,17 @@
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
     using NewPlatform.Flexberry.Services;
 
-    
     public class DefaultOfflineManagerIntegratedTest : BaseODataServiceIntegratedTest
     {
+#if NETCOREAPP
+        /// <summary>
+        /// Конструктор по-умолчанию.
+        /// </summary>
+        public DefaultOfflineManagerIntegratedTest(CustomWebApplicationFactory<ODataServiceSample.AspNetCore.Startup> factory, Xunit.Abstractions.ITestOutputHelper output)
+            : base(factory, output)
+        { }
+#endif
+
         [Fact]
         public void TestAcquiringWithoutLock()
         {
