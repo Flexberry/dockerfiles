@@ -35,6 +35,12 @@
         public string FileBaseUrl { get; set; }
 
         /// <summary>
+        /// Тип файлового свойства.
+        /// </summary>
+        [JsonIgnore]
+        public Type FilePropertyType { get; set; }
+
+        /// <summary>
         /// Получает или задает URL, по которому будут осуществляться запросы на скачивание/удаление файла.
         /// </summary>
         [JsonProperty(PropertyName = "fileUrl")]

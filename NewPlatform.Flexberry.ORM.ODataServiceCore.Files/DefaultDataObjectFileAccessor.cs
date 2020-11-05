@@ -108,10 +108,17 @@
         /// <inheritdoc/>
         public void RemoveFileUploadDirectories(List<FileDescription> removingFileDescriptions)
         {
-            removingFileDescriptions?
-                .Where(x => x != null)
-                .ToList()
-                .ForEach(x => RemoveFileUploadDirectory(x.FileUploadKey));
+            if (removingFileDescriptions == null)
+                return;
+
+            DataObjectFileProviders.ForEach(
+                fp =>
+                {
+                    var selectedDescriptions = removingFileDescriptions
+                        .Where(x => x != null && fp.FilePropertyType == x.FilePropertyType)
+                        .ToList();
+                    selectedDescriptions.ForEach(fp.RemoveFile);
+                });
         }
 
         /// <summary>

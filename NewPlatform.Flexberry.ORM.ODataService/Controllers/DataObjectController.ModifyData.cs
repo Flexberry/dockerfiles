@@ -635,12 +635,6 @@
 
                 var obj = DataObjectCache.CreateDataObject(type, key);
 
-                // Раз объект данных удаляется, то и все ассоциированные с ним файлы должны быть удалены.
-                // Запоминаем метаданные всех ассоциированных файлов, кроме файлов соответствующих файловым свойствам типа File
-                // (файлы соответствующие свойствам типа File хранятся в БД, и из файловой системы просто нечего удалять).
-                // TODO: подумать как быть с детейлами, детейлами детейлов, и т д.
-                _removingFileDescriptions.AddRange(GetDataObjectFileDescriptions(obj, new List<Type> { typeof(File) }));
-
                 // Удаляем объект с заданным ключем.
                 // Детейлы удалятся вместе с агрегатором автоматически.
                 // Если удаляемый объект является мастером для какого-либо объекта, то
@@ -650,6 +644,12 @@
                 // IReferencesCascadeDelete/IReferencesNullDelete и требуемые действия будут выполнены автоматически.
                 // В данный момент ReferentialConstraints не создаются в модели.
                 obj.SetStatus(ObjectStatus.Deleted);
+
+                // Раз объект данных удаляется, то и все ассоциированные с ним файлы должны быть удалены.
+                // Запоминаем метаданные всех ассоциированных файлов, кроме файлов соответствующих файловым свойствам типа File
+                // (файлы соответствующие свойствам типа File хранятся в БД, и из файловой системы просто нечего удалять).
+                // TODO: подумать как быть с детейлами, детейлами детейлов, и т д.
+                _removingFileDescriptions.AddRange(GetDataObjectFileDescriptions(obj, new List<Type> { typeof(File) }));
 
                 List<DataObject> objs = new List<DataObject>();
 
@@ -1160,8 +1160,8 @@
                                 // Если в метаданных файла присутствует FileUploadKey значит файл был загружен на сервер,
                                 // но еще не был ассоциирован с объектом данных, и это нужно сделать.
                                 FileDescription fileDescription = FileDescription.FromJson(serializedFileDescription);
-#if NETFRAMEWORK
                                 fileDescription.FilePropertyType = dataObjectPropertyType;
+#if NETFRAMEWORK
                                 if (!(string.IsNullOrEmpty(fileDescription.FileUploadKey) || string.IsNullOrEmpty(fileDescription.FileName)))
                                 {
                                     Information.SetPropValueByName(obj, dataObjectPropName, dataObjectFileProvider.GetFileProperty(fileDescription));

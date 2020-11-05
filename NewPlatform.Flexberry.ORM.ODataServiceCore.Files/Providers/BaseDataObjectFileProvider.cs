@@ -58,6 +58,7 @@
                 fileDescription.EntityTypeName = dataObject.GetType().AssemblyQualifiedName;
                 fileDescription.EntityPropertyName = dataObjectFilePropertyName;
                 fileDescription.EntityPrimaryKey = dataObject.__PrimaryKey.ToString();
+                fileDescription.FilePropertyType = FilePropertyType;
             }
 
             return fileDescription;
