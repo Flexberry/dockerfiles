@@ -10,7 +10,7 @@
     /// </summary>
     /// <seealso cref="ApiController" />
     [Authorize]
-    public class LockController : BaseApiController
+    public class LockController : ApiController
     {
         private readonly ILockService _lockService;
 

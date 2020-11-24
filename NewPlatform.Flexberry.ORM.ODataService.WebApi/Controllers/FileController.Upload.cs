@@ -1,13 +1,10 @@
 ﻿namespace NewPlatform.Flexberry.ORM.ODataService.WebApi.Controllers
 {
     using System;
-    using System.Collections.Generic;
-    using System.Collections.Specialized;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using System.Web;
     using System.Web.Http;
 
     using NewPlatform.Flexberry.ORM.ODataService.Files;
@@ -45,7 +42,7 @@
             catch (Exception)
             {
                 // Удаляем созданный каталог вместе с файлом, если при загрузке произошел какой-либо сбой.
-                RemoveFileUploadDirectory(fileUploadKey);
+                dataObjectFileAccessor.RemoveFileUploadDirectory(fileUploadKey);
 
                 throw;
             }
@@ -63,7 +60,7 @@
         private Task<FileDescription> UploadFile(string fileUploadKey)
         {
             // Создаём каталог для загружаемого файла, и провайдер для его вычитки и сохранения.
-            string fileUploadPath = CreateFileUploadDirectory(fileUploadKey);
+            string fileUploadPath = dataObjectFileAccessor.CreateFileUploadDirectory(fileUploadKey);
             FileUploadStreamProvider fileUploadProvider = new FileUploadStreamProvider(fileUploadPath);
 
             // Вычитываем загружаемый файл из запроса, и сохраняем в созданном каталоге.
@@ -78,7 +75,7 @@
                 }
 
                 // Возвращаем описание загруженного файла.
-                return new FileDescription(BaseUrl, fileUploadProvider.FileData.First().LocalFileName);
+                return new FileDescription(dataObjectFileAccessor.BaseUri.AbsoluteUri, fileUploadProvider.FileData.First().LocalFileName);
             }).ContinueWith((fileDescriptionTask) =>
             {
                 // Если загрузка файла прошла успешно, нужно удалить ранее загруженнй файл,
@@ -88,7 +85,7 @@
                     FileDescription previousFileDescription = FileDescription.FromJson(fileUploadProvider.FormData.Get("previousFileDescription"));
                     if (!string.IsNullOrEmpty(previousFileDescription?.FileUploadKey))
                     {
-                        RemoveFileUploadDirectory(previousFileDescription.FileUploadKey);
+                        dataObjectFileAccessor.RemoveFileUploadDirectory(previousFileDescription.FileUploadKey);
                     }
                 }
 

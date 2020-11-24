@@ -3,8 +3,6 @@
     using System;
     using System.IO;
 
-    using ICSSoft.STORMNET.Business;
-
     using File = ICSSoft.STORMNET.FileType.File;
 
     /// <summary>
@@ -13,11 +11,10 @@
     public class DataObjectFileProvider : BaseDataObjectFileProvider
     {
         /// <summary>
-        /// Конструктор класса <see cref="DataObjectFileProvider"/> с параметрами.
+        /// Конструктор класса <see cref="DataObjectFileProvider"/>.
         /// </summary>
-        /// <param name="dataService">Сервис данных для операций с БД.</param>
-        public DataObjectFileProvider(IDataService dataService)
-            : base(dataService)
+        public DataObjectFileProvider()
+            : base()
         {
         }
 

@@ -11,13 +11,13 @@
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.KeyGen;
     using ICSSoft.STORMNET.Windows.Forms;
+    using NewPlatform.Flexberry.ORM.ODataService.Files;
     using NewPlatform.Flexberry.ORM.ODataService.Model;
     using Unity;
     using Xunit;
     using Xunit.Abstractions;
 
 #if NETFRAMEWORK
-    using System.IO;
     using System.Web.Http;
     using System.Web.Http.Cors;
     using Microsoft.AspNet.OData.Batch;
@@ -123,23 +123,21 @@
 
             foreach (IDataService dataService in DataServices)
             {
-                var container = new UnityContainer();
-                container.RegisterInstance(dataService);
-
+                using (var container = new UnityContainer())
                 using (var config = new HttpConfiguration())
                 using (var server = new HttpServer(config))
                 using (var client = new HttpClient(server, false) { BaseAddress = new Uri("http://localhost/odata/") })
                 {
+                    container.RegisterInstance(dataService);
+
                     server.Configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
                     config.EnableCors(new EnableCorsAttribute("*", "*", "*"));
                     config.DependencyResolver = new UnityDependencyResolver(container);
 
                     const string fileControllerPath = "api/File";
-                    config.MapODataServiceFileRoute(
-                        "File",
-                        fileControllerPath,
-                        Path.GetTempPath(),
-                        dataService);
+                    config.MapODataServiceFileRoute("File", fileControllerPath);
+                    var fileAccessor = new DefaultDataObjectFileAccessor(new Uri("http://localhost/"), fileControllerPath, "Uploads");
+                    container.RegisterInstance<IDataObjectFileAccessor>(fileAccessor);
 
                     var token = config.MapDataObjectRoute(_builder, server, "odata", "odata", true);
                     token.Events.CallbackAfterInternalServerError = AfterInternalServerError;
@@ -188,6 +186,9 @@
                 ManagementToken token = (ManagementToken)container.Resolve(typeof(ManagementToken));
                 container.RegisterInstance(dataService);
                 token.Events.CallbackAfterInternalServerError = AfterInternalServerError;
+
+                var fileAccessor = (IDataObjectFileAccessor)_factory.Services.GetService(typeof(IDataObjectFileAccessor));
+                container.RegisterInstance(fileAccessor);
 
                 var args = new TestArgs { UnityContainer = container, DataService = dataService, HttpClient = client, Token = token };
                 ExternalLangDef.LanguageDef.DataService = dataService;

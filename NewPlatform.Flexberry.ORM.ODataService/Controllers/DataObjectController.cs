@@ -23,6 +23,7 @@
     using Microsoft.OData.Edm;
     using Microsoft.OData.UriParser;
     using NewPlatform.Flexberry.ORM.ODataService.Expressions;
+    using NewPlatform.Flexberry.ORM.ODataService.Files;
     using NewPlatform.Flexberry.ORM.ODataService.Model;
     using NewPlatform.Flexberry.ORM.ODataService.Offline;
 
@@ -41,7 +42,6 @@
     using NewPlatform.Flexberry.ORM.ODataService.Formatter;
     using NewPlatform.Flexberry.ORM.ODataService.Functions;
     using NewPlatform.Flexberry.ORM.ODataService.Handlers;
-    using NewPlatform.Flexberry.ORM.ODataService.WebApi.Controllers;
 #endif
 #if NETSTANDARD
     using ICSSoft.Services;
@@ -53,7 +53,6 @@
     using Microsoft.AspNetCore.Mvc;
     using NewPlatform.Flexberry.ORM.ODataService.Batch;
     using NewPlatform.Flexberry.ORM.ODataService.Extensions;
-    using NewPlatform.Flexberry.ORM.ODataService.Files;
     using NewPlatform.Flexberry.ORM.ODataService.Formatter;
     using NewPlatform.Flexberry.ORM.ODataService.Middleware;
     using NewPlatform.Flexberry.ORM.ODataService.WebUtilities;
@@ -64,12 +63,7 @@
     /// <summary>
     /// Определяет класс контроллера OData, который поддерживает запись и чтение данных с использованием OData формата.
     /// </summary>
-    public partial class DataObjectController :
-#if NETFRAMEWORK
-        BaseODataController
-#elif NETSTANDARD
-        ODataController
-#endif
+    public partial class DataObjectController : ODataController
     {
         private List<string> _filterDetailProperties;
         private DataObject[] _objs;
@@ -112,11 +106,10 @@
 
         internal BaseOfflineManager OfflineManager { get; set; }
 
-#if NETFRAMEWORK
         /// <summary>
-        /// The current EDM model.
+        /// The data object file properties accessor.
         /// </summary>
-        private readonly DataObjectEdmModel _model;
+        private readonly IDataObjectFileAccessor _dataObjectFileAccessor;
 
         /// <summary>
         /// Gets a <see cref="ICSSoft.STORMNET.DataObjectCache" /> instance from a http context if such instance exists,
@@ -132,10 +125,17 @@
             {
                 if (_dataObjectCache == null)
                 {
+#if NETFRAMEWORK
                     if (Request.Properties.ContainsKey(DataObjectODataBatchHandler.DataObjectCachePropertyKey))
                     {
                         _dataObjectCache = (DataObjectCache)Request.Properties[DataObjectODataBatchHandler.DataObjectCachePropertyKey];
                     }
+#elif NETSTANDARD
+                    if (IsBatchChangeSetRequest)
+                    {
+                        _dataObjectCache = (DataObjectCache)HttpContext.Items[DataObjectODataBatchHandler.DataObjectCachePropertyKey];
+                    }
+#endif
 
                     if (_dataObjectCache == null)
                     {
@@ -147,6 +147,12 @@
                 return _dataObjectCache;
             }
         }
+
+#if NETFRAMEWORK
+        /// <summary>
+        /// The current EDM model.
+        /// </summary>
+        private readonly DataObjectEdmModel _model;
 
         private static readonly IAssembliesResolver _defaultAssembliesResolver = new DefaultAssembliesResolver();
 
@@ -156,42 +162,7 @@
 #elif NETSTANDARD
         private static readonly IWebApiAssembliesResolver _defaultAssembliesResolver = new WebApiAssembliesResolver();
 
-        /// <summary>
-        /// The data object file properties accessor.
-        /// </summary>
-        private readonly IDataObjectFileAccessor _dataObjectFileAccessor;
-
         private ManagementToken _managementToken;
-
-        /// <summary>
-        /// Gets a <see cref="ICSSoft.STORMNET.DataObjectCache" /> instance from a http context if such instance exists,
-        /// otherwise creates a new <see cref="ICSSoft.STORMNET.DataObjectCache"/> instance.
-        /// </summary>
-        /// <remarks>
-        /// Tries to extract object from the request shared data for batch requests
-        /// before creating a new <see cref="DataObjectCache"/> instance.
-        /// </remarks>
-        private DataObjectCache DataObjectCache
-        {
-            get
-            {
-                if (_dataObjectCache == null && HttpContext != null)
-                {
-                    if (IsBatchChangeSetRequest)
-                    {
-                        _dataObjectCache = (DataObjectCache)HttpContext.Items[DataObjectODataBatchHandler.DataObjectCachePropertyKey];
-                    }
-
-                    if (_dataObjectCache == null)
-                    {
-                        _dataObjectCache = new DataObjectCache();
-                        _dataObjectCache.StartCaching(false);
-                    }
-                }
-
-                return _dataObjectCache;
-            }
-        }
 
         /// <summary>
         /// The current EDM model.
@@ -221,17 +192,21 @@
         /// Конструктор по-умолчанию.
         /// </summary>
         /// <param name="dataService">Data service for all manipulations with data.</param>
+        /// <param name="dataObjectFileAccessor">The data object file properties accessor.</param>
         /// <param name="dataObjectCache">DataObject cache.</param>
         /// <param name="model">EDM model.</param>
         /// <param name="events">The container with registered events.</param>
         /// <param name="functions">The container with OData Service functions.</param>
         public DataObjectController(
             IDataService dataService,
+            IDataObjectFileAccessor dataObjectFileAccessor,
             DataObjectCache dataObjectCache,
             DataObjectEdmModel model,
             IEventHandlerContainer events,
             IFunctionContainer functions)
         {
+            _dataObjectFileAccessor = dataObjectFileAccessor ?? throw new ArgumentNullException(nameof(dataObjectFileAccessor), "Contract assertion not met: dataObjectFileAccessor != null");
+
             _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService), "Contract assertion not met: dataService != null");
 
             if (dataObjectCache != null)
@@ -789,23 +764,14 @@
 
                         // Если тип свойства относится к одному из зарегистрированных провайдеров файловых свойств,
                         // значит свойство файловое, и его нужно обработать особым образом.
-#if NETFRAMEWORK
-                        if (FileController.HasDataObjectFileProvider(propType))
-#elif NETSTANDARD
                         if (_dataObjectFileAccessor.HasDataObjectFileProvider(propType))
-#endif
                         {
                             // Обработка файловых свойств объектов данных.
                             // ODataService будет возвращать строку с сериализованными метаданными файлового свойства.
                             if (!selectedProperties.Any() || (selectedProperties.Any() && selectedProperties.ContainsKey(dataObjectPropName)))
                             {
-#if NETFRAMEWORK
-                                value = FileController.GetDataObjectFileProvider(propType)
-                                    .GetFileDescription((DataObject)obj, dataObjectPropName)
-#elif NETSTANDARD
                                 value = _dataObjectFileAccessor.GetDataObjectFileProvider(propType)
                                     .GetFileDescription(_dataService, (DataObject)obj, dataObjectPropName)
-#endif
                                     ?.ToJson();
                             }
                         }

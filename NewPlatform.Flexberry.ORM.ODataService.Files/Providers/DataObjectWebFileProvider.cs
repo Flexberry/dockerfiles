@@ -3,8 +3,6 @@
     using System;
     using System.IO;
 
-    using ICSSoft.STORMNET.Business;
-
     using WebFile = ICSSoft.STORMNET.UserDataTypes.WebFile;
 
     /// <summary>
@@ -13,11 +11,10 @@
     public class DataObjectWebFileProvider : BaseDataObjectFileProvider
     {
         /// <summary>
-        /// Конструктор класса <see cref="DataObjectWebFileProvider"/> с параметрами.
+        /// Конструктор класса <see cref="DataObjectWebFileProvider"/>.
         /// </summary>
-        /// <param name="dataService">Сервис данных для операций с БД.</param>
-        public DataObjectWebFileProvider(IDataService dataService)
-            : base(dataService)
+        public DataObjectWebFileProvider()
+            : base()
         {
         }
 

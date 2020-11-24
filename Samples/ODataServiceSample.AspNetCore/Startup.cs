@@ -3,7 +3,6 @@
     using System;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
     using ICSSoft.Services;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Security;
@@ -13,10 +12,8 @@
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Hosting.Server.Features;
-    using Microsoft.AspNetCore.Routing;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using NewPlatform.Flexberry.ORM.ODataService;
     using NewPlatform.Flexberry.ORM.ODataService.Extensions;
     using NewPlatform.Flexberry.ORM.ODataService.Files;
     using NewPlatform.Flexberry.ORM.ODataService.Model;
@@ -96,7 +93,7 @@
 
                 var env = provider.GetRequiredService<IHostingEnvironment>();
 
-                return new DefaultDataObjectFileAccessor(baseUri, "api/file", Path.Combine(env.WebRootPath, "Uploads"));
+                return new DefaultDataObjectFileAccessor(baseUri, "api/File", "Uploads");
             });
         }   
 

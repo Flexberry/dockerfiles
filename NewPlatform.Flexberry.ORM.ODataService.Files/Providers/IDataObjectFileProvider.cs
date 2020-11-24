@@ -5,6 +5,7 @@
     using System.IO;
 
     using ICSSoft.STORMNET;
+    using ICSSoft.STORMNET.Business;
 
     /// <summary>
     /// Интерфейс для провайдеров файловых свойств объектов данных.
@@ -43,6 +44,9 @@
         /// <remarks>
         /// При необходимости будет произведена дочитка объекта данных.
         /// </remarks>
+        /// <param name="dataService">
+        /// Сервис данных для операций с БД.
+        /// </param>
         /// <param name="dataObject">
         /// Объект данных, содержащий файловое свойство.
         /// </param>
@@ -52,7 +56,7 @@
         /// <returns>
         /// Метаданные с описанием файлового свойства объекта данных.
         /// </returns>
-        FileDescription GetFileDescription(DataObject dataObject, string dataObjectFilePropertyName);
+        FileDescription GetFileDescription(IDataService dataService, DataObject dataObject, string dataObjectFilePropertyName);
 
         /// <summary>
         /// Осуществляет получение списка метаданных с описанием файловых свойств объекта данных, соответствующих типу <see cref="FilePropertyType"/>.
@@ -60,13 +64,16 @@
         /// <remarks>
         /// При необходимости будет произведена дочитка объекта данных.
         /// </remarks>
+        /// <param name="dataService">
+        /// Сервис данных для операций с БД.
+        /// </param>
         /// <param name="dataObject">
         /// Объект данных, содержащий файловые свойства.
         /// </param>
         /// <returns>
         /// Список метаданных с описанием файловых свойств объекта данных, соответствующих типу <see cref="FilePropertyType"/>.
         /// </returns>
-        List<FileDescription> GetFileDescriptions(DataObject dataObject);
+        List<FileDescription> GetFileDescriptions(IDataService dataService, DataObject dataObject);
 
         /// <summary>
         /// Осуществляет получение файлового свойства объекта данных.
@@ -74,6 +81,9 @@
         /// <remarks>
         /// При необходимости будет произведена дочитка объекта данных.
         /// </remarks>
+        /// <param name="dataService">
+        /// Сервис данных для операций с БД.
+        /// </param>
         /// <param name="dataObject">
         /// Объект данных, содержащий файловое свойство.
         /// </param>
@@ -83,7 +93,7 @@
         /// <returns>
         /// Значение файлового свойства объекта данных.
         /// </returns>
-        object GetFileProperty(DataObject dataObject, string dataObjectFilePropertyName);
+        object GetFileProperty(IDataService dataService, DataObject dataObject, string dataObjectFilePropertyName);
 
         /// <summary>
         /// Осуществляет получение файлового свойства из файла, расположенного по заданному пути.
@@ -102,13 +112,16 @@
         /// <remarks>
         /// При необходимости будет  вычитан объект данных.
         /// </remarks>
+        /// <param name="dataService">
+        /// Сервис данных для операций с БД.
+        /// </param>
         /// <param name="fileDescription">
         /// Метаданные с описанием файлового свойства объекта данных.
         /// </param>
         /// <returns>
         /// Значение файлового свойства объекта данных.
         /// </returns>
-        object GetFileProperty(FileDescription fileDescription);
+        object GetFileProperty(IDataService dataService, FileDescription fileDescription);
 
         /// <summary>
         /// Осуществляет получение списка файловых свойств объекта данных, соответствующих типу <see cref="FilePropertyType"/>.
@@ -116,13 +129,16 @@
         /// <remarks>
         /// При необходимости будет произведена дочитка объекта данных.
         /// </remarks>
+        /// <param name="dataService">
+        /// Сервис данных для операций с БД.
+        /// </param>
         /// <param name="dataObject">
         /// Объект данных, содержащий файловые свойства.
         /// </param>
         /// <returns>
         /// Список файловых свойств объекта данных, соответствующих типу <see cref="FilePropertyType"/>.
         /// </returns>
-        List<object> GetFileProperties(DataObject dataObject);
+        List<object> GetFileProperties(IDataService dataService, DataObject dataObject);
 
         /// <summary>
         /// Осуществляет получение имени файла для файлового свойства объекта данных.
@@ -141,6 +157,9 @@
         /// <remarks>
         /// При необходимости будет произведена дочитка объекта данных.
         /// </remarks>
+        /// <param name="dataService">
+        /// Сервис данных для операций с БД.
+        /// </param>
         /// <param name="dataObject">
         /// Объект данных, содержащий файловое свойство, для которого требуется получить имя.
         /// </param>
@@ -150,7 +169,7 @@
         /// <returns>
         /// Имя файла.
         /// </returns>
-        string GetFileName(DataObject dataObject, string dataObjectFilePropertyName);
+        string GetFileName(IDataService dataService, DataObject dataObject, string dataObjectFilePropertyName);
 
         /// <summary>
         /// Осуществляет получение MIME-типа для файлового свойства объекта данных.
@@ -169,6 +188,9 @@
         /// <remarks>
         /// При необходимости будет произведена дочитка объекта данных.
         /// </remarks>
+        /// <param name="dataService">
+        /// Сервис данных для операций с БД.
+        /// </param>
         /// <param name="dataObject">
         /// Объект данных, содержащий файловое свойство, для которого требуется получить MIME-тип.
         /// </param>
@@ -178,7 +200,7 @@
         /// <returns>
         /// MIME-тип файла, соответствующего заданному файловому свойству.
         /// </returns>
-        string GetFileMimeType(DataObject dataObject, string dataObjectFilePropertyName);
+        string GetFileMimeType(IDataService dataService, DataObject dataObject, string dataObjectFilePropertyName);
 
         /// <summary>
         /// Осуществляет получение размера файла, связанного с объектом данных, в байтах.
@@ -192,21 +214,24 @@
         long GetFileSize(object fileProperty);
 
         /// <summary>
-        /// Осуществляет получение MIME-типа для файлового свойства объекта данных.
+        /// Осуществляет получение размера файла, связанного с объектом данных, в байтах.
         /// </summary>
         /// <remarks>
         /// При необходимости будет произведена дочитка объекта данных.
         /// </remarks>
+        /// <param name="dataService">
+        /// Сервис данных для операций с БД.
+        /// </param>
         /// <param name="dataObject">
-        /// Объект данных, содержащий файловое свойство, для которого требуется получить MIME-тип.
+        /// Объект данных, содержащий файловое свойство.
         /// </param>
         /// <param name="dataObjectFilePropertyName">
-        /// Имя файлового свойства в объекте данных.
+        /// Имя файлового свойства в объекте данных, для которого требуется получить размер файла.
         /// </param>
         /// <returns>
-        /// MIME-тип файла, соответствующего заданному файловому свойству.
+        /// Размер файла в байтах.
         /// </returns>
-        long GetFileSize(DataObject dataObject, string dataObjectFilePropertyName);
+        long GetFileSize(IDataService dataService, DataObject dataObject, string dataObjectFilePropertyName);
 
         /// <summary>
         /// Осуществляет получение потока данных для файлового свойства объекта данных.
@@ -225,6 +250,9 @@
         /// <remarks>
         /// При необходимости будет произведена дочитка объекта данных.
         /// </remarks>
+        /// <param name="dataService">
+        /// Сервис данных для операций с БД.
+        /// </param>
         /// <param name="dataObject">
         /// Объект данных, содержащий файловое свойство, для которого требуется получить поток данных.
         /// </param>
@@ -234,7 +262,7 @@
         /// <returns>
         /// Поток данных.
         /// </returns>
-        Stream GetFileStream(DataObject dataObject, string dataObjectFilePropertyName);
+        Stream GetFileStream(IDataService dataService, DataObject dataObject, string dataObjectFilePropertyName);
 
         /// <summary>
         /// Осуществляет получение потока данных для файлового свойства объекта данных.
@@ -242,9 +270,12 @@
         /// <remarks>
         /// При необходимости будет  вычитан объект данных.
         /// </remarks>
+        /// <param name="dataService">
+        /// Сервис данных для операций с БД.
+        /// </param>
         /// <param name="fileDescription">Метаданные с описанием файлового свойства объекта данных, для которого требуется получить поток данных.</param>
         /// <returns>Поток данных.</returns>
-        Stream GetFileStream(FileDescription fileDescription);
+        Stream GetFileStream(IDataService dataService, FileDescription fileDescription);
 
         /// <summary>
         /// Осуществляет удаление из файловой системы файла, соответствующего файловому свойству объекта данных.
@@ -268,12 +299,15 @@
         /// <remarks>
         /// При необходимости будет произведена дочитка объекта данных.
         /// </remarks>
+        /// <param name="dataService">
+        /// Сервис данных для операций с БД.
+        /// </param>
         /// <param name="dataObject">
         /// Объект данных, содержащий файловое свойство.
         /// </param>
         /// <param name="dataObjectFilePropertyName">
         /// Имя файлового свойства в объекте данных.
         /// </param>
-        void RemoveFile(DataObject dataObject, string dataObjectFilePropertyName);
+        void RemoveFile(IDataService dataService, DataObject dataObject, string dataObjectFilePropertyName);
     }
 }

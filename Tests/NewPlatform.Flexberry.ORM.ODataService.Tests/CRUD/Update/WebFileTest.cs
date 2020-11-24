@@ -4,10 +4,11 @@
     using System.IO;
     using System.Linq;
     using System.Net;
-    using ICSSoft.Services;
+
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.UserDataTypes;
 
+    using NewPlatform.Flexberry.ORM.ODataService.Files;
     using NewPlatform.Flexberry.ORM.ODataService.Tests.Extensions;
     using Unity;
     using Xunit;
@@ -88,19 +89,11 @@
                 args.DataService.UpdateObject(медведь);
 
                 string key = Guid.NewGuid().ToString("D");
-                Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), key));
                 const string fileName = "cert.txt";
-                string basePath = Path.GetTempPath();
-#if NETCOREAPP
-                Unity.IUnityContainer container = UnityFactory.GetContainer();
-                var env = container.Resolve<Microsoft.AspNetCore.Hosting.IHostingEnvironment>();
-                basePath = Path.Combine(env.WebRootPath, "Uploads");
-                if (!Directory.Exists(Path.Combine(basePath, key)))
-                {
-                    Directory.CreateDirectory(Path.Combine(basePath, key));
-                }
-#endif
-                string filePath = Path.Combine(basePath, key, fileName);
+                var fileAccessor = args.UnityContainer.Resolve<IDataObjectFileAccessor>();
+                string basePath = fileAccessor.CreateFileUploadDirectory(key);
+
+                string filePath = Path.Combine(basePath, fileName);
                 using (var fs = new FileStream(filePath, FileMode.Create))
                 {
                     fs.SetLength(100);

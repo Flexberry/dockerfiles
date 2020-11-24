@@ -13,6 +13,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService
     using NewPlatform.Flexberry.ORM.ODataService.Batch;
     using NewPlatform.Flexberry.ORM.ODataService.Controllers;
     using NewPlatform.Flexberry.ORM.ODataService.Extensions;
+    using NewPlatform.Flexberry.ORM.ODataService.Files;
     using NewPlatform.Flexberry.ORM.ODataService.Handlers;
     using NewPlatform.Flexberry.ORM.ODataService.Offline;
 
@@ -56,11 +57,13 @@ namespace NewPlatform.Flexberry.ORM.ODataService
         {
             IDataService dataService = GetDataService(request, controllerDescriptor, controllerType);
 
+            IDataObjectFileAccessor fileAccessor = GetDataObjectFileAccessor(request, controllerDescriptor, controllerType);
+
             DataObjectCache dataObjectCache = GetDataObjectCache(request, controllerDescriptor, controllerType);
 
             ManagementToken token = (request.GetRouteData().Route as ODataRoute).GetManagementToken();
 
-            DataObjectController controller = new DataObjectController(dataService, dataObjectCache, token.Model, token.Events, token.Functions);
+            DataObjectController controller = new DataObjectController(dataService, fileAccessor, dataObjectCache, token.Model, token.Events, token.Functions);
             controller.OfflineManager = GetOfflineManager(request, controllerDescriptor, controllerType) ?? controller.OfflineManager;
 
             return controller;
@@ -85,6 +88,27 @@ namespace NewPlatform.Flexberry.ORM.ODataService
             }
 
             return dataService;
+        }
+
+        /// <summary>
+        /// Gets the instance of <see cref="IDataObjectFileAccessor" /> using current <see cref="IDependencyScope"/> and <see cref="IHttpRoute"/>.
+        /// </summary>
+        /// <param name="request">The message request.</param>
+        /// <param name="controllerDescriptor">The HTTP controller descriptor.</param>
+        /// <param name="controllerType">The type of the controller.</param>
+        /// <returns>Gets the instance of <see cref="IDataObjectFileAccessor" /> for specified arguments.</returns>
+        /// <remarks>Extracts object from configurated <see cref="IDependencyResolver" />.</remarks>
+        protected virtual IDataObjectFileAccessor GetDataObjectFileAccessor(HttpRequestMessage request, HttpControllerDescriptor controllerDescriptor, Type controllerType)
+        {
+            IDependencyResolver dependencyResolver = request.GetConfiguration().DependencyResolver;
+            IDataObjectFileAccessor fileAccessor = (IDataObjectFileAccessor)dependencyResolver.GetService(typeof(IDataObjectFileAccessor));
+
+            if (fileAccessor == null)
+            {
+                throw new InvalidOperationException("IDataObjectFileAccessor is not registered in the dependency scope.");
+            }
+
+            return fileAccessor;
         }
 
         /// <summary>

@@ -235,7 +235,7 @@
             FileUploadKey = fileUploadKey;
             FileName = fileInfo.Name;
             FileSize = fileInfo.Length;
-            FileMimeType = MimeMapping.GetMimeMapping(fileInfo.Name);
+            FileMimeType = MimeTypeUtils.GetFileMimeType(fileInfo.Name);
         }
 
         /// <summary>

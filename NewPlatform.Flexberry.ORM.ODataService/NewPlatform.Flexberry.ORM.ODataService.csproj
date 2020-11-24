@@ -48,14 +48,16 @@
     <PackageReference Include="NewPlatform.Flexberry.AspNetCore.OData" Version="7.5.1-beta02" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
+  <ItemGroup>
     <ProjectReference Include="..\NewPlatform.Flexberry.ORM.ODataService.Files\NewPlatform.Flexberry.ORM.ODataService.Files.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
     <ProjectReference Include="..\NewPlatform.Flexberry.ORM.ODataService.WebApi\NewPlatform.Flexberry.ORM.ODataService.WebApi.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <ProjectReference Include="..\NewPlatform.Flexberry.ORM.ODataServiceCore.Common\NewPlatform.Flexberry.ORM.ODataServiceCore.Common.csproj" />
-    <ProjectReference Include="..\NewPlatform.Flexberry.ORM.ODataServiceCore.Files\NewPlatform.Flexberry.ORM.ODataServiceCore.Files.csproj" />
     <ProjectReference Include="..\NewPlatform.Flexberry.ORM.ODataServiceCore.WebApi\NewPlatform.Flexberry.ORM.ODataServiceCore.WebApi.csproj" />
   </ItemGroup>
 

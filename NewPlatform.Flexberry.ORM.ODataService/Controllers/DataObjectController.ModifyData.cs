@@ -280,11 +280,7 @@
                 // Запоминаем метаданные всех ассоциированных файлов, кроме файлов соответствующих файловым свойствам типа File
                 // (файлы соответствующие свойствам типа File хранятся в БД, и из файловой системы просто нечего удалять).
                 // TODO: подумать как быть с детейлами, детейлами детейлов, и т д.
-#if NETFRAMEWORK
-                var descriptions = FileController.GetDataObjectFileDescriptions(obj, new List<Type> { typeof(File) });
-#elif NETSTANDARD
-                var descriptions = GetDataObjectFileDescriptions(obj, new List<Type> { typeof(File) });
-#endif
+                var descriptions = _dataObjectFileAccessor.GetDataObjectFileDescriptions(_dataService, obj, new List<Type> { typeof(File) });
                 _removingFileDescriptions.AddRange(descriptions);
 
                 List<DataObject> objs = new List<DataObject>();
@@ -321,11 +317,7 @@
                 }
 
                 // При успешном удалении вычищаем из файловой системы, файлы подлежащие удалению.
-#if NETFRAMEWORK
-                FileController.RemoveFileUploadDirectories(_removingFileDescriptions);
-#elif NETSTANDARD
                 _dataObjectFileAccessor.RemoveFileUploadDirectories(_removingFileDescriptions);
-#endif
                 ExecuteCallbackAfterDelete(obj);
 
 #if NETFRAMEWORK
@@ -631,42 +623,6 @@
         }
 #endif
 
-#if NETSTANDARD
-
-        /// <summary>
-        /// Осуществляет получение списка метаданных с описанием файловых свойств объекта данных,
-        /// соответствующих всем типам файловых свойств, для которых есть зарегистрированные провайдеры.
-        /// </summary>
-        /// <remarks>
-        /// При необходимости будет произведена дочитка объекта данных.
-        /// </remarks>
-        /// <param name="dataObject">Объект данных, содержащий файловые свойства.</param>
-        /// <param name="excludedFilePropertiesTypes">Список типов файловых свойств объекта данных, для которых не требуется получение метаданных.</param>
-        /// <returns>
-        /// Список метаданных с описанием файловых свойств объекта данных,
-        /// соответствующих всем типам файловых свойств, для которых есть зарегистрированные провайдеры.
-        /// </returns>
-        private List<FileDescription> GetDataObjectFileDescriptions(DataObject dataObject, List<Type> excludedFilePropertiesTypes = null)
-        {
-            List<FileDescription> fileDescriptions = new List<FileDescription>();
-
-            if (dataObject != null)
-            {
-                excludedFilePropertiesTypes = excludedFilePropertiesTypes ?? new List<Type>();
-                List<IDataObjectFileProvider> includedDataObjectFileProviders = _dataObjectFileAccessor.DataObjectFileProviders
-                    .Where(x => !excludedFilePropertiesTypes.Contains(x.FilePropertyType))
-                    .ToList();
-
-                foreach (IDataObjectFileProvider dataObjectFileProvider in includedDataObjectFileProviders)
-                {
-                    fileDescriptions.AddRange(dataObjectFileProvider.GetFileDescriptions(_dataService, dataObject));
-                }
-            }
-
-            return fileDescriptions;
-        }
-#endif
-
         /// <summary>
         /// Общая логика модификации данных: вставка и обновление в зависимости от статуса.
         /// Используется в Post (вставка) и Patch (обновление).
@@ -733,11 +689,8 @@
                 }
 
                 // При успешном обновлении вычищаем из файловой системы, файлы подлежащие удалению.
-#if NETFRAMEWORK
-                FileController.RemoveFileUploadDirectories(_removingFileDescriptions);
-#elif NETSTANDARD
                 _dataObjectFileAccessor.RemoveFileUploadDirectories(_removingFileDescriptions);
-#endif
+
                 return obj;
             }
             catch (Exception)
@@ -979,15 +932,9 @@
 
                         // Если тип свойства относится к одному из зарегистрированных провайдеров файловых свойств,
                         // значит свойство файловое, и его нужно обработать особым образом.
-#if NETFRAMEWORK
-                        if (FileController.HasDataObjectFileProvider(dataObjectPropertyType))
-                        {
-                            IDataObjectFileProvider dataObjectFileProvider = FileController.GetDataObjectFileProvider(dataObjectPropertyType);
-#elif NETSTANDARD
                         if (_dataObjectFileAccessor.HasDataObjectFileProvider(dataObjectPropertyType))
                         {
                             IDataObjectFileProvider dataObjectFileProvider = _dataObjectFileAccessor.GetDataObjectFileProvider(dataObjectPropertyType);
-#endif
 
                             // Обработка файловых свойств объектов данных.
                             string serializedFileDescription = value as string;
@@ -1002,11 +949,7 @@
                                 // поэтому обходим его стороной, чтобы избежать лишных вычиток файлов из БД.
                                 if (dataObjectPropertyType != typeof(File))
                                 {
-#if NETFRAMEWORK
-                                    var fileDescription = dataObjectFileProvider.GetFileDescription(obj, dataObjectPropName);
-#elif NETSTANDARD
                                     var fileDescription = dataObjectFileProvider.GetFileDescription(_dataService, obj, dataObjectPropName);
-#endif
                                     _removingFileDescriptions.Add(fileDescription);
                                 }
 
@@ -1022,11 +965,7 @@
                                 fileDescription.FilePropertyType = dataObjectPropertyType;
                                 if (!(string.IsNullOrEmpty(fileDescription.FileUploadKey) || string.IsNullOrEmpty(fileDescription.FileName)))
                                 {
-#if NETFRAMEWORK
-                                    var fileProperty = dataObjectFileProvider.GetFileProperty(fileDescription);
-#elif NETSTANDARD
                                     var fileProperty = dataObjectFileProvider.GetFileProperty(_dataService, fileDescription);
-#endif
                                     Information.SetPropValueByName(obj, dataObjectPropName, fileProperty);
 
                                     // Файловое свойство типа File хранит данные ассоциированного файла прямо в БД,

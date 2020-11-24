@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Web;
 
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
@@ -14,44 +13,23 @@
     /// </summary>
     public abstract class BaseDataObjectFileProvider : IDataObjectFileProvider
     {
-        /// <summary>
-        /// Получает тип файловых свойств объектов данных, обрабатываемых провайдером.
-        /// </summary>
+        /// <inheritdoc />
         public abstract Type FilePropertyType { get; }
 
-        /// <summary>
-        /// Получает или задает путь к каталогу, в котором должны храниться файлы, загруженные на сервер при помощи провайдера.
-        /// </summary>
+        /// <inheritdoc />
         public string UploadsDirectoryPath { get; set; }
 
-        /// <summary>
-        /// Получат или задает базовую часть URL-а для ссылок на скачивание / удаление файлов.
-        /// </summary>
+        /// <inheritdoc />
         public string FileBaseUrl { get; set; }
 
         /// <summary>
-        /// Сервис данных для операций с БД.
+        /// Конструктор классa <see cref="BaseDataObjectFileProvider"/>.
         /// </summary>
-        private readonly IDataService _dataService;
-
-        /// <summary>
-        /// Конструктор класс <see cref="BaseDataObjectFileProvider"/> с параметрами.
-        /// </summary>
-        /// <param name="dataService">Сервис данных для операций с БД.</param>
-        protected BaseDataObjectFileProvider(IDataService dataService)
+        protected BaseDataObjectFileProvider()
         {
-            _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService), "Contract assertion not met: dataService != null");
         }
 
-        /// <summary>
-        /// Осуществляет получение метаданных с описанием файлового свойства объекта данных.
-        /// </summary>
-        /// <param name="fileProperty">
-        /// Файловое свойство объекта данных, для которого требуется получить метаданные файла.
-        /// </param>
-        /// <returns>
-        /// Метаданные с описанием файлового свойства объекта данных.
-        /// </returns>
+        /// <inheritdoc />
         public virtual FileDescription GetFileDescription(object fileProperty)
         {
             if (fileProperty == null)
@@ -64,28 +42,14 @@
                 FileBaseUrl = FileBaseUrl,
                 FileName = GetFileName(fileProperty),
                 FileSize = GetFileSize(fileProperty),
-                FileMimeType = GetFileMimeType(fileProperty)
+                FileMimeType = GetFileMimeType(fileProperty),
             };
         }
 
-        /// <summary>
-        /// Осуществляет получение метаданных с описанием файлового свойства объекта данных.
-        /// </summary>
-        /// <remarks>
-        /// При необходимости будет произведена дочитка объекта данных.
-        /// </remarks>
-        /// <param name="dataObject">
-        /// Объект данных, содержащий файловое свойство.
-        /// </param>
-        /// <param name="dataObjectFilePropertyName">
-        /// Имя файлового свойства в объекте данных.
-        /// </param>
-        /// <returns>
-        /// Метаданные с описанием файлового свойства объекта данных.
-        /// </returns>
-        public virtual FileDescription GetFileDescription(DataObject dataObject, string dataObjectFilePropertyName)
+        /// <inheritdoc />
+        public virtual FileDescription GetFileDescription(IDataService dataService, DataObject dataObject, string dataObjectFilePropertyName)
         {
-            FileDescription fileDescription = GetFileDescription(GetFileProperty(dataObject, dataObjectFilePropertyName));
+            FileDescription fileDescription = GetFileDescription(GetFileProperty(dataService, dataObject, dataObjectFilePropertyName));
 
             if (fileDescription != null)
             {
@@ -98,19 +62,8 @@
             return fileDescription;
         }
 
-        /// <summary>
-        /// Осуществляет получение списка метаданных с описанием файловых свойств объекта данных, соответствующих типу <see cref="FilePropertyType"/>.
-        /// </summary>
-        /// <remarks>
-        /// При необходимости будет произведена дочитка объекта данных.
-        /// </remarks>
-        /// <param name="dataObject">
-        /// Объект данных, содержащий файловые свойства.
-        /// </param>
-        /// <returns>
-        /// Список метаданных с описанием файловых свойств объекта данных, соответствующих типу <see cref="FilePropertyType"/>.
-        /// </returns>
-        public virtual List<FileDescription> GetFileDescriptions(DataObject dataObject)
+        /// <inheritdoc />
+        public virtual List<FileDescription> GetFileDescriptions(IDataService dataService, DataObject dataObject)
         {
             List<FileDescription> fileDescriptions = new List<FileDescription>();
 
@@ -125,29 +78,15 @@
 
                 fileDescriptions.AddRange(
                     filePropertiesNames
-                    .Select(filePropertyName => GetFileDescription(dataObject, filePropertyName))
+                    .Select(filePropertyName => GetFileDescription(dataService, dataObject, filePropertyName))
                     .Where(x => x != null));
             }
 
             return fileDescriptions;
         }
 
-        /// <summary>
-        /// Осуществляет получение файлового свойства объекта данных.
-        /// </summary>
-        /// <remarks>
-        /// При необходимости будет произведена дочитка объекта данных.
-        /// </remarks>
-        /// <param name="dataObject">
-        /// Объект данных, содержащий файловое свойство.
-        /// </param>
-        /// <param name="dataObjectFilePropertyName">
-        /// Имя файлового свойства в объекте данных.
-        /// </param>
-        /// <returns>
-        /// Значение файлового свойства объекта данных.
-        /// </returns>
-        public virtual object GetFileProperty(DataObject dataObject, string dataObjectFilePropertyName)
+        /// <inheritdoc />
+        public virtual object GetFileProperty(IDataService dataService, DataObject dataObject, string dataObjectFilePropertyName)
         {
             if (dataObject == null)
             {
@@ -158,12 +97,13 @@
             Type dataObjectFilePropertyType = Information.GetPropertyType(dataObjectType, dataObjectFilePropertyName);
             if (dataObjectFilePropertyType != FilePropertyType)
             {
-                throw new Exception(string.Format(
-                    "Wrong type of {0}.{1} property. Actual is {2}, but {3} is expected.",
-                    nameof(dataObject),
-                    dataObjectFilePropertyName,
-                    dataObjectFilePropertyType.FullName,
-                    FilePropertyType.FullName));
+                throw new Exception(
+                    string.Format(
+                        "Wrong type of {0}.{1} property. Actual is {2}, but {3} is expected.",
+                        nameof(dataObject),
+                        dataObjectFilePropertyName,
+                        dataObjectFilePropertyType.FullName,
+                        FilePropertyType.FullName));
             }
 
             // Выполняем дочитку объекта данных, если в переданном объекте на загружено искомое файловое свойство.
@@ -176,36 +116,17 @@
                 srcDataObject = (DataObject)Activator.CreateInstance(dataObjectType);
                 srcDataObject.SetExistObjectPrimaryKey(dataObject.__PrimaryKey);
 
-                _dataService.LoadObject(view, srcDataObject);
+                dataService.LoadObject(view, srcDataObject);
             }
 
             return Information.GetPropValueByName(srcDataObject, dataObjectFilePropertyName);
         }
 
-        /// <summary>
-        /// Осуществляет получение файлового свойства из файла, расположенного по заданному пути.
-        /// </summary>
-        /// <param name="filePath">
-        /// Путь к файлу.
-        /// </param>
-        /// <returns>
-        /// Значение файлового свойства объекта данных.
-        /// </returns>
+        /// <inheritdoc />
         public abstract object GetFileProperty(string filePath);
 
-        /// <summary>
-        /// Осуществляет получение файлового свойства объекта данных, по его метаданным.
-        /// </summary>
-        /// <remarks>
-        /// При необходимости будет  вычитан объект данных.
-        /// </remarks>
-        /// <param name="fileDescription">
-        /// Метаданные с описанием файлового свойства объекта данных.
-        /// </param>
-        /// <returns>
-        /// Значение файлового свойства объекта данных.
-        /// </returns>
-        public virtual object GetFileProperty(FileDescription fileDescription)
+        /// <inheritdoc />
+        public virtual object GetFileProperty(IDataService dataService, FileDescription fileDescription)
         {
             if (fileDescription == null)
             {
@@ -231,30 +152,19 @@
                 var dataObject = (DataObject)Activator.CreateInstance(dataObjectType);
                 dataObject.SetExistObjectPrimaryKey(fileDescription.EntityPrimaryKey);
 
-                return GetFileProperty(dataObject, fileDescription.EntityPropertyName);
+                return GetFileProperty(dataService, dataObject, fileDescription.EntityPropertyName);
             }
 
             throw new Exception(
                 string.Format(
                     "Both \"{0}\" properties: \"{1}\" & \"{2}\" are undefined.",
-                nameof(fileDescription),
-                nameof(FileDescription.FileUploadKey),
-                nameof(FileDescription.EntityPrimaryKey)));
+                    nameof(fileDescription),
+                    nameof(FileDescription.FileUploadKey),
+                    nameof(FileDescription.EntityPrimaryKey)));
         }
 
-        /// <summary>
-        /// Осуществляет получение списка файловых свойств объекта данных, соответствующих типу <see cref="FilePropertyType"/>.
-        /// </summary>
-        /// <remarks>
-        /// При необходимости будет произведена дочитка объекта данных.
-        /// </remarks>
-        /// <param name="dataObject">
-        /// Объект данных, содержащий файловые свойства.
-        /// </param>
-        /// <returns>
-        /// Список файловых свойств объекта данных, соответствующих типу <see cref="FilePropertyType"/>.
-        /// </returns>
-        public virtual List<object> GetFileProperties(DataObject dataObject)
+        /// <inheritdoc />
+        public virtual List<object> GetFileProperties(IDataService dataService, DataObject dataObject)
         {
             List<object> fileProperties = new List<object>();
 
@@ -269,163 +179,59 @@
 
                 fileProperties.AddRange(
                     filePropertiesNames
-                    .Select(x => GetFileProperty(dataObject, x))
+                    .Select(x => GetFileProperty(dataService, dataObject, x))
                     .Where(x => x != null));
             }
 
             return fileProperties;
         }
 
-        /// <summary>
-        /// Осуществляет получение имени файла для файлового свойства объекта данных.
-        /// </summary>
-        /// <param name="fileProperty">
-        /// Файловому свойству объекта данных, для которого требуется получить имя файла.
-        /// </param>
-        /// <returns>
-        /// Имя файла.
-        /// </returns>
+        /// <inheritdoc />
         public abstract string GetFileName(object fileProperty);
 
-        /// <summary>
-        /// Осуществляет получение имени файла для файлового свойства объекта данных.
-        /// </summary>
-        /// <remarks>
-        /// При необходимости будет произведена дочитка объекта данных.
-        /// </remarks>
-        /// <param name="dataObject">
-        /// Объект данных, содержащий файловое свойство, для которого требуется получить имя.
-        /// </param>
-        /// <param name="dataObjectFilePropertyName">
-        /// Имя файлового свойства в объекте данных.
-        /// </param>
-        /// <returns>
-        /// Имя файла.
-        /// </returns>
-        public virtual string GetFileName(DataObject dataObject, string dataObjectFilePropertyName)
+        /// <inheritdoc />
+        public virtual string GetFileName(IDataService dataService, DataObject dataObject, string dataObjectFilePropertyName)
         {
-            return GetFileName(GetFileProperty(dataObject, dataObjectFilePropertyName));
+            return GetFileName(GetFileProperty(dataService, dataObject, dataObjectFilePropertyName));
         }
 
-        /// <summary>
-        /// Осуществляет получение MIME-типа для файлового свойства объекта данных.
-        /// </summary>
-        /// <param name="fileProperty">
-        /// Файловому свойству объекта данных, для которого требуется получить MIME-тип.
-        /// </param>
-        /// <returns>
-        /// MIME-тип файла, соответствующего заданному файловому свойству.
-        /// </returns>
+        /// <inheritdoc />
         public virtual string GetFileMimeType(object fileProperty)
         {
-            return MimeMapping.GetMimeMapping(GetFileName(fileProperty));
+            return MimeTypeUtils.GetFileMimeType(GetFileName(fileProperty));
         }
 
-        /// <summary>
-        /// Осуществляет получение MIME-типа для файлового свойства объекта данных.
-        /// </summary>
-        /// <remarks>
-        /// При необходимости будет произведена дочитка объекта данных.
-        /// </remarks>
-        /// <param name="dataObject">
-        /// Объект данных, содержащий файловое свойство, для которого требуется получить MIME-тип.
-        /// </param>
-        /// <param name="dataObjectFilePropertyName">
-        /// Имя файлового свойства в объекте данных.
-        /// </param>
-        /// <returns>
-        /// MIME-тип файла, соответствующего заданному файловому свойству.
-        /// </returns>
-        public virtual string GetFileMimeType(DataObject dataObject, string dataObjectFilePropertyName)
+        /// <inheritdoc />
+        public virtual string GetFileMimeType(IDataService dataService, DataObject dataObject, string dataObjectFilePropertyName)
         {
-            return GetFileMimeType(GetFileProperty(dataObject, dataObjectFilePropertyName));
+            return GetFileMimeType(GetFileProperty(dataService, dataObject, dataObjectFilePropertyName));
         }
 
-        /// <summary>
-        /// Осуществляет получение размера файла, связанного с объектом данных, в байтах.
-        /// </summary>
-        /// <param name="fileProperty">
-        /// Файловое свойство объекта данных, для которого требуется получить размер файла.
-        /// </param>
-        /// <returns>
-        /// Размер файла в байтах.
-        /// </returns>
+        /// <inheritdoc />
         public abstract long GetFileSize(object fileProperty);
 
-        /// <summary>
-        /// Осуществляет получение MIME-типа для файлового свойства объекта данных.
-        /// </summary>
-        /// <remarks>
-        /// При необходимости будет произведена дочитка объекта данных.
-        /// </remarks>
-        /// <param name="dataObject">
-        /// Объект данных, содержащий файловое свойство, для которого требуется получить MIME-тип.
-        /// </param>
-        /// <param name="dataObjectFilePropertyName">
-        /// Имя файлового свойства в объекте данных.
-        /// </param>
-        /// <returns>
-        /// MIME-тип файла, соответствующего заданному файловому свойству.
-        /// </returns>
-        public virtual long GetFileSize(DataObject dataObject, string dataObjectFilePropertyName)
+        /// <inheritdoc />
+        public virtual long GetFileSize(IDataService dataService, DataObject dataObject, string dataObjectFilePropertyName)
         {
-            return GetFileSize(GetFileProperty(dataObject, dataObjectFilePropertyName));
+            return GetFileSize(GetFileProperty(dataService, dataObject, dataObjectFilePropertyName));
         }
 
-        /// <summary>
-        /// Осуществляет получение потока данных для файлового свойства объекта данных.
-        /// </summary>
-        /// <param name="fileProperty">
-        /// Значение файлового свойства объекта данных, для которого требуется получить поток данных.
-        /// </param>
-        /// <returns>
-        /// Поток данных.
-        /// </returns>
+        /// <inheritdoc />
         public abstract Stream GetFileStream(object fileProperty);
 
-        /// <summary>
-        /// Осуществляет получение потока данных для файлового свойства объекта данных.
-        /// </summary>
-        /// <remarks>
-        /// При необходимости будет произведена дочитка объекта данных.
-        /// </remarks>
-        /// <param name="dataObject">
-        /// Объект данных, содержащий файловое свойство, для которого требуется получить поток данных.
-        /// </param>
-        /// <param name="dataObjectFilePropertyName">
-        /// Имя файлового свойства в объекте данных.
-        /// </param>
-        /// <returns>
-        /// Поток данных.
-        /// </returns>
-        public virtual Stream GetFileStream(DataObject dataObject, string dataObjectFilePropertyName)
+        /// <inheritdoc />
+        public virtual Stream GetFileStream(IDataService dataService, DataObject dataObject, string dataObjectFilePropertyName)
         {
-            return GetFileStream(GetFileProperty(dataObject, dataObjectFilePropertyName));
+            return GetFileStream(GetFileProperty(dataService, dataObject, dataObjectFilePropertyName));
         }
 
-        /// <summary>
-        /// Осуществляет получение потока данных для файлового свойства объекта данных.
-        /// </summary>
-        /// <remarks>
-        /// При необходимости будет  вычитан объект данных.
-        /// </remarks>
-        /// <param name="fileDescription">
-        /// Метаданные с описанием файлового свойства объекта данных, для которого требуется получить поток данных.
-        /// </param>
-        /// <returns>
-        /// Поток данных.
-        /// </returns>
-        public virtual Stream GetFileStream(FileDescription fileDescription)
+        /// <inheritdoc />
+        public virtual Stream GetFileStream(IDataService dataService, FileDescription fileDescription)
         {
-            return GetFileStream(GetFileProperty(fileDescription));
+            return GetFileStream(GetFileProperty(dataService, fileDescription));
         }
 
-        /// <summary>
-        /// Осуществляет удаление из файловой системы файла, соответствующего файловому свойству объекта данных.
-        /// </summary>
-        /// <param name="fileDescription">
-        /// Метаданные удаляемого файла.
-        /// </param>
+        /// <inheritdoc />
         public virtual void RemoveFile(FileDescription fileDescription)
         {
             string fileDirectoryPath = string.Concat(UploadsDirectoryPath, Path.DirectorySeparatorChar, fileDescription.FileUploadKey);
@@ -436,32 +242,16 @@
             }
         }
 
-        /// <summary>
-        /// Осуществляет удаление из файловой системы файла, соответствующего файловому свойству объекта данных.
-        /// </summary>
-        /// <param name="fileProperty">
-        /// Значение файлового свойства объекта данных, для которого требуется выполнить удаление.
-        /// </param>
+        /// <inheritdoc />
         public virtual void RemoveFile(object fileProperty)
         {
             RemoveFile(GetFileDescription(fileProperty));
         }
 
-        /// <summary>
-        /// Осуществляет удаление из файловой системы файла, соответствующего файловому свойству объекта данных.
-        /// </summary>
-        /// <remarks>
-        /// При необходимости будет произведена дочитка объекта данных.
-        /// </remarks>
-        /// <param name="dataObject">
-        /// Объект данных, содержащий файловое свойство.
-        /// </param>
-        /// <param name="dataObjectFilePropertyName">
-        /// Имя файлового свойства в объекте данных.
-        /// </param>
-        public virtual void RemoveFile(DataObject dataObject, string dataObjectFilePropertyName)
+        /// <inheritdoc />
+        public virtual void RemoveFile(IDataService dataService, DataObject dataObject, string dataObjectFilePropertyName)
         {
-            RemoveFile(GetFileProperty(dataObject, dataObjectFilePropertyName));
+            RemoveFile(GetFileProperty(dataService, dataObject, dataObjectFilePropertyName));
         }
     }
 }

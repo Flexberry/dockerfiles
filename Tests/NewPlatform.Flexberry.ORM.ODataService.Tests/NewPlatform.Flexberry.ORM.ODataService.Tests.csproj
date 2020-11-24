@@ -68,6 +68,8 @@
 
   <ItemGroup>
     <None Remove="SqlScripts\**" />
+    <None Remove="Files\delorean.png" />
+    <None Remove="Files\readme.txt" />
     <None Remove="StyleCop.Cache" />
   </ItemGroup>
 
@@ -86,6 +88,15 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
     <ProjectReference Include="..\..\Samples\ODataServiceSample.AspNetCore\ODataServiceSample.AspNetCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Files\delorean.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\readme.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

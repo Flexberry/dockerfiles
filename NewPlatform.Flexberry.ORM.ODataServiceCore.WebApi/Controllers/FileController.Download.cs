@@ -5,6 +5,7 @@
     using ICSSoft.STORMNET;
     using Microsoft.AspNetCore.Mvc;
     using NewPlatform.Flexberry.ORM.ODataService.Files;
+    using NewPlatform.Flexberry.ORM.ODataService.Files.Helpers;
     using NewPlatform.Flexberry.ORM.ODataService.Files.Providers;
 
     using WebFile = ICSSoft.STORMNET.UserDataTypes.WebFile;
@@ -54,25 +55,6 @@
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Осуществляет получение данных файла в виде Base64String.
-        /// </summary>
-        /// <param name="contentType">MIME-тип данных.</param>
-        /// <param name="stream">Поток байтов файла.</param>
-        /// <returns>Данные файла в виде Base64String.</returns>
-        private static string GetBase64StringFileData(string contentType, Stream stream)
-        {
-            if (stream == null)
-            {
-                return string.Empty;
-            }
-
-            byte[] buffer = new byte[stream.Length];
-            stream.Read(buffer, 0, (int)stream.Length);
-
-            return string.Format("data:{0};base64,{1}", contentType, Convert.ToBase64String(buffer));
         }
 
         /// <summary>
@@ -137,7 +119,7 @@
             using (fileStream)
             {
                 string base64FileData = fileMimeType.ToLower().StartsWith("image")
-                           ? GetBase64StringFileData(fileMimeType, fileStream)
+                           ? Base64Helper.GetBase64StringFileData(fileMimeType, fileStream)
                            : string.Empty;
 
                 return Content(base64FileData);

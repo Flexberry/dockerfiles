@@ -2,10 +2,8 @@
 {
     using System;
     using System.Data;
-    using System.Data.SqlClient;
     using System.Linq;
     using System.Reflection;
-    using System.Web;
     using System.Web.Http;
     using ICSSoft.Services;
     using ICSSoft.STORMNET;
@@ -13,6 +11,7 @@
     using IIS.Caseberry.Logging.Objects;
     using NewPlatform.Flexberry.AspNet.WebApi.Cors;
     using NewPlatform.Flexberry.ORM.ODataService.Extensions;
+    using NewPlatform.Flexberry.ORM.ODataService.Files;
     using NewPlatform.Flexberry.ORM.ODataService.Functions;
     using NewPlatform.Flexberry.ORM.ODataService.Model;
     using NewPlatform.Flexberry.ORM.ODataService.WebApi.Extensions;
@@ -51,7 +50,10 @@
             config.DependencyResolver = new UnityDependencyResolver(container);
 
             // Config file upload.
-            config.MapODataServiceFileRoute("File", "api/File", HttpContext.Current.Server.MapPath("~/Uploads"), container.Resolve<IDataService>());
+            const string fileControllerPath = "api/File";
+            config.MapODataServiceFileRoute("File", fileControllerPath);
+            var fileAccessor = new DefaultDataObjectFileAccessor(new Uri("http://localhost:44324/"), fileControllerPath, "Uploads");
+            container.RegisterInstance<IDataObjectFileAccessor>(fileAccessor);
 
             // Create EDM model builder
             var assemblies = new[]

@@ -4,15 +4,17 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+
+    using ICSSoft.STORMNET;
+    using ICSSoft.STORMNET.Business;
+
     using NewPlatform.Flexberry.ORM.ODataService.Files.Providers;
 
     /// <summary>
     /// The default <see cref="IDataObjectFileAccessor"/> implementation.
     /// </summary>
     public class DefaultDataObjectFileAccessor : IDataObjectFileAccessor
-    {        
-        private readonly Uri fileBaseUrl;
-
+    {
         /// <summary>
         /// The file uploads directory path.
         /// </summary>
@@ -20,6 +22,9 @@
 
         /// <inheritdoc/>
         public List<IDataObjectFileProvider> DataObjectFileProviders { get; } = new List<IDataObjectFileProvider>();
+
+        /// <inheritdoc/>
+        public Uri BaseUri { get; }
 
         /// <inheritdoc/>
         public string RouteUrl { get; private set; }
@@ -35,7 +40,7 @@
         {
             RouteUrl = routeUrl;
 
-            fileBaseUrl = new Uri(baseUrl, RouteUrl);
+            BaseUri = new Uri(baseUrl, RouteUrl);
 
             this.uploadsDirectoryPath = uploadsDirectoryPath;
 
@@ -43,7 +48,7 @@
             List<IDataObjectFileProvider> providers = new List<IDataObjectFileProvider>
             {
                 new DataObjectFileProvider(),
-                new DataObjectWebFileProvider()
+                new DataObjectWebFileProvider(),
             };
 
             // Добавляем пользовательские провайдеры файловых свойств объектов данных.
@@ -54,7 +59,7 @@
             {
                 RegisterDataObjectFileProvider(provider);
             }
-        }   
+        }
 
         /// <inheritdoc/>
         public string CreateFileUploadDirectory(string fileUploadKey)
@@ -121,6 +126,26 @@
                 });
         }
 
+        /// <inheritdoc />
+        public List<FileDescription> GetDataObjectFileDescriptions(IDataService dataService, DataObject dataObject, List<Type> excludedFilePropertiesTypes = null)
+        {
+            List<FileDescription> fileDescriptions = new List<FileDescription>();
+
+            if (dataObject != null)
+            {
+                List<IDataObjectFileProvider> includedDataObjectFileProviders = DataObjectFileProviders
+                    .Where(x => excludedFilePropertiesTypes == null || !excludedFilePropertiesTypes.Contains(x.FilePropertyType))
+                    .ToList();
+
+                foreach (IDataObjectFileProvider dataObjectFileProvider in includedDataObjectFileProviders)
+                {
+                    fileDescriptions.AddRange(dataObjectFileProvider.GetFileDescriptions(dataService, dataObject));
+                }
+            }
+
+            return fileDescriptions;
+        }
+
         /// <summary>
         /// Осуществляет регистрацию провайдера файловых свойств для объекта данных.
         /// </summary>
@@ -135,7 +160,7 @@
                 DataObjectFileProviders.Remove(alreadyRegisteredProvider);
             }
 
-            dataObjectFileProvider.FileBaseUrl = fileBaseUrl.AbsoluteUri;
+            dataObjectFileProvider.FileBaseUrl = BaseUri.AbsoluteUri;
             dataObjectFileProvider.UploadsDirectoryPath = uploadsDirectoryPath;
 
             DataObjectFileProviders.Add(dataObjectFileProvider);

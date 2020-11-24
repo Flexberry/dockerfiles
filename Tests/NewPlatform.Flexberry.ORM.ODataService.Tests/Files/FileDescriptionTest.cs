@@ -16,12 +16,56 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
 
     using Newtonsoft.Json;
 
+    using Xunit;
+
     /// <summary>
     /// Класс, содержащий модульные тесты для метаданных, описывающих файловые свойства объектов данных.
     /// </summary>
-    //[TestFixture]
     public class FileDescriptionTest
     {
+        private const string FileBaseUrl = "http://localhost/api/File";
+
+        /// <summary>
+        /// Путь к каталогу с тестовыми файлами.
+        /// </summary>
+        private static string _filesDirectoryPath;
+
+        /// <summary>
+        /// Путь к каталогу, предназначенному для загружаемых на сервер файлов.
+        /// </summary>
+        private static string _uploadsDirectoryPath;
+
+        /// <summary>
+        /// Путь к тестовому текстовому файлу.
+        /// </summary>
+        private static string _srcTextFilePath;
+
+        /// <summary>
+        /// Инициализирует тестовый класс (инициализация выполняется перед запуском тестов).
+        /// </summary>
+        public FileDescriptionTest()
+        {
+            _filesDirectoryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Files");
+
+            _uploadsDirectoryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Uploads");
+            if (!Directory.Exists(_uploadsDirectoryPath))
+            {
+                Directory.CreateDirectory(_uploadsDirectoryPath);
+            }
+
+            _srcTextFilePath = Path.Combine(_filesDirectoryPath, "readme.txt");
+        }
+
+        /// <summary>
+        /// Осуществляет очистку результатов работы тестов.
+        /// </summary>
+        ~FileDescriptionTest()
+        {
+            FileDescriptionTestController.FileDescriptionGet = null;
+            FileDescriptionTestController.FileDescriptionPost = null;
+            FileDescriptionTestController.FileDescriptionPut = null;
+        }
+
         /// <summary>
         /// Тестовый WebApi контроллер для проверки того, как <see cref="FileDescription"/>
         /// сериализуется в JSON при возвращении в качестве ответа на запрос к серверу,
@@ -94,21 +138,26 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
         }
 
         /// <summary>
-        /// Осуществляет очистку результатов работы тестов.
+        /// Осуществляет создание подкаталога с заданным именем в каталоге <see cref="_uploadsDirectoryPath"/>.
         /// </summary>
-        //[TestFixtureTearDown]
-        public void Cleanup()
+        /// <param name="subDirectoryName">Имя создаваемого подкаталога.</param>
+        /// <returns>Абсолютный путь к созданному подкаталогу.</returns>
+        public static string CreateUploadsSubDirectory(string subDirectoryName)
         {
-            FileDescriptionTestController.FileDescriptionGet = null;
-            FileDescriptionTestController.FileDescriptionPost = null;
-            FileDescriptionTestController.FileDescriptionPut = null;
+            string directoryPath = Path.Combine(_uploadsDirectoryPath, subDirectoryName);
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+
+            return directoryPath;
         }
 
         /// <summary>
         /// Осуществляет проверку того, что <see cref="FileDescription.FileUrl"/> и <see cref="FileDescription.PreviewUrl"/> не формируются
         /// если не задано свойтсво <see cref="FileDescription.FileBaseUrl"/>.
         /// </summary>
-        //[Test]
+        [Fact]
         public void TestUrlsByEmptyFileBaseUrl()
         {
             // Свойства достаточные для описания файла, который не привязан к объекту данных (ключ загрузки и имя файла).
@@ -133,8 +182,8 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
 
             foreach (var fileDescription in fileDescriptions)
             {
-                //Assert.AreEqual(null, fileDescription.FileUrl);
-                //Assert.AreEqual(null, fileDescription.PreviewUrl);
+                Assert.Null(fileDescription.FileUrl);
+                Assert.Null(fileDescription.PreviewUrl);
             }
         }
 
@@ -142,11 +191,9 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
         /// Осуществляет проверку того, что <see cref="FileDescription.FileUrl"/> и <see cref="FileDescription.PreviewUrl"/> не формируются,
         /// если заданный набор свойств недостаточен для описания файла.
         /// </summary>
-        //[Test]
+        [Fact]
         public void TestUrlsByIncompleteProperties()
         {
-            string fileBaseUrl = "http://localhost/api/File";
-
             // Свойства достаточные для описания файла, который не привязан к объекту данных (ключ загрузки и имя файла).
             string fileUploadKey = Guid.NewGuid().ToString("D");
             string fileName = "readme.txt";
@@ -162,41 +209,41 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
             List<FileDescription> incompleteFileDescriptions = new List<FileDescription>
             {
                 // Свойства не заданы вообще.
-                new FileDescription(fileBaseUrl) { },
+                new FileDescription(FileBaseUrl) { },
 
                 // Заданы либо ключ, либо имя файла, но не оба свойства вместе.
-                new FileDescription(fileBaseUrl) { FileUploadKey = fileUploadKey },
-                new FileDescription(fileBaseUrl) { FileName = fileName },
+                new FileDescription(FileBaseUrl) { FileUploadKey = fileUploadKey },
+                new FileDescription(FileBaseUrl) { FileName = fileName },
 
                 // Заданы либо имя типа объекта данных, либо имя файлового свойства в объекте данных, либо первичный ключ объекта данных,
                 // либо любые парные комбинации этих свойств, но не все свойства вместе.
-                new FileDescription(fileBaseUrl) { EntityTypeName = entityTypeName },
-                new FileDescription(fileBaseUrl) { EntityPropertyName = entityPropertyName },
-                new FileDescription(fileBaseUrl) { EntityPrimaryKey = entityPrimaryKey },
-                new FileDescription(fileBaseUrl) { EntityTypeName = entityTypeName, EntityPropertyName = entityPropertyName },
-                new FileDescription(fileBaseUrl) { EntityTypeName = entityTypeName, EntityPropertyName = entityPrimaryKey },
-                new FileDescription(fileBaseUrl) { EntityPropertyName = entityPropertyName, EntityPrimaryKey = entityPrimaryKey },
+                new FileDescription(FileBaseUrl) { EntityTypeName = entityTypeName },
+                new FileDescription(FileBaseUrl) { EntityPropertyName = entityPropertyName },
+                new FileDescription(FileBaseUrl) { EntityPrimaryKey = entityPrimaryKey },
+                new FileDescription(FileBaseUrl) { EntityTypeName = entityTypeName, EntityPropertyName = entityPropertyName },
+                new FileDescription(FileBaseUrl) { EntityTypeName = entityTypeName, EntityPropertyName = entityPrimaryKey },
+                new FileDescription(FileBaseUrl) { EntityPropertyName = entityPropertyName, EntityPrimaryKey = entityPrimaryKey },
 
                 // Комбинации предыдущих неполностью заданных наборов свойств.
-                new FileDescription(fileBaseUrl) { FileUploadKey = fileUploadKey, EntityTypeName = entityTypeName },
-                new FileDescription(fileBaseUrl) { FileUploadKey = fileUploadKey, EntityPropertyName = entityPropertyName },
-                new FileDescription(fileBaseUrl) { FileUploadKey = fileUploadKey, EntityPrimaryKey = entityPrimaryKey },
-                new FileDescription(fileBaseUrl) { FileUploadKey = fileUploadKey, EntityTypeName = entityTypeName, EntityPropertyName = entityPropertyName },
-                new FileDescription(fileBaseUrl) { FileUploadKey = fileUploadKey, EntityTypeName = entityTypeName, EntityPropertyName = entityPrimaryKey },
-                new FileDescription(fileBaseUrl) { FileUploadKey = fileUploadKey, EntityPropertyName = entityPropertyName, EntityPrimaryKey = entityPrimaryKey },
+                new FileDescription(FileBaseUrl) { FileUploadKey = fileUploadKey, EntityTypeName = entityTypeName },
+                new FileDescription(FileBaseUrl) { FileUploadKey = fileUploadKey, EntityPropertyName = entityPropertyName },
+                new FileDescription(FileBaseUrl) { FileUploadKey = fileUploadKey, EntityPrimaryKey = entityPrimaryKey },
+                new FileDescription(FileBaseUrl) { FileUploadKey = fileUploadKey, EntityTypeName = entityTypeName, EntityPropertyName = entityPropertyName },
+                new FileDescription(FileBaseUrl) { FileUploadKey = fileUploadKey, EntityTypeName = entityTypeName, EntityPropertyName = entityPrimaryKey },
+                new FileDescription(FileBaseUrl) { FileUploadKey = fileUploadKey, EntityPropertyName = entityPropertyName, EntityPrimaryKey = entityPrimaryKey },
 
-                new FileDescription(fileBaseUrl) { FileName = fileName, EntityTypeName = entityTypeName },
-                new FileDescription(fileBaseUrl) { FileName = fileName, EntityPropertyName = entityPropertyName },
-                new FileDescription(fileBaseUrl) { FileName = fileName, EntityPrimaryKey = entityPrimaryKey },
-                new FileDescription(fileBaseUrl) { FileName = fileName, EntityTypeName = entityTypeName, EntityPropertyName = entityPropertyName },
-                new FileDescription(fileBaseUrl) { FileName = fileName, EntityTypeName = entityTypeName, EntityPropertyName = entityPrimaryKey },
-                new FileDescription(fileBaseUrl) { FileName = fileName, EntityPropertyName = entityPropertyName, EntityPrimaryKey = entityPrimaryKey }
+                new FileDescription(FileBaseUrl) { FileName = fileName, EntityTypeName = entityTypeName },
+                new FileDescription(FileBaseUrl) { FileName = fileName, EntityPropertyName = entityPropertyName },
+                new FileDescription(FileBaseUrl) { FileName = fileName, EntityPrimaryKey = entityPrimaryKey },
+                new FileDescription(FileBaseUrl) { FileName = fileName, EntityTypeName = entityTypeName, EntityPropertyName = entityPropertyName },
+                new FileDescription(FileBaseUrl) { FileName = fileName, EntityTypeName = entityTypeName, EntityPropertyName = entityPrimaryKey },
+                new FileDescription(FileBaseUrl) { FileName = fileName, EntityPropertyName = entityPropertyName, EntityPrimaryKey = entityPrimaryKey },
             };
 
             foreach (FileDescription fileDescription in incompleteFileDescriptions)
             {
-                //Assert.AreEqual(null, fileDescription.FileUrl);
-                //Assert.AreEqual(null, fileDescription.PreviewUrl);
+                Assert.Null(fileDescription.FileUrl);
+                Assert.Null(fileDescription.PreviewUrl);
             }
         }
 
@@ -204,20 +251,18 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
         /// Осуществляет проверку того, что <see cref="FileDescription.FileUrl"/> и <see cref="FileDescription.PreviewUrl"/>
         /// корректно формируются по заданным ключу загрузки и имени файла.
         /// </summary>
-        //[Test]
+        [Fact]
         public void TestUrlsByUploadKeyAndFileNameProperties()
         {
-            string fileBaseUrl = "http://localhost/api/File";
-
             // Свойства достаточные для описания файла, который не привязан к объекту данных (ключ загрузки и имя файла).
             string fileUploadKey = Guid.NewGuid().ToString("D");
             string fileName = "readme.txt";
 
-            FileDescription fileDescription = new FileDescription(fileBaseUrl)
-                                                  {
-                                                      FileUploadKey = fileUploadKey,
-                                                      FileName = fileName
-                                                  };
+            FileDescription fileDescription = new FileDescription(FileBaseUrl)
+            {
+                FileUploadKey = fileUploadKey,
+                FileName = fileName,
+            };
 
             Uri receivedFileUri = new Uri(fileDescription.FileUrl);
             Uri receivedPreviewUri = new Uri(fileDescription.PreviewUrl);
@@ -227,30 +272,28 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
 
             NameValueCollection receivedFileQueryParameters = HttpUtility.ParseQueryString(receivedFileUri.Query);
             NameValueCollection receivedPreviewQueryParameters = HttpUtility.ParseQueryString(receivedPreviewUri.Query);
-            /*
-            Assert.AreEqual(fileBaseUrl, receivedFileBaseUrl);
-            Assert.AreEqual(fileBaseUrl, receivedPreviewBaseUrl);
 
-            Assert.AreEqual(2, receivedFileQueryParameters.Count);
-            Assert.AreEqual(fileUploadKey, receivedFileQueryParameters["fileUploadKey"]);
-            Assert.AreEqual(fileName, receivedFileQueryParameters["fileName"]);
+            // Assert.
+            Assert.Equal(FileBaseUrl, receivedFileBaseUrl);
+            Assert.Equal(FileBaseUrl, receivedPreviewBaseUrl);
 
-            Assert.AreEqual(3, receivedPreviewQueryParameters.Count);
-            Assert.AreEqual(fileUploadKey, receivedPreviewQueryParameters["fileUploadKey"]);
-            Assert.AreEqual(fileName, receivedPreviewQueryParameters["fileName"]);
-            Assert.AreEqual(true, bool.Parse(receivedPreviewQueryParameters["getPreview"]));
-            */
+            Assert.Equal(2, receivedFileQueryParameters.Count);
+            Assert.Equal(fileUploadKey, receivedFileQueryParameters["fileUploadKey"]);
+            Assert.Equal(fileName, receivedFileQueryParameters["fileName"]);
+
+            Assert.Equal(3, receivedPreviewQueryParameters.Count);
+            Assert.Equal(fileUploadKey, receivedPreviewQueryParameters["fileUploadKey"]);
+            Assert.Equal(fileName, receivedPreviewQueryParameters["fileName"]);
+            Assert.True(bool.Parse(receivedPreviewQueryParameters["getPreview"]));
         }
 
         /// <summary>
         /// Осуществляет проверку того, что <see cref="FileDescription.FileUrl"/> и <see cref="FileDescription.PreviewUrl"/>
         /// корректно формируются по заданному описанию объекта данных, с которым связан файл.
         /// </summary>
-        //[Test]
+        [Fact]
         public void TestUrlsByEntityProperties()
         {
-            string fileBaseUrl = "http://localhost/api/File";
-
             // Свойства достаточные для описания файла, который привязан к объекту данных
             // (тип и первичный ключ объекта данных, а так же имя файлового свойства в объекте данных).
             КлассСМножествомТипов entity = new КлассСМножествомТипов();
@@ -258,12 +301,12 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
             string entityPropertyName = nameof(entity.PropertyStormnetFile);
             string entityPrimaryKey = entity.__PrimaryKey.ToString();
 
-            FileDescription fileDescription = new FileDescription(fileBaseUrl)
-                                                  {
-                                                      EntityTypeName = entityTypeName,
-                                                      EntityPropertyName = entityPropertyName,
-                                                      EntityPrimaryKey = entityPrimaryKey
-                                                  };
+            FileDescription fileDescription = new FileDescription(FileBaseUrl)
+            {
+                EntityTypeName = entityTypeName,
+                EntityPropertyName = entityPropertyName,
+                EntityPrimaryKey = entityPrimaryKey,
+            };
 
             Uri receivedFileUri = new Uri(fileDescription.FileUrl);
             Uri receivedPreviewUri = new Uri(fileDescription.PreviewUrl);
@@ -273,21 +316,21 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
 
             NameValueCollection receivedFileQueryParameters = HttpUtility.ParseQueryString(receivedFileUri.Query);
             NameValueCollection receivedPreviewQueryParameters = HttpUtility.ParseQueryString(receivedPreviewUri.Query);
-            /*
-            Assert.AreEqual(fileBaseUrl, receivedFileBaseUrl);
-            Assert.AreEqual(fileBaseUrl, receivedPreviewBaseUrl);
 
-            Assert.AreEqual(3, receivedFileQueryParameters.Count);
-            Assert.AreEqual(entityTypeName, receivedFileQueryParameters["entityTypeName"]);
-            Assert.AreEqual(entityPropertyName, receivedFileQueryParameters["entityPropertyName"]);
-            Assert.AreEqual(entityPrimaryKey, receivedFileQueryParameters["entityPrimaryKey"]);
+            // Assert.
+            Assert.Equal(FileBaseUrl, receivedFileBaseUrl);
+            Assert.Equal(FileBaseUrl, receivedPreviewBaseUrl);
 
-            Assert.AreEqual(4, receivedPreviewQueryParameters.Count);
-            Assert.AreEqual(entityTypeName, receivedPreviewQueryParameters["entityTypeName"]);
-            Assert.AreEqual(entityPropertyName, receivedPreviewQueryParameters["entityPropertyName"]);
-            Assert.AreEqual(entityPrimaryKey, receivedPreviewQueryParameters["entityPrimaryKey"]);
-            Assert.AreEqual(true, bool.Parse(receivedPreviewQueryParameters["getPreview"]));
-            */
+            Assert.Equal(3, receivedFileQueryParameters.Count);
+            Assert.Equal(entityTypeName, receivedFileQueryParameters["entityTypeName"]);
+            Assert.Equal(entityPropertyName, receivedFileQueryParameters["entityPropertyName"]);
+            Assert.Equal(entityPrimaryKey, receivedFileQueryParameters["entityPrimaryKey"]);
+
+            Assert.Equal(4, receivedPreviewQueryParameters.Count);
+            Assert.Equal(entityTypeName, receivedPreviewQueryParameters["entityTypeName"]);
+            Assert.Equal(entityPropertyName, receivedPreviewQueryParameters["entityPropertyName"]);
+            Assert.Equal(entityPrimaryKey, receivedPreviewQueryParameters["entityPrimaryKey"]);
+            Assert.True(bool.Parse(receivedPreviewQueryParameters["getPreview"]));
         }
 
         /// <summary>
@@ -296,11 +339,9 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
         /// (все свойства описания: и ключ загрузки с именем файла, и описание объекта данных, с которым связан файл).
         /// При этом соблюдается приоритет в пользу ключа загрузки и имени файла.
         /// </summary>
-        //[Test]
+        [Fact]
         public void TestUrlsByAllProperties()
         {
-            string fileBaseUrl = "http://localhost/api/File";
-
             // Свойства достаточные для описания файла, который не привязан к объекту данных (ключ загрузки и имя файла).
             string fileUploadKey = Guid.NewGuid().ToString("D");
             string fileName = "readme.txt";
@@ -313,14 +354,14 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
             string entityPrimaryKey = entity.__PrimaryKey.ToString();
 
             // Описание файла с избыточным набором свойств.
-            FileDescription fileDescription = new FileDescription(fileBaseUrl)
-                                                  {
-                                                      FileUploadKey = fileUploadKey,
-                                                      FileName = fileName,
-                                                      EntityTypeName = entityTypeName,
-                                                      EntityPropertyName = entityPropertyName,
-                                                      EntityPrimaryKey = entityPrimaryKey
-                                                  };
+            FileDescription fileDescription = new FileDescription(FileBaseUrl)
+            {
+                FileUploadKey = fileUploadKey,
+                FileName = fileName,
+                EntityTypeName = entityTypeName,
+                EntityPropertyName = entityPropertyName,
+                EntityPrimaryKey = entityPrimaryKey,
+            };
 
             Uri receivedFileUri = new Uri(fileDescription.FileUrl);
             Uri receivedPreviewUri = new Uri(fileDescription.PreviewUrl);
@@ -330,30 +371,28 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
 
             NameValueCollection receivedFileQueryParameters = HttpUtility.ParseQueryString(receivedFileUri.Query);
             NameValueCollection receivedPreviewQueryParameters = HttpUtility.ParseQueryString(receivedPreviewUri.Query);
-            /*
-            Assert.AreEqual(fileBaseUrl, receivedFileBaseUrl);
-            Assert.AreEqual(fileBaseUrl, receivedPreviewBaseUrl);
 
-            Assert.AreEqual(2, receivedFileQueryParameters.Count);
-            Assert.AreEqual(fileUploadKey, receivedFileQueryParameters["fileUploadKey"]);
-            Assert.AreEqual(fileName, receivedFileQueryParameters["fileName"]);
+            // Assert.
+            Assert.Equal(FileBaseUrl, receivedFileBaseUrl);
+            Assert.Equal(FileBaseUrl, receivedPreviewBaseUrl);
 
-            Assert.AreEqual(3, receivedPreviewQueryParameters.Count);
-            Assert.AreEqual(fileUploadKey, receivedPreviewQueryParameters["fileUploadKey"]);
-            Assert.AreEqual(fileName, receivedPreviewQueryParameters["fileName"]);
-            Assert.AreEqual(true, bool.Parse(receivedPreviewQueryParameters["getPreview"]));
-            */
+            Assert.Equal(2, receivedFileQueryParameters.Count);
+            Assert.Equal(fileUploadKey, receivedFileQueryParameters["fileUploadKey"]);
+            Assert.Equal(fileName, receivedFileQueryParameters["fileName"]);
+
+            Assert.Equal(3, receivedPreviewQueryParameters.Count);
+            Assert.Equal(fileUploadKey, receivedPreviewQueryParameters["fileUploadKey"]);
+            Assert.Equal(fileName, receivedPreviewQueryParameters["fileName"]);
+            Assert.True(bool.Parse(receivedPreviewQueryParameters["getPreview"]));
         }
 
         /// <summary>
         /// Осуществляет проверку того, что <see cref="FileDescription"/>
         /// корректно сериализуется в JSON-строку.
         /// </summary>
-        //[Test]
+        [Fact]
         public void TestSerializationToJson()
         {
-            string fileBaseUrl = "http://localhost/api/File";
-
             // Свойства достаточные для описания файла, который не привязан к объекту данных (ключ загрузки и имя файла).
             string fileUploadKey = Guid.NewGuid().ToString("D");
             string fileName = "readme.txt";
@@ -370,16 +409,16 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
             string entityPrimaryKey = entity.__PrimaryKey.ToString();
 
             // Описание файла с избыточным набором свойств.
-            FileDescription fileDescription = new FileDescription(fileBaseUrl)
-                                                  {
-                                                      FileUploadKey = fileUploadKey,
-                                                      FileName = fileName,
-                                                      FileSize = fileSize,
-                                                      FileMimeType = fileMimeType,
-                                                      EntityTypeName = entityTypeName,
-                                                      EntityPropertyName = entityPropertyName,
-                                                      EntityPrimaryKey = entityPrimaryKey
-                                                  };
+            FileDescription fileDescription = new FileDescription(FileBaseUrl)
+            {
+                FileUploadKey = fileUploadKey,
+                FileName = fileName,
+                FileSize = fileSize,
+                FileMimeType = fileMimeType,
+                EntityTypeName = entityTypeName,
+                EntityPropertyName = entityPropertyName,
+                EntityPrimaryKey = entityPrimaryKey,
+            };
 
             FileDescriptionTestController.FileDescriptionGet = fileDescription;
 
@@ -394,10 +433,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
                 {
                     using (HttpClient client = new HttpClient(server, false))
                     {
-                        using (HttpResponseMessage response = client.GetAsync("http://localhost/api/File").Result)
+                        using (HttpResponseMessage response = client.GetAsync(FileBaseUrl).Result)
                         {
                             // Убедимся, что запрос завершился успешно.
-                            //Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+                            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
                             serializedFileDescriptions.Add(response.Content.ReadAsStringAsync().Result);
                         }
@@ -405,19 +444,18 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
                 }
             }
 
+            // Assert.
             // Проверяем, что результаты сериализации, полученные разными способами - одинаковы и корректны.
             foreach (string serializedFileDescription in serializedFileDescriptions)
             {
                 // Преобразуем сериализованное описание файла в словарь.
                 Dictionary<string, object> deserializedFileDescription = JsonConvert.DeserializeObject<Dictionary<string, object>>(serializedFileDescription);
-                /*
-                Assert.AreEqual(5, deserializedFileDescription.Keys.Count);
-                Assert.AreEqual(fileName, deserializedFileDescription["fileName"]);
-                Assert.AreEqual((int)fileSize, (int)deserializedFileDescription["fileSize"]);
-                Assert.AreEqual(fileMimeType, deserializedFileDescription["fileMimeType"]);
-                Assert.AreEqual(fileDescription.FileUrl, deserializedFileDescription["fileUrl"]);
-                Assert.AreEqual(fileDescription.PreviewUrl, deserializedFileDescription["previewUrl"]);
-                */
+                Assert.Equal(5, deserializedFileDescription.Keys.Count);
+                Assert.Equal(fileName, deserializedFileDescription["fileName"]);
+                Assert.Equal(fileSize, deserializedFileDescription["fileSize"]);
+                Assert.Equal(fileMimeType, deserializedFileDescription["fileMimeType"]);
+                Assert.Equal(fileDescription.FileUrl, deserializedFileDescription["fileUrl"]);
+                Assert.Equal(fileDescription.PreviewUrl, deserializedFileDescription["previewUrl"]);
             }
         }
 
@@ -425,11 +463,9 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
         /// Осуществляет проверку того, что <see cref="FileDescription"/> с заданными ключом загрузки и именем файла
         /// корректно десериализуется из JSON-строки.
         /// </summary>
-        //[Test]
+        [Fact]
         public void TestDeserializationFromJsonByUploadKeyAndFileNameProperties()
         {
-            string fileBaseUrl = "http://localhost/api/File";
-
             // Свойства достаточные для описания файла, который не привязан к объекту данных (ключ загрузки и имя файла).
             string fileUploadKey = Guid.NewGuid().ToString("D");
             string fileName = "readme.txt";
@@ -438,13 +474,13 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
             long fileSize = 1024;
             string fileMimeType = MimeMapping.GetMimeMapping(fileName);
 
-            FileDescription fileDescription = new FileDescription(fileBaseUrl)
-                                                  {
-                                                      FileUploadKey = fileUploadKey,
-                                                      FileName = fileName,
-                                                      FileSize = fileSize,
-                                                      FileMimeType = fileMimeType
-                                                  };
+            FileDescription fileDescription = new FileDescription(FileBaseUrl)
+            {
+                FileUploadKey = fileUploadKey,
+                FileName = fileName,
+                FileSize = fileSize,
+                FileMimeType = fileMimeType,
+            };
 
             string serializedFileDescription = fileDescription.ToJson();
 
@@ -463,10 +499,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
                     using (HttpClient client = new HttpClient(server, false))
                     {
                         // Получаем десериализованное описание файла из тела POST-запроса.
-                        using (HttpResponseMessage response = client.PostAsJsonStringAsync("http://localhost/api/File", serializedFileDescription).Result)
+                        using (HttpResponseMessage response = client.PostAsJsonStringAsync(FileBaseUrl, serializedFileDescription).Result)
                         {
                             // Убедимся, что запрос завершился успешно.
-                            //Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+                            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
                             deserializedFileDescriptions.Add(FileDescriptionTestController.FileDescriptionPost);
                         }
@@ -485,7 +521,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
                         using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Put, putUrl)).Result)
                         {
                             // Убедимся, что запрос завершился успешно.
-                            //Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+                            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
                             deserializedFileDescriptions.Add(FileDescriptionTestController.FileDescriptionPut);
                         }
@@ -493,20 +529,19 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
                 }
             }
 
+            // Assert.
             // Проверяем, что результаты десериализации, полученные разными способами - одинаковы и корректны.
             foreach (FileDescription deserializedFileDescription in deserializedFileDescriptions)
             {
-                /*
-                Assert.AreEqual(fileUploadKey, deserializedFileDescription.FileUploadKey);
-                Assert.AreEqual(fileName, deserializedFileDescription.FileName);
-                Assert.AreEqual(fileSize, deserializedFileDescription.FileSize);
-                Assert.AreEqual(fileMimeType, deserializedFileDescription.FileMimeType);
-                Assert.AreEqual(fileDescription.FileUrl, deserializedFileDescription.FileUrl);
-                Assert.AreEqual(fileDescription.PreviewUrl, deserializedFileDescription.PreviewUrl);
-                Assert.AreEqual(null, deserializedFileDescription.EntityTypeName);
-                Assert.AreEqual(null, deserializedFileDescription.EntityPropertyName);
-                Assert.AreEqual(null, deserializedFileDescription.EntityPrimaryKey);
-                */
+                Assert.Equal(fileUploadKey, deserializedFileDescription.FileUploadKey);
+                Assert.Equal(fileName, deserializedFileDescription.FileName);
+                Assert.Equal(fileSize, deserializedFileDescription.FileSize);
+                Assert.Equal(fileMimeType, deserializedFileDescription.FileMimeType);
+                Assert.Equal(fileDescription.FileUrl, deserializedFileDescription.FileUrl);
+                Assert.Equal(fileDescription.PreviewUrl, deserializedFileDescription.PreviewUrl);
+                Assert.Null(deserializedFileDescription.EntityTypeName);
+                Assert.Null(deserializedFileDescription.EntityPropertyName);
+                Assert.Null(deserializedFileDescription.EntityPrimaryKey);
             }
         }
 
@@ -514,11 +549,9 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
         /// Осуществляет проверку того, что <see cref="FileDescription"/> с заданными свойствами, описывающими объект данных,
         /// корректно десериализуется из JSON-строки.
         /// </summary>
-        //[Test]
+        [Fact]
         public void TestDeserializationFromJsonByEntityProperties()
         {
-            string fileBaseUrl = "http://localhost/api/File";
-
             // Имя, размер и тип файла.
             string fileName = "readme.txt";
             long fileSize = 1024;
@@ -532,7 +565,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
             string entityPrimaryKey = entity.__PrimaryKey.ToString();
 
             // Описание файла с избыточным набором свойств.
-            FileDescription fileDescription = new FileDescription(fileBaseUrl)
+            FileDescription fileDescription = new FileDescription(FileBaseUrl)
                                                   {
                                                       FileName = fileName,
                                                       FileSize = fileSize,
@@ -559,10 +592,10 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
                     using (HttpClient client = new HttpClient(server, false))
                     {
                         // Получаем десериализованное описание файла из тела POST-запроса.
-                        using (HttpResponseMessage response = client.PostAsJsonStringAsync("http://localhost/api/File", serializedFileDescription).Result)
+                        using (HttpResponseMessage response = client.PostAsJsonStringAsync(FileBaseUrl, serializedFileDescription).Result)
                         {
                             // Убедимся, что запрос завершился успешно.
-                            //Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+                            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
                             deserializedFileDescriptions.Add(FileDescriptionTestController.FileDescriptionPost);
                         }
@@ -585,7 +618,7 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
                         using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Put, putUrl)).Result)
                         {
                             // Убедимся, что запрос завершился успешно.
-                            //Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+                            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
                             deserializedFileDescriptions.Add(FileDescriptionTestController.FileDescriptionPut);
                         }
@@ -596,17 +629,15 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
             // Проверяем, что результаты десериализации, полученные разными способами - одинаковы и корректны.
             foreach (FileDescription deserializedFileDescription in deserializedFileDescriptions)
             {
-                /*
-                Assert.AreEqual(fileName, deserializedFileDescription.FileName);
-                Assert.AreEqual(fileSize, deserializedFileDescription.FileSize);
-                Assert.AreEqual(fileMimeType, deserializedFileDescription.FileMimeType);
-                Assert.AreEqual(entityTypeName, deserializedFileDescription.EntityTypeName);
-                Assert.AreEqual(entityPropertyName, deserializedFileDescription.EntityPropertyName);
-                Assert.AreEqual(entityPrimaryKey, deserializedFileDescription.EntityPrimaryKey);
-                Assert.AreEqual(fileDescription.FileUrl, deserializedFileDescription.FileUrl);
-                Assert.AreEqual(fileDescription.PreviewUrl, deserializedFileDescription.PreviewUrl);
-                Assert.AreEqual(null, deserializedFileDescription.FileUploadKey);
-                */
+                Assert.Equal(fileName, deserializedFileDescription.FileName);
+                Assert.Equal(fileSize, deserializedFileDescription.FileSize);
+                Assert.Equal(fileMimeType, deserializedFileDescription.FileMimeType);
+                Assert.Equal(entityTypeName, deserializedFileDescription.EntityTypeName);
+                Assert.Equal(entityPropertyName, deserializedFileDescription.EntityPropertyName);
+                Assert.Equal(entityPrimaryKey, deserializedFileDescription.EntityPrimaryKey);
+                Assert.Equal(fileDescription.FileUrl, deserializedFileDescription.FileUrl);
+                Assert.Equal(fileDescription.PreviewUrl, deserializedFileDescription.PreviewUrl);
+                Assert.Null(deserializedFileDescription.FileUploadKey);
             }
         }
 
@@ -614,58 +645,48 @@ namespace NewPlatform.Flexberry.ORM.ODataService.Tests.Files
         /// Осуществляет проверку того, что метод "FileDescription.FromFile"/>
         /// корректно осуществляет получение метаданных о файле по заданному пути.
         /// </summary>
-        //[Test]
+        [Fact]
         public void TestFromFile()
         {
-            string fileBaseUrl = "http://localhost/api/File";
-
+            // Arrange.
             // Свойства достаточные для описания файла, который не привязан к объекту данных (ключ загрузки и имя файла).
+            FileInfo fileInfo = new FileInfo(_srcTextFilePath);
             string fileUploadKey = Guid.NewGuid().ToString("D");
-            string fileName = "readme.txt";
-            string filePath = string.Format("C:\\Uploads\\{0}\\{1}", fileUploadKey, fileName);
-            string fileMimeType = MimeMapping.GetMimeMapping(fileName);
-            long fileSize = 1024;
+            string fileMimeType = MimeMapping.GetMimeMapping(fileInfo.Name);
 
-            //using (ShimsContext.Create())
-            {
-                //System.IO.Fakes.ShimFile.ExistsString = (path) => { return true; };
-                //System.IO.Fakes.ShimFileInfo.AllInstances.NameGet = (@this) => { return fileName; };
-                //System.IO.Fakes.ShimFileInfo.AllInstances.LengthGet = (@this) => { return fileSize; };
+            // Копируем тестовый файл в каталог, предназначенный для загруженных на сервер файлов.
+            // Тем самым имитируем ситуацию как будто файл был ранее загружен на сервер через файловый контроллер.
+            string uploadedFileDirectoryPath = CreateUploadsSubDirectory(fileUploadKey);
+            string uploadedFilePath = Path.Combine(uploadedFileDirectoryPath, fileInfo.Name);
+            File.Copy(_srcTextFilePath, uploadedFilePath, true);
 
-                FileDescription fileDescription = new FileDescription(fileBaseUrl, filePath);
-                /*
-                Assert.AreEqual(fileUploadKey, fileDescription.FileUploadKey);
-                Assert.AreEqual(fileName, fileDescription.FileName);
-                Assert.AreEqual(fileSize, fileDescription.FileSize);
-                Assert.AreEqual(fileMimeType, fileDescription.FileMimeType);
-                Assert.AreEqual(null, fileDescription.EntityTypeName);
-                Assert.AreEqual(null, fileDescription.EntityPropertyName);
-                Assert.AreEqual(null, fileDescription.EntityPrimaryKey);
-                */
-            }
+            // Act.
+            FileDescription fileDescription = new FileDescription(FileBaseUrl, uploadedFilePath);
+
+            // Assert.
+            Assert.Equal(fileUploadKey, fileDescription.FileUploadKey);
+            Assert.Equal(fileInfo.Name, fileDescription.FileName);
+            Assert.Equal(fileInfo.Length, fileDescription.FileSize);
+            Assert.Equal(fileMimeType, fileDescription.FileMimeType);
+            Assert.Null(fileDescription.EntityTypeName);
+            Assert.Null(fileDescription.EntityPropertyName);
+            Assert.Null(fileDescription.EntityPrimaryKey);
         }
 
         /// <summary>
         /// Осуществляет проверку того, что при инициализации <see cref="FileDescription"/> по заданному пути,
         /// выбрасывается исключение <see cref="FileNotFoundException"/>, в случае, если по заданному пути нет никакого файла.
         /// </summary>
-        //[Test]
-        //[ExpectedException(typeof(FileNotFoundException))]
+        [Fact]
         public void TestFromFileNotFoundException()
         {
-            string fileBaseUrl = "http://localhost/api/File";
-
+            // Arrange.
             // Свойства достаточные для описания файла, который не привязан к объекту данных (ключ загрузки и имя файла).
-            string fileUploadKey = Guid.NewGuid().ToString("D");
             string fileName = "readme.txt";
-            string filePath = string.Format("C:\\Uploads\\{0}\\{1}", fileUploadKey, fileName);
+            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Uploads", fileName);
 
-            //using (ShimsContext.Create())
-            {
-                //System.IO.Fakes.ShimFile.ExistsString = (path) => { return false; };
-
-                FileDescription fileDescription = new FileDescription(fileBaseUrl, filePath);
-            }
+            // Assert.
+            Assert.Throws<FileNotFoundException>(() => new FileDescription(FileBaseUrl, filePath));
         }
     }
 }

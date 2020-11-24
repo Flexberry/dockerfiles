@@ -2,6 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Configurations>Debug;Release</Configurations>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>ODataServiceSample.AspNetCore</RootNamespace>
+    <AssemblyName>ODataServiceSample.AspNetCore</AssemblyName>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
@@ -15,8 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\NewPlatform.Flexberry.ORM.ODataService.Files\NewPlatform.Flexberry.ORM.ODataService.Files.csproj" />
     <ProjectReference Include="..\..\NewPlatform.Flexberry.ORM.ODataServiceCore.Common\NewPlatform.Flexberry.ORM.ODataServiceCore.Common.csproj" />
-    <ProjectReference Include="..\..\NewPlatform.Flexberry.ORM.ODataServiceCore.Files\NewPlatform.Flexberry.ORM.ODataServiceCore.Files.csproj" />
     <ProjectReference Include="..\..\NewPlatform.Flexberry.ORM.ODataServiceCore.WebApi\NewPlatform.Flexberry.ORM.ODataServiceCore.WebApi.csproj" />
     <ProjectReference Include="..\..\NewPlatform.Flexberry.ORM.ODataService\NewPlatform.Flexberry.ORM.ODataService.csproj" />
     <ProjectReference Include="..\..\Tests\BusinessServers\NewPlatform.Flexberry.ORM.ODataService.Tests.BusinessServers.csproj" />

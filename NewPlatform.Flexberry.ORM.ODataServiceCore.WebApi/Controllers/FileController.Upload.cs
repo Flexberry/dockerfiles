@@ -4,10 +4,11 @@
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-    using ICSSoft.STORMNET.UserDataTypes;
+
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Primitives;
+
     using NewPlatform.Flexberry.ORM.ODataService.Files;
 
     /// <summary>
@@ -104,7 +105,7 @@
                         fs.Close();
 
                         // Возвращаем описание загруженного файла.
-                        return new FileDescription(dataObjectFileAccessor.GetDataObjectFileProvider(typeof(WebFile)).FileBaseUrl, localFileName);
+                        return new FileDescription(dataObjectFileAccessor.BaseUri.AbsoluteUri, localFileName);
                     })
                     .ContinueWith(previousTask =>
                     {

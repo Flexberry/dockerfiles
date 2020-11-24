@@ -5,12 +5,12 @@
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
-    using System.Web;
     using System.Web.Http;
 
     using ICSSoft.STORMNET;
 
     using NewPlatform.Flexberry.ORM.ODataService.Files;
+    using NewPlatform.Flexberry.ORM.ODataService.Files.Helpers;
     using NewPlatform.Flexberry.ORM.ODataService.Files.Providers;
 
     using File = ICSSoft.STORMNET.FileType.File;
@@ -21,48 +21,6 @@
     /// </summary>
     public partial class FileController
     {
-        /// <summary>
-        /// Осуществляет получение данных файла в виде Base64String.
-        /// </summary>
-        /// <param name="contentType">MIME-тип данных.</param>
-        /// <param name="stream">Поток байтов файла.</param>
-        /// <returns>Данные файла в виде  Base64String.</returns>
-        public static string GetBase64StringFileData(string contentType, Stream stream)
-        {
-            if (stream == null)
-            {
-                return string.Empty;
-            }
-
-            byte[] buffer = new byte[stream.Length];
-            stream.Read(buffer, 0, (int)stream.Length);
-
-            return string.Format("data:{0};base64,{1}", contentType, Convert.ToBase64String(buffer));
-        }
-
-        /// <summary>
-        /// Осуществляет получение данных файла в виде Base64String.
-        /// </summary>
-        /// <param name="filePath">Путь к файлу.</param>
-        /// <returns>Данные файла в виде  Base64String.</returns>
-        public static string GetBase64StringFileData(string filePath)
-        {
-            if (!System.IO.File.Exists(filePath))
-            {
-                return string.Empty;
-            }
-
-            string result;
-
-            FileInfo fileInfo = new FileInfo(filePath);
-            using (FileStream fileStream = fileInfo.Open(FileMode.Open, FileAccess.Read))
-            {
-                result = GetBase64StringFileData(MimeMapping.GetMimeMapping(fileInfo.Name), fileStream);
-            }
-
-            return result;
-        }
-
         /// <summary>
         /// Осуществляет скачивание файлов с сервера.
         /// В зависимости от значения флага <paramref name="getPreview"/> возвращается либо содержимое файла, либо файл в виде приложения.
@@ -142,13 +100,13 @@
                 filePropertyType = typeof(WebFile);
             }
 
-            if (!HasDataObjectFileProvider(filePropertyType))
+            if (!dataObjectFileAccessor.HasDataObjectFileProvider(filePropertyType))
             {
                 throw new Exception(string.Format("DataObjectFileProvider for \"{0}\" property type not found.", filePropertyType.AssemblyQualifiedName));
             }
 
-            IDataObjectFileProvider dataObjectFileProvider = GetDataObjectFileProvider(filePropertyType);
-            object fileProperty = dataObjectFileProvider.GetFileProperty(fileDescription);
+            IDataObjectFileProvider dataObjectFileProvider = dataObjectFileAccessor.GetDataObjectFileProvider(filePropertyType);
+            object fileProperty = dataObjectFileProvider.GetFileProperty(dataService, fileDescription);
 
             fileStream = dataObjectFileProvider.GetFileStream(fileProperty);
             fileName = dataObjectFileProvider.GetFileName(fileProperty);
@@ -172,7 +130,7 @@
 
             // Преобразуем поток данных файла в строку base64.
             string base64FileData = fileMimeType.ToLower().StartsWith("image")
-                       ? GetBase64StringFileData(fileMimeType, fileStream)
+                       ? Base64Helper.GetBase64StringFileData(fileMimeType, fileStream)
                        : string.Empty;
 
             response.Content = new StringContent(base64FileData);
