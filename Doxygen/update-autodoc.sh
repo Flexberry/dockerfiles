@@ -1,6 +1,16 @@
 # Exit with nonzero exit code if anything fails.
 set -e
 
+if [ -n "$GITHUB_REF" ]
+then
+  ifs=$IFS
+  IFS=/
+  set -- $GITHUB_REF
+  IFS=$ifs
+  while [ $# -gt 1 ]; do shift; done
+  TRAVIS_BRANCH=$1
+fi
+
 # Define repository relative GitHub address.
 repositoryRelativeGitHubAddress="Flexberry/NewPlatform.Flexberry.ORM.ODataService"
 

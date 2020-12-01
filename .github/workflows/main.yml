@@ -1,0 +1,71 @@
+name: CI
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the develop-v5.2 branch
+  push:
+    branches: [ develop-v5.2 ]
+  pull_request:
+    branches: [ develop-v5.2 ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # Service containers to run with `runner-job`
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: flexberry/alt.p8-postgresql-postgis
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: p@ssw0rd
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x' # SDK Version to use; x will use the latest version of the 3.1 channel  
+        
+      #- name: Show env
+        #run: set 
+        
+      - name: Install packages
+        run: sudo apt-get install -y doxygen 
+
+      - name: Restore NewPlatform.Flexberry.ORM.ODataService.sln
+        run: nuget restore NewPlatform.Flexberry.ORM.ODataService.sln
+        
+      - name: Install xunit.runner.console
+        run: nuget install xunit.runner.console -Version 2.1.0 -OutputDirectory testrunner
+        
+      - name: Compile code
+        run:  msbuild /p:Configuration=Debug NewPlatform.Flexberry.ORM.ODataService.sln 
+
+      - name: Run mono application 
+        run: mono ./testrunner/xunit.runner.console.2.1.0/tools/xunit.console.exe ./Tests/NewPlatform.Flexberry.ORM.ODataService.Tests/bin/Debug/NewPlatform.Flexberry.ORM.ODataService.Tests.dll
+
+      - name: Run dotnet aoolication
+        run:  dotnet test ./Tests/NewPlatform.Flexberry.ORM.ODataService.Tests/bin/$CONFIGURATION/netcoreapp3.1/NewPlatform.Flexberry.ORM.ODataService.Tests.dll
+
+      - name: Update documentation
+        run: |
+          [ $GITHUB_EVENT_NAME == 'push' ] && 
+          ( [ $GITHUB_REF == "refs/heads/master" ] || [ $GITHUB_REF == "refs/heads/develop" ] ) &&
+          bash Doxygen/update-autodoc.sh
