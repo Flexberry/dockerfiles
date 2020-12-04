@@ -16,6 +16,8 @@ COPY /configTransform.sh /bin
 
 COPY /start_xsp.sh /bin
 
+COPY apache2.conf /etc/apache2/
+
 # Ensure XMLTEMPLATES and BOOTUP_CHECK_URL environment variables are set for best experience.
 CMD /bin/configTransform.sh \
   && /bin/start_xsp.sh
