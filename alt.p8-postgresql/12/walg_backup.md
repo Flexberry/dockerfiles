@@ -31,7 +31,7 @@ OPLOG_ARCHIVE_AFTER_SIZE |   | 33554432
 WALG_PUSH_TIMEOUT | Интервал архивации данных | 300 
 WALG_FULL_RETAIN | Число оставляемых полных бекапов после архивации | 2
 
-Подробое описание полей см. на странице [WAL-G for PostgreSQL](https://github.com/wal-g/wal-g/blob/master/PostgreSQL.md)
+Подробое описание полей см. на странице [WAL-G for PostgreSQL](https://github.com/wal-g/wal-g/blob/master/docs/PostgreSQL.md)
 
 ### Параметры бекапа файловой системы по протоколу file
 
