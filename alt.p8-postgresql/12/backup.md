@@ -46,7 +46,7 @@ docker service update --force \
   --env-add RESTORE_HOST={{ip}} \
   --env-add RESTORE_PORT={{port}} \
   --env-add RESTORE_USER={{login}} \
-  --env-add RESTORE_PASSWORD={{password}} 
+  --env-add RESTORE_PASSWORD={{password}} \
   {{name}}
 
 ```
