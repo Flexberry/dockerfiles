@@ -100,7 +100,7 @@ docker-compose up -d
 
 При запуске в режиме `docker swarm`:
 ```
-docker service update --force  --env-add BACKUP_WALG=`date "+%Y-%m-%d %H:%M:%S"` <имя_сервиса>
+docker service update --force  --env-add BACKUP_WALG='`date "+%Y-%m-%d %H:%M:%S"`' <имя_сервиса>
 ```
 
 После восстановления базы данных 
