@@ -42,7 +42,7 @@ pg_dumpall -h ... -p ... -U ... --clean --if-exists | psql -U postgres
 
 ```
 docker service update --force \
-  --env-add BACKUP_RESTORE=`date "+%Y-%m-%d %H:%M:%S"` \
+  --env-add BACKUP_RESTORE='`date "+%Y-%m-%d %H:%M:%S"`'\
   --env-add RESTORE_HOST={{ip}} \
   --env-add RESTORE_PORT={{port}} \
   --env-add RESTORE_USER={{login}} \
