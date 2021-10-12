@@ -1,4 +1,4 @@
-FROM mono:5.10.0.160
+FROM mono:latest
 
 MAINTAINER mail@flexberry.ru
 
@@ -12,7 +12,7 @@ RUN \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list ; \
     apt-get update && apt-get -y install yarn ; \
 	yarn global add bower ; \
-	yarn global add ember-cli@3.1.3 ; \
+	yarn global add ember-cli@3.1.4 ; \
 	apt-get -y install xvfb fontconfig ttf-mscorefonts-installer; \
   fc-cache -vf
 
