@@ -27,9 +27,9 @@
 
 - [hookFunctions.sh](hookFunctions.sh) - набор shell-фукций используемых в shell-скриптах [hooks/pre_push](alt.p8-nginx/hooks/pre_push), [hooks/post_push](/alt.p8-nginx/hooks/post_push) для установки алиасов образа(`setAliases()`) и размещения образов в репозитории (`pushAliases()`)
 
-#### Скрипт локальной сборки и тестирования образов `[testAutobuild.sh](testAutobuild.sh)`
+#### Скрипт локальной сборки и тестирования образов `testAutobuild.sh`
 
-Скрипт автосборки образов по протоколам https://cloud.docker.com/
+Скрипт [testAutobuild.sh](testAutobuild.sh) автосборки образов по протоколам https://cloud.docker.com/
 обеспечивает сборку и тестирование образов на основе локального  git-репозитория
 
 Формат вызова:
