@@ -8,8 +8,9 @@ RUN \
 
 RUN \
   apt-get install -y yarnpkg; \
-  yarnpkg global add bower ; \
-	yarnpkg global add ember-cli@3.1.4 ;
+  cd /usr/bin/; ln -sf ../lib/nodejs/yarn/bin/yarn.js yarn; \
+  yarn global add bower ; \
+	yarn global add ember-cli@3.1.4 ;
 
 RUN apt-get -y install git mc htop sudo xvfb fontconfig ttf-mscorefonts-installer; \
   fc-cache -vf
