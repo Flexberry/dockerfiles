@@ -8,7 +8,7 @@
 
 При некорректных значениях переменной `WAL_G` бекап не производится.
 
-Все описанные ниже переменные, задающие режим бекапа могут быть переопределены в среде (`environmant`) переда запуском контейенера / сервиса.
+Все описанные ниже переменные, задающие режим бекапа могут быть переопределены в среде (`environmant`) перед запуском контейенера / сервиса.
 
 ## Параметры бекапа
 Переменные определяющие общие параметы бекапа хранятся в файле конфигурации
@@ -23,7 +23,7 @@ WALG_DELTA_ORIGIN | To configure base for next delta backup (only if WALG_DELTA_
 WALG_DELTA_MAX_STEPS | Delta-backup is the difference between previously taken backup and present state. WALG_DELTA_MAX_STEPS determines how many delta backups can be between full backups. Defaults to 0. Restoration process will automatically fetch all necessary deltas and base backup and compose valid restored backup (you still need WALs after start of last backup to restore consistent cluster). Delta computation is based on ModTime of file system and LSN number of pages in datafiles.  | 7
 WALG_TAR_SIZE_THRESHOLD |  To configure the size of one backup bundle (in bytes). Smaller size causes granularity and more optimal, faster recovering. It also increases the number of storage requests, so it can costs you much money. Default size is 1 GB (1 << 30 - 1 bytes). | 109051904
 WALG_UPLOAD_CONCURRENCY |  To configure how many concurrency streams to use during backup uploading, use WALG_UPLOAD_CONCURRENCY. By default, WAL-G uses 16 streams. | 16
-WALG_DOWNLOAD_CONCURRENCY | o configure how many goroutines to use during backup-fetch and wal-fetch, use WALG_DOWNLOAD_CONCURRENCY. By default, WAL-G uses the minimum of the number of files to extract and 10.  | 10
+WALG_DOWNLOAD_CONCURRENCY | To configure how many goroutines to use during backup-fetch and wal-fetch, use WALG_DOWNLOAD_CONCURRENCY. By default, WAL-G uses the minimum of the number of files to extract and 10.  | 10
 WALG_UPLOAD_DISK_CONCURRENCY | To configure how many concurrency streams are reading disk during backup-push. By default, WAL-G uses 1 stream.  | 1
 WALG_COMPRESSION_METHOD |   | brotli
 OPLOG_ARCHIVE_TIMEOUT |   | 60
@@ -31,7 +31,7 @@ OPLOG_ARCHIVE_AFTER_SIZE |   | 33554432
 WALG_PUSH_TIMEOUT | Интервал архивации данных | 300 
 WALG_FULL_RETAIN | Число оставляемых полных бекапов после архивации | 2
 
-Подробое описание полей см. на странице [WAL-G for PostgreSQL](https://github.com/wal-g/wal-g/blob/master/PostgreSQL.md)
+Подробое описание полей см. на странице [WAL-G for PostgreSQL](https://github.com/wal-g/wal-g/blob/master/docs/PostgreSQL.md)
 
 ### Параметры бекапа файловой системы по протоколу file
 

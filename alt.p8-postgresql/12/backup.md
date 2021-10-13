@@ -42,11 +42,11 @@ pg_dumpall -h ... -p ... -U ... --clean --if-exists | psql -U postgres
 
 ```
 docker service update --force \
-  --env-add BACKUP_RESTORE=`date "+%Y-%m-%d %H:%M:%S"` \
+  --env-add BACKUP_RESTORE='`date "+%Y-%m-%d %H:%M:%S"`'\
   --env-add RESTORE_HOST={{ip}} \
   --env-add RESTORE_PORT={{port}} \
   --env-add RESTORE_USER={{login}} \
-  --env-add RESTORE_PASSWORD={{password}} 
+  --env-add RESTORE_PASSWORD={{password}} \
   {{name}}
 
 ```
@@ -100,7 +100,7 @@ docker-compose up -d
 
 При запуске в режиме `docker swarm`:
 ```
-docker service update --force  --env-add BACKUP_WALG=`date "+%Y-%m-%d %H:%M:%S"` <имя_сервиса>
+docker service update --force  --env-add BACKUP_WALG='`date "+%Y-%m-%d %H:%M:%S"`' <имя_сервиса>
 ```
 
 После восстановления базы данных 
