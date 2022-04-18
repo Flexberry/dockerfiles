@@ -1,0 +1,50 @@
+{
+  "name": "flexberryModules",
+  "version": "1.0.0",
+  "dependencies": {
+    "autoprefixer": "^6",
+    "broccoli-asset-rev": "^2.4.5",
+    "dexie": "^2.0.2",
+    "ember-ajax": "^3.0.0",
+    "ember-block-slots": "1.1.11",
+    "ember-browserify": "1.1.9",
+    "ember-cli": "~3.1.4",
+    "ember-cli-app-version": "^3.0.0",
+    "ember-cli-babel": "^6.6.0",
+    "ember-cli-dependency-checker": "^2.0.0",
+    "ember-cli-eslint": "^4.2.1",
+    "ember-cli-htmlbars": "^2.0.1",
+    "ember-cli-htmlbars-inline-precompile": "^1.0.0",
+    "ember-cli-inject-live-reload": "^1.4.1",
+    "ember-cli-less": "^1.5.4",
+    "ember-cli-moment-shim": "^3.8.0",
+    "ember-cli-qunit": "^4.1.1",
+    "ember-cli-shims": "^1.2.0",
+    "ember-cli-sri": "^2.1.0",
+    "ember-cli-uglify": "^2.0.0",
+    "ember-cp-validations": "~3.5.2",
+    "ember-data": "~3.1.1",
+    "ember-export-application-global": "^2.0.0",
+    "ember-flexberry": "3.7.0-beta.5",
+    "ember-flexberry-themes": "^0.1.0-beta.12",
+    "ember-link-action": "0.0.36",
+    "ember-load-initializers": "^1.0.0",
+    "ember-maybe-import-regenerator": "^0.1.6",
+    "ember-moment": "7.7.0",
+    "ember-resolver": "^4.0.0",
+    "ember-source": "~3.1.0",
+    "ember-test-selectors": "2.1.0",
+    "ember-welcome-page": "^3.0.0",
+    "eslint-plugin-ember": "^5.0.0",
+    "flatpickr": "4.6.1",
+    "inflection": "^1.12.0",
+    "loader.js": "^4.2.3",
+    "node-uuid": "^1.4.7"
+  },
+  "resolutions": {
+    "ember-get-config": "0.3.0"
+  },
+  "engines": {
+    "node": "^4.5 || 6.* || >= 7.*"
+  }
+}
