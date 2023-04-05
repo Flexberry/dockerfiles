@@ -1,0 +1,98 @@
+#!/bin/bash
+
+# Скрипт требует наличия программы curl
+# Согласно предоставленному списку URL он проверяет наличие указанных открытых портов
+# Для протокола HTTP и HTTPS проверяется наличие в первой строке ответа:
+# HTTP/N CODE
+# с кодом завершения менее 400
+# Если порт недостуgен или код завершения неверный сканирование дальнейших URL прекращается и через  READYCHECK_TIMEOUT производится тестирование указанных URLs сначала
+
+# Экспортируемые переменные
+# READYCHECK_URLS
+# Список URLS через пробел
+# Format:
+# IP:PORT
+# HOSTNAME:PORT
+# http://IP:PORT/[...]
+# HTTP://IP:PORT/[...]
+# http://HOSTNAME:PORT/[...]
+# HTTP://HOSTNAME:PORT/[...]
+# https://IP:PORT/[...]
+# HTTPS://IP:PORT/[...]
+# https://HOSTNAME:PORT/[...]
+# HTTPS://HOSTNAME:PORT/[...]
+#
+# Если имя протокола написно заглавными буквми (HTTP, HTTPS) код завершения запроса должен быть < 400
+# Если прописными (http, https) - код завершеня запроса не проверяется
+#
+# For example:
+# READYCHECK_URLS="SrvHBDN:5432 10.130.5.176:55555 http://front-nginx:80/ HTTPS://front-nginx:443/"
+
+# READYCHECK_TIMEOUT
+# Таймаут между проверками списка URLS - по умолчанию 5 секунд
+
+export LANG=C
+
+TMPFILE=/tmp/$$
+
+if [ "$READYCHECK_TIMEOUT" -gt 0 ] 2>/dev/null
+then :;
+else
+  READYCHECK_TIMEOUT=5  # By default timeout=5sec
+fi
+while :;
+do
+  ready=yes
+  for url in $READYCHECK_URLS
+  do
+    reply=`curl -kisS $url 2>$TMPFILE | head -1`
+    error=`cat $TMPFILE`
+    set -- $error
+    rm -f $TMPFILE
+    errorCode=$2
+    date=$(date '+%Y/%m/%dT%H:%M:%S')
+    case "$errorCode" in
+      "(7)"|"(6)") echo "READYCHECK:$date: $url: NO connection ERROR: $error!!";
+        ready=no
+        ;;
+    esac
+    if [ $ready == 'yes' ]
+    then
+      if [ ${url:0:4} == 'http' -o ${url:0:4} == 'HTTP' ]
+      then
+        set -- `echo $reply`
+        protocol=$1
+        code=$2
+        if [ ${protocol:0:4} == 'HTTP' ]
+        then
+          if [ $code -lt 400 -o ${url:0:4} == 'http' ]
+          then
+            if [ ${url:0:4} == 'http' ]
+            then
+              echo "READYCHECK:$date: $url: There is an HTTP(S) connection with a code $code (OK)"
+            else
+              echo "READYCHECK:$date: $url: There is an HTTP(S) connection with a code $code less than 400 (OK)"
+            fi
+          else
+            echo "READYCHECK:$date: $url: There is an HTTP(S) connection with a code $code more than 400 (ERROR)"
+            ready=no
+          break
+          fi
+        else
+          echo "READYCHECK:$date: $url: There is an HTTP with an incorrect protocol $protocol (ERROR)"
+          ready=no
+        fi
+      else
+        echo "READYCHECK:$date: $url: Connection OK"
+      fi
+    fi
+  done
+  if [ $ready = 'yes' ]
+  then
+    break
+  fi
+  echo "READYCHECK:$date: wait for $READYCHECK_TIMEOUT seconds"
+  sleep $READYCHECK_TIMEOUT
+done
+echo "READYCHECK:$date: ALL CONNECTION READINESS CHECKS SUCCESSFULLY COMPLETED"
+exit 0;
