@@ -1,6 +1,5 @@
 # readycheck - Описание скрипта readycheck и способы его использования в сервисах docker-compose
 
-Данный скрипт был написан для решения задачи  [Запуск докер-сервисов из стека сервисов в заданном порядке](https://gitlab.flexberry-foundation.ru/infrastructure/public/-/issues/225061).
 
 ## Общее описание
 
