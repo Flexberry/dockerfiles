@@ -1,5 +1,7 @@
 # dockerfiles
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Flexberry_dockerfiles&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Flexberry_dockerfiles)
+
 В данном репозитории располагаются Dockerfile's сторонных сервисов (apache-mono, postgres, oracle, pentaho, ...)
 собираемых под docker-доменом [flexberry/](https://hub.docker.com/u/flexberry).
 
