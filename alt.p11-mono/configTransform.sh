@@ -1,9 +1,22 @@
 #!/bin/bash
 set -x
 exec 2>&1
+
+# Register cleanup on exit for temporary files
+TMPFILES=""
+cleanup() {
+  if [ -n "$TMPFILES" ]; then
+    for f in $TMPFILES; do
+      rm -f "$f" 2>/dev/null
+    done
+  fi
+}
+trap cleanup EXIT INT TERM
+
 for XMLTEMPLATE in $XMLTEMPLATES
 do
-  vars=`xsltproc - $XMLTEMPLATE  <<EOF | sort -u
+  # Extract variables and check xsltproc status separately
+  vars=$(xsltproc - "$XMLTEMPLATE" <<EOF 2>/dev/null
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:beans="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util">
   <xsl:output method="text" encoding="UTF-8"/>
@@ -15,7 +28,14 @@ do
   </xsl:template>
 </xsl:stylesheet>
 EOF
-`
+)
+  xsltproc_status=$?
+  if [ $xsltproc_status -ne 0 ]; then
+    echo "Error: xsltproc failed with status $xsltproc_status" >&2
+    exit 1
+  fi
+  vars=$(echo "$vars" | sort -u)
+
   if [ -z "$vars" ]
   then
     continue;
@@ -31,7 +51,8 @@ EOF
     fi
   done
 
-  TMPFILE=/tmp/config$$.xml
+  TMPFILE=$(mktemp /tmp/config.XXXXXX.xml)
+  TMPFILES="$TMPFILES $TMPFILE"
   {
   cat <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
@@ -47,9 +68,11 @@ EOF
   for var in $vars
   do
     value=${!var}
+    # Escape special XML characters in value for safe insertion
+    escaped_value=$(echo "$value" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g')
     cat <<EOF
   <xsl:template match="//*/@*[.='%%$var%%']">
-    <xsl:attribute name="{name()}">$value</xsl:attribute>
+    <xsl:attribute name="{name()}">$escaped_value</xsl:attribute>
   </xsl:template>
 EOF
   done
@@ -62,7 +85,7 @@ EOF
   then
     mv $TMPFILE $XMLTEMPLATE
   else
-    rm $TMPFILE
+    rm -f $TMPFILE
     exit 1
   fi
 done
